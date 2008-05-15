@@ -10,6 +10,7 @@ freeimage (3.10.0-1) unstable; urgency=low
   * Fix FTBFS on amd64.
   * Adding debug package.
   * Added DM-Upload-Allowed: yes field.
+  * Added Vcs entries.
 
  -- Andres Mejia <mcitadel@gmail.com>  Wed, 30 Apr 2008 19:04:34 -0400
 
