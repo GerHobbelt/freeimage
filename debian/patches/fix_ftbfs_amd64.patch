@@ -1,0 +1,24 @@
+Patch that fixes several problems for building on amd64. Thanks Fedora guys.
+=====================================================================
+--- Source/FreeImage/PluginBMP.cpp~	2007-10-21 16:50:08.000000000 +0200
++++ Source/FreeImage/PluginBMP.cpp	2008-03-12 23:14:51.000000000 +0100
+@@ -189,6 +189,8 @@
+ #endif
+ }
+ 
++#define MIN(a, b) ( ((a) < (b))? (a):(b) )
++
+ /**
+ Load image pixels for 4-bit RLE compressed dib
+ @param io FreeImage IO
+--- Source/Metadata/Exif.cpp~	2007-07-17 03:28:26.000000000 +0200
++++ Source/Metadata/Exif.cpp	2008-03-13 19:19:07.000000000 +0100
+@@ -495,7 +495,7 @@
+ 		}
+ 
+ 		// remember that we've visited this directory so that we don't visit it again later
+-		DWORD visited = (((DWORD)ifdp & 0xFFFF) << 16) | (DWORD)de;
++		DWORD visited = (((DWORD)((long)ifdp) & 0xFFFF) << 16) | (DWORD)de;
+ 		if(visitedIFD.find(visited) != visitedIFD.end()) {
+ 			continue;
+ 		} else {

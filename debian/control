@@ -1,0 +1,49 @@
+Source: freeimage
+Priority: extra
+Maintainer: Federico Di Gregorio <fog@debian.org>
+Uploaders: Andres Mejia <mcitadel@gmail.com>
+Build-Depends: debhelper (>= 5), tofrodos, quilt
+Standards-Version: 3.7.3
+Section: libs
+DM-Upload-Allowed: yes
+Homepage: http://freeimage.sourceforge.net/
+
+Package: libfreeimage-dev
+Section: libdevel
+Architecture: any
+Depends: libfreeimage3 (= ${binary:Version})
+Description: Support library for graphics image formats (development files)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the headers and static libraries needed to develop
+ programs using FreeImage.
+
+Package: libfreeimage3
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Support library for graphics image formats (library)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the FreeImage library.
+
+Package: libfreeimage3-dbg
+Section: libs
+Architecture: any
+Depends: libfreeimage3 (= ${binary:Version})
+Description: Support library for graphics image formats (dubugging symbols)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the debugging symbols for the FreeImage library.

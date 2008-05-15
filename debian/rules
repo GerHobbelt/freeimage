@@ -1,0 +1,100 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# export DH_VERBOSE=1
+
+# Used for setting the compiler
+export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	DEB_OPTFLAGS += -O0 -fPIC -D_REENTRANT
+	DEB_FIP_OPTFLAGS += -O0 -fPIC -D_REENTRANT
+else
+	DEB_OPTFLAGS += -O3 -fPIC -fexceptions -fvisibility=hidden -D_REENTRANT
+	DEB_FIP_OPTFLAGS += -O3 -fPIC -fexceptions -fvisibility=hidden -D_REENTRANT
+endif
+
+# Setting our own compiler flags
+DEB_COMPILERFLAGS ?= -Wall -g $(DEB_OPTFLAGS)
+DEB_FIP_COMPILERFLAGS ?= -Wall -g $(DEB_FIP_OPTFLAGS)
+
+fromdos: fromdos-stamp
+fromdos-stamp:
+	dh_testdir
+	fromdos -e Makefile.gnu
+	fromdos -e Makefile.fip
+	fromdos -e Source/FreeImage/PluginBMP.cpp
+	fromdos -e Source/Metadata/Exif.cpp
+
+patch: fromdos patch-stamp
+patch-stamp:
+	dh_testdir
+	QUILT_PATCHES=debian/patches quilt push -a || test $$? = 2
+	touch patch-stamp
+
+build: patch build-stamp
+build-stamp:
+	dh_testdir
+	$(MAKE) COMPILERFLAGS="$(DEB_COMPILERFLAGS)" CC=$(DEB_BUILD_GNU_TYPE)-gcc \
+		CXX=$(DEB_BUILD_GNU_TYPE)-g++
+	$(MAKE) -f Makefile.fip COMPILERFLAGS="$(DEB_FIP_COMPILERFLAGS)" \
+		CC=$(DEB_BUILD_GNU_TYPE)-gcc CXX=$(DEB_BUILD_GNU_TYPE)-g++
+	touch build-stamp
+
+clean: clean-stamp unpatch todos
+clean-stamp:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	$(MAKE) clean
+	$(MAKE) -f Makefile.fip clean
+	dh_clean
+
+unpatch:
+	dh_testdir
+	QUILT_PATCHES=debian/patches quilt pop -a || test $$? = 2
+	rm -rf .pc/ patch-stamp
+
+todos:
+	dh_testdir
+	todos -e Makefile.fip
+	todos -e Makefile.gnu
+	todos -e Source/FreeImage/PluginBMP.cpp
+	todos -e Source/Metadata/Exif.cpp
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	mkdir -p debian/tmp/usr/include
+	mkdir -p debian/tmp/usr/lib
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp/
+	$(MAKE) -f Makefile.fip install DESTDIR=$(CURDIR)/debian/tmp/
+
+# Build architecture-independent files here.
+binary-indep:
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs extra.Debian/*
+	dh_install
+	dh_link
+	dh_strip -plibfreeimage3 --dbg-package=libfreeimage3-dbg
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs -V
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+get-orig-source:
+	$(dir $_)freeimage-get-orig-source
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

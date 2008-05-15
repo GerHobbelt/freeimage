@@ -1,0 +1,2 @@
+fix_ftbfs_amd64.patch -p0
+makefile_modifications.patch -p0

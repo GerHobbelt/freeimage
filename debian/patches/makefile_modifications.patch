@@ -1,0 +1,92 @@
+Some modificatoins to the makefiles to help in build Debian packages.
+Also removed -s (strip) option so we can make debug package. With the compiler
+options we're using by default, debugging should still be possible.
+==========================================================================
+--- Makefile.fip.bak	2008-05-08 14:41:23.000000000 -0400
++++ Makefile.fip	2008-05-08 14:40:30.000000000 -0400
+@@ -4,17 +4,19 @@
+ include fipMakefile.srcs
+ 
+ # General configuration variables:
+-CC = gcc
+-CXX = g++
++CC ?= gcc
++CXX ?= g++
+ AR = ar
+ 
+-INCDIR = /usr/include
+-INSTALLDIR = /usr/lib
++# Include a configurable DESTDIR variable
++DESTDIR ?= /
++INCDIR = $(DESTDIR)usr/include
++INSTALLDIR = $(DESTDIR)usr/lib
+ 
+ # Converts cr/lf to just lf
+ DOS2UNIX = dos2unix
+ 
+-COMPILERFLAGS = -O3 -fexceptions -fvisibility=hidden
++COMPILERFLAGS ?= -O3 -fexceptions -fvisibility=hidden
+ LIBRARIES = -lstdc++
+ 
+ MODULES = $(SRCS:.c=.o)
+@@ -56,7 +58,7 @@
+ 	$(AR) r $@ $(MODULES)
+ 
+ $(SHAREDLIB): $(MODULES)
+-	$(CC) -s -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
++	$(CC) -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
+ 
+ install:
+ 	install -m 644 -o root -g root $(HEADER) $(INCDIR)
+@@ -65,7 +67,6 @@
+ 	install -m 755 -o root -g root $(SHAREDLIB) $(INSTALLDIR)
+ 	ln -sf $(SHAREDLIB) $(INSTALLDIR)/$(VERLIBNAME)
+ 	ln -sf $(VERLIBNAME) $(INSTALLDIR)/$(LIBNAME)
+-	ldconfig
+ 
+ clean:
+ 	rm -f core Dist/*.* u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)
+--- Makefile.gnu.bak	2008-05-08 14:41:22.000000000 -0400
++++ Makefile.gnu	2008-05-08 14:40:23.000000000 -0400
+@@ -4,17 +4,19 @@
+ include Makefile.srcs
+ 
+ # General configuration variables:
+-CC = gcc
+-CXX = g++
++CC ?= gcc
++CXX ?= g++
+ AR = ar
+ 
+-INCDIR = /usr/include
+-INSTALLDIR = /usr/lib
++# Include a configurable DESTDIR variable
++DESTDIR ?= /
++INCDIR = $(DESTDIR)usr/include
++INSTALLDIR = $(DESTDIR)usr/lib
+ 
+ # Converts cr/lf to just lf
+ DOS2UNIX = dos2unix
+ 
+-COMPILERFLAGS = -O3 -fPIC -fexceptions -fvisibility=hidden
++COMPILERFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden
+ LIBRARIES = -lstdc++
+ 
+ MODULES = $(SRCS:.c=.o)
+@@ -55,7 +57,7 @@
+ 	$(AR) r $@ $(MODULES)
+ 
+ $(SHAREDLIB): $(MODULES)
+-	$(CC) -s -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
++	$(CC) -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
+ 
+ install:
+ 	install -m 644 -o root -g root $(HEADER) $(INCDIR)
+@@ -63,7 +65,6 @@
+ 	install -m 755 -o root -g root $(SHAREDLIB) $(INSTALLDIR)
+ 	ln -sf $(SHAREDLIB) $(INSTALLDIR)/$(VERLIBNAME)
+ 	ln -sf $(VERLIBNAME) $(INSTALLDIR)/$(LIBNAME)	
+-	ldconfig
+ 
+ clean:
+ 	rm -f core Dist/*.* u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)
