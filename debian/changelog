@@ -12,7 +12,7 @@ freeimage (3.10.0-1) unstable; urgency=low
   * Added DM-Upload-Allowed: yes field.
   * Added Vcs entries.
 
- -- Andres Mejia <mcitadel@gmail.com>  Wed, 30 Apr 2008 19:04:34 -0400
+ -- Andres Mejia <mcitadel@gmail.com>  Thu, 15 May 2008 03:18:00 -0400
 
 freeimage (3.9.3-3) unstable; urgency=low
 
