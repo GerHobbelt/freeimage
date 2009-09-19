@@ -1,9 +1,9 @@
 Source: freeimage
-Priority: extra
+Priority: optional
 Maintainer: Federico Di Gregorio <fog@debian.org>
-Uploaders: Andres Mejia <mcitadel@gmail.com>
+Uploaders: Andres Mejia <mcitadel@gmail.com>, Michael Koch <konqueror@gmx.de>
 Build-Depends: debhelper (>= 5), tofrodos, quilt
-Standards-Version: 3.7.3
+Standards-Version: 3.8.3
 Section: libs
 DM-Upload-Allowed: yes
 Homepage: http://freeimage.sourceforge.net/
@@ -38,10 +38,11 @@ Description: Support library for graphics image formats (library)
  This package contains the FreeImage library.
 
 Package: libfreeimage3-dbg
-Section: libs
+Section: debug
+Priority: extra
 Architecture: any
 Depends: libfreeimage3 (= ${binary:Version})
-Description: Support library for graphics image formats (dubugging symbols)
+Description: Support library for graphics image formats (debugging symbols)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
  and others as needed by today's multimedia applications. FreeImage is

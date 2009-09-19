@@ -1,3 +1,17 @@
+freeimage (3.10.0-2) unstable; urgency=low
+
+  * Fixed typo in short description of libfreeimage3-dbg.
+    (Closes: #518647)
+  * Adjusted patched to not need -p0 (Closes: #485251).
+  * Made package priority optional.
+  * Moved libfreeimage3-dbg package into debug section. 
+  * Added debian/README.source.
+  * Added watch file.
+  * Added myself to Uploaders.
+  * Updated Standards-Version.
+
+ -- Michael Koch <konqueror@gmx.de>  Tue, 15 Sep 2009 20:12:53 +0200
+
 freeimage (3.10.0-1) unstable; urgency=low
 
   * New upstream release. Closes: #471242

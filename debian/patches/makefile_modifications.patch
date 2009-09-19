@@ -2,8 +2,8 @@ Some modificatoins to the makefiles to help in build Debian packages.
 Also removed -s (strip) option so we can make debug package. With the compiler
 options we're using by default, debugging should still be possible.
 ==========================================================================
---- Makefile.fip.bak	2008-05-08 14:41:23.000000000 -0400
-+++ Makefile.fip	2008-05-08 14:40:30.000000000 -0400
+--- freeimage/Makefile.fip.bak	2008-05-08 14:41:23.000000000 -0400
++++ freeimage/Makefile.fip	2008-05-08 14:40:30.000000000 -0400
 @@ -4,17 +4,19 @@
  include fipMakefile.srcs
  
@@ -46,8 +46,8 @@ options we're using by default, debugging should still be possible.
  
  clean:
  	rm -f core Dist/*.* u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)
---- Makefile.gnu.bak	2008-05-08 14:41:22.000000000 -0400
-+++ Makefile.gnu	2008-05-08 14:40:23.000000000 -0400
+--- freeimage/Makefile.gnu.bak	2008-05-08 14:41:22.000000000 -0400
++++ freeimage/Makefile.gnu	2008-05-08 14:40:23.000000000 -0400
 @@ -4,17 +4,19 @@
  include Makefile.srcs
  

@@ -1,7 +1,7 @@
 Patch that fixes several problems for building on amd64. Thanks Fedora guys.
 =====================================================================
---- Source/FreeImage/PluginBMP.cpp~	2007-10-21 16:50:08.000000000 +0200
-+++ Source/FreeImage/PluginBMP.cpp	2008-03-12 23:14:51.000000000 +0100
+--- freeimage/Source/FreeImage/PluginBMP.cpp~	2007-10-21 16:50:08.000000000 +0200
++++ freeimage/Source/FreeImage/PluginBMP.cpp	2008-03-12 23:14:51.000000000 +0100
 @@ -189,6 +189,8 @@
  #endif
  }
@@ -11,8 +11,8 @@ Patch that fixes several problems for building on amd64. Thanks Fedora guys.
  /**
  Load image pixels for 4-bit RLE compressed dib
  @param io FreeImage IO
---- Source/Metadata/Exif.cpp~	2007-07-17 03:28:26.000000000 +0200
-+++ Source/Metadata/Exif.cpp	2008-03-13 19:19:07.000000000 +0100
+--- freeimage/Source/Metadata/Exif.cpp~	2007-07-17 03:28:26.000000000 +0200
++++ freeimage/Source/Metadata/Exif.cpp	2008-03-13 19:19:07.000000000 +0100
 @@ -495,7 +495,7 @@
  		}
  
