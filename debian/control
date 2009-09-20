@@ -1,7 +1,7 @@
 Source: freeimage
 Priority: optional
 Maintainer: Federico Di Gregorio <fog@debian.org>
-Uploaders: Andres Mejia <mcitadel@gmail.com>, Michael Koch <konqueror@gmx.de>
+Uploaders: Michael Koch <konqueror@gmx.de>
 Build-Depends: debhelper (>= 5), tofrodos, quilt
 Standards-Version: 3.8.3
 Section: libs
