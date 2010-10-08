@@ -34,9 +34,10 @@ extern "C" {
 #undef FAR
 #include <setjmp.h>
 
-#include "../LibJPEG/jinclude.h"
-#include "../LibJPEG/jpeglib.h"
-#include "../LibJPEG/jerror.h"
+#include <sys/types.h>
+#include <stdio.h>
+#include <jpeglib.h>
+#include <jerror.h>
 }
 
 #include "FreeImage.h"
@@ -158,7 +159,7 @@ init_destination (j_compress_ptr cinfo) {
 
 	dest->buffer = (JOCTET *)
 	  (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-				  OUTPUT_BUF_SIZE * SIZEOF(JOCTET));
+				  OUTPUT_BUF_SIZE * sizeof(JOCTET));
 
 	dest->pub.next_output_byte = dest->buffer;
 	dest->pub.free_in_buffer = OUTPUT_BUF_SIZE;
@@ -333,12 +334,12 @@ jpeg_freeimage_src (j_decompress_ptr cinfo, fi_handle infile, FreeImageIO *io) {
 
 	if (cinfo->src == NULL) {
 		cinfo->src = (struct jpeg_source_mgr *) (*cinfo->mem->alloc_small)
-			((j_common_ptr) cinfo, JPOOL_PERMANENT, SIZEOF(SourceManager));
+			((j_common_ptr) cinfo, JPOOL_PERMANENT, sizeof(SourceManager));
 
 		src = (freeimage_src_ptr) cinfo->src;
 
 		src->buffer = (JOCTET *) (*cinfo->mem->alloc_small)
-			((j_common_ptr) cinfo, JPOOL_PERMANENT, INPUT_BUF_SIZE * SIZEOF(JOCTET));
+			((j_common_ptr) cinfo, JPOOL_PERMANENT, INPUT_BUF_SIZE * sizeof(JOCTET));
 	}
 
 	// initialize the jpeg pointer struct with pointers to functions
@@ -366,7 +367,7 @@ jpeg_freeimage_dst (j_compress_ptr cinfo, fi_handle outfile, FreeImageIO *io) {
 
 	if (cinfo->dest == NULL) {
 		cinfo->dest = (struct jpeg_destination_mgr *)(*cinfo->mem->alloc_small)
-			((j_common_ptr) cinfo, JPOOL_PERMANENT, SIZEOF(DestinationManager));
+			((j_common_ptr) cinfo, JPOOL_PERMANENT, sizeof(DestinationManager));
 	}
 
 	dest = (freeimage_dst_ptr) cinfo->dest;
