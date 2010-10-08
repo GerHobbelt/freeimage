@@ -25,9 +25,10 @@ extern "C" {
 #undef FAR
 #include <setjmp.h>
 
-#include "../LibJPEG/jinclude.h"
-#include "../LibJPEG/jpeglib.h"
-#include "../LibJPEG/jerror.h"
+#include <sys/types.h>
+#include <stdio.h>
+#include <jpeglib.h>
+#include <jerror.h>
 #include "../LibJPEG/transupp.h"
 }
 
