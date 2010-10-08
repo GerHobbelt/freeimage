@@ -22,7 +22,7 @@
 #include "FreeImage.h"
 #include "Utilities.h"
 
-#include "../LibMNG/libmng.h"
+#include <libmng.h>
 
 // ----------------------------------------------------------
 //   Constants + headers
