@@ -2,9 +2,11 @@ Some modificatoins to the makefiles to help in build Debian packages.
 Also removed -s (strip) option so we can make debug package. With the compiler
 options we're using by default, debugging should still be possible.
 ==========================================================================
---- freeimage/Makefile.fip.bak	2008-05-08 14:41:23.000000000 -0400
-+++ freeimage/Makefile.fip	2008-05-08 14:40:30.000000000 -0400
-@@ -4,17 +4,19 @@
+Index: freeimage/Makefile.fip
+===================================================================
+--- freeimage.orig/Makefile.fip
++++ freeimage/Makefile.fip
+@@ -4,18 +4,20 @@
  include fipMakefile.srcs
  
  # General configuration variables:
@@ -25,16 +27,18 @@ options we're using by default, debugging should still be possible.
  DOS2UNIX = dos2unix
  
 -COMPILERFLAGS = -O3 -fexceptions -fvisibility=hidden
+-LIBRARIES = -lstdc++
 +COMPILERFLAGS ?= -O3 -fexceptions -fvisibility=hidden
- LIBRARIES = -lstdc++
++LIBRARIES = -lmng -lz -lpng -lm -ljpeg -lopenjpeg $(shell pkg-config --libs OpenEXR)
  
  MODULES = $(SRCS:.c=.o)
+ MODULES := $(MODULES:.cpp=.o)
 @@ -56,7 +58,7 @@
  	$(AR) r $@ $(MODULES)
  
  $(SHAREDLIB): $(MODULES)
 -	$(CC) -s -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
-+	$(CC) -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
++	$(CXX) -shared -Wl,-soname,$(VERLIBNAME) -Wl,-z,defs -o $@ $(MODULES) $(CXXFLAGS) $(LIBRARIES)
  
  install:
  	install -m 644 -o root -g root $(HEADER) $(INCDIR)
@@ -46,9 +50,11 @@ options we're using by default, debugging should still be possible.
  
  clean:
  	rm -f core Dist/*.* u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)
---- freeimage/Makefile.gnu.bak	2008-05-08 14:41:22.000000000 -0400
-+++ freeimage/Makefile.gnu	2008-05-08 14:40:23.000000000 -0400
-@@ -4,17 +4,19 @@
+Index: freeimage/Makefile.gnu
+===================================================================
+--- freeimage.orig/Makefile.gnu
++++ freeimage/Makefile.gnu
+@@ -4,18 +4,20 @@
  include Makefile.srcs
  
  # General configuration variables:
@@ -69,16 +75,18 @@ options we're using by default, debugging should still be possible.
  DOS2UNIX = dos2unix
  
 -COMPILERFLAGS = -O3 -fPIC -fexceptions -fvisibility=hidden
+-LIBRARIES = -lstdc++
 +COMPILERFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden
- LIBRARIES = -lstdc++
++LIBRARIES = -ljpeg -lmng -lopenjpeg -lpng $(shell pkg-config --libs OpenEXR) -lz -lm
  
  MODULES = $(SRCS:.c=.o)
+ MODULES := $(MODULES:.cpp=.o)
 @@ -55,7 +57,7 @@
  	$(AR) r $@ $(MODULES)
  
  $(SHAREDLIB): $(MODULES)
 -	$(CC) -s -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
-+	$(CC) -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
++	$(CXX) -shared -Wl,-soname,$(VERLIBNAME) -Wl,-z,defs -o $@ $(MODULES) $(CXXFLAGS) $(LIBRARIES)
  
  install:
  	install -m 644 -o root -g root $(HEADER) $(INCDIR)
