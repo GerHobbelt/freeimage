@@ -6,7 +6,7 @@ Index: freeimage/Makefile.fip
 ===================================================================
 --- freeimage.orig/Makefile.fip
 +++ freeimage/Makefile.fip
-@@ -4,18 +4,20 @@
+@@ -4,18 +4,21 @@
  include fipMakefile.srcs
  
  # General configuration variables:
@@ -29,6 +29,7 @@ Index: freeimage/Makefile.fip
 -COMPILERFLAGS = -O3 -fexceptions -fvisibility=hidden
 -LIBRARIES = -lstdc++
 +COMPILERFLAGS ?= -O3 -fexceptions -fvisibility=hidden
++COMPILERFLAGS += $(shell getconf LFS_CFLAGS)
 +LIBRARIES = -lmng -lz -lpng -lm -ljpeg -lopenjpeg $(shell pkg-config --libs OpenEXR)
  
  MODULES = $(SRCS:.c=.o)
@@ -54,7 +55,7 @@ Index: freeimage/Makefile.gnu
 ===================================================================
 --- freeimage.orig/Makefile.gnu
 +++ freeimage/Makefile.gnu
-@@ -4,18 +4,20 @@
+@@ -4,18 +4,21 @@
  include Makefile.srcs
  
  # General configuration variables:
@@ -77,6 +78,7 @@ Index: freeimage/Makefile.gnu
 -COMPILERFLAGS = -O3 -fPIC -fexceptions -fvisibility=hidden
 -LIBRARIES = -lstdc++
 +COMPILERFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden
++COMPILERFLAGS += $(shell getconf LFS_CFLAGS)
 +LIBRARIES = -ljpeg -lmng -lopenjpeg -lpng $(shell pkg-config --libs OpenEXR) -lz -lm
  
  MODULES = $(SRCS:.c=.o)
