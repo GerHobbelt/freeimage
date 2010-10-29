@@ -1,83 +1,25 @@
 /* FreeImage libtiff config */
 
-#ifndef _TIFFCONF_
-#define _TIFFCONF_
+/* libtiff/tif_config.h.  Generated from tif_config.h.in by configure.  */
+/* libtiff/tif_config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define as 0 or 1 according to the floating point format suported by the
-   machine */
-#define HAVE_IEEEFP 1
-
-/* --- byte order --- */
-
-/* Some versions of gcc may have BYTE_ORDER or __BYTE_ORDER defined
-   If your big endian system isn't being detected, add an OS specific check
-*/
-#if (defined(BYTE_ORDER) && BYTE_ORDER==BIG_ENDIAN) || \
-	(defined(__BYTE_ORDER) && __BYTE_ORDER==__BIG_ENDIAN) || \
-	defined(__BIG_ENDIAN__)
-/* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
-#define HOST_FILLORDER FILLORDER_MSB2LSB
-/* Native cpu byte order: 1 if big-endian (Motorola) or 0 if little-endian (Intel) */
-#define WORDS_BIGENDIAN 1
-#else
-/* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
-#define HOST_FILLORDER FILLORDER_LSB2MSB
-/* Native cpu byte order: 1 if big-endian (Motorola) or 0 if little-endian (Intel) */
-#undef WORDS_BIGENDIAN
-#endif // BYTE_ORDER
-
-/* --- compression algorithms --- */
+/* Define if building universal (internal helper macro) */
+/* #undef AC_APPLE_UNIVERSAL_BUILD */
 
 /* Support CCITT Group 3 & 4 algorithms */
 #define CCITT_SUPPORT 1
-
-/* Support JPEG compression (requires IJG JPEG library) */
-#define JPEG_SUPPORT 1
-
-/* Support LogLuv high dynamic range encoding */
-#define LOGLUV_SUPPORT 1
-
-/* Support LZW algorithm */
-#define LZW_SUPPORT 1
-
-/* Support NeXT 2-bit RLE algorithm */
-#define NEXT_SUPPORT 1
-
-/* Support Old JPEG compresson (read contrib/ojpeg/README first! Compilation
-   fails with unpatched IJG JPEG library) */
-/* #undef OJPEG_SUPPORT */
-
-/* Support Macintosh PackBits algorithm */
-#define PACKBITS_SUPPORT 1
-
-/* Support Pixar log-format algorithm (requires Zlib) */
-#define PIXARLOG_SUPPORT 1
-
-/* Support ThunderScan 4-bit RLE algorithm */
-#define THUNDER_SUPPORT 1
-
-/* Support Deflate compression */
-#define ZIP_SUPPORT 1
-
-/* --- ``Orthogonal Features'' --- */
-
-/* Support strip chopping (whether or not to convert single-strip uncompressed
-   images to mutiple strips of ~8Kb to reduce memory usage) */
-#define STRIPCHOP_DEFAULT TIFF_STRIPCHOP
-
-/* Enable SubIFD tag (330) support */
-#define SUBIFD_SUPPORT 1
-
-/* Treat extra sample as alpha (default enabled). The RGBA interface will
-   treat a fourth sample with no EXTRASAMPLE_ value as being ASSOCALPHA. Many
-   packages produce RGBA files but don't mark the alpha properly. */
-#define DEFAULT_EXTRASAMPLE_AS_ALPHA 1
 
 /* Pick up YCbCr subsampling info from the JPEG data stream to support files
    lacking the tag (default enabled). */
 #define CHECK_JPEG_YCBCR_SUBSAMPLING 1
 
-/* --- include files --- */
+/* Support C++ stream API (requires C++ compiler) */
+#define CXX_SUPPORT 1
+
+/* Treat extra sample as alpha (default enabled). The RGBA interface will
+   treat a fourth sample with no EXTRASAMPLE_ value as being ASSOCALPHA. Many
+   packages produce RGBA files but don't mark the alpha properly. */
+#define DEFAULT_EXTRASAMPLE_AS_ALPHA 1
 
 /* Use the Apple OpenGL framework. */
 /* #undef HAVE_APPLE_OPENGL_FRAMEWORK */
@@ -113,8 +55,17 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
+/* Define to 1 if you have the <io.h> header file. */
+/* #undef HAVE_IO_H */
+
 /* Define to 1 if you have the `isascii' function. */
 #define HAVE_ISASCII 1
+
+/* Define to 1 if you have the `jbg_newlen' function. */
+/* #undef HAVE_JBG_NEWLEN */
+
+/* Define to 1 if you have the `lfind' function. */
+#define HAVE_LFIND 1
 
 /* Define to 1 if you have the `c' library (-lc). */
 #define HAVE_LIBC 1
@@ -145,6 +96,12 @@
 
 /* Define if you have POSIX threads libraries and header files. */
 #define HAVE_PTHREAD 1
+
+/* Define to 1 if you have the <search.h> header file. */
+#define HAVE_SEARCH_H 1
+
+/* Define to 1 if you have the `setmode' function. */
+/* #undef HAVE_SETMODE */
 
 /* Define to 1 if you have the `sqrt' function. */
 #define HAVE_SQRT 1
@@ -194,23 +151,147 @@
 /* Define to 1 if you have the <windows.h> header file. */
 /* #undef HAVE_WINDOWS_H */
 
+/* --- XXX byte order XXX --- */
+/* hack for freeimage to avoid hardcoding a value */
+
+/* Some versions of gcc may have BYTE_ORDER or __BYTE_ORDER defined
+   If your big endian system isn't being detected, add an OS specific check
+*/
+#if (defined(BYTE_ORDER) && BYTE_ORDER==BIG_ENDIAN) || \
+	(defined(__BYTE_ORDER) && __BYTE_ORDER==__BIG_ENDIAN) || \
+	defined(__BIG_ENDIAN__)
+/* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
+#define HOST_FILLORDER FILLORDER_MSB2LSB
+/* Native cpu byte order: 1 if big-endian (Motorola) or 0 if little-endian (Intel) */
+#define WORDS_BIGENDIAN 1
+#define HOST_BIGENDIAN 1
+#else
+/* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
+#define HOST_FILLORDER FILLORDER_LSB2MSB
+/* Native cpu byte order: 1 if big-endian (Motorola) or 0 if little-endian (Intel) */
+#undef WORDS_BIGENDIAN
+#define HOST_BIGENDIAN 0
+#endif // BYTE_ORDER
+/* XXX end XXX */
+
+/* Support ISO JBIG compression (requires JBIG-KIT library) */
+/* #undef JBIG_SUPPORT */
+
+/* Support JPEG compression (requires IJG JPEG library) */
+#define JPEG_SUPPORT 1
+
+/* Support LogLuv high dynamic range encoding */
+#define LOGLUV_SUPPORT 1
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#define LT_OBJDIR ".libs/"
+
+/* Support LZW algorithm */
+#define LZW_SUPPORT 1
+
+/* Support Microsoft Document Imaging format */
+#define MDI_SUPPORT 1
+
+/* Support NeXT 2-bit RLE algorithm */
+#define NEXT_SUPPORT 1
 
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 /* #undef NO_MINUS_C_MINUS_O */
 
+/* Support Old JPEG compresson (read-only) */
+#define OJPEG_SUPPORT 1
 
-/* Define to the necessary symbol if this constant uses a non-standard name on
+/* Name of package */
+#define PACKAGE "tiff"
+
+/* Define to the address where bug reports for this package should be sent. */
+#define PACKAGE_BUGREPORT "tiff@lists.maptools.org"
+
+/* Define to the full name of this package. */
+#define PACKAGE_NAME "LibTIFF Software"
+
+/* Define to the full name and version of this package. */
+#define PACKAGE_STRING "LibTIFF Software 3.9.4"
+
+/* Define to the one symbol short name of this package. */
+#define PACKAGE_TARNAME "tiff"
+
+/* Define to the home page for this package. */
+#define PACKAGE_URL ""
+
+/* Define to the version of this package. */
+#define PACKAGE_VERSION "3.9.4"
+
+/* Support Macintosh PackBits algorithm */
+#define PACKBITS_SUPPORT 1
+
+/* Support Pixar log-format algorithm (requires Zlib) */
+#define PIXARLOG_SUPPORT 1
+
+/* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
 /* #undef PTHREAD_CREATE_JOINABLE */
 
-/* The size of a `int', as computed by sizeof. */
+/* The size of `int', as computed by sizeof. */
 #define SIZEOF_INT 4
 
-/* The size of a `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
+/* The size of `signed long long', as computed by sizeof. */
+#define SIZEOF_SIGNED_LONG_LONG 8
+
+/* The size of `unsigned long long', as computed by sizeof. */
+#define SIZEOF_UNSIGNED_LONG_LONG 8
+
+/* XXX size of long, hacked for freeimage XXX */
+/* The size of `long', as computed by sizeof. */
+#define SIZEOF_LONG __SIZEOF_LONG__
+
+/* The size of `signed long', as computed by sizeof. */
+#define SIZEOF_SIGNED_LONG __SIZEOF_LONG__
+
+/* The size of `unsigned long', as computed by sizeof. */
+#define SIZEOF_UNSIGNED_LONG __SIZEOF_LONG__
+/* XXX end XXX */
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
+
+/* Support strip chopping (whether or not to convert single-strip uncompressed
+   images to mutiple strips of specified size to reduce memory usage) */
+#define STRIPCHOP_DEFAULT TIFF_STRIPCHOP
+
+/* Default size of the strip in bytes (when strip chopping enabled) */
+#define STRIP_SIZE_DEFAULT 8192
+
+/* Enable SubIFD tag (330) support */
+#define SUBIFD_SUPPORT 1
+
+/* Support ThunderScan 4-bit RLE algorithm */
+#define THUNDER_SUPPORT 1
+
+/* XXX hack for freeimage XXX */
+#include <inttypes.h>
+
+/* Signed 64-bit type formatter */
+#define TIFF_INT64_FORMAT "%" PRId64
+
+/* Signed 64-bit type */
+#if SIZEOF_LONG == 8
+#define TIFF_INT64_T signed long
+#else
+#define TIFF_INT64_T signed long long
+#endif
+
+/* Unsigned 64-bit type formatter */
+#define TIFF_UINT64_FORMAT "%" PRIu64
+
+/* Unsigned 64-bit type */
+#if SIZEOF_LONG == 8
+#define TIFF_UINT64_T unsigned long
+#else
+#define TIFF_INT64_T unsigned long long
+#endif
+/* XXX end XXX */
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #define TIME_WITH_SYS_TIME 1
@@ -218,17 +299,29 @@
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 /* #undef TM_IN_SYS_TIME */
 
+/* Version number of package */
+#define VERSION "3.9.4"
 
-/* Define to 1 if your processor stores words with the most significant byte
-   first (like Motorola and SPARC, unlike Intel and VAX). */
-/* #undef WORDS_BIGENDIAN */
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+/* #  undef WORDS_BIGENDIAN */
+# endif
+#endif
 
 /* Define to 1 if the X Window System is missing or not being used. */
 /* #undef X_DISPLAY_MISSING */
 
+/* Support Deflate compression */
+#define ZIP_SUPPORT 1
 
 /* Number of bits in a file offset, on hosts where this is settable. */
-#define _FILE_OFFSET_BITS 64
+/* #undef _FILE_OFFSET_BITS */
 
 /* Define for large files, on AIX-style hosts. */
 /* #undef _LARGE_FILES */
@@ -239,26 +332,11 @@
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
 #ifndef __cplusplus
-  #ifdef _MSC_VER
-    #ifndef inline
-    #define inline __inline
-    #endif
-  #else
-    #undef inline
-  #endif // _MSC_VER
-#endif // __cplusplus
+/* #undef inline */
+#endif
 
-#ifdef _MSC_VER 
-#define lfind _lfind
-/* Define to 1 if you have the <search.h> header file. */
-#define HAVE_SEARCH_H 1
-#endif // _MSC_VER
-
-
-/* Define to `long' if <sys/types.h> does not define. */
+/* Define to `long int' if <sys/types.h> does not define. */
 /* #undef off_t */
 
-/* Define to `unsigned' if <sys/types.h> does not define. */
+/* Define to `unsigned int' if <sys/types.h> does not define. */
 /* #undef size_t */
-
-#endif /* _TIFFCONF_ */
