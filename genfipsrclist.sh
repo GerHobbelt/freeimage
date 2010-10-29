@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DIRLIST=". Source Source/Metadata Source/FreeImageToolkit Source/LibJPEG Source/LibMNG Source/LibPNG Source/LibTIFF Source/ZLib Source/LibOpenJPEG Source/OpenEXR Source/OpenEXR/Half Source/OpenEXR/Iex Source/OpenEXR/IlmImf Source/OpenEXR/IlmThread Source/OpenEXR/Imath Wrapper/FreeImagePlus"
+DIRLIST=". Source Source/Metadata Source/FreeImageToolkit Source/LibTIFF Wrapper/FreeImagePlus"
 
 
 echo "VER_MAJOR = 3" > fipMakefile.srcs
