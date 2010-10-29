@@ -1,7 +1,6 @@
 Source: freeimage
 Priority: optional
-Maintainer: Federico Di Gregorio <fog@debian.org>
-Uploaders: Michael Koch <konqueror@gmx.de>
+Maintainer: Debian QA Group <packages@qa.debian.org>
 Build-Depends:
  debhelper (>= 5),
  tofrodos,
