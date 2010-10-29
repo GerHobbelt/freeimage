@@ -1,4 +1,4 @@
-/* $Id: tif_dirwrite.c,v 1.20 2007/11/10 18:41:03 drolon Exp $ */
+/* $Id: tif_dirwrite.c,v 1.37.2.7 2010-06-08 18:50:42 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -112,9 +112,9 @@ _TIFFWriteDirectory(TIFF* tif, int done)
 		(*tif->tif_close)(tif);		/* shutdown encoder */
 		/*
 		 * Flush any data that might have been written
-		 * by the compression close+cleanup routines.
+ 		 * by the compression close+cleanup routines.
 		 */
-		if (tif->tif_rawcc > 0 
+		if (tif->tif_rawcc > 0
                     && (tif->tif_flags & TIFF_BEENWRITING) != 0
                     && !TIFFFlushData1(tif)) {
 			TIFFErrorExt(tif->tif_clientdata, tif->tif_name,
@@ -1140,7 +1140,11 @@ TIFFWriteAnyArray(TIFF* tif,
 		}
 		break;
 	case TIFF_DOUBLE:
-		return (TIFFWriteDoubleArray(tif, dir, v));
+                {
+                    if( !TIFFWriteDoubleArray(tif, dir, v))
+                        goto out;
+                }
+		break;
 	default:
 		/* TIFF_NOTYPE */
 		/* TIFF_ASCII */
@@ -1401,3 +1405,10 @@ TIFFLinkDirectory(TIFF* tif)
 }
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

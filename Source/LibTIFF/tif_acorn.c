@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/freeimage/FreeImage/Source/LibTIFF/tif_acorn.c,v 1.20 2007/11/10 18:40:46 drolon Exp $ */
+/* $Header: /cvs/maptools/cvsroot/libtiff/libtiff/Attic/tif_acorn.c,v 1.2.2.1 2010-06-08 18:50:41 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -517,3 +517,10 @@ acornErrorHandler(const char* module, const char* fmt, va_list ap)
 	fprintf(stderr, ".\n");
 }
 TIFFErrorHandler _TIFFerrorHandler = acornErrorHandler;
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

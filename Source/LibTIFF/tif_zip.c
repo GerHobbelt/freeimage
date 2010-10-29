@@ -1,4 +1,4 @@
-/* $Id: tif_zip.c,v 1.20 2007/11/10 18:41:43 drolon Exp $ */
+/* $Id: tif_zip.c,v 1.11.2.4 2010-06-08 18:50:43 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1995-1997 Sam Leffler
@@ -47,7 +47,7 @@
  * last found at ftp://ftp.uu.net/pub/archiving/zip/zlib/zlib-0.99.tar.gz.
  */
 #include "tif_predict.h"
-#include "../ZLib/zlib.h"
+#include "zlib.h"
 
 #include <stdio.h>
 
@@ -119,7 +119,7 @@ ZIPPreDecode(TIFF* tif, tsample_t s)
 	assert(sp != NULL);
 
         if( (sp->state & ZSTATE_INIT_DECODE) == 0 )
-            ZIPSetupDecode(tif);
+            tif->tif_setupdecode( tif );
 
 	sp->stream.next_in = tif->tif_rawdata;
 	sp->stream.avail_in = tif->tif_rawcc;
@@ -197,7 +197,7 @@ ZIPPreEncode(TIFF* tif, tsample_t s)
 	(void) s;
 	assert(sp != NULL);
         if( sp->state != ZSTATE_INIT_ENCODE )
-            ZIPSetupEncode(tif);
+            tif->tif_setupencode( tif );
 
 	sp->stream.next_out = tif->tif_rawdata;
 	sp->stream.avail_out = tif->tif_rawdatasize;
@@ -410,3 +410,10 @@ bad:
 #endif /* ZIP_SUPORT */
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

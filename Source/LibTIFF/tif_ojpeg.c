@@ -1,4 +1,4 @@
-/* $Id: tif_ojpeg.c,v 1.18 2007/11/10 18:41:22 drolon Exp $ */
+/* $Id: tif_ojpeg.c,v 1.24.2.6 2010-06-08 23:29:51 bfriesen Exp $ */
 
 /* WARNING: The type of JPEG encapsulation defined by the TIFF Version 6.0
    specification is now totally obsolete and deprecated for new applications and
@@ -1127,6 +1127,9 @@ OJPEGWriteHeaderInfo(TIFF* tif)
 	if ((sp->subsampling_force_desubsampling_inside_decompression==0) && (sp->samples_per_pixel_per_plane>1))
 	{
 		sp->libjpeg_jpeg_decompress_struct.raw_data_out=1;
+#if JPEG_LIB_VERSION >= 70
+		sp->libjpeg_jpeg_decompress_struct.do_fancy_upsampling=FALSE;
+#endif
 		sp->libjpeg_jpeg_query_style=0;
 		if (sp->subsampling_convert_log==0)
 		{
@@ -1906,6 +1909,10 @@ OJPEGReadBufferFill(OJPEGState* sp)
 					sp->in_buffer_source=osibsEof;
 				else
 				{
+					if (sp->tif->tif_dir.td_stripoffset == 0) {
+						TIFFErrorExt(sp->tif->tif_clientdata,sp->tif->tif_name,"Strip offsets are missing");
+						return(0);
+					}
 					sp->in_buffer_file_pos=sp->tif->tif_dir.td_stripoffset[sp->in_buffer_next_strile];  
 					if (sp->in_buffer_file_pos!=0)
 					{
@@ -2359,7 +2366,7 @@ OJPEGLibjpegJpegErrorMgrOutputMessage(jpeg_common_struct* cinfo)
 {
 	char buffer[JMSG_LENGTH_MAX];
 	(*cinfo->err->format_message)(cinfo,buffer);
-	TIFFWarningExt(((TIFF*)(cinfo->client_data))->tif_clientdata,"LibJpeg",buffer);
+	TIFFWarningExt(((TIFF*)(cinfo->client_data))->tif_clientdata,"LibJpeg", "%s", buffer);
 }
 
 static void
@@ -2367,7 +2374,7 @@ OJPEGLibjpegJpegErrorMgrErrorExit(jpeg_common_struct* cinfo)
 {
 	char buffer[JMSG_LENGTH_MAX];
 	(*cinfo->err->format_message)(cinfo,buffer);
-	TIFFErrorExt(((TIFF*)(cinfo->client_data))->tif_clientdata,"LibJpeg",buffer);
+	TIFFErrorExt(((TIFF*)(cinfo->client_data))->tif_clientdata,"LibJpeg", "%s", buffer);
 	jpeg_encap_unwind((TIFF*)(cinfo->client_data));
 }
 
@@ -2382,8 +2389,8 @@ OJPEGLibjpegJpegSourceMgrFillInputBuffer(jpeg_decompress_struct* cinfo)
 {
 	TIFF* tif=(TIFF*)cinfo->client_data;
 	OJPEGState* sp=(OJPEGState*)tif->tif_data;
-	void* mem;
-	uint32 len;
+	void* mem=0;
+	uint32 len=0;
 	if (OJPEGWriteStream(tif,&mem,&len)==0)
 	{
 		TIFFErrorExt(tif->tif_clientdata,"LibJpeg","Premature end of JPEG data");
@@ -2422,3 +2429,10 @@ OJPEGLibjpegJpegSourceMgrTermSource(jpeg_decompress_struct* cinfo)
 #endif
 
 
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

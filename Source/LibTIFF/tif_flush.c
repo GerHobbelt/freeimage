@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/freeimage/FreeImage/Source/LibTIFF/tif_flush.c,v 1.20 2007/11/10 18:41:11 drolon Exp $ */
+/* $Header: /cvs/maptools/cvsroot/libtiff/libtiff/tif_flush.c,v 1.3.2.1 2010-06-08 18:50:42 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -65,3 +65,10 @@ TIFFFlushData(TIFF* tif)
 	return (TIFFFlushData1(tif));
 }
 
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

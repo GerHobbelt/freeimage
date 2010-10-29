@@ -1,4 +1,4 @@
-/* $Id: tiff.h,v 1.21 2007/11/10 18:41:44 drolon Exp $ */
+/* $Id: tiff.h,v 1.43.2.1 2010-06-08 18:50:43 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -27,7 +27,7 @@
 #ifndef _TIFF_
 #define	_TIFF_
 
-#include "tif_config.h"
+#include "tiffconf.h"
 
 /*
  * Tag Image File Format (TIFF)
@@ -645,3 +645,10 @@ typedef	enum {
 #endif /* _TIFF_ */
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

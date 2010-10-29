@@ -1,4 +1,4 @@
-/* $Id: tif_dirread.c,v 1.21 2007/11/10 18:40:57 drolon Exp $ */
+/* $Id: tif_dirread.c,v 1.92.2.9 2010-06-14 00:21:46 fwarmerdam Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -84,6 +84,7 @@ TIFFReadDirectory(TIFF* tif)
 	size_t fix;
 	uint16 dircount;
 	int diroutoforderwarning = 0, compressionknown = 0;
+	int haveunknowntags = 0;
 
 	tif->tif_diroff = tif->tif_nextdiroff;
 	/*
@@ -100,7 +101,7 @@ TIFFReadDirectory(TIFF* tif)
 				      &dir, &tif->tif_nextdiroff);
 	if (!dircount) {
 		TIFFErrorExt(tif->tif_clientdata, module,
-			     "%s: Failed to read directory at offset %lu",
+			     "%s: Failed to read directory at offset %u",
 			     tif->tif_name, tif->tif_nextdiroff);
 		return 0;
 	}
@@ -160,8 +161,10 @@ TIFFReadDirectory(TIFF* tif)
 	fix = 0;
 	for (dp = dir, n = dircount; n > 0; n--, dp++) {
 
-		if (fix >= tif->tif_nfields || dp->tdir_tag == IGNORE)
+		if (dp->tdir_tag == IGNORE)
 			continue;
+		if (fix >= tif->tif_nfields)
+			fix = 0;
 
 		/*
 		 * Silicon Beach (at least) writes unordered
@@ -182,32 +185,9 @@ TIFFReadDirectory(TIFF* tif)
 			fix++;
 		if (fix >= tif->tif_nfields ||
 		    tif->tif_fieldinfo[fix]->field_tag != dp->tdir_tag) {
-
-					TIFFWarningExt(tif->tif_clientdata,
-						       module,
-                        "%s: unknown field with tag %d (0x%x) encountered",
-						       tif->tif_name,
-						       dp->tdir_tag,
-						       dp->tdir_tag,
-						       dp->tdir_type);
-
-					if (!_TIFFMergeFieldInfo(tif,
-						_TIFFCreateAnonFieldInfo(tif,
-						dp->tdir_tag,
-						(TIFFDataType) dp->tdir_type),
-						1))
-					{
-					TIFFWarningExt(tif->tif_clientdata,
-						       module,
-			"Registering anonymous field with tag %d (0x%x) failed",
-						       dp->tdir_tag,
-						       dp->tdir_tag);
-					goto ignore;
-					}
-			fix = 0;
-			while (fix < tif->tif_nfields &&
-			       tif->tif_fieldinfo[fix]->field_tag < dp->tdir_tag)
-				fix++;
+			/* Unknown tag ... we'll deal with it below */
+			haveunknowntags = 1;
+			continue;
 		}
 		/*
 		 * Null out old tags that we ignore.
@@ -295,6 +275,76 @@ TIFFReadDirectory(TIFF* tif)
 			dp->tdir_tag = IGNORE;
 			break;
 		}
+	}
+
+	/*
+	 * If we saw any unknown tags, make an extra pass over the directory
+	 * to deal with them.  This must be done separately because the tags
+	 * could have become known when we registered a codec after finding
+	 * the Compression tag.  In a correctly-sorted directory there's
+	 * no problem because Compression will come before any codec-private
+	 * tags, but if the sorting is wrong that might not hold.
+	 */
+	if (haveunknowntags) {
+	    fix = 0;
+	    for (dp = dir, n = dircount; n > 0; n--, dp++) {
+		if (dp->tdir_tag == IGNORE)
+			continue;
+		if (fix >= tif->tif_nfields ||
+		    dp->tdir_tag < tif->tif_fieldinfo[fix]->field_tag)
+			fix = 0;			/* O(n^2) */
+		while (fix < tif->tif_nfields &&
+		    tif->tif_fieldinfo[fix]->field_tag < dp->tdir_tag)
+			fix++;
+		if (fix >= tif->tif_nfields ||
+		    tif->tif_fieldinfo[fix]->field_tag != dp->tdir_tag) {
+
+					TIFFWarningExt(tif->tif_clientdata,
+						       module,
+                        "%s: unknown field with tag %d (0x%x) encountered",
+						       tif->tif_name,
+						       dp->tdir_tag,
+						       dp->tdir_tag);
+
+					if (!_TIFFMergeFieldInfo(tif,
+						_TIFFCreateAnonFieldInfo(tif,
+						dp->tdir_tag,
+						(TIFFDataType) dp->tdir_type),
+						1))
+					{
+					TIFFWarningExt(tif->tif_clientdata,
+						       module,
+			"Registering anonymous field with tag %d (0x%x) failed",
+						       dp->tdir_tag,
+						       dp->tdir_tag);
+					dp->tdir_tag = IGNORE;
+					continue;
+					}
+			fix = 0;
+			while (fix < tif->tif_nfields &&
+			       tif->tif_fieldinfo[fix]->field_tag < dp->tdir_tag)
+				fix++;
+		}
+		/*
+		 * Check data type.
+		 */
+		fip = tif->tif_fieldinfo[fix];
+		while (dp->tdir_type != (unsigned short) fip->field_type
+		    && fix < tif->tif_nfields) {
+			if (fip->field_type == TIFF_ANY)	/* wildcard */
+				break;
+			fip = tif->tif_fieldinfo[++fix];
+			if (fix >= tif->tif_nfields ||
+			    fip->field_tag != dp->tdir_tag) {
+				TIFFWarningExt(tif->tif_clientdata, module,
+			"%s: wrong data type %d for \"%s\"; tag ignored",
+					    tif->tif_name, dp->tdir_type,
+					    tif->tif_fieldinfo[fix-1]->field_name);
+				dp->tdir_tag = IGNORE;
+				break;
+			}
+		}
+	    }
 	}
 
 	/*
@@ -776,12 +826,13 @@ TIFFReadCustomDirectory(TIFF* tif, toff_t diroff,
 	dircount = TIFFFetchDirectory(tif, diroff, &dir, NULL);
 	if (!dircount) {
 		TIFFErrorExt(tif->tif_clientdata, module,
-			"%s: Failed to read custom directory at offset %lu",
+			"%s: Failed to read custom directory at offset %u",
 			     tif->tif_name, diroff);
 		return 0;
 	}
 
 	TIFFFreeDirectory(tif);
+        _TIFFmemset(&tif->tif_dir, 0, sizeof(TIFFDirectory));
 
 	fix = 0;
 	for (dp = dir, i = dircount; i > 0; i--, dp++) {
@@ -802,8 +853,7 @@ TIFFReadCustomDirectory(TIFF* tif, toff_t diroff,
 
 			TIFFWarningExt(tif->tif_clientdata, module,
                         "%s: unknown field with tag %d (0x%x) encountered",
-				    tif->tif_name, dp->tdir_tag, dp->tdir_tag,
-				    dp->tdir_type);
+				    tif->tif_name, dp->tdir_tag, dp->tdir_tag);
 			if (!_TIFFMergeFieldInfo(tif,
 						 _TIFFCreateAnonFieldInfo(tif,
 						 dp->tdir_tag,
@@ -905,6 +955,9 @@ EstimateStripByteCounts(TIFF* tif, TIFFDirEntry* dir, uint16 dircount)
 	td->td_stripbytecount = (uint32*)
 	    _TIFFCheckMalloc(tif, td->td_nstrips, sizeof (uint32),
 		"for \"StripByteCounts\" array");
+        if( td->td_stripbytecount == NULL )
+            return -1;
+
 	if (td->td_compression != COMPRESSION_NONE) {
 		uint32 space = (uint32)(sizeof (TIFFHeader)
 		    + sizeof (uint16)
@@ -1024,13 +1077,13 @@ CheckDirCount(TIFF* tif, TIFFDirEntry* dir, uint32 count)
 {
 	if (count > dir->tdir_count) {
 		TIFFWarningExt(tif->tif_clientdata, tif->tif_name,
-	"incorrect count for field \"%s\" (%lu, expecting %lu); tag ignored",
+	"incorrect count for field \"%s\" (%u, expecting %u); tag ignored",
 		    _TIFFFieldWithTag(tif, dir->tdir_tag)->field_name,
 		    dir->tdir_count, count);
 		return (0);
 	} else if (count < dir->tdir_count) {
 		TIFFWarningExt(tif->tif_clientdata, tif->tif_name,
-	"incorrect count for field \"%s\" (%lu, expecting %lu); tag trimmed",
+	"incorrect count for field \"%s\" (%u, expecting %u); tag trimmed",
 		    _TIFFFieldWithTag(tif, dir->tdir_tag)->field_name,
 		    dir->tdir_count, count);
 		return (1);
@@ -1228,7 +1281,7 @@ cvtRational(TIFF* tif, TIFFDirEntry* dir, uint32 num, uint32 denom, float* rv)
 {
 	if (denom == 0) {
 		TIFFErrorExt(tif->tif_clientdata, tif->tif_name,
-		    "%s: Rational with zero denominator (num = %lu)",
+		    "%s: Rational with zero denominator (num = %u)",
 		    _TIFFFieldWithTag(tif, dir->tdir_tag)->field_name, num);
 		return (0);
 	} else {
@@ -1350,7 +1403,7 @@ TIFFFetchShortPair(TIFF* tif, TIFFDirEntry* dir)
 	 */
 	if (dir->tdir_count > 2) {
 		TIFFWarningExt(tif->tif_clientdata, tif->tif_name,
-		"unexpected count for field \"%s\", %lu, expected 2; ignored",
+		"unexpected count for field \"%s\", %u, expected 2; ignored",
 			_TIFFFieldWithTag(tif, dir->tdir_tag)->field_name,
 			dir->tdir_count);
 		return 0;
@@ -1424,7 +1477,14 @@ TIFFFetchFloatArray(TIFF* tif, TIFFDirEntry* dir, float* v)
 {
 
 	if (dir->tdir_count == 1) {
-		v[0] = *(float*) &dir->tdir_offset;
+	        union
+		{
+		  float  f;
+		  uint32 i;
+		} float_union;
+
+		float_union.i=dir->tdir_offset;
+		v[0]=float_union.f;
 		TIFFCvtIEEEFloatToNative(tif, dir->tdir_count, v);
 		return (1);
 	} else	if (TIFFFetchData(tif, dir, (char*) v)) {
@@ -1910,6 +1970,13 @@ TIFFFetchSubjectDistance(TIFF* tif, TIFFDirEntry* dir)
 	float v;
 	int ok = 0;
 
+    if( dir->tdir_count != 1 || dir->tdir_type != TIFF_RATIONAL )
+    {
+		TIFFWarningExt(tif->tif_clientdata, tif->tif_name,
+                       "incorrect count or type for SubjectDistance, tag ignored" );
+		return (0);
+    }
+
 	if (TIFFFetchData(tif, dir, (char *)l)
 	    && cvtRational(tif, dir, l[0], l[1], &v)) {
 		/*
@@ -2005,3 +2072,10 @@ ChopUpSingleUncompressedStrip(TIFF* tif)
 }
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

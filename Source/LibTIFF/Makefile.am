@@ -114,7 +114,7 @@ endif
 
 libtiff_la_LDFLAGS = \
 	-no-undefined \
-	-version-number $(LIBTIFF_VERSION_INFO)
+	-version-number 4:3:3
 if HAVE_RPATH
 libtiff_la_LDFLAGS += $(LIBDIR)
 endif
@@ -122,7 +122,7 @@ libtiff_la_LIBADD = $(LIBPORT)
 
 libtiffxx_la_LDFLAGS = \
 	-no-undefined \
-	-version-number $(LIBTIFF_VERSION_INFO)
+	-version-number 0:0:7
 if HAVE_RPATH
 libtiffxx_la_LDFLAGS += $(LIBDIR)
 endif

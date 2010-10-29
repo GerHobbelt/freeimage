@@ -1,4 +1,4 @@
-/* $Id: tif_pixarlog.c,v 1.20 2007/11/10 18:41:25 drolon Exp $ */
+/* $Id: tif_pixarlog.c,v 1.15.2.4 2010-06-08 18:50:42 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1996-1997 Sam Leffler
@@ -87,7 +87,7 @@
  */
 
 #include "tif_predict.h"
-#include "../ZLib/zlib.h"
+#include "zlib.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -774,8 +774,8 @@ PixarLogDecode(TIFF* tif, tidata_t op, tsize_t occ, tsample_t s)
 	 */
 	if (nsamples % llen) { 
 		TIFFWarningExt(tif->tif_clientdata, module,
-			"%s: stride %lu is not a multiple of sample count, "
-			"%lu, data truncated.", tif->tif_name, llen, nsamples);
+			"%s: stride %d is not a multiple of sample count, "
+			"%d, data truncated.", tif->tif_name, llen, nsamples);
 		nsamples -= nsamples % llen;
 	}
 
@@ -1362,3 +1362,10 @@ bad:
 #endif /* PIXARLOG_SUPPORT */
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

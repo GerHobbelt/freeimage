@@ -1,4 +1,4 @@
-/* $Id: tif_jpeg.c,v 1.20 2007/11/10 18:41:15 drolon Exp $ */
+/* $Id: tif_jpeg.c,v 1.50.2.9 2010-06-14 02:47:16 fwarmerdam Exp $ */
 
 /*
  * Copyright (c) 1994-1997 Sam Leffler
@@ -84,8 +84,8 @@ int TIFFFillTile(TIFF*, ttile_t);
 # define HAVE_BOOLEAN            /* prevent jmorecfg.h from redefining it */
 #endif
 
-#include "../LibJPEG/jpeglib.h"
-#include "../LibJPEG/jerror.h"
+#include "jpeglib.h"
+#include "jerror.h"
 
 /*
  * We are using width_in_blocks which is supposed to be private to
@@ -226,7 +226,7 @@ TIFFjpeg_error_exit(j_common_ptr cinfo)
 	char buffer[JMSG_LENGTH_MAX];
 
 	(*cinfo->err->format_message) (cinfo, buffer);
-	TIFFErrorExt(sp->tif->tif_clientdata, "JPEGLib", buffer);		/* display the error message */
+	TIFFErrorExt(sp->tif->tif_clientdata, "JPEGLib", "%s", buffer);		/* display the error message */
 	jpeg_abort(cinfo);			/* clean up libjpeg state */
 	LONGJMP(sp->exit_jmpbuf, 1);		/* return to libtiff caller */
 }
@@ -242,7 +242,7 @@ TIFFjpeg_output_message(j_common_ptr cinfo)
 	char buffer[JMSG_LENGTH_MAX];
 
 	(*cinfo->err->format_message) (cinfo, buffer);
-	TIFFWarningExt(((JPEGState *) cinfo)->tif->tif_clientdata, "JPEGLib", buffer);
+	TIFFWarningExt(((JPEGState *) cinfo)->tif->tif_clientdata, "JPEGLib", "%s", buffer);
 }
 
 /*
@@ -988,8 +988,15 @@ JPEGDecodeRaw(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 	tsize_t nrows;
 	(void) s;
 
-	/* data is expected to be read in multiples of a scanline */
-	if ( (nrows = sp->cinfo.d.image_height) ) {
+    nrows = cc / sp->bytesperline;
+    if (cc % sp->bytesperline)
+		TIFFWarningExt(tif->tif_clientdata, tif->tif_name, "fractional scanline not read");
+
+    if( nrows > (int) sp->cinfo.d.image_height )
+        nrows = sp->cinfo.d.image_height;
+
+    /* data is expected to be read in multiples of a scanline */
+    if (nrows) {
 		/* Cb,Cr both have sampling factors 1, so this is correct */
 		JDIMENSION clumps_per_line = sp->cinfo.d.comp_info[1].downsampled_width;            
 		int samples_per_clump = sp->samplesperclump;
@@ -1087,8 +1094,7 @@ JPEGDecodeRaw(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 			 * TODO: resolve this */
 			buf += sp->bytesperline;
 			cc -= sp->bytesperline;
-			nrows -= sp->v_sampling;
-		} while (nrows > 0);
+		} while (--nrows > 0);
 
 #ifdef JPEG_LIB_MK1
 		_TIFFfree(tmpbuf);
@@ -1269,12 +1275,16 @@ JPEGSetupEncode(TIFF* tif)
 
 	/* Create a JPEGTables field if appropriate */
 	if (sp->jpegtablesmode & (JPEGTABLESMODE_QUANT|JPEGTABLESMODE_HUFF)) {
-		if (!prepare_JPEGTables(tif))
-			return (0);
-		/* Mark the field present */
-		/* Can't use TIFFSetField since BEENWRITING is already set! */
-		TIFFSetFieldBit(tif, FIELD_JPEGTABLES);
-		tif->tif_flags |= TIFF_DIRTYDIRECT;
+                if( sp->jpegtables == NULL
+                    || memcmp(sp->jpegtables,"\0\0\0\0\0\0\0\0\0",8) == 0 )
+                {
+                        if (!prepare_JPEGTables(tif))
+                                return (0);
+                        /* Mark the field present */
+                        /* Can't use TIFFSetField since BEENWRITING is already set! */
+                        tif->tif_flags |= TIFF_DIRTYDIRECT;
+                        TIFFSetFieldBit(tif, FIELD_JPEGTABLES);
+                }
 	} else {
 		/* We do not support application-supplied JPEGTables, */
 		/* so mark the field not present */
@@ -1370,9 +1380,9 @@ JPEGPreEncode(TIFF* tif, tsample_t s)
 	sp->cinfo.c.write_JFIF_header = FALSE;
 	sp->cinfo.c.write_Adobe_marker = FALSE;
 	/* set up table handling correctly */
+        if (!TIFFjpeg_set_quality(sp, sp->jpegquality, FALSE))
+                return (0);
 	if (! (sp->jpegtablesmode & JPEGTABLESMODE_QUANT)) {
-		if (!TIFFjpeg_set_quality(sp, sp->jpegquality, FALSE))
-			return (0);
 		unsuppress_quant_table(sp, 0);
 		unsuppress_quant_table(sp, 1);
 	}
@@ -1424,6 +1434,10 @@ JPEGEncode(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 	nrows = cc / sp->bytesperline;
 	if (cc % sp->bytesperline)
 		TIFFWarningExt(tif->tif_clientdata, tif->tif_name, "fractional scanline discarded");
+
+        /* The last strip will be limited to image size */
+        if( !isTiled(tif) && tif->tif_row+nrows > tif->tif_dir.td_imagelength )
+            nrows = tif->tif_dir.td_imagelength - tif->tif_row;
 
 	while (nrows-- > 0) {
 		bufptr[0] = (JSAMPROW) buf;
@@ -1609,7 +1623,11 @@ JPEGResetUpsampled( TIFF* tif )
 	 * Must recalculate cached tile size in case sampling state changed.
 	 * Should we really be doing this now if image size isn't set? 
 	 */
-	tif->tif_tilesize = isTiled(tif) ? TIFFTileSize(tif) : (tsize_t) -1;
+        if( tif->tif_tilesize > 0 )
+            tif->tif_tilesize = isTiled(tif) ? TIFFTileSize(tif) : (tsize_t) -1;
+
+        if(tif->tif_scanlinesize > 0 )
+            tif->tif_scanlinesize = TIFFScanlineSize(tif); 
 }
 
 static int
@@ -1737,13 +1755,21 @@ JPEGFixupTestSubsampling( TIFF * tif )
 			return;
     }
     else
-	{
+    {
         if( !TIFFFillStrip( tif, 0 ) )
             return;
     }
 
     TIFFSetField( tif, TIFFTAG_YCBCRSUBSAMPLING, 
                   (uint16) sp->h_sampling, (uint16) sp->v_sampling );
+
+    /*
+    ** We want to clear the loaded strip so the application has time
+    ** to set JPEGCOLORMODE or other behavior modifiers.  This essentially
+    ** undoes the JPEGPreDecode triggers by TIFFFileStrip().  (#1936)
+    */
+    tif->tif_curstrip = -1;
+
 #endif /* CHECK_JPEG_YCBCR_SUBSAMPLING */
 }
 
@@ -2010,7 +2036,14 @@ TIFFInitJPEG(TIFF* tif, int scheme)
         if( tif->tif_diroff == 0 )
         {
 #define SIZE_OF_JPEGTABLES 2000
+/*
+The following line assumes incorrectly that all JPEG-in-TIFF files will have
+a JPEGTABLES tag generated and causes null-filled JPEGTABLES tags to be written
+when the JPEG data is placed with TIFFWriteRawStrip.  The field bit should be 
+set, anyway, later when actual JPEGTABLES header is generated, so removing it 
+here hopefully is harmless.
             TIFFSetFieldBit(tif, FIELD_JPEGTABLES);
+*/
             sp->jpegtables_length = SIZE_OF_JPEGTABLES;
             sp->jpegtables = (void *) _TIFFmalloc(sp->jpegtables_length);
 	    _TIFFmemset(sp->jpegtables, 0, SIZE_OF_JPEGTABLES);
@@ -2029,3 +2062,10 @@ TIFFInitJPEG(TIFF* tif, int scheme)
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
 
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */
