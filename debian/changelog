@@ -1,3 +1,9 @@
+freeimage (3.10.0-4) unstable; urgency=low
+
+  * Fix copy-pasto in tif_config.h.
+
+ -- Julien Cristau <jcristau@debian.org>  Fri, 29 Oct 2010 22:39:26 +0200
+
 freeimage (3.10.0-3) unstable; urgency=low
 
   * Don't use embedded copies of various libraries, add build-deps on their
