@@ -1,3 +1,32 @@
+freeimage (3.10.0-3) unstable; urgency=low
+
+  * Don't use embedded copies of various libraries, add build-deps on their
+    packaged versions (closes: #595560):
+    - libjpeg 6b
+    - libmng 1.0.9
+    - libopenjpeg 1.2.0
+    - libpng 1.2.23
+      + CVE-2010-2249, CVE-2010-1205, CVE-2010-0205, CVE-2009-2042,
+        CVE-2008-6218, CVE-2008-5907, CVE-2009-0040, CVE-2008-3964,
+        CVE-2008-1382
+    - openexr 1.6.1
+      + CVE-2009-1720, CVE-2009-1721
+    - zlib 1.2.3
+  * The embedded libtiff copy is still used, because freeimage uses its
+    internals and I couldn't figure out how to unentangle this.  Update the
+    tiff copy to 3.9.4-5, though:
+    CVE-2010-3087, CVE-2010-2483, CVE-2010-2482, CVE-2010-2481, CVE-2010-2443,
+    CVE-2010-2233, CVE-2010-2067, CVE-2010-2065, CVE-2010-1411, CVE-2009-2347,
+    CVE-2008-2327.
+  * Add tiff copyright and license to debian/copyright (closes: #601002)
+  * Link with -lm (closes: #558857).
+  * Try to avoid arch-specific values in our copy of tif_config.h and
+    tiffconf.h (closes: #601762)
+  * Set LFS CFLAGS in Makefile.gnu.
+  * Orphan package (closes: #595559).
+
+ -- Julien Cristau <jcristau@debian.org>  Fri, 29 Oct 2010 14:46:46 +0200
+
 freeimage (3.10.0-2) unstable; urgency=low
 
   * Fixed typo in short description of libfreeimage3-dbg.
