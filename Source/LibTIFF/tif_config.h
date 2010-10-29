@@ -289,7 +289,7 @@
 #if SIZEOF_LONG == 8
 #define TIFF_UINT64_T unsigned long
 #else
-#define TIFF_INT64_T unsigned long long
+#define TIFF_UINT64_T unsigned long long
 #endif
 /* XXX end XXX */
 
