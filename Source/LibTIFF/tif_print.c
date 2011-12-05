@@ -1,4 +1,4 @@
-/* $Id: tif_print.c,v 1.20 2007/11/10 18:41:28 drolon Exp $ */
+/* $Id: tif_print.c,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -31,7 +31,7 @@
  */
 #include "tiffiop.h"
 #include <stdio.h>
-
+#include <string.h>
 #include <ctype.h>
 
 static const char *photoNames[] = {
@@ -132,10 +132,6 @@ _TIFFPrettyPrintField(TIFF* tif, FILE* fd, ttag_t tag,
 					break;
 			}
 			return 1;
-		case TIFFTAG_DOTRANGE:
-			fprintf(fd, "  Dot Range: %u-%u\n",
-				((uint16*)raw_data)[0], ((uint16*)raw_data)[1]);
-			return 1;
 		case TIFFTAG_WHITEPOINT:
 			fprintf(fd, "  White Point: %g-%g\n",
 				((float *)raw_data)[0], ((float *)raw_data)[1]);			return 1;
@@ -144,7 +140,7 @@ _TIFFPrettyPrintField(TIFF* tif, FILE* fd, ttag_t tag,
 			uint16 i;
 
 			fprintf(fd, "  Reference Black/White:\n");
-			for (i = 0; i < td->td_samplesperpixel; i++)
+			for (i = 0; i < 3; i++)
 			fprintf(fd, "    %2d: %5g %5g\n", i,
 				((float *)raw_data)[2*i+0],
 				((float *)raw_data)[2*i+1]);
@@ -491,7 +487,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 		} else
 			fprintf(fd, "(present)\n");
 	}
-	if (TIFFFieldSet(tif, FIELD_SUBIFD)) {
+	if (TIFFFieldSet(tif, FIELD_SUBIFD) && (td->td_subifd)) {
 		fprintf(fd, "  SubIFD Offsets:");
 		for (i = 0; i < td->td_nsubifd; i++)
 			fprintf(fd, " %5lu", (long) td->td_subifd[i]);
@@ -637,3 +633,10 @@ _TIFFprintAsciiTag(FILE* fd, const char* name, const char* value)
 }
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

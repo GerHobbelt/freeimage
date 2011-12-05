@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/freeimage/FreeImage/Source/LibTIFF/tif_dumpmode.c,v 1.20 2007/11/10 18:41:05 drolon Exp $ */
+/* $Header: /cvsroot/freeimage/FreeImage/Source/LibTIFF/tif_dumpmode.c,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -71,6 +71,8 @@ static int
 DumpModeDecode(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 {
 	(void) s;
+/*         fprintf(stderr,"DumpModeDecode: scanline %ld, expected %ld bytes, got %ld bytes\n", */
+/*                 (long) tif->tif_row, (long) tif->tif_rawcc, (long) cc); */
 	if (tif->tif_rawcc < cc) {
 		TIFFErrorExt(tif->tif_clientdata, tif->tif_name,
 		    "DumpModeDecode: Not enough data for scanline %d",
@@ -115,3 +117,10 @@ TIFFInitDumpMode(TIFF* tif, int scheme)
 	tif->tif_seek = DumpModeSeek;
 	return (1);
 }
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */

@@ -4,6 +4,7 @@
 //
 // Design and implementation by
 // - Hervé Drolon (drolon@infonie.fr)
+// - Mihail Naydenov (mnaydenov@users.sourceforge.net)
 //
 // Based on the following implementations:
 // - metadata-extractor : http://www.drewnoakes.com/code/exif/
@@ -42,13 +43,15 @@
 #define TAG_EXIF_OFFSET			0x8769	// Exif IFD Pointer
 #define TAG_GPS_OFFSET			0x8825	// GPS Info IFD Pointer
 #define TAG_INTEROP_OFFSET		0xA005	// Interoperability IFD Pointer
-#define TAG_THUMBNAIL_OFFSET	0x0201	// Thumbnail Pointer
 #define TAG_MAKER_NOTE			0x927C	// Maker note
 
 // CANON cameras have some funny bespoke fields that need further processing...
-#define TAG_CANON_CAMERA_STATE_1 0x0001
-#define TAG_CANON_CAMERA_STATE_2 0x0002
-#define TAG_CANON_CAMERA_STATE_4 0x0004
+#define TAG_CANON_CAMERA_STATE_0x01	0x0001		// tags under tag 0x001 (CameraSettings)
+#define TAG_CANON_CAMERA_STATE_0x02	0x0002		// tags under tag 0x002 (FocalLength)
+#define TAG_CANON_CAMERA_STATE_0x04	0x0004		// tags under tag 0x004 (ShotInfo)
+#define TAG_CANON_CAMERA_STATE_0x12	0x0012		// tags under tag 0x012 (AFInfo)
+#define TAG_CANON_CAMERA_STATE_0xA0	0x00A0		// tags under tag 0x0A0 (ProcessingInfo)
+#define TAG_CANON_CAMERA_STATE_0xE0	0x00E0		// tags under tag 0x0E0 (SensorInfo)
 
 
 // =====================================================================
@@ -87,7 +90,7 @@ FreeImage_strnicmp(const char *s1, const char *s2, size_t len) {
 // ----------------------------------------------------------
 
 static short 
-ReadInt16(BOOL msb_order, void *buffer) {
+ReadInt16(BOOL msb_order, const void *buffer) {
 	short value;
 
 	if(msb_order) {
@@ -98,20 +101,20 @@ ReadInt16(BOOL msb_order, void *buffer) {
 	return value;
 }
 
-static long 
-ReadInt32(BOOL msb_order, void *buffer) {
-	long value;
+static LONG 
+ReadInt32(BOOL msb_order, const void *buffer) {
+	LONG value;
 
 	if(msb_order) {
-		value = (long)((((BYTE*) buffer)[0] << 24) | (((BYTE*) buffer)[1] << 16) | (((BYTE*) buffer)[2] << 8) | (((BYTE*) buffer)[3]));
+		value = (LONG)((((BYTE*) buffer)[0] << 24) | (((BYTE*) buffer)[1] << 16) | (((BYTE*) buffer)[2] << 8) | (((BYTE*) buffer)[3]));
 		return value;
     }
-	value = (long)((((BYTE*) buffer)[3] << 24) | (((BYTE*) buffer)[2] << 16) | (((BYTE*) buffer)[1] << 8 ) | (((BYTE*) buffer)[0]));
+	value = (LONG)((((BYTE*) buffer)[3] << 24) | (((BYTE*) buffer)[2] << 16) | (((BYTE*) buffer)[1] << 8 ) | (((BYTE*) buffer)[0]));
 	return value;
 }
 
 static unsigned short 
-ReadUint16(BOOL msb_order, void *buffer) {
+ReadUint16(BOOL msb_order, const void *buffer) {
 	unsigned short value;
 	
 	if(msb_order) {
@@ -122,9 +125,9 @@ ReadUint16(BOOL msb_order, void *buffer) {
 	return value;
 }
 
-static unsigned long 
-ReadUint32(BOOL msb_order, void *buffer) {
-	return ((unsigned long) ReadInt32(msb_order, buffer) & 0xFFFFFFFF);
+static DWORD 
+ReadUint32(BOOL msb_order, const void *buffer) {
+	return ((DWORD) ReadInt32(msb_order, buffer) & 0xFFFFFFFF);
 }
 
 // ----------------------------------------------------------
@@ -172,13 +175,19 @@ processMakerNote(FIBITMAP *dib, char *pval, BOOL msb_order, DWORD *subdirOffset,
 	FreeImage_GetMetadata(FIMD_EXIF_MAIN, dib, "Make", &tagMake);
 	const char *Maker = (char*)FreeImage_GetTagValue(tagMake);
 
-	if((strncmp("OLYMP", pval, 5) == 0) || (strncmp("EPSON", pval, 5) == 0) || (strncmp("AGFA", pval, 4) == 0)) {
-		// Olympus Makernote
+	if((strncmp("OLYMP\x00\x01", pval, 7) == 0) || (strncmp("OLYMP\x00\x02", pval, 7) == 0) || (strncmp("EPSON", pval, 5) == 0) || (strncmp("AGFA", pval, 4) == 0)) {
+		// Olympus Type 1 Makernote
 		// Epson and Agfa use Olympus maker note standard, 
 		// see: http://www.ozhiker.com/electronics/pjmt/jpeg_info/
-		*md_model = TagLib::EXIF_MAKERNOTE_OLYMPUS;
+		*md_model = TagLib::EXIF_MAKERNOTE_OLYMPUSTYPE1;
 		*subdirOffset = 8;
 	} 
+	else if(strncmp("OLYMPUS\x00\x49\x49\x03\x00", pval, 12) == 0) {
+		// Olympus Type 2 Makernote
+		// !!! NOT YET SUPPORTED !!!
+		*subdirOffset = 0;
+		*md_model = TagLib::UNKNOWN;
+	}
 	else if(strncmp("Nikon", pval, 5) == 0) {
 		/* There are two scenarios here:
 		 * Type 1:
@@ -221,6 +230,10 @@ processMakerNote(FIBITMAP *dib, char *pval, BOOL msb_order, DWORD *subdirOffset,
 		}
 	} else if ((strncmp("FUJIFILM", pval, 8) == 0) || (Maker && (FreeImage_strnicmp("Fujifilm", Maker, 8) == 0))) {
         // Fujifile Makernote
+		// Fujifilm's Makernote always use Intel order altough the Exif section maybe in Intel order or in Motorola order. 
+		// If msb_order == TRUE, the Makernote won't be read: 
+		// the value of ifdStart will be 0x0c000000 instead of 0x0000000c and the MakerNote section will be discarded later
+		// in jpeg_read_exif_dir because the IFD is too high
 		*md_model = TagLib::EXIF_MAKERNOTE_FUJIFILM;
         DWORD ifdStart = (DWORD) ReadUint32(msb_order, pval + 8);
 		*subdirOffset = ifdStart;
@@ -261,7 +274,7 @@ processMakerNote(FIBITMAP *dib, char *pval, BOOL msb_order, DWORD *subdirOffset,
 Process a Canon maker note tag. 
 A single Canon tag may contain many other tags within.
 */
-static void 
+static BOOL 
 processCanonMakerNoteTag(FIBITMAP *dib, FITAG *tag) {
 	char defaultKey[16];
 	DWORD startIndex = 0;
@@ -269,71 +282,88 @@ processCanonMakerNoteTag(FIBITMAP *dib, FITAG *tag) {
 
 	WORD tag_id = FreeImage_GetTagID(tag);
 
-	if((tag_id == TAG_CANON_CAMERA_STATE_1) || (tag_id == TAG_CANON_CAMERA_STATE_2) || (tag_id == TAG_CANON_CAMERA_STATE_4)) {
-		// this single tag has multiple values within
+	int subTagTypeBase = 0;
 
-		int subTagTypeBase = 0;
+	switch(tag_id) {
+		case TAG_CANON_CAMERA_STATE_0x01:
+			subTagTypeBase = 0xC100;
+			startIndex = 1;
+			break;
+		case TAG_CANON_CAMERA_STATE_0x02:
+			subTagTypeBase = 0xC200;
+			startIndex = 0;
+			break;
+		case TAG_CANON_CAMERA_STATE_0x04:
+			subTagTypeBase = 0xC400;
+			startIndex = 1;
+			break;
+		case TAG_CANON_CAMERA_STATE_0x12:
+			subTagTypeBase = 0x1200;
+			startIndex = 0;
+			break;
+		case TAG_CANON_CAMERA_STATE_0xA0:
+			subTagTypeBase = 0xCA00;
+			startIndex = 1;
+			break;
+		case TAG_CANON_CAMERA_STATE_0xE0:
+			subTagTypeBase = 0xCE00;
+			startIndex = 1;
+			break;
 
-		switch(tag_id) {
-			case TAG_CANON_CAMERA_STATE_1:
-				subTagTypeBase = 0xC100;
-				startIndex = 1;
-				break;
-			case TAG_CANON_CAMERA_STATE_2:
-				subTagTypeBase = 0xC200;
-				startIndex = 0;
-				break;
-			case TAG_CANON_CAMERA_STATE_4:
-				subTagTypeBase = 0xC400;
-				startIndex = 2;
-				break;
-		}
-
-		WORD *pvalue = (WORD*)FreeImage_GetTagValue(tag);
-
-        // we intentionally skip the first array member
-        for (DWORD i = startIndex; i < FreeImage_GetTagCount(tag); i++) {
-			// create a tag
-			FITAG *canonTag = FreeImage_CreateTag();
-			if(!canonTag) return;
-
-			tag_id = (WORD)(subTagTypeBase + i);
-
-			FreeImage_SetTagID(canonTag, tag_id);
-			FreeImage_SetTagType(canonTag, FIDT_SHORT);
-			FreeImage_SetTagCount(canonTag, 1);
-			FreeImage_SetTagLength(canonTag, 2);
-			FreeImage_SetTagValue(canonTag, &pvalue[i]);
+		default:
+		{
+			// process as a normal tag
 
 			// get the tag key and description
 			const char *key = s.getTagFieldName(TagLib::EXIF_MAKERNOTE_CANON, tag_id, defaultKey);
-			FreeImage_SetTagKey(canonTag, key);
+			FreeImage_SetTagKey(tag, key);
 			const char *description = s.getTagDescription(TagLib::EXIF_MAKERNOTE_CANON, tag_id);
-			FreeImage_SetTagDescription(canonTag, description);
+			FreeImage_SetTagDescription(tag, description);
 
 			// store the tag
 			if(key) {
-				FreeImage_SetMetadata(FIMD_EXIF_MAKERNOTE, dib, key, canonTag);
+				FreeImage_SetMetadata(FIMD_EXIF_MAKERNOTE, dib, key, tag);
 			}
 
-			// delete the tag
-			FreeImage_DeleteTag(canonTag);
-        }
+			return TRUE;
+		}
+		break;
+
 	}
-	else {
-		// process as a normal tag
+
+	WORD *pvalue = (WORD*)FreeImage_GetTagValue(tag);
+
+	// create a tag
+	FITAG *canonTag = FreeImage_CreateTag();
+	if(!canonTag) return FALSE;
+
+	// we intentionally skip the first array member (if needed)
+    for (DWORD i = startIndex; i < FreeImage_GetTagCount(tag); i++) {
+
+		tag_id = (WORD)(subTagTypeBase + i);
+
+		FreeImage_SetTagID(canonTag, tag_id);
+		FreeImage_SetTagType(canonTag, FIDT_SHORT);
+		FreeImage_SetTagCount(canonTag, 1);
+		FreeImage_SetTagLength(canonTag, 2);
+		FreeImage_SetTagValue(canonTag, &pvalue[i]);
 
 		// get the tag key and description
 		const char *key = s.getTagFieldName(TagLib::EXIF_MAKERNOTE_CANON, tag_id, defaultKey);
-		FreeImage_SetTagKey(tag, key);
+		FreeImage_SetTagKey(canonTag, key);
 		const char *description = s.getTagDescription(TagLib::EXIF_MAKERNOTE_CANON, tag_id);
-		FreeImage_SetTagDescription(tag, description);
+		FreeImage_SetTagDescription(canonTag, description);
 
 		// store the tag
 		if(key) {
-			FreeImage_SetMetadata(FIMD_EXIF_MAKERNOTE, dib, key, tag);
+			FreeImage_SetMetadata(FIMD_EXIF_MAKERNOTE, dib, key, canonTag);
 		}
 	}
+
+	// delete the tag
+	FreeImage_DeleteTag(canonTag);
+
+	return TRUE;
 }
 
 /**
@@ -347,6 +377,10 @@ processExifTag(FIBITMAP *dib, FITAG *tag, char *pval, BOOL msb_order, TagLib::MD
 
 	// allocate a buffer to store the tag value
 	BYTE *exif_value = (BYTE*)malloc(FreeImage_GetTagLength(tag) * sizeof(BYTE));
+	if(NULL == exif_value) {
+		// out of memory ...
+		return;
+	}
 	memset(exif_value, 0, FreeImage_GetTagLength(tag) * sizeof(BYTE));
 
 	// get the tag value
@@ -461,11 +495,11 @@ processExifTag(FIBITMAP *dib, FITAG *tag, char *pval, BOOL msb_order, TagLib::MD
 	@return 
 */
 static BOOL 
-jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned int offset, unsigned int length, BOOL msb_order) {
+jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned long offset, unsigned int length, BOOL msb_order) {
 	WORD de, nde;
 
 	std::stack<WORD>			destack;	// directory entries stack
-	std::stack<BYTE*>			ifdstack;	// IFD stack
+	std::stack<const BYTE*>		ifdstack;	// IFD stack
 	std::stack<TagLib::MDMODEL>	modelstack; // metadata model stack
 
 	// Keep a list of already visited IFD to avoid stack overflows 
@@ -474,15 +508,23 @@ jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned int offset, unsign
 	// KODAK PROFESSIONAL DCS Photo Desk JPEG Export v3.2 W
 	std::map<DWORD, int> visitedIFD;
 
-    #define DIR_ENTRY_ADDR(_start, _entry) (_start + 2 + (12 * _entry))
+	/*
+	"An Image File Directory (IFD) consists of a 2-byte count of the number of directory
+	entries (i.e. the number of fields), followed by a sequence of 12-byte field
+	entries, followed by a 4-byte offset of the next IFD (or 0 if none)."
+	The "next IFD" (1st IFD) is the thumbnail.
+	*/
+	#define DIR_ENTRY_ADDR(_start, _entry) (_start + 2 + (12 * _entry))
 
 	// set the metadata model to Exif
 
 	TagLib::MDMODEL md_model = TagLib::EXIF_MAIN;
 
-	// set the pointer to the first IFD and follow it were it leads.
+	// set the pointer to the first IFD (0th IFD) and follow it were it leads.
 
-	BYTE *ifdp = (BYTE*)tiffp + offset;
+	const BYTE *ifd0th = (BYTE*)tiffp + offset;
+
+	const BYTE *ifdp = ifd0th;
 
 	de = 0;
 
@@ -494,8 +536,8 @@ jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned int offset, unsign
 			md_model	= modelstack.top();	modelstack.pop();
 		}
 
-		// remember that we've visited this directory so that we don't visit it again later
-		DWORD visited = (((DWORD)ifdp & 0xFFFF) << 16) | (DWORD)de;
+		// remember that we've visited this directory and entry so that we don't visit it again later
+		DWORD visited = (DWORD)( (((size_t)ifdp & 0xFFFF) << 16) | (size_t)de );
 		if(visitedIFD.find(visited) != visitedIFD.end()) {
 			continue;
 		} else {
@@ -518,7 +560,7 @@ jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned int offset, unsign
 
 			// get the tag ID
 			FreeImage_SetTagID(tag, ReadUint16(msb_order, pde));
-			// get the tag format
+			// get the tag type
 			WORD tag_type = (WORD)ReadUint16(msb_order, pde + 2);
             if((tag_type - 1) >= EXIF_NUM_FORMATS) {
                 // a problem occured : delete the tag (not free'd after)
@@ -530,18 +572,30 @@ jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned int offset, unsign
 
 			// get number of components
 			FreeImage_SetTagCount(tag, ReadUint32(msb_order, pde + 4));
-			// get the size of the tag value in bytes
-			FreeImage_SetTagLength(tag, FreeImage_GetTagCount(tag) * FreeImage_TagDataWidth((WORD)FreeImage_GetTagType(tag)));
+            // check that tag length (size of the tag value in bytes) will fit in a DWORD
+            int tag_data_width = FreeImage_TagDataWidth(FreeImage_GetTagType(tag));
+            if (tag_data_width != 0 && FreeImage_GetTagCount(tag) > ~(DWORD)0 / tag_data_width) {
+                FreeImage_DeleteTag(tag);
+                // jump to next entry
+                continue;
+            }
+			FreeImage_SetTagLength(tag, FreeImage_GetTagCount(tag) * tag_data_width);
 
 			if(FreeImage_GetTagLength(tag) <= 4) {
 				// 4 bytes or less and value is in the dir entry itself
 				pval = pde + 8;
 			} else {
-				DWORD offset_value;
-
 				// if its bigger than 4 bytes, the directory entry contains an offset
-				offset_value = ReadUint32(msb_order, pde + 8);
-				if((size_t) (offset_value + FreeImage_GetTagLength(tag)) > length) {
+				// first check if offset exceeds buffer, at this stage FreeImage_GetTagLength may return invalid data
+				DWORD offset_value = ReadUint32(msb_order, pde + 8);
+				if(offset_value > length) {
+					// a problem occured : delete the tag (not free'd after)
+					FreeImage_DeleteTag(tag);
+					// jump to next entry
+					continue;
+				}
+				// now check that length does not exceed the buffer size
+				if(FreeImage_GetTagLength(tag) > length - offset_value){
 					// a problem occured : delete the tag (not free'd after)
 					FreeImage_DeleteTag(tag);
 					// jump to next entry
@@ -563,7 +617,7 @@ jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned int offset, unsign
 			if(isIFDOffset)	{
 				DWORD sub_offset = 0;
 				TagLib::MDMODEL next_mdmodel = md_model;
-				BYTE *next_ifd = ifdp;
+				const BYTE *next_ifd = ifdp;
 				
 				// get offset and metadata model
 				if (FreeImage_GetTagID(tag) == TAG_MAKER_NOTE) {
@@ -597,7 +651,7 @@ jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned int offset, unsign
 					break; // break out of the for loop
 				}
 				else {
-					// unsupported camera model, canon maker tag or or something unknown
+					// unsupported camera model, canon maker tag or something unknown
 					// process as a standard tag
 					processExifTag(dib, tag, pval, msb_order, md_model);
 				}			
@@ -616,12 +670,88 @@ jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, unsigned int offset, unsign
 
     } while (!destack.empty()); 
 
+	//
+	// --- handle thumbnail data ---
+	//
+
+	const WORD entriesCount0th = ReadUint16(msb_order, ifd0th);
+	
+	DWORD next_offset = ReadUint32(msb_order, DIR_ENTRY_ADDR(ifd0th, entriesCount0th));
+	if((next_offset == 0) || (next_offset >= length)) {
+		return TRUE; //< no thumbnail
+	}
+	
+	const BYTE* const ifd1st = (BYTE*)tiffp + next_offset;
+	const WORD entriesCount1st = ReadUint16(msb_order, ifd1st);
+	
+	unsigned thCompression = 0;
+	unsigned thOffset = 0; 
+	unsigned thSize = 0; 
+	
+	for(int e = 0; e < entriesCount1st; e++) {
+
+		// point to the directory entry
+		const BYTE* base = DIR_ENTRY_ADDR(ifd1st, e);
+
+		// get the tag ID
+		WORD tag = ReadUint16(msb_order, base);
+		// get the tag type
+		WORD type = ReadUint16(msb_order, base + sizeof(WORD));
+		// get number of components
+		DWORD count = ReadUint32(msb_order, base + sizeof(WORD) + sizeof(WORD));
+		// get the tag value
+		DWORD offset = ReadUint32(msb_order, base + sizeof(WORD) + sizeof(WORD) + sizeof(DWORD));
+
+		switch(tag) {
+			case TAG_COMPRESSION:
+				// Tiff Compression Tag (should be COMPRESSION_OJPEG (6), but is not always respected)
+				thCompression = offset;
+				break;
+			case TAG_JPEG_INTERCHANGE_FORMAT:
+				// Tiff JPEGInterchangeFormat Tag
+				thOffset = offset;
+				break;
+			case TAG_JPEG_INTERCHANGE_FORMAT_LENGTH:
+				// Tiff JPEGInterchangeFormatLength Tag
+				thSize = offset;
+				break;
+			// ### X and Y Resolution ignored, orientation ignored
+			case TAG_X_RESOLUTION:		// XResolution
+			case TAG_Y_RESOLUTION:		// YResolution
+			case TAG_RESOLUTION_UNIT:	// ResolutionUnit
+			case TAG_ORIENTATION:		// Orientation
+				break;
+			default:
+				break;
+		}
+	}
+	
+	if(/*thCompression != 6 ||*/ thOffset == 0 || thSize == 0) {
+		return TRUE;
+	}
+	
+	if(thOffset + thSize > length) {
+		return TRUE;
+	}
+	
+	// load the thumbnail
+
+	const BYTE *thLocation = tiffp + thOffset;
+	
+	FIMEMORY* hmem = FreeImage_OpenMemory(const_cast<BYTE*>(thLocation), thSize);
+	FIBITMAP* thumbnail = FreeImage_LoadFromMemory(FIF_JPEG, hmem);
+	FreeImage_CloseMemory(hmem);
+	
+	// store the thumbnail
+	FreeImage_SetThumbnail(dib, thumbnail);
+	// then delete it
+	FreeImage_Unload(thumbnail);
 
 	return TRUE;
 }
 
 /**
-	Read JPEG_APP1 marker (Exif profile)
+	Read and decode JPEG_APP1 marker (Exif profile)
 	@param dib Input FIBITMAP
 	@param dataptr Pointer to the APP1 marker
 	@param datalen APP1 marker length
@@ -634,16 +764,18 @@ jpeg_read_exif_profile(FIBITMAP *dib, const BYTE *dataptr, unsigned int datalen)
 	BYTE lsb_first[4] = { 0x49, 0x49, 0x2A, 0x00 };		// Intel order
 	BYTE msb_first[4] = { 0x4D, 0x4D, 0x00, 0x2A };		// Motorola order
 
-	size_t length = datalen;
+	unsigned int length = datalen;
 	BYTE *profile = (BYTE*)dataptr;
 
 	// verify the identifying string
 
 	if(memcmp(exif_signature, profile, sizeof(exif_signature)) == 0) {
-		// Exif profile
+		// Exif profile - TIFF header with 2 IFDs. 0th - the image attributes, 1st - may be used for thumbnail
 
 		profile += sizeof(exif_signature);
 		length  -= sizeof(exif_signature);
+
+		// read the TIFF header (8 bytes)
 
 		// check the endianess order
 		
@@ -662,15 +794,19 @@ jpeg_read_exif_profile(FIBITMAP *dib, const BYTE *dataptr, unsigned int datalen)
 			}
 		}
 
-		// this is the offset to the first IFD
-		size_t first_offset = ReadUint32(bMotorolaOrder, profile + 4);
+		// this is the offset to the first IFD (Image File Directory)
+		unsigned long first_offset = ReadUint32(bMotorolaOrder, profile + 4);
 
+		/*
+		Note: as FreeImage 3.14.0, this test is no longer needed for images with similar suspicious offset
+		=> tested with Pentax Optio 230, FujiFilm SP-2500 and Canon EOS 300D
 		if (first_offset < 8 || first_offset > 16) {
 			// This is usually set to 8
 			// but PENTAX Optio 230 has it set differently, and uses it as offset. 
 			FreeImage_OutputMessageProc(FIF_JPEG, "Exif: Suspicious offset of first IFD value");
 			return FALSE;
 		}
+		*/
 
 		// process Exif directories
 		return jpeg_read_exif_dir(dib, profile, first_offset, length, bMotorolaOrder);

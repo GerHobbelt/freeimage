@@ -56,7 +56,7 @@ typedef struct opj_mqc_state {
 	struct opj_mqc_state *nlps;
 } opj_mqc_state_t;
 
-#define MQC_NUMCTXS 32
+#define MQC_NUMCTXS 19
 
 /**
 MQ coder
@@ -70,6 +70,9 @@ typedef struct opj_mqc {
 	unsigned char *end;
 	opj_mqc_state_t *ctxs[MQC_NUMCTXS];
 	opj_mqc_state_t **curctx;
+#ifdef MQC_PERF_OPT
+	unsigned char *buffer;
+#endif
 } opj_mqc_t;
 
 /** @name Exported functions */
@@ -79,7 +82,7 @@ typedef struct opj_mqc {
 Create a new MQC handle 
 @return Returns a new MQC handle if successful, returns NULL otherwise
 */
-opj_mqc_t* mqc_create();
+opj_mqc_t* mqc_create(void);
 /**
 Destroy a previously created MQC handle
 @param mqc MQC handle to destroy
@@ -116,7 +119,7 @@ Set the current context used for coding/decoding
 @param mqc MQC handle
 @param ctxno Number that identifies the context
 */
-void mqc_setcurctx(opj_mqc_t *mqc, int ctxno);
+#define mqc_setcurctx(mqc, ctxno)	(mqc)->curctx = &(mqc)->ctxs[(int)(ctxno)]
 /**
 Encode a symbol using the MQ-coder
 @param mqc MQC handle
@@ -188,7 +191,7 @@ Decode a symbol
 @param mqc MQC handle
 @return Returns the decoded symbol (0 or 1)
 */
-int mqc_decode(opj_mqc_t *mqc);
+int mqc_decode(opj_mqc_t *const mqc);
 /* ----------------------------------------------------------------------- */
 /*@}*/
 

@@ -32,6 +32,12 @@
 /* The size of a `long', as computed by sizeof. */
 #define SIZEOF_LONG 4
 
+/* Signed 64-bit type */
+#define TIFF_INT64_T signed __int64
+
+/* Unsigned 64-bit type */
+#define TIFF_UINT64_T unsigned __int64
+
 /* Set the native cpu bit order */
 #define HOST_FILLORDER FILLORDER_LSB2MSB
 
@@ -48,3 +54,10 @@
 #endif
 
 #define lfind _lfind
+/*
+ * Local Variables:
+ * mode: c
+ * c-basic-offset: 8
+ * fill-column: 78
+ * End:
+ */
