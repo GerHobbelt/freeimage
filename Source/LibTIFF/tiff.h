@@ -1,4 +1,4 @@
-/* $Id: tiff.h,v 1.43.2.1 2010-06-08 18:50:43 bfriesen Exp $ */
+/* $Id: tiff.h,v 1.38 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -27,7 +27,7 @@
 #ifndef _TIFF_
 #define	_TIFF_
 
-#include "tiffconf.h"
+#include "tif_config.h"
 
 /*
  * Tag Image File Format (TIFF)

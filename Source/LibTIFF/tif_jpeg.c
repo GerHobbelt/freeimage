@@ -1,4 +1,4 @@
-/* $Id: tif_jpeg.c,v 1.50.2.9 2010-06-14 02:47:16 fwarmerdam Exp $ */
+/* $Id: tif_jpeg.c,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1994-1997 Sam Leffler
@@ -84,8 +84,8 @@ int TIFFFillTile(TIFF*, ttile_t);
 # define HAVE_BOOLEAN            /* prevent jmorecfg.h from redefining it */
 #endif
 
-#include "jpeglib.h"
-#include "jerror.h"
+#include "../LibJPEG/jpeglib.h"
+#include "../LibJPEG/jerror.h"
 
 /*
  * We are using width_in_blocks which is supposed to be private to
@@ -1071,7 +1071,7 @@ JPEGDecodeRaw(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 					}
 				}
 				else
-				{         // 12-bit
+				{         /* 12-bit  */
 					int value_pairs = (sp->cinfo.d.output_width
 					    * sp->cinfo.d.num_components) / 2;
 					int iPair;
@@ -1358,8 +1358,15 @@ JPEGPreEncode(TIFF* tif, tsample_t s)
 			sp->cinfo.c.comp_info[0].h_samp_factor = sp->h_sampling;
 			sp->cinfo.c.comp_info[0].v_samp_factor = sp->v_sampling;
 		} else {
-			sp->cinfo.c.in_color_space = JCS_UNKNOWN;
-			if (!TIFFjpeg_set_colorspace(sp, JCS_UNKNOWN))
+			if ((td->td_photometric == PHOTOMETRIC_MINISWHITE || td->td_photometric == PHOTOMETRIC_MINISBLACK) && td->td_samplesperpixel == 1)
+				sp->cinfo.c.in_color_space = JCS_GRAYSCALE;
+			else if (td->td_photometric == PHOTOMETRIC_RGB)
+				sp->cinfo.c.in_color_space = JCS_RGB;
+			else if (td->td_photometric == PHOTOMETRIC_SEPARATED && td->td_samplesperpixel == 4)
+				sp->cinfo.c.in_color_space = JCS_CMYK;
+			else
+				sp->cinfo.c.in_color_space = JCS_UNKNOWN;
+			if (!TIFFjpeg_set_colorspace(sp, sp->cinfo.c.in_color_space))
 				return (0);
 			/* jpeg_set_colorspace set all sampling factors to 1 */
 		}
@@ -1529,7 +1536,7 @@ JPEGEncodeRaw(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 			sp->scancount = 0;
 		}
 		tif->tif_row += sp->v_sampling;
-		buf += sp->bytesperline;
+		buf += bytesperclumpline;
 		nrows -= sp->v_sampling;
 	}
 	return (1);

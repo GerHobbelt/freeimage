@@ -273,26 +273,26 @@ rgbe_WriteHeader(FreeImageIO *io, fi_handle handle, unsigned width, unsigned hei
 	}
 	// The #? is to identify file type, the programtype is optional
 	sprintf(buffer, "#?%s\n", programtype);
-	if(io->write_proc(buffer, 1, strlen(buffer), handle) < 1)
+	if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
 		return rgbe_Error(rgbe_write_error, NULL);
 	sprintf(buffer, "%s\n", info->comment);
-	if(io->write_proc(buffer, 1, strlen(buffer), handle) < 1)
+	if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
 		return rgbe_Error(rgbe_write_error, NULL);
 	sprintf(buffer, "FORMAT=32-bit_rle_rgbe\n");
-	if(io->write_proc(buffer, 1, strlen(buffer), handle) < 1)
+	if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
 		return rgbe_Error(rgbe_write_error, NULL);
 	if(info && (info->valid & RGBE_VALID_GAMMA)) {
 		sprintf(buffer, "GAMMA=%g\n", info->gamma);
-		if(io->write_proc(buffer, 1, strlen(buffer), handle) < 1)
+		if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
 			return rgbe_Error(rgbe_write_error, NULL);
 	}
 	if(info && (info->valid & RGBE_VALID_EXPOSURE)) {
 		sprintf(buffer,"EXPOSURE=%g\n", info->exposure);
-		if(io->write_proc(buffer, 1, strlen(buffer), handle) < 1)
+		if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
 			return rgbe_Error(rgbe_write_error, NULL);
 	}
 	sprintf(buffer, "\n-Y %d +X %d\n", height, width);
-	if(io->write_proc(buffer, 1, strlen(buffer), handle) < 1)
+	if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
 		return rgbe_Error(rgbe_write_error, NULL);
 
 	return TRUE;
@@ -587,12 +587,17 @@ Validate(FreeImageIO *io, fi_handle handle) {
 
 static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
-	return (depth == 96);
+	return FALSE;
 }
 
 static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_RGBF) ? TRUE : FALSE;
+}
+
+static BOOL DLL_CALLCONV
+SupportsNoPixels() {
+	return TRUE;
 }
 
 // --------------------------------------------------------------------------
@@ -601,43 +606,53 @@ static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	FIBITMAP *dib = NULL;
 
-	if(handle) {
-		try {
+	if(!handle) {
+		return NULL;
+	}
 
-			rgbeHeaderInfo header_info;
-			unsigned width, height;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
-			// Read the header
-			if(rgbe_ReadHeader(io, handle, &width, &height, &header_info) == FALSE)
-				return NULL;
+	try {
 
-			// allocate a RGBF image
-			dib = FreeImage_AllocateT(FIT_RGBF, width, height);
-			if(!dib) {
-				throw "Memory allocation failed";
-			}
+		rgbeHeaderInfo header_info;
+		unsigned width, height;
 
-			// read the image pixels and fill the dib
-			
-			for(unsigned y = 0; y < height; y++) {
-				FIRGBF *scanline = (FIRGBF*)FreeImage_GetScanLine(dib, height - 1 - y);
-				if(!rgbe_ReadPixels_RLE(io, handle, scanline, width, 1)) {
-					FreeImage_Unload(dib);
-					return NULL;
-				}
-			}
-
-			// set the metadata as comments
-			rgbe_ReadMetadata(dib, &header_info);
-
+		// Read the header
+		if(rgbe_ReadHeader(io, handle, &width, &height, &header_info) == FALSE) {
+			return NULL;
 		}
-		catch(const char *text) {
-			if(dib != NULL) {
+
+		// allocate a RGBF image
+		dib = FreeImage_AllocateHeaderT(header_only, FIT_RGBF, width, height);
+		if(!dib) {
+			throw FI_MSG_ERROR_MEMORY;
+		}
+
+		// set the metadata as comments
+		rgbe_ReadMetadata(dib, &header_info);
+
+		if(header_only) {
+			// header only mode
+			return dib;
+		}
+
+		// read the image pixels and fill the dib
+		
+		for(unsigned y = 0; y < height; y++) {
+			FIRGBF *scanline = (FIRGBF*)FreeImage_GetScanLine(dib, height - 1 - y);
+			if(!rgbe_ReadPixels_RLE(io, handle, scanline, width, 1)) {
 				FreeImage_Unload(dib);
+				return NULL;
 			}
-			FreeImage_OutputMessageProc(s_format_id, text);
 		}
-	}	
+
+	}
+	catch(const char *text) {
+		if(dib != NULL) {
+			FreeImage_Unload(dib);
+		}
+		FreeImage_OutputMessageProc(s_format_id, text);
+	}
 
 	return dib;
 }
@@ -646,8 +661,9 @@ static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	if(!dib) return FALSE;
 
-	if(FreeImage_GetImageType(dib) != FIT_RGBF)
+	if(FreeImage_GetImageType(dib) != FIT_RGBF) {
 		return FALSE;
+	}
 
 	unsigned width  = FreeImage_GetWidth(dib);
 	unsigned height = FreeImage_GetHeight(dib);
@@ -699,4 +715,5 @@ InitHDR(Plugin *plugin, int format_id) {
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
 	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }

@@ -1,4 +1,4 @@
-/* $Id: tif_codec.c,v 1.10.2.2 2010-06-08 18:50:41 bfriesen Exp $ */
+/* $Id: tif_codec.c,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler

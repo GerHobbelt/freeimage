@@ -1,4 +1,4 @@
-/* $Id: tif_dir.c,v 1.75.2.5 2010-06-09 21:15:27 bfriesen Exp $ */
+/* $Id: tif_dir.c,v 1.38 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -163,7 +163,9 @@ _TIFFVSetField(TIFF* tif, ttag_t tag, va_list ap)
 		 * work in with its normal work.
 		 */
 		if (tif->tif_flags & TIFF_SWAB) {
-			if (td->td_bitspersample == 16)
+			if (td->td_bitspersample == 8)
+				tif->tif_postdecode = _TIFFNoPostDecode;
+			else if (td->td_bitspersample == 16)
 				tif->tif_postdecode = _TIFFSwab16BitData;
 			else if (td->td_bitspersample == 24)
 				tif->tif_postdecode = _TIFFSwab24BitData;

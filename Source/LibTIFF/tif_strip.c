@@ -1,4 +1,4 @@
-/* $Id: tif_strip.c,v 1.19.2.1 2010-06-08 18:50:43 bfriesen Exp $ */
+/* $Id: tif_strip.c,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1991-1997 Sam Leffler
@@ -124,9 +124,9 @@ TIFFVStripSize(TIFF* tif, uint32 nrows)
 		uint16 ycbcrsubsampling[2];
 		tsize_t w, scanline, samplingarea;
 
-		TIFFGetField( tif, TIFFTAG_YCBCRSUBSAMPLING,
-			      ycbcrsubsampling + 0,
-			      ycbcrsubsampling + 1 );
+		TIFFGetFieldDefaulted(tif, TIFFTAG_YCBCRSUBSAMPLING,
+				      ycbcrsubsampling + 0,
+				      ycbcrsubsampling + 1);
 
 		samplingarea = ycbcrsubsampling[0]*ycbcrsubsampling[1];
 		if (samplingarea == 0) {
@@ -234,9 +234,9 @@ TIFFScanlineSize(TIFF* tif)
 		    && !isUpSampled(tif)) {
 			uint16 ycbcrsubsampling[2];
 
-			TIFFGetField(tif, TIFFTAG_YCBCRSUBSAMPLING,
-				     ycbcrsubsampling + 0,
-				     ycbcrsubsampling + 1);
+			TIFFGetFieldDefaulted(tif, TIFFTAG_YCBCRSUBSAMPLING,
+					      ycbcrsubsampling + 0,
+					      ycbcrsubsampling + 1);
 
 			if (ycbcrsubsampling[0]*ycbcrsubsampling[1] == 0) {
 				TIFFErrorExt(tif->tif_clientdata, tif->tif_name,
@@ -304,9 +304,9 @@ TIFFNewScanlineSize(TIFF* tif)
 		    && !isUpSampled(tif)) {
 			uint16 ycbcrsubsampling[2];
 
-			TIFFGetField(tif, TIFFTAG_YCBCRSUBSAMPLING,
-				     ycbcrsubsampling + 0,
-				     ycbcrsubsampling + 1);
+			TIFFGetFieldDefaulted(tif, TIFFTAG_YCBCRSUBSAMPLING,
+					      ycbcrsubsampling + 0,
+					      ycbcrsubsampling + 1);
 
 			if (ycbcrsubsampling[0]*ycbcrsubsampling[1] == 0) {
 				TIFFErrorExt(tif->tif_clientdata, tif->tif_name,

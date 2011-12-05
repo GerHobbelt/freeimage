@@ -1,3 +1,24 @@
+freeimage (3.15.1-1) unstable; urgency=low
+
+  * QA upload.
+  * New upstream release (closes: 649541, LP: #898825, #898845)
+    - Refreshed patches.
+      + Abuse dh-autoreconf to generate Makefile.srcs and fipMakefile.srcs
+        patches at build time
+    - Update debian/freeimage-get-orig-source for the new version.
+    - Add new build-dep libraw-dev.
+    - Update patch to disable embedded libraries to deal with API changes
+      in libpng, libmng, and libraw.
+    - Make sure we install symlinks for libfreeimageplus.
+    - Use (upstream-supported) CFLAGS instead of COMPILERFLAGS.
+  * Switch to source format 3.0 (quilt)
+  * Switch to dh(1) and debhelper compat 8
+  * Add missing misc:Depends.
+  * Include the upstream changelog.
+  * Update Debian standards version (no other changes needed).
+
+ -- Evan Broder <evan@ebroder.net>  Sun, 04 Dec 2011 21:46:11 -0800
+
 freeimage (3.10.0-4) unstable; urgency=low
 
   * Fix copy-pasto in tif_config.h.

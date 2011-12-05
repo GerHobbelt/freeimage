@@ -312,9 +312,9 @@ FIBITMAP * DLL_CALLCONV
 FreeImage_Dither(FIBITMAP *dib, FREE_IMAGE_DITHER algorithm) {
 	FIBITMAP *input = NULL, *dib8 = NULL;
 
-	if(NULL == dib) return NULL;
+	if(!FreeImage_HasPixels(dib)) return NULL;
 
-	int bpp = FreeImage_GetBPP(dib);
+	const unsigned bpp = FreeImage_GetBPP(dib);
 
 	if(bpp == 1) {
 		// Just clone the dib and adjust the palette if needed
@@ -388,6 +388,9 @@ FreeImage_Dither(FIBITMAP *dib, FREE_IMAGE_DITHER algorithm) {
 	FIBITMAP *new_dib = FreeImage_Threshold(dib8, 128);
 	FreeImage_Unload(dib8);
 
+	// copy metadata from src to dst
+	FreeImage_CloneMetadata(new_dib, dib);
+
 	return new_dib;
 }
 
@@ -398,9 +401,9 @@ FIBITMAP * DLL_CALLCONV
 FreeImage_Threshold(FIBITMAP *dib, BYTE T) {
 	FIBITMAP *dib8 = NULL;
 
-	if(NULL == dib) return NULL;
+	if(!FreeImage_HasPixels(dib)) return NULL;
 
-	int bpp = FreeImage_GetBPP(dib);
+	const unsigned bpp = FreeImage_GetBPP(dib);
 
 	if(bpp == 1) {
 		// Just clone the dib and adjust the palette if needed
@@ -462,6 +465,9 @@ FreeImage_Threshold(FIBITMAP *dib, BYTE T) {
 	if(dib8 != dib) {
 		FreeImage_Unload(dib8);
 	}
+
+	// copy metadata from src to dst
+	FreeImage_CloneMetadata(new_dib, dib);
 
 	return new_dib;
 }

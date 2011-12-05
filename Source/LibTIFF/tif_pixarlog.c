@@ -1,4 +1,4 @@
-/* $Id: tif_pixarlog.c,v 1.15.2.4 2010-06-08 18:50:42 bfriesen Exp $ */
+/* $Id: tif_pixarlog.c,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1996-1997 Sam Leffler
@@ -87,7 +87,7 @@
  */
 
 #include "tif_predict.h"
-#include "zlib.h"
+#include "../ZLib/zlib.h"
 
 #include <stdio.h>
 #include <stdlib.h>

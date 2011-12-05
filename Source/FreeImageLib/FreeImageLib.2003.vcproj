@@ -22,19 +22,20 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\;..\ZLib;..\DeprecationManager;..\OpenEXR\Half;..\OpenEXR\Iex;..\OpenEXR\IlmImf;..\OpenEXR\Imath;..\OpenEXR\IlmThread"
-				PreprocessorDefinitions="WIN32;_DEBUG;OPJ_STATIC;FREEIMAGE_LIB;_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_DEBUG;OPJ_STATIC;FREEIMAGE_LIB;_SECURE_NO_DEPRECATE;LIBRAW_NODLL"
 				StringPooling="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/FreeImageLib.pch"
+				TreatWChar_tAsBuiltInType="TRUE"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
-				CompileAs="0"/>
+				CompileAs="2"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -83,10 +84,11 @@ copy ..\FreeImage.h ..\..\Dist
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="3"
 				AdditionalIncludeDirectories="..\;..\ZLib;..\DeprecationManager;..\OpenEXR\Half;..\OpenEXR\Iex;..\OpenEXR\IlmImf;..\OpenEXR\Imath;..\OpenEXR\IlmThread"
-				PreprocessorDefinitions="WIN32;NDEBUG;OPJ_STATIC;FREEIMAGE_LIB;_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;NDEBUG;OPJ_STATIC;FREEIMAGE_LIB;_SECURE_NO_DEPRECATE;LIBRAW_NODLL"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="FALSE"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Release/FreeImageLib.pch"
 				AssemblerListingLocation=".\Release/"
@@ -94,7 +96,7 @@ copy ..\FreeImage.h ..\..\Dist
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				CompileAs="0"/>
+				CompileAs="2"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -188,10 +190,19 @@ copy ..\FreeImage.h ..\..\Dist
 					RelativePath="..\FreeImage\Conversion8.cpp">
 				</File>
 				<File
+					RelativePath="..\FreeImage\ConversionFloat.cpp">
+				</File>
+				<File
+					RelativePath="..\FreeImage\ConversionRGB16.cpp">
+				</File>
+				<File
 					RelativePath="..\FreeImage\ConversionRGBF.cpp">
 				</File>
 				<File
 					RelativePath="..\FreeImage\ConversionType.cpp">
+				</File>
+				<File
+					RelativePath="..\FreeImage\ConversionUINT16.cpp">
 				</File>
 				<File
 					RelativePath="..\FreeImage\Halftoning.cpp">
@@ -270,6 +281,12 @@ copy ..\FreeImage.h ..\..\Dist
 					RelativePath="..\FreeImage\PluginPCX.cpp">
 				</File>
 				<File
+					RelativePath="..\FreeImage\PluginPFM.cpp">
+				</File>
+				<File
+					RelativePath="..\FreeImage\PluginPICT.cpp">
+				</File>
+				<File
 					RelativePath="..\FreeImage\PluginPNG.cpp">
 				</File>
 				<File
@@ -280,6 +297,9 @@ copy ..\FreeImage.h ..\..\Dist
 				</File>
 				<File
 					RelativePath="..\FreeImage\PluginRAS.cpp">
+				</File>
+				<File
+					RelativePath="..\FreeImage\PluginRAW.cpp">
 				</File>
 				<File
 					RelativePath="..\FreeImage\PluginSGI.cpp">
@@ -299,10 +319,19 @@ copy ..\FreeImage.h ..\..\Dist
 				<File
 					RelativePath="..\FreeImage\PluginXPM.cpp">
 				</File>
+				<File
+					RelativePath="..\FreeImage\PSDParser.cpp">
+				</File>
+				<File
+					RelativePath="..\FreeImage\TIFFLogLuv.cpp">
+				</File>
 			</Filter>
 			<Filter
 				Name="DeprecationMgr"
 				Filter="">
+				<File
+					RelativePath="..\DeprecationManager\Deprecated.cpp">
+				</File>
 				<File
 					RelativePath="..\DeprecationManager\DeprecationMgr.cpp">
 				</File>
@@ -374,6 +403,9 @@ copy ..\FreeImage.h ..\..\Dist
 				RelativePath="..\PoissonSolver.h">
 			</File>
 			<File
+				RelativePath="..\FreeImage\PSDParser.h">
+			</File>
+			<File
 				RelativePath="..\Quantizers.h">
 			</File>
 			<File
@@ -386,6 +418,9 @@ copy ..\FreeImage.h ..\..\Dist
 		<Filter
 			Name="Toolkit Files"
 			Filter="">
+			<File
+				RelativePath="..\FreeImageToolkit\Background.cpp">
+			</File>
 			<File
 				RelativePath="..\FreeImageToolkit\BSplineRotate.cpp">
 			</File>

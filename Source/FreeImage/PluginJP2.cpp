@@ -21,7 +21,7 @@
 
 #include "FreeImage.h"
 #include "Utilities.h"
-#include <openjpeg.h>
+#include "../LibOpenJPEG/openjpeg.h"
 
 // ==========================================================
 // Plugin Interface
@@ -164,7 +164,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			io->seek_proc(handle, start_pos, SEEK_SET);
 			src = (BYTE*)malloc(file_length * sizeof(BYTE));
 			if(!src) {
-				throw "Memory allocation failed";
+				throw FI_MSG_ERROR_MEMORY;
 			}
 			if(io->read_proc(src, 1, file_length, handle) < 1) {
 				throw "Error while reading input stream";
@@ -247,6 +247,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		// set encoding parameters to default values
 		opj_set_default_encoder_parameters(&parameters);
 
+		parameters.tcp_numlayers = 0;
 		// if no rate entered, apply a 16:1 rate by default
 		if(flags == JP2_DEFAULT) {
 			parameters.tcp_rates[0] = (float)16;

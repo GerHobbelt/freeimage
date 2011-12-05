@@ -1,4 +1,4 @@
-/* $Id: tif_jbig.c,v 1.2.2.3 2010-06-08 18:50:42 bfriesen Exp $ */
+/* $Id: tif_jbig.c,v 1.23 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler

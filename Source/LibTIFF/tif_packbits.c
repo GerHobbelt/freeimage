@@ -1,4 +1,4 @@
-/* $Id: tif_packbits.c,v 1.13.2.2 2010-06-08 18:50:42 bfriesen Exp $ */
+/* $Id: tif_packbits.c,v 1.37 2011/04/10 17:14:09 drolon Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler

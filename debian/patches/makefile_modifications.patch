@@ -4,95 +4,74 @@ options we're using by default, debugging should still be possible.
 ==========================================================================
 Index: freeimage/Makefile.fip
 ===================================================================
---- freeimage.orig/Makefile.fip
-+++ freeimage/Makefile.fip
-@@ -4,18 +4,21 @@
- include fipMakefile.srcs
- 
- # General configuration variables:
--CC = gcc
--CXX = g++
-+CC ?= gcc
-+CXX ?= g++
- AR = ar
- 
--INCDIR = /usr/include
--INSTALLDIR = /usr/lib
-+# Include a configurable DESTDIR variable
-+DESTDIR ?= /
-+INCDIR = $(DESTDIR)usr/include
-+INSTALLDIR = $(DESTDIR)usr/lib
- 
- # Converts cr/lf to just lf
- DOS2UNIX = dos2unix
- 
--COMPILERFLAGS = -O3 -fexceptions -fvisibility=hidden
--LIBRARIES = -lstdc++
-+COMPILERFLAGS ?= -O3 -fexceptions -fvisibility=hidden
-+COMPILERFLAGS += $(shell getconf LFS_CFLAGS)
-+LIBRARIES = -lmng -lz -lpng -lm -ljpeg -lopenjpeg $(shell pkg-config --libs OpenEXR)
+--- freeimage.orig/Makefile.fip	2011-12-04 11:43:19.000000000 -0800
++++ freeimage/Makefile.fip	2011-12-04 11:49:31.245769399 -0800
+@@ -15,10 +15,12 @@
  
  MODULES = $(SRCS:.c=.o)
  MODULES := $(MODULES:.cpp=.o)
-@@ -56,7 +58,7 @@
+-CFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden -DNO_LCMS
+-CFLAGS += $(INCLUDE)
+-CXXFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden -Wno-ctor-dtor-privacy
+-CXXFLAGS += $(INCLUDE)
++CFLAGS ?= -O3 -fPIC
++override CFLAGS += -fexceptions -fvisibility=hidden -DNO_LCMS
++override CFLAGS += $(INCLUDE)
++CXXFLAGS ?= -O3 -fPIC
++override CXXFLAGS += -fexceptions -fvisibility=hidden -Wno-ctor-dtor-privacy
++override CXXFLAGS += $(INCLUDE)
+ 
+ ifeq ($(shell sh -c 'uname -m 2>/dev/null || echo not'),x86_64)
+ 	CFLAGS += -fPIC
+@@ -59,7 +61,7 @@
  	$(AR) r $@ $(MODULES)
  
  $(SHAREDLIB): $(MODULES)
--	$(CC) -s -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
-+	$(CXX) -shared -Wl,-soname,$(VERLIBNAME) -Wl,-z,defs -o $@ $(MODULES) $(CXXFLAGS) $(LIBRARIES)
+-	$(CC) -s -shared -Wl,-soname,$(VERLIBNAME) $(LDFLAGS) -o $@ $(MODULES) $(LIBRARIES)
++	$(CXX) -shared -Wl,-soname,$(VERLIBNAME) -Wl,-z,defs $(LDFLAGS) -o $@ $(MODULES) $(CXXFLAGS) $(LIBRARIES)
  
  install:
- 	install -m 644 -o root -g root $(HEADER) $(INCDIR)
-@@ -65,7 +67,6 @@
+ 	install -d $(INCDIR) $(INSTALLDIR)
+@@ -67,6 +69,8 @@
+ 	install -m 644 -o root -g root $(HEADERFIP) $(INCDIR)
+ 	install -m 644 -o root -g root $(STATICLIB) $(INSTALLDIR)
  	install -m 755 -o root -g root $(SHAREDLIB) $(INSTALLDIR)
- 	ln -sf $(SHAREDLIB) $(INSTALLDIR)/$(VERLIBNAME)
- 	ln -sf $(VERLIBNAME) $(INSTALLDIR)/$(LIBNAME)
--	ldconfig
++	ln -sf $(SHAREDLIB) $(INSTALLDIR)/$(VERLIBNAME)
++	ln -sf $(VERLIBNAME) $(INSTALLDIR)/$(LIBNAME)
  
  clean:
  	rm -f core Dist/*.* u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)
 Index: freeimage/Makefile.gnu
 ===================================================================
---- freeimage.orig/Makefile.gnu
-+++ freeimage/Makefile.gnu
-@@ -4,18 +4,21 @@
- include Makefile.srcs
- 
- # General configuration variables:
--CC = gcc
--CXX = g++
-+CC ?= gcc
-+CXX ?= g++
- AR = ar
- 
--INCDIR = /usr/include
--INSTALLDIR = /usr/lib
-+# Include a configurable DESTDIR variable
-+DESTDIR ?= /
-+INCDIR = $(DESTDIR)usr/include
-+INSTALLDIR = $(DESTDIR)usr/lib
- 
- # Converts cr/lf to just lf
- DOS2UNIX = dos2unix
- 
--COMPILERFLAGS = -O3 -fPIC -fexceptions -fvisibility=hidden
--LIBRARIES = -lstdc++
-+COMPILERFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden
-+COMPILERFLAGS += $(shell getconf LFS_CFLAGS)
-+LIBRARIES = -ljpeg -lmng -lopenjpeg -lpng $(shell pkg-config --libs OpenEXR) -lz -lm
+--- freeimage.orig/Makefile.gnu	2011-12-04 11:44:21.000000000 -0800
++++ freeimage/Makefile.gnu	2011-12-04 11:49:10.365768658 -0800
+@@ -15,10 +15,12 @@
  
  MODULES = $(SRCS:.c=.o)
  MODULES := $(MODULES:.cpp=.o)
-@@ -55,7 +57,7 @@
+-CFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden -DNO_LCMS
+-CFLAGS += $(INCLUDE)
+-CXXFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden -Wno-ctor-dtor-privacy
+-CXXFLAGS += $(INCLUDE)
++CFLAGS ?= -O3 -fPIC
++override CFLAGS += -fexceptions -fvisibility=hidden -DNO_LCMS
++override CFLAGS += $(INCLUDE)
++CXXFLAGS ?= -O3 -fPIC
++override CXXFLAGS += -fexceptions -fvisibility=hidden -Wno-ctor-dtor-privacy
++override CXXFLAGS += $(INCLUDE)
+ 
+ ifeq ($(shell sh -c 'uname -m 2>/dev/null || echo not'),x86_64)
+ 	CFLAGS += -fPIC
+@@ -58,7 +60,7 @@
  	$(AR) r $@ $(MODULES)
  
  $(SHAREDLIB): $(MODULES)
--	$(CC) -s -shared -Wl,-soname,$(VERLIBNAME) -o $@ $(MODULES) $(LIBRARIES)
-+	$(CXX) -shared -Wl,-soname,$(VERLIBNAME) -Wl,-z,defs -o $@ $(MODULES) $(CXXFLAGS) $(LIBRARIES)
+-	$(CC) -s -shared -Wl,-soname,$(VERLIBNAME) $(LDFLAGS) -o $@ $(MODULES) $(LIBRARIES)
++	$(CXX) -shared -Wl,-soname,$(VERLIBNAME) -Wl,-z,defs $(LDFLAGS) -o $@ $(MODULES) $(CXXFLAGS) $(LIBRARIES)
  
  install:
- 	install -m 644 -o root -g root $(HEADER) $(INCDIR)
-@@ -63,7 +65,6 @@
+ 	install -d $(INCDIR) $(INSTALLDIR)
+@@ -67,7 +69,6 @@
  	install -m 755 -o root -g root $(SHAREDLIB) $(INSTALLDIR)
  	ln -sf $(SHAREDLIB) $(INSTALLDIR)/$(VERLIBNAME)
  	ln -sf $(VERLIBNAME) $(INSTALLDIR)/$(LIBNAME)	

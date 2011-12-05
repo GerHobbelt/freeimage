@@ -4,14 +4,12 @@
 # package.
 
 # Some variables to make maintaining this script easier
-FREEIMAGE_VERSION="3.10.0"
+FREEIMAGE_VERSION="3.15.1"
 FREEIMAGE_URL_DIR="http://downloads.sourceforge.net/freeimage"
-FREEIMAGE_TARBALL="FreeImage3100.zip"
-FREEIMAGE_TARBALL_CHECKSUM="2e57135e26bb487cc8e13ee7b7e0a595"
-FREEIMAGE_DOC="FreeImage3100.pdf"
-FREEIMAGE_DOC_CHECKSUM="8f93e322b92a267d5cc84d4d80b9a671"
-FREEIMAGE_CHINESE_DOC="FreeImage380Chinese.pdf"
-FREEIMAGE_CHINESE_DOC_CHECKSUM="8d9481a75b7b86eac8d642f8dc443cf7"
+FREEIMAGE_TARBALL="FreeImage3151.zip"
+FREEIMAGE_TARBALL_CHECKSUM="450d2ff278690b0d1d7d7d58fad083cc"
+FREEIMAGE_DOC="FreeImage3151.pdf"
+FREEIMAGE_DOC_CHECKSUM="49325c97ba1f557f5fa34e1c480082b5"
 
 USAGE="\n\
 This script is used to generate the orig tarball used in building\n\
@@ -70,12 +68,10 @@ verify_checksum() {
 #Download the files
 download $FREEIMAGE_URL_DIR $FREEIMAGE_TARBALL
 download $FREEIMAGE_URL_DIR $FREEIMAGE_DOC
-download $FREEIMAGE_URL_DIR $FREEIMAGE_CHINESE_DOC
 
 # Verify the checksums
 verify_checksum $FREEIMAGE_TARBALL $FREEIMAGE_TARBALL_CHECKSUM
 verify_checksum $FREEIMAGE_DOC $FREEIMAGE_DOC_CHECKSUM
-verify_checksum $FREEIMAGE_CHINESE_DOC $FREEIMAGE_CHINESE_DOC_CHECKSUM
 
 # Unpack the upstream source
 if [ ! -d FreeImage -a ! -d freeimage-$FREEIMAGE_VERSION ]; then
@@ -96,8 +92,6 @@ if [ ! -f freeimage-$FREEIMAGE_VERSION ]; then
         mkdir -p freeimage-$FREEIMAGE_VERSION/extra.Debian
     cp -f $FREEIMAGE_DOC \
         freeimage-$FREEIMAGE_VERSION/extra.Debian/$FREEIMAGE_DOC
-    cp -f $FREEIMAGE_CHINESE_DOC \
-        freeimage-$FREEIMAGE_VERSION/extra.Debian/$FREEIMAGE_CHINESE_DOC
     tar -czf freeimage_$FREEIMAGE_VERSION.orig.tar.gz \
         freeimage-$FREEIMAGE_VERSION
 else
@@ -114,5 +108,4 @@ if [ -z "$KEEP_UPSTREAM_FILES" ]; then
     echo "Removing upstream files."
     rm $FREEIMAGE_TARBALL
     rm $FREEIMAGE_DOC
-    rm $FREEIMAGE_CHINESE_DOC
 fi

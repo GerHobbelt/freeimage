@@ -37,7 +37,8 @@
 
 // ----------------------------------------------------------
 
-#include <png.h>
+#include "../ZLib/zlib.h"
+#include "../LibPNG/png.h"
 
 // ----------------------------------------------------------
 
@@ -53,7 +54,7 @@ typedef struct {
 static void
 _ReadProc(png_structp png_ptr, unsigned char *data, png_size_t size) {
     pfi_ioStructure pfio = (pfi_ioStructure)png_get_io_ptr(png_ptr);
-	unsigned n = pfio->s_io->read_proc(data, size, 1, pfio->s_handle);
+	unsigned n = pfio->s_io->read_proc(data, (unsigned int)size, 1, pfio->s_handle);
 	if(size && (n == 0)) {
 		throw "Read error: invalid or corrupted PNG file";
 	}
@@ -62,7 +63,7 @@ _ReadProc(png_structp png_ptr, unsigned char *data, png_size_t size) {
 static void
 _WriteProc(png_structp png_ptr, unsigned char *data, png_size_t size) {
     pfi_ioStructure pfio = (pfi_ioStructure)png_get_io_ptr(png_ptr);
-    pfio->s_io->write_proc(data, size, 1, pfio->s_handle);
+    pfio->s_io->write_proc(data, (unsigned int)size, 1, pfio->s_handle);
 }
 
 static void
@@ -101,10 +102,7 @@ ReadMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 			tag = FreeImage_CreateTag();
 			if(!tag) return FALSE;
 
-			DWORD tag_length = text_ptr[i].text_length;
-#ifdef PNG_iTXt_SUPPORTED
-			tag_length = MAX(tag_length, text_ptr[i].itxt_length);
-#endif
+			DWORD tag_length = (DWORD) MAX(text_ptr[i].text_length, text_ptr[i].itxt_length);
 
 			FreeImage_SetTagLength(tag, tag_length);
 			FreeImage_SetTagCount(tag, tag_length);
@@ -147,19 +145,13 @@ WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 	if(mdhandle) {
 		do {
 			memset(&text_metadata, 0, sizeof(png_text));
-#ifdef PNG_iTXt_SUPPORTED
 			text_metadata.compression = 1;							// iTXt, none
-#else
-			text_metadata.compression = -1;
-#endif
 			text_metadata.key = (char*)FreeImage_GetTagKey(tag);	// keyword, 1-79 character description of "text"
 			text_metadata.text = (char*)FreeImage_GetTagValue(tag);	// comment, may be an empty string (ie "")
 			text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
-#ifdef PNG_iTXt_SUPPORTED
 			text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
 			text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
 			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
-#endif
 
 			// set the tag 
 			png_set_text(png_ptr, info_ptr, &text_metadata, 1);
@@ -175,19 +167,13 @@ WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 	FreeImage_GetMetadata(FIMD_XMP, dib, g_TagLib_XMPFieldName, &tag);
 	if(tag && FreeImage_GetTagLength(tag)) {
 		memset(&text_metadata, 0, sizeof(png_text));
-#ifdef PNG_iTXt_SUPPORTED
 		text_metadata.compression = 1;							// iTXt, none
-#else
-		text_metadata.compression = -1;
-#endif
 		text_metadata.key = g_png_xmp_keyword;					// keyword, 1-79 character description of "text"
 		text_metadata.text = (char*)FreeImage_GetTagValue(tag);	// comment, may be an empty string (ie "")
 		text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
-#ifdef PNG_iTXt_SUPPORTED
 		text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
 		text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
 		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
-#endif
 
 		// set the tag 
 		png_set_text(png_ptr, info_ptr, &text_metadata, 1);
@@ -268,6 +254,11 @@ SupportsICCProfiles() {
 	return TRUE;
 }
 
+static BOOL DLL_CALLCONV
+SupportsNoPixels() {
+	return TRUE;
+}
+
 // ----------------------------------------------------------
 
 static FIBITMAP * DLL_CALLCONV
@@ -275,8 +266,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	png_structp png_ptr = NULL;
 	png_infop info_ptr;
 	png_uint_32 width, height;
-	png_colorp png_palette;
-	int color_type, palette_entries;
+	png_colorp png_palette = NULL;
+	int color_type, palette_entries = 0;
 	int bit_depth, pixel_depth;		// pixel_depth = bit_depth * channels
 
 	FIBITMAP *dib = NULL;
@@ -289,6 +280,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	fio.s_io = io;
     
 	if (handle) {
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+
 		try {		
 			// check to see if the file is in fact a PNG file
 
@@ -296,15 +289,17 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			io->read_proc(png_check, PNG_BYTES_TO_CHECK, 1, handle);
 
-			if (png_sig_cmp(png_check, (png_size_t)0, PNG_BYTES_TO_CHECK) != 0)
+			if (png_sig_cmp(png_check, (png_size_t)0, PNG_BYTES_TO_CHECK) != 0) {
 				return NULL;	// Bad signature
+			}
 			
 			// create the chunk manage structure
 
 			png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, (png_voidp)NULL, error_handler, warning_handler);
 
-			if (!png_ptr)
+			if (!png_ptr) {
 				return NULL;			
+			}
 
 			// create the info structure
 
@@ -332,7 +327,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			png_read_info(png_ptr, info_ptr);
 			png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, NULL, NULL, NULL);
-			pixel_depth = info_ptr->pixel_depth;
+
+			pixel_depth = png_get_bit_depth(png_ptr, info_ptr) * png_get_channels(png_ptr, info_ptr);
 
 			// get image data type (assume standard image type)
 
@@ -368,8 +364,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
 					// flip the RGB pixels to BGR (or RGBA to BGRA)
 
-					if(image_type == FIT_BITMAP)
+					if(image_type == FIT_BITMAP) {
 						png_set_bgr(png_ptr);
+					}
 #endif
 					break;
 
@@ -385,9 +382,10 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				case PNG_COLOR_TYPE_GRAY:
 					// expand grayscale images to the full 8 bits from 2 bits/pixel
+					// but *do not* expand fully transparent palette entries to a full alpha channel
 
 					if (pixel_depth == 2) {
-						png_set_expand(png_ptr);
+						png_set_expand_gray_1_2_4_to_8(png_ptr);
 						pixel_depth = 8;
 					}
 
@@ -407,39 +405,21 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					break;
 
 				default:
-					throw "PNG format not supported";
+					throw FI_MSG_ERROR_UNSUPPORTED_FORMAT;
 			}
-
-			// Get the background color to draw transparent and alpha images over.
-			// Note that even if the PNG file supplies a background, you are not required to
-			// use it - you should use the (solid) application background if it has one.
-
-			png_color_16p image_background = NULL;
-			RGBQUAD rgbBkColor;
-
-			if (png_get_bKGD(png_ptr, info_ptr, &image_background)) {
-				rgbBkColor.rgbRed      = (BYTE)image_background->red;
-				rgbBkColor.rgbGreen    = (BYTE)image_background->green;
-				rgbBkColor.rgbBlue     = (BYTE)image_background->blue;
-				rgbBkColor.rgbReserved = 0;
-			}
-
-			// if this image has transparency, store the trns values
-
-			png_bytep trans               = NULL;
-			int num_trans                 = 0;
-			//png_color_16p trans_values    = NULL;
-			//png_uint_32 transparent_value = png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, &trans_values);
 
 			// unlike the example in the libpng documentation, we have *no* idea where
 			// this file may have come from--so if it doesn't have a file gamma, don't
 			// do any correction ("do no harm")
 
-			double gamma = 0;
-			double screen_gamma = 2.2;
+			if (png_get_valid(png_ptr, info_ptr, PNG_INFO_gAMA)) {
+				double gamma = 0;
+				double screen_gamma = 2.2;
 
-			if (png_get_gAMA(png_ptr, info_ptr, &gamma) && ( flags & PNG_IGNOREGAMMA ) != PNG_IGNOREGAMMA)
-				png_set_gamma(png_ptr, screen_gamma, gamma);
+				if (png_get_gAMA(png_ptr, info_ptr, &gamma) && ( flags & PNG_IGNOREGAMMA ) != PNG_IGNOREGAMMA) {
+					png_set_gamma(png_ptr, screen_gamma, gamma);
+				}
+			}
 
 			// all transformations have been registered; now update info_ptr data
 
@@ -457,24 +437,24 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					png_set_invert_alpha(png_ptr);
 
 					if(image_type == FIT_BITMAP) {
-						dib = FreeImage_Allocate(width, height, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+						dib = FreeImage_AllocateHeader(header_only, width, height, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 					} else {
-						dib = FreeImage_AllocateT(image_type, width, height, pixel_depth);
+						dib = FreeImage_AllocateHeaderT(header_only, image_type, width, height, pixel_depth);
 					}
 					break;
 
 				case PNG_COLOR_TYPE_RGB_ALPHA:
 					if(image_type == FIT_BITMAP) {
-						dib = FreeImage_Allocate(width, height, 32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+						dib = FreeImage_AllocateHeader(header_only, width, height, 32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 					} else {
-						dib = FreeImage_AllocateT(image_type, width, height, pixel_depth);
+						dib = FreeImage_AllocateHeaderT(header_only, image_type, width, height, pixel_depth);
 					}
 					break;
 
 				case PNG_COLOR_TYPE_PALETTE:
-					dib = FreeImage_Allocate(width, height, pixel_depth);
+					dib = FreeImage_AllocateHeader(header_only, width, height, pixel_depth);
 
-					png_get_PLTE(png_ptr,info_ptr, &png_palette,&palette_entries);
+					png_get_PLTE(png_ptr,info_ptr, &png_palette, &palette_entries);
 
 					palette = FreeImage_GetPalette(dib);
 
@@ -485,16 +465,10 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						palette[i].rgbGreen = png_palette[i].green;
 						palette[i].rgbBlue  = png_palette[i].blue;
 					}
-
-					// store the transparency table
-
-					if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
-						FreeImage_SetTransparencyTable(dib, (BYTE *)trans, num_trans);					
-
 					break;
 
 				case PNG_COLOR_TYPE_GRAY:
-					dib = FreeImage_AllocateT(image_type, width, height, pixel_depth);
+					dib = FreeImage_AllocateHeaderT(header_only, image_type, width, height, pixel_depth);
 
 					if(pixel_depth <= 8) {
 						palette = FreeImage_GetPalette(dib);
@@ -506,20 +480,56 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 							palette[i].rgbBlue  = (BYTE)((i * 255) / (palette_entries - 1));
 						}
 					}
-					// store the transparency table
-
-					if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
-						FreeImage_SetTransparencyTable(dib, (BYTE *)trans, num_trans);					
-
 					break;
 
 				default:
-					throw "PNG format not supported";
+					throw FI_MSG_ERROR_UNSUPPORTED_FORMAT;
+			}
+
+			// store the transparency table
+
+			if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
+				// array of alpha (transparency) entries for palette
+				png_bytep trans_alpha = NULL;
+				// number of transparent entries
+				int num_trans = 0;						
+				// graylevel or color sample values of the single transparent color for non-paletted images
+				png_color_16p trans_color = NULL;
+
+				png_get_tRNS(png_ptr, info_ptr, &trans_alpha, &num_trans, &trans_color);
+
+				if((color_type == PNG_COLOR_TYPE_GRAY) && trans_color) {
+					// single transparent color
+					if (trans_color->gray < palette_entries) { 
+						BYTE table[256]; 
+						memset(table, 0xFF, palette_entries); 
+						table[trans_color->gray] = 0; 
+						FreeImage_SetTransparencyTable(dib, table, palette_entries); 
+					}
+				} else if((color_type == PNG_COLOR_TYPE_PALETTE) && trans_alpha) {
+					// transparency table
+					FreeImage_SetTransparencyTable(dib, (BYTE *)trans_alpha, num_trans);
+				}
 			}
 
 			// store the background color 
-			if(image_background) {
-				FreeImage_SetBackgroundColor(dib, &rgbBkColor);
+
+			if (png_get_valid(png_ptr, info_ptr, PNG_INFO_bKGD)) {
+				// Get the background color to draw transparent and alpha images over.
+				// Note that even if the PNG file supplies a background, you are not required to
+				// use it - you should use the (solid) application background if it has one.
+
+				png_color_16p image_background = NULL;
+				RGBQUAD rgbBkColor;
+
+				if (png_get_bKGD(png_ptr, info_ptr, &image_background)) {
+					rgbBkColor.rgbRed      = (BYTE)image_background->red;
+					rgbBkColor.rgbGreen    = (BYTE)image_background->green;
+					rgbBkColor.rgbBlue     = (BYTE)image_background->blue;
+					rgbBkColor.rgbReserved = 0;
+
+					FreeImage_SetBackgroundColor(dib, &rgbBkColor);
+				}
 			}
 
 			// get physical resolution
@@ -530,11 +540,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				// we'll overload this var and use 0 to mean no phys data,
 				// since if it's not in meters we can't use it anyway
 
-				int res_unit_type = 0;
+				int res_unit_type = PNG_RESOLUTION_UNKNOWN;
 
-				png_get_pHYs(png_ptr,info_ptr,&res_x,&res_y,&res_unit_type);
+				png_get_pHYs(png_ptr,info_ptr, &res_x, &res_y, &res_unit_type);
 
-				if (res_unit_type == 1) {
+				if (res_unit_type == PNG_RESOLUTION_METER) {
 					FreeImage_SetDotsPerMeterX(dib, res_x);
 					FreeImage_SetDotsPerMeterY(dib, res_y);
 				}
@@ -544,46 +554,56 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			if (png_get_valid(png_ptr, info_ptr, PNG_INFO_iCCP)) {
 				png_charp profile_name = NULL;
-				png_charp profile_data = NULL;
+				png_bytep profile_data = NULL;
 				png_uint_32 profile_length = 0;
 				int  compression_type;
 
 				png_get_iCCP(png_ptr, info_ptr, &profile_name, &compression_type, &profile_data, &profile_length);
 
-				// copy ICC profile data (must be done after FreeImage_Allocate)
+				// copy ICC profile data (must be done after FreeImage_AllocateHeader)
 
 				FreeImage_CreateICCProfile(dib, profile_data, profile_length);
 			}
 
+			// --- header only mode => clean-up and return
+
+			if (header_only) {
+				// get possible metadata (it can be located both before and after the image data)
+				ReadMetadata(png_ptr, info_ptr, dib);
+				if (png_ptr) {
+					// clean up after the read, and free any memory allocated - REQUIRED
+					png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+				}
+				return dib;
+			}
 
 			// set the individual row_pointers to point at the correct offsets
 
 			row_pointers = (png_bytepp)malloc(height * sizeof(png_bytep));
 
 			if (!row_pointers) {
-				if (palette)
-					png_free(png_ptr, palette);				
-
 				png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-
 				FreeImage_Unload(dib);
 				return NULL;
 			}
 
 			// read in the bitmap bits via the pointer table
 
-			for (png_uint_32 k = 0; k < height; k++)				
+			for (png_uint_32 k = 0; k < height; k++) {
 				row_pointers[height - 1 - k] = FreeImage_GetScanLine(dib, k);			
+			}
 
 			png_read_image(png_ptr, row_pointers);
 
 			// check if the bitmap contains transparency, if so enable it in the header
 
-			if (FreeImage_GetBPP(dib) == 32)
-				if (FreeImage_GetColorType(dib) == FIC_RGBALPHA)
+			if (FreeImage_GetBPP(dib) == 32) {
+				if (FreeImage_GetColorType(dib) == FIC_RGBALPHA) {
 					FreeImage_SetTransparent(dib, TRUE);
-				else
+				} else {
 					FreeImage_SetTransparent(dib, FALSE);
+				}
+			}
 				
 			// cleanup
 
@@ -606,16 +626,17 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			}
 
 			return dib;
+
 		} catch (const char *text) {
-			if (png_ptr)
+			if (png_ptr) {
 				png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
-			
-			if (row_pointers)
+			}
+			if (row_pointers) {
 				free(row_pointers);
-
-			if (dib)
+			}
+			if (dib) {
 				FreeImage_Unload(dib);			
-
+			}
 			FreeImage_OutputMessageProc(s_format_id, text);
 			
 			return NULL;
@@ -682,7 +703,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			png_uint_32 res_y = (png_uint_32)FreeImage_GetDotsPerMeterY(dib);
 
 			if ((res_x > 0) && (res_y > 0))  {
-				png_set_pHYs(png_ptr, info_ptr, res_x, res_y, 1);
+				png_set_pHYs(png_ptr, info_ptr, res_x, res_y, PNG_RESOLUTION_METER);
 			}
 	
 			// Set the image information here.  Width and height are up to 2^31,
@@ -693,10 +714,33 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			// PNG_INTERLACE_ADAM7, and the compression_type and filter_type MUST
 			// currently be PNG_COMPRESSION_TYPE_BASE and PNG_FILTER_TYPE_BASE. REQUIRED
 
-			interlace_type = PNG_INTERLACE_NONE;	// Default value
 			width = FreeImage_GetWidth(dib);
 			height = FreeImage_GetHeight(dib);
-			pixel_depth = FreeImage_GetBPP(dib);	
+			pixel_depth = FreeImage_GetBPP(dib);
+
+			BOOL bInterlaced = FALSE;
+			if( (flags & PNG_INTERLACED) == PNG_INTERLACED) {
+				interlace_type = PNG_INTERLACE_ADAM7;
+				bInterlaced = TRUE;
+			} else {
+				interlace_type = PNG_INTERLACE_NONE;
+			}
+
+			// set the ZLIB compression level or default to PNG default compression level (ZLIB level = 6)
+			int zlib_level = flags & 0x0F;
+			if((zlib_level >= 1) && (zlib_level <= 9)) {
+				png_set_compression_level(png_ptr, zlib_level);
+			} else if((flags & PNG_Z_NO_COMPRESSION) == PNG_Z_NO_COMPRESSION) {
+				png_set_compression_level(png_ptr, Z_NO_COMPRESSION);
+			}
+
+			// filtered strategy works better for high color images
+			if(pixel_depth >= 16){
+				png_set_compression_strategy(png_ptr, Z_FILTERED);
+				png_set_filter(png_ptr, 0, PNG_FILTER_NONE|PNG_FILTER_SUB|PNG_FILTER_PAETH);
+			} else {
+				png_set_compression_strategy(png_ptr, Z_DEFAULT_STRATEGY);
+			}
 
 			FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(dib);
 			if(image_type == FIT_BITMAP) {
@@ -706,7 +750,6 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 				// 16-bit greyscale or 16-bit RGB(A)
 				bit_depth = 16;
 			}
-
 
 			switch (FreeImage_GetColorType(dib)) {
 				case FIC_MINISWHITE:
@@ -756,8 +799,9 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
 					// flip BGR pixels to RGB
-					if(image_type == FIT_BITMAP)
+					if(image_type == FIT_BITMAP) {
 						png_set_bgr(png_ptr);
+					}
 #endif
 					break;
 	
@@ -768,8 +812,9 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
 					// flip BGR pixels to RGB
-					if(image_type == FIT_BITMAP)
+					if(image_type == FIT_BITMAP) {
 						png_set_bgr(png_ptr);
+					}
 #endif
 					break;
 					
@@ -781,7 +826,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 			FIICCPROFILE *iccProfile = FreeImage_GetICCProfile(dib);
 			if (iccProfile->size && iccProfile->data) {
-				png_set_iCCP(png_ptr, info_ptr, "Embedded Profile", 0, (png_charp)iccProfile->data, iccProfile->size);
+				png_set_iCCP(png_ptr, info_ptr, "Embedded Profile", 0, (png_const_bytep)iccProfile->data, iccProfile->size);
 			}
 
 			// write metadata
@@ -794,8 +839,9 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 			// set the transparency table
 
-			if ((pixel_depth == 8) && (FreeImage_IsTransparent(dib)) && (FreeImage_GetTransparencyCount(dib) > 0))
+			if (FreeImage_IsTransparent(dib) && (FreeImage_GetTransparencyCount(dib) > 0)) {
 				png_set_tRNS(png_ptr, info_ptr, FreeImage_GetTransparencyTable(dib), FreeImage_GetTransparencyCount(dib), NULL);
+			}
 
 			// set the background color
 
@@ -826,21 +872,29 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			}
 #endif
 
+			int number_passes = 1;
+			if (bInterlaced) {
+				number_passes = png_set_interlace_handling(png_ptr);
+			}
 
 			if ((pixel_depth == 32) && (!has_alpha_channel)) {
 				BYTE *buffer = (BYTE *)malloc(width * 3);
 
 				// transparent conversion to 24-bit
-				for (png_uint_32 k = 0; k < height; k++) {
-					FreeImage_ConvertLine32To24(buffer, FreeImage_GetScanLine(dib, height - k - 1), width);
-
-					png_write_row(png_ptr, buffer);
+				// the number of passes is either 1 for non-interlaced images, or 7 for interlaced images
+				for (int pass = 0; pass < number_passes; pass++) {
+					for (png_uint_32 k = 0; k < height; k++) {
+						FreeImage_ConvertLine32To24(buffer, FreeImage_GetScanLine(dib, height - k - 1), width);			
+						png_write_row(png_ptr, buffer);
+					}
 				}
-
 				free(buffer);
 			} else {
-				for (png_uint_32 k = 0; k < height; k++) {
-					png_write_row(png_ptr, FreeImage_GetScanLine(dib, height - k - 1));
+				// the number of passes is either 1 for non-interlaced images, or 7 for interlaced images
+				for (int pass = 0; pass < number_passes; pass++) {
+					for (png_uint_32 k = 0; k < height; k++) {			
+						png_write_row(png_ptr, FreeImage_GetScanLine(dib, height - k - 1));					
+					}
 				}
 			}
 
@@ -850,8 +904,9 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			png_write_end(png_ptr, info_ptr);
 
 			// clean up after the write, and free any memory allocated
-			if (palette)
+			if (palette) {
 				png_free(png_ptr, palette);
+			}
 
 			png_destroy_write_struct(&png_ptr, &info_ptr);
 
@@ -887,4 +942,5 @@ InitPNG(Plugin *plugin, int format_id) {
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
 	plugin->supports_icc_profiles_proc = SupportsICCProfiles;
+	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }
