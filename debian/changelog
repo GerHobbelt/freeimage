@@ -20,6 +20,10 @@ freeimage (3.15.1-1) unstable; urgency=low
 
   [ Stefano Rivera ]
   * Dropped README.source.
+  * Updated freeimage (3.9.5) fixes CVE-2011-1167, CVE-2011-0192,
+    CVE-2010-2595
+  * Override lintian's embedded-library error for libtiff. It wasn't
+    extricable.
 
  -- Evan Broder <evan@ebroder.net>  Tue, 06 Dec 2011 14:31:21 +0200
 
