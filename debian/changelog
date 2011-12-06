@@ -21,7 +21,7 @@ freeimage (3.15.1-1) unstable; urgency=low
   [ Stefano Rivera ]
   * Dropped README.source.
 
- -- Evan Broder <evan@ebroder.net>  Sun, 04 Dec 2011 21:46:11 -0800
+ -- Evan Broder <evan@ebroder.net>  Tue, 06 Dec 2011 14:31:21 +0200
 
 freeimage (3.10.0-4) unstable; urgency=low
 
