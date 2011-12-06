@@ -1,5 +1,6 @@
 freeimage (3.15.1-1) unstable; urgency=low
 
+  [ Evan Broder ]
   * QA upload.
   * New upstream release (closes: 649541, LP: #898825, #898845)
     - Refreshed patches.
@@ -16,6 +17,9 @@ freeimage (3.15.1-1) unstable; urgency=low
   * Add missing misc:Depends.
   * Include the upstream changelog.
   * Update Debian standards version (no other changes needed).
+
+  [ Stefano Rivera ]
+  * Dropped README.source.
 
  -- Evan Broder <evan@ebroder.net>  Sun, 04 Dec 2011 21:46:11 -0800
 
