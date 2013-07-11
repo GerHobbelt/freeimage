@@ -1,3 +1,11 @@
+freeimage (3.15.1-2) unstable; urgency=low
+
+  * QA upload.
+  * debian/patches/document-mode.patch:
+    - Fix FTBFS with LibRaw 0.15 (Closes: #710133).
+
+ -- Luca Falavigna <dktrkranz@debian.org>  Thu, 11 Jul 2013 11:22:37 +0200
+
 freeimage (3.15.1-1) unstable; urgency=low
 
   [ Evan Broder ]
