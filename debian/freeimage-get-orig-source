@@ -4,12 +4,12 @@
 # package.
 
 # Some variables to make maintaining this script easier
-FREEIMAGE_VERSION="3.15.1"
+FREEIMAGE_VERSION="3.15.4"
 FREEIMAGE_URL_DIR="http://downloads.sourceforge.net/freeimage"
-FREEIMAGE_TARBALL="FreeImage3151.zip"
-FREEIMAGE_TARBALL_CHECKSUM="450d2ff278690b0d1d7d7d58fad083cc"
-FREEIMAGE_DOC="FreeImage3151.pdf"
-FREEIMAGE_DOC_CHECKSUM="49325c97ba1f557f5fa34e1c480082b5"
+FREEIMAGE_TARBALL="FreeImage3154.zip"
+FREEIMAGE_TARBALL_CHECKSUM="9f9a3b2c3c1b4fd24fe479e8aaee86b1"
+FREEIMAGE_DOC="FreeImage3154.pdf"
+FREEIMAGE_DOC_CHECKSUM="acfbb9bcf5f5ee5ab77824c666a39a15"
 
 USAGE="\n\
 This script is used to generate the orig tarball used in building\n\
