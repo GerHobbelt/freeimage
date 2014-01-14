@@ -1,12 +1,21 @@
-freeimage (3.15.4-1) UNRELEASED; urgency=low
+freeimage (3.15.4-2) unstable; urgency=low
+
+  * Fix FTBFS from declaring UINT64 twice
+    - updated debian/patches/fixes_ftbfs_amd64.patch
+
+ -- Scott Howard <showard@debian.org>  Tue, 14 Jan 2014 11:51:54 -0500
+
+freeimage (3.15.4-1) unstable; urgency=low
 
   * QA Upload
   * New upstream minor release 
     - Includes fix to build on !linux (Closes: #650485)
   * Refreshed patches (line endings had to change)
+    - Remove document-mode.patch (accepted upstream)
   * Lintian fixes: S-V 3.9.5, DM-Upload-Allowed removed
+  * Remove document-mode.patch (accepted upstream)
 
- -- Scott Howard <showard@debian.org>  Mon, 13 Jan 2014 17:10:33 -0500
+ -- Scott Howard <showard@debian.org>  Mon, 13 Jan 2014 21:57:45 -0500
 
 freeimage (3.15.1-2) unstable; urgency=low
 

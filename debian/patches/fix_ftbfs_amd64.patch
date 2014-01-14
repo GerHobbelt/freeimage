@@ -2,8 +2,8 @@ Patch that fixes several problems for building on amd64. Thanks Fedora guys.
 =====================================================================
 Index: freeimage/Source/FreeImage/PluginBMP.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/PluginBMP.cpp	2011-12-03 21:40:26.000000000 -0800
-+++ freeimage/Source/FreeImage/PluginBMP.cpp	2011-12-03 21:40:30.988882105 -0800
+--- freeimage.orig/Source/FreeImage/PluginBMP.cpp	2014-01-14 11:43:25.776431191 -0500
++++ freeimage/Source/FreeImage/PluginBMP.cpp	2014-01-14 11:43:25.768431191 -0500
 @@ -192,6 +192,8 @@
  	return TRUE;
  }
@@ -13,3 +13,18 @@ Index: freeimage/Source/FreeImage/PluginBMP.cpp
  /**
  Load image pixels for 4-bit RLE compressed dib
  @param io FreeImage IO
+Index: freeimage/Source/FreeImage.h
+===================================================================
+--- freeimage.orig/Source/FreeImage.h	2014-01-13 17:15:32.449041339 -0500
++++ freeimage/Source/FreeImage.h	2014-01-14 11:51:29.864428839 -0500
+@@ -141,8 +141,10 @@
+ typedef uint16_t WORD;
+ typedef uint32_t DWORD;
+ typedef int32_t LONG;
++#ifndef _LIBRAW_TYPES_H
+ typedef int64_t INT64;
+ typedef uint64_t UINT64;
++#endif
+ #else
+ // MS is not C99 ISO compliant
+ typedef long BOOL;
