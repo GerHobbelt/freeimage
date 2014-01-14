@@ -4,8 +4,8 @@ options we're using by default, debugging should still be possible.
 ==========================================================================
 Index: freeimage/Makefile.fip
 ===================================================================
---- freeimage.orig/Makefile.fip	2011-12-04 11:43:19.000000000 -0800
-+++ freeimage/Makefile.fip	2011-12-04 11:49:31.245769399 -0800
+--- freeimage.orig/Makefile.fip	2014-01-13 17:29:48.737061690 -0500
++++ freeimage/Makefile.fip	2014-01-13 17:29:48.729061689 -0500
 @@ -15,10 +15,12 @@
  
  MODULES = $(SRCS:.c=.o)
@@ -43,8 +43,8 @@ Index: freeimage/Makefile.fip
  	rm -f core Dist/*.* u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)
 Index: freeimage/Makefile.gnu
 ===================================================================
---- freeimage.orig/Makefile.gnu	2011-12-04 11:44:21.000000000 -0800
-+++ freeimage/Makefile.gnu	2011-12-04 11:49:10.365768658 -0800
+--- freeimage.orig/Makefile.gnu	2014-01-13 17:29:48.737061690 -0500
++++ freeimage/Makefile.gnu	2014-01-13 17:29:48.729061689 -0500
 @@ -15,10 +15,12 @@
  
  MODULES = $(SRCS:.c=.o)
@@ -71,11 +71,3 @@ Index: freeimage/Makefile.gnu
  
  install:
  	install -d $(INCDIR) $(INSTALLDIR)
-@@ -67,7 +69,6 @@
- 	install -m 755 -o root -g root $(SHAREDLIB) $(INSTALLDIR)
- 	ln -sf $(SHAREDLIB) $(INSTALLDIR)/$(VERLIBNAME)
- 	ln -sf $(VERLIBNAME) $(INSTALLDIR)/$(LIBNAME)	
--	ldconfig
- 
- clean:
- 	rm -f core Dist/*.* u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)

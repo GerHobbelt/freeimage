@@ -1,8 +1,10 @@
-freeimage (3.15.4-1) unstable; urgency=low
+freeimage (3.15.4-1) UNRELEASED; urgency=low
 
   * QA Upload
   * New upstream minor release 
     - Includes fix to build on !linux (Closes: #650485)
+  * Refreshed patches (line endings had to change)
+  * Lintian fixes: S-V 3.9.5, DM-Upload-Allowed removed
 
  -- Scott Howard <showard@debian.org>  Mon, 13 Jan 2014 17:10:33 -0500
 
