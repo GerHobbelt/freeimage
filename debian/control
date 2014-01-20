@@ -11,6 +11,7 @@ Build-Depends:
  libopenjpeg-dev,
  libpng-dev,
  libraw-dev,
+ libtiff-dev,
  pkg-config,
  tofrodos,
  zlib1g-dev
