@@ -17,8 +17,8 @@ Last-Update: 2011-12-04
 
 Index: freeimage/gensrclist.sh
 ===================================================================
---- freeimage.orig/gensrclist.sh	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/gensrclist.sh	2014-01-13 21:56:37.535435145 -0500
+--- freeimage.orig/gensrclist.sh	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/gensrclist.sh	2014-01-19 19:46:55.961739167 -0500
 @@ -1,6 +1,6 @@
  #!/bin/sh
  
@@ -48,8 +48,8 @@ Index: freeimage/gensrclist.sh
  
 Index: freeimage/genfipsrclist.sh
 ===================================================================
---- freeimage.orig/genfipsrclist.sh	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/genfipsrclist.sh	2014-01-13 21:56:38.731435139 -0500
+--- freeimage.orig/genfipsrclist.sh	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/genfipsrclist.sh	2014-01-19 19:46:55.961739167 -0500
 @@ -1,6 +1,6 @@
  #!/bin/sh
  
@@ -74,8 +74,8 @@ Index: freeimage/genfipsrclist.sh
  
 Index: freeimage/Source/FreeImage/ZLibInterface.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/ZLibInterface.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImage/ZLibInterface.cpp	2014-01-13 21:56:24.167435210 -0500
+--- freeimage.orig/Source/FreeImage/ZLibInterface.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImage/ZLibInterface.cpp	2014-01-19 19:46:55.961739167 -0500
 @@ -19,10 +19,10 @@
  // Use at your own risk!
  // ==========================================================
@@ -100,8 +100,8 @@ Index: freeimage/Source/FreeImage/ZLibInterface.cpp
  	        memcpy(target + 8 + dest_len, &source_size, 4);
 Index: freeimage/Source/FreeImage/PluginJPEG.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/PluginJPEG.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImage/PluginJPEG.cpp	2014-01-13 21:56:24.183435209 -0500
+--- freeimage.orig/Source/FreeImage/PluginJPEG.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImage/PluginJPEG.cpp	2014-01-19 19:46:55.965739167 -0500
 @@ -35,9 +35,10 @@
  #undef FAR
  #include <setjmp.h>
@@ -118,8 +118,8 @@ Index: freeimage/Source/FreeImage/PluginJPEG.cpp
  #include "FreeImage.h"
 Index: freeimage/Source/FreeImage/PluginEXR.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/PluginEXR.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImage/PluginEXR.cpp	2014-01-13 21:56:24.207435209 -0500
+--- freeimage.orig/Source/FreeImage/PluginEXR.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImage/PluginEXR.cpp	2014-01-19 19:46:55.965739167 -0500
 @@ -22,16 +22,16 @@
  
  #include "FreeImage.h"
@@ -149,8 +149,8 @@ Index: freeimage/Source/FreeImage/PluginEXR.cpp
  // ==========================================================
 Index: freeimage/Source/FreeImage/PluginJ2K.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/PluginJ2K.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImage/PluginJ2K.cpp	2014-01-13 21:56:24.207435209 -0500
+--- freeimage.orig/Source/FreeImage/PluginJ2K.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImage/PluginJ2K.cpp	2014-01-19 19:46:55.965739167 -0500
 @@ -21,7 +21,7 @@
  
  #include "FreeImage.h"
@@ -162,8 +162,8 @@ Index: freeimage/Source/FreeImage/PluginJ2K.cpp
  // Plugin Interface
 Index: freeimage/Source/FreeImage/PluginPNG.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/PluginPNG.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImage/PluginPNG.cpp	2014-01-13 21:56:24.211435209 -0500
+--- freeimage.orig/Source/FreeImage/PluginPNG.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImage/PluginPNG.cpp	2014-01-19 19:46:55.965739167 -0500
 @@ -37,8 +37,7 @@
  
  // ----------------------------------------------------------
@@ -248,8 +248,8 @@ Index: freeimage/Source/FreeImage/PluginPNG.cpp
  			// write metadata
 Index: freeimage/Source/FreeImage/J2KHelper.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/J2KHelper.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImage/J2KHelper.cpp	2014-01-13 21:56:24.215435209 -0500
+--- freeimage.orig/Source/FreeImage/J2KHelper.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImage/J2KHelper.cpp	2014-01-19 19:46:55.965739167 -0500
 @@ -21,7 +21,7 @@
  
  #include "FreeImage.h"
@@ -261,8 +261,8 @@ Index: freeimage/Source/FreeImage/J2KHelper.cpp
  Divide an integer by a power of 2 and round upwards
 Index: freeimage/Source/FreeImage/PluginJP2.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/PluginJP2.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImage/PluginJP2.cpp	2014-01-13 21:56:24.215435209 -0500
+--- freeimage.orig/Source/FreeImage/PluginJP2.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImage/PluginJP2.cpp	2014-01-19 19:46:55.969739167 -0500
 @@ -21,7 +21,7 @@
  
  #include "FreeImage.h"
@@ -274,8 +274,8 @@ Index: freeimage/Source/FreeImage/PluginJP2.cpp
  // Plugin Interface
 Index: freeimage/Source/FreeImage/PluginRAW.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImage/PluginRAW.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImage/PluginRAW.cpp	2014-01-13 21:56:24.215435209 -0500
+--- freeimage.orig/Source/FreeImage/PluginRAW.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImage/PluginRAW.cpp	2014-01-19 19:46:55.969739167 -0500
 @@ -19,7 +19,7 @@
  // Use at your own risk!
  // ==========================================================
@@ -287,8 +287,8 @@ Index: freeimage/Source/FreeImage/PluginRAW.cpp
  #include "Utilities.h"
 Index: freeimage/Source/FreeImageToolkit/JPEGTransform.cpp
 ===================================================================
---- freeimage.orig/Source/FreeImageToolkit/JPEGTransform.cpp	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Source/FreeImageToolkit/JPEGTransform.cpp	2014-01-13 21:56:24.219435209 -0500
+--- freeimage.orig/Source/FreeImageToolkit/JPEGTransform.cpp	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Source/FreeImageToolkit/JPEGTransform.cpp	2014-01-19 19:46:55.969739167 -0500
 @@ -25,9 +25,10 @@
  #undef FAR
  #include <setjmp.h>
@@ -305,8 +305,8 @@ Index: freeimage/Source/FreeImageToolkit/JPEGTransform.cpp
  
 Index: freeimage/Makefile.fip
 ===================================================================
---- freeimage.orig/Makefile.fip	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Makefile.fip	2014-01-13 21:56:24.219435209 -0500
+--- freeimage.orig/Makefile.fip	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Makefile.fip	2014-01-19 19:46:55.969739167 -0500
 @@ -11,7 +11,7 @@
  # Converts cr/lf to just lf
  DOS2UNIX = dos2unix
@@ -318,8 +318,8 @@ Index: freeimage/Makefile.fip
  MODULES := $(MODULES:.cpp=.o)
 Index: freeimage/Makefile.gnu
 ===================================================================
---- freeimage.orig/Makefile.gnu	2014-01-13 21:56:24.227435209 -0500
-+++ freeimage/Makefile.gnu	2014-01-13 21:56:24.219435209 -0500
+--- freeimage.orig/Makefile.gnu	2014-01-19 19:46:56.009739168 -0500
++++ freeimage/Makefile.gnu	2014-01-19 19:46:55.969739167 -0500
 @@ -11,7 +11,7 @@
  # Converts cr/lf to just lf
  DOS2UNIX = dos2unix
@@ -329,3 +329,16 @@ Index: freeimage/Makefile.gnu
  
  MODULES = $(SRCS:.c=.o)
  MODULES := $(MODULES:.cpp=.o)
+Index: freeimage/Source/FreeImage/PluginTIFF.cpp
+===================================================================
+--- freeimage.orig/Source/FreeImage/PluginTIFF.cpp	2014-01-19 18:49:00.753656573 -0500
++++ freeimage/Source/FreeImage/PluginTIFF.cpp	2014-01-19 19:48:09.045740904 -0500
+@@ -39,7 +39,7 @@
+ #include "Utilities.h"
+ #include "../LibTIFF4/tiffiop.h"
+ #include "../Metadata/FreeImageTag.h"
+-#include "../OpenEXR/Half/half.h"
++#include <OpenEXR/half.h>
+ 
+ #include "FreeImageIO.h"
+ #include "PSDParser.h"

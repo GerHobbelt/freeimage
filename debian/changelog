@@ -1,3 +1,10 @@
+freeimage (3.15.4-3) UNRELEASED; urgency=low
+
+  * disable_embedded_libraries.patch
+    - Use system header <OpenEXR/half.h> in Source/FreeImage/PluginTIFF.cpp
+
+ -- Scott Howard <showard@debian.org>  Sun, 19 Jan 2014 19:48:30 -0500
+
 freeimage (3.15.4-2) unstable; urgency=low
 
   * Fix FTBFS from declaring UINT64 twice
