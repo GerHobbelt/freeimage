@@ -1,9 +1,12 @@
-freeimage (3.15.4-3) UNRELEASED; urgency=low
+freeimage (3.15.4-3) unstable; urgency=low
 
   * QA upload.
   * disable_embedded_libraries.patch
-    - Remove embedded libtiff (Closes: #735847, #735249)
-      Thanks to Sabayon from Gentoo for the tip
+    - Use system libtiff (Closes: #735249)
+      Thanks to Sabayon from Gentoo for the hints
+  * tag_truncation.patch
+    - Cherry pick upstream fix for truncation of tags in TIFF files
+      Thanks to Julian Taylor (Closes: #735847)
 
  -- Scott Howard <showard@debian.org>  Sun, 19 Jan 2014 21:44:52 -0500
 
