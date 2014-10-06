@@ -1,3 +1,28 @@
+freeimage (3.15.4-4.1) unstable; urgency=medium
+
+  * Non-maintainer upload
+  * Remove libjpeg8-dev from Build-Depends
+  * Add compatibility transupp.c from src:libjpeg-turbo and use that
+    to compile against libjpeg62 (Closes: #763255)
+  * Make d/copyright machine readable and add jpeg/* and Source/LibJPEG/*
+    license
+
+ -- Ondřej Surý <ondrej@debian.org>  Mon, 06 Oct 2014 11:29:52 +0200
+
+freeimage (3.15.4-4) unstable; urgency=medium
+
+  * QA upload.
+  * Build-depend on libjpeg8-dev.
+    Patch by Dejan Latinovic <Dejan.Latinovic@imgtec.com>.
+    Closes: #763255.
+  * Improve big endian detection.
+    Add fix-big-endian-detection.patch.
+    Patch by Dejan Latinovic <Dejan.Latinovic@imgtec.com>.
+    Closes:  #763730.
+  * Refresh patches
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Thu, 02 Oct 2014 10:18:47 +0100
+
 freeimage (3.15.4-3) unstable; urgency=low
 
   * QA upload.

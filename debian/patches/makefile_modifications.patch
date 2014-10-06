@@ -2,11 +2,9 @@ Some modificatoins to the makefiles to help in build Debian packages.
 Also removed -s (strip) option so we can make debug package. With the compiler
 options we're using by default, debugging should still be possible.
 ==========================================================================
-Index: freeimage/Makefile.fip
-===================================================================
---- freeimage.orig/Makefile.fip	2014-01-13 17:29:48.737061690 -0500
-+++ freeimage/Makefile.fip	2014-01-13 17:29:48.729061689 -0500
-@@ -15,10 +15,12 @@
+--- freeimage.orig/Makefile.fip
++++ freeimage/Makefile.fip
+@@ -15,10 +15,12 @@ LIBRARIES = -lstdc++ -lmng -ljpeg -lopen
  
  MODULES = $(SRCS:.c=.o)
  MODULES := $(MODULES:.cpp=.o)
@@ -23,7 +21,7 @@ Index: freeimage/Makefile.fip
  
  ifeq ($(shell sh -c 'uname -m 2>/dev/null || echo not'),x86_64)
  	CFLAGS += -fPIC
-@@ -59,7 +61,7 @@
+@@ -59,7 +61,7 @@ $(STATICLIB): $(MODULES)
  	$(AR) r $@ $(MODULES)
  
  $(SHAREDLIB): $(MODULES)
@@ -32,7 +30,7 @@ Index: freeimage/Makefile.fip
  
  install:
  	install -d $(INCDIR) $(INSTALLDIR)
-@@ -67,6 +69,8 @@
+@@ -67,6 +69,8 @@ install:
  	install -m 644 -o root -g root $(HEADERFIP) $(INCDIR)
  	install -m 644 -o root -g root $(STATICLIB) $(INSTALLDIR)
  	install -m 755 -o root -g root $(SHAREDLIB) $(INSTALLDIR)
@@ -41,11 +39,9 @@ Index: freeimage/Makefile.fip
  
  clean:
  	rm -f core Dist/*.* u2dtmp* $(MODULES) $(STATICLIB) $(SHAREDLIB) $(LIBNAME)
-Index: freeimage/Makefile.gnu
-===================================================================
---- freeimage.orig/Makefile.gnu	2014-01-13 17:29:48.737061690 -0500
-+++ freeimage/Makefile.gnu	2014-01-13 17:29:48.729061689 -0500
-@@ -15,10 +15,12 @@
+--- freeimage.orig/Makefile.gnu
++++ freeimage/Makefile.gnu
+@@ -15,10 +15,12 @@ LIBRARIES = -lstdc++ -ljpeg -lmng -lopen
  
  MODULES = $(SRCS:.c=.o)
  MODULES := $(MODULES:.cpp=.o)
@@ -62,7 +58,7 @@ Index: freeimage/Makefile.gnu
  
  ifeq ($(shell sh -c 'uname -m 2>/dev/null || echo not'),x86_64)
  	CFLAGS += -fPIC
-@@ -58,7 +60,7 @@
+@@ -58,7 +60,7 @@ $(STATICLIB): $(MODULES)
  	$(AR) r $@ $(MODULES)
  
  $(SHAREDLIB): $(MODULES)
