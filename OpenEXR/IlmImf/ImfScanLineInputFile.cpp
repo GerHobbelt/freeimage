@@ -57,6 +57,10 @@
 #include <vector>
 #include <assert.h>
 
+//min and max are defined in algorithm in visual
+#ifdef _MSC_VER
+#include <algorithm>
+#endif //_MSC_VER
 
 namespace Imf {
 
