@@ -16,6 +16,7 @@ OPTION(ENABLE_WEBP "Enable WebP support" 0)
 OPTION(ENABLE_RAW "Enable RAW support" 0)
 OPTION(ENABLE_OPENJP "Enable OpenJPEG support" 0)
 OPTION(ENABLE_TESTS "Make built in tests" 0)
+OPTION(FREEIMAGE_BUILD_STATIC "Enable static build of freeimage" 1)
 OPTION(FREEIMAGE_DYNAMIC_C_RUNTIME "If ON build FreeImage with dynamicly linked C/C++ runtime. If OFF FreeImage is staticly linked with C/C++ runtime.")
 
 IF(NOT FREEIMAGE_DYNAMIC_C_RUNTIME)
