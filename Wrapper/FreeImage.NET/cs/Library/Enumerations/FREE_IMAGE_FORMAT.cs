@@ -28,9 +28,9 @@
 
 // ==========================================================
 // CVS
-// $Revision$
-// $Date$
-// $Id$
+// $Revision: 1.2 $
+// $Date: 2009/09/15 11:44:42 $
+// $Id: FREE_IMAGE_FORMAT.cs,v 1.2 2009/09/15 11:44:42 cklein05 Exp $
 // ==========================================================
 
 namespace FreeImageAPI
@@ -188,7 +188,5 @@ namespace FreeImageAPI
 		/// RAW camera image (*.*)
 		/// </summary>
 		FIF_RAW = 34,
-		FIF_WEBP = 35,
-		FIF_JXR = 36
 	}
 }
