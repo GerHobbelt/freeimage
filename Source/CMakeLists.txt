@@ -15,6 +15,8 @@ set( FREEIMAGE_SOURCES
 	FreeImage/ConversionFloat.cpp 
 	FreeImage/ConversionRGBF.cpp FreeImage/ConversionRGB16.cpp FreeImage/ConversionType.cpp 
 	FreeImage/ConversionUINT16.cpp
+	FreeImage/ConversionRGBAF.cpp
+	FreeImage/ConversionRGBA16.cpp
 	FreeImage/FreeImage.cpp FreeImage/FreeImageIO.cpp FreeImage/GetType.cpp 
 	FreeImage/Halftoning.cpp
 	FreeImage/MemoryIO.cpp
@@ -23,7 +25,7 @@ set( FREEIMAGE_SOURCES
 	FreeImage/PluginCUT.cpp FreeImage/PluginDDS.cpp
 	FreeImage/PluginGIF.cpp FreeImage/PluginHDR.cpp
 	FreeImage/PluginICO.cpp FreeImage/PluginIFF.cpp
-
+	FreeImage/LFPQuantizer.cpp
 	FreeImage/PluginKOALA.cpp
 	FreeImage/PluginPCD.cpp FreeImage/PluginPCX.cpp FreeImage/PluginPFM.cpp 
 	FreeImage/PluginPICT.cpp
@@ -60,7 +62,9 @@ set( FREEIMAGE_SOURCES
 	FreeImage/PluginMNG.cpp
 	FreeImage/ZLibInterface.cpp
 )
-
+IF(ENABLE_JXR)
+  SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} FreeImage/PluginJXR.cpp)
+ENDIF()
 IF(ENABLE_PNG)
   SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} FreeImage/PluginPNG.cpp)
 ENDIF()
@@ -91,6 +95,7 @@ ENDIF()
 IF(FREEIMAGE_BUILD_STATIC)
   ADD_DEFINITIONS(-DFREEIMAGE_LIB -DLIBRAW_NODLL -DOPJ_STATIC)
   add_library(FreeImage_static STATIC ${FREEIMAGE_SOURCES})
+  target_link_libraries(FreeImage_static png jpeg tiff zlib half)
 ENDIF()
 
 IF(FREEIMAGE_BUILD_DLL)
@@ -100,5 +105,6 @@ IF(FREEIMAGE_BUILD_DLL)
   IF(MINGW)
     target_link_libraries(FreeImage ws2_32)
   ENDIF()
+  target_link_libraries(FreeImage png jpeg tiff zlib half)
 ENDIF()
 

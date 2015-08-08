@@ -80,8 +80,11 @@ If your big endian system isn't being detected, add an OS specific check
 #undef HOST_BIGENDIAN
 #endif // BYTE_ORDER
 
+/* Visual Studio 2015 / VC 14 / MSVC 19.00 finally has snprintf() */
 #ifdef _WIN32
+#if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
+#endif
 #define lfind _lfind
 #endif // _WIN32
 
