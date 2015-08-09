@@ -38,7 +38,7 @@ INCLUDE(CheckFunctionExists)
 INCLUDE(CheckTypeSize)
 
 # Find packages
-add_library(zlib Source/ZLib/zlib.h Source/ZLib/crc32.h Source/ZLib/deflate.h Source/ZLib/gzguts.h Source/ZLib/inffast.h Source/ZLib/inffixed.h Source/ZLib/inflate.h Source/ZLib/inftrees.h Source/ZLib/trees.h Source/ZLib/zutil.h Source/ZLib/adler32.c Source/ZLib/compress.c Source/ZLib/crc32.c Source/ZLib/deflate.c Source/ZLib/gzclose.c Source/ZLib/gzlib.c Source/ZLib/gzread.c Source/ZLib/gzwrite.c Source/ZLib/inflate.c Source/ZLib/infback.c Source/ZLib/inftrees.c Source/ZLib/inffast.c Source/ZLib/trees.c Source/ZLib/uncompr.c Source/ZLib/zutil.c)
+#add_library(zlib Source/ZLib/zlib.h Source/ZLib/crc32.h Source/ZLib/deflate.h Source/ZLib/gzguts.h Source/ZLib/inffast.h Source/ZLib/inffixed.h Source/ZLib/inflate.h Source/ZLib/inftrees.h Source/ZLib/trees.h Source/ZLib/zutil.h Source/ZLib/adler32.c Source/ZLib/compress.c Source/ZLib/crc32.c Source/ZLib/deflate.c Source/ZLib/gzclose.c Source/ZLib/gzlib.c Source/ZLib/gzread.c Source/ZLib/gzwrite.c Source/ZLib/inflate.c Source/ZLib/infback.c Source/ZLib/inftrees.c Source/ZLib/inffast.c Source/ZLib/trees.c Source/ZLib/uncompr.c Source/ZLib/zutil.c)
 include_directories(AFTER Source/OpenEXR Source/OpenEXR/Imath Source/OpenEXR/Iex Source/OpenEXR/IexMath Source/OpenEXR/Half Source/LibJXR/jxrgluelib Source/LibJXR/image/sys)
 SET(ZLIB_INCLUDE_DIR Source/Zlib/)
 IF(ENABLE_PNG)
