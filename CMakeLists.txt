@@ -75,6 +75,7 @@ IF(ENABLE_OPENJP)
 ENDIF()
 IF(ENABLE_PLUS)
   add_library(FreeImagePlus Wrapper/FreeImagePlus/src/fipImage.cpp Wrapper/FreeImagePlus/src/fipMemoryIO.cpp Wrapper/FreeImagePlus/src/fipMetadataFind.cpp Wrapper/FreeImagePlus/src/fipMultiPage.cpp Wrapper/FreeImagePlus/src/fipTag.cpp Wrapper/FreeImagePlus/src/fipWinImage.cpp Wrapper/FreeImagePlus/src/FreeImagePlus.cpp)
+  include_directories(AFTER Wrapper/FreeImagePlus Source/)
 ENDIF()
 
 # Set default output dirs
