@@ -4,3 +4,4 @@ makefile_modifications.patch
 tag_truncation.patch
 fix-big-endian-detection.patch
 build_using_libjpeg62_transupp.c.patch
+fix_integer_overflow.patch
