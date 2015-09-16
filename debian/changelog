@@ -1,7 +1,7 @@
-freeimage (3.15.4-4.2) unstable; urgency=medium
+freeimage (3.15.4-5) unstable; urgency=medium
 
   [ W. Martin Borgert ]
-  * Non-maintainer upload.
+  * QA upload.
   * [e807e1c] Fix integer overflow. (Closes: #797165)
 
  -- W. Martin Borgert <debacle@debian.org>  Tue, 15 Sep 2015 22:50:49 +0200
