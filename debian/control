@@ -1,31 +1,32 @@
 Source: freeimage
-Priority: optional
 Maintainer: Debian Science Maintainers <debian-science-maintainers@lists.alioth.debian.org>
-Uploaders: Anton Gladky <gladk@debian.org>, Ghislain Antony Vaillant <ghisvail@gmail.com>
-Build-Depends:
- debhelper (>= 8),
- dh-autoreconf,
- libjpeg-dev,
- liblcms2-dev,
- libmng-dev,
- libopenexr-dev,
- libopenjpeg-dev,
- libpng-dev,
- libraw-dev,
- libtiff-dev,
- pkg-config,
- tofrodos,
- zlib1g-dev
-Standards-Version: 3.9.5
+Uploaders: Anton Gladky <gladk@debian.org>,
+           Ghislain Antony Vaillant <ghisvail@gmail.com>
 Section: libs
-Homepage: http://freeimage.sourceforge.net/
+Priority: optional
+Build-Depends: debhelper (>= 8),
+               dh-autoreconf,
+               libjpeg-dev,
+               liblcms2-dev,
+               libmng-dev,
+               libopenexr-dev,
+               libopenjpeg-dev,
+               libpng-dev,
+               libraw-dev,
+               libtiff-dev,
+               pkg-config,
+               tofrodos,
+               zlib1g-dev
+Standards-Version: 3.9.6
 Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/freeimage.git
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/freeimage.git
+Homepage: http://freeimage.sourceforge.net/
 
 Package: libfreeimage-dev
-Section: libdevel
 Architecture: any
-Depends: libfreeimage3 (= ${binary:Version}), ${misc:Depends}
+Section: libdevel
+Depends: libfreeimage3 (= ${binary:Version}),
+         ${misc:Depends}
 Description: Support library for graphics image formats (development files)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
@@ -38,7 +39,8 @@ Description: Support library for graphics image formats (development files)
 
 Package: libfreeimage3
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
 Description: Support library for graphics image formats (library)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
@@ -49,10 +51,11 @@ Description: Support library for graphics image formats (library)
  This package contains the FreeImage library.
 
 Package: libfreeimage3-dbg
+Architecture: any
 Section: debug
 Priority: extra
-Architecture: any
-Depends: libfreeimage3 (= ${binary:Version}), ${misc:Depends}
+Depends: libfreeimage3 (= ${binary:Version}),
+         ${misc:Depends}
 Description: Support library for graphics image formats (debugging symbols)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
