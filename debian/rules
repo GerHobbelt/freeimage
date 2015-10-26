@@ -6,7 +6,7 @@ CXXFLAGS := $(shell dpkg-buildflags --get CXXFLAGS) -fPIC
 LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS)
 
 %:
-	dh $@ --with=autoreconf
+	dh $@ --with=autoreconf --parallel
 
 gen-src-list:
 	fromdos gensrclist.sh
@@ -22,13 +22,11 @@ override_dh_auto_build:
 	$(MAKE) -f Makefile.fip CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 override_dh_auto_install:
-	mkdir -p debian/tmp/usr/include
-	mkdir -p debian/tmp/usr/lib
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	dh_auto_install
 	$(MAKE) -f Makefile.fip install DESTDIR=$(CURDIR)/debian/tmp
 
 override_dh_auto_clean:
-	$(MAKE) clean
+	dh_auto_clean
 	$(MAKE) -f Makefile.fip clean
 
 override_dh_installdocs:
