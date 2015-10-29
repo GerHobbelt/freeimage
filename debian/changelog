@@ -1,6 +1,6 @@
 freeimage (3.15.4-6) unstable; urgency=medium
 
-  * [2ae274b] Move package under the Debian science team.
+  * [2ae274b] Move package under the Debian science team. (Closes: #604614)
   * [d526203] Apply cme fix dpkg-control.
   * [d526a52] Use compat level 9.
   * [c8cc95b] Simplify d/rules, .install.
