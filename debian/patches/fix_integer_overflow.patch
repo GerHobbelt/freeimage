@@ -60,7 +60,7 @@ Index: freeimage/Source/FreeImage/PluginPCX.cpp
 +		const unsigned width = right - left + 1;
 +		const unsigned height = bottom - top + 1;
 +		const unsigned bitcount = header.bpp * header.planes;
-+
+ 
 +		// allocate a new DIB
 +		switch(bitcount) {
 +			case 1:
@@ -75,27 +75,27 @@ Index: freeimage/Source/FreeImage/PluginPCX.cpp
 +				throw FI_MSG_ERROR_DIB_MEMORY;
 +				break;
 +		}
- 
++ 
 +		// if the dib couldn't be allocated, throw an error
  		if (!dib) {
  			throw FI_MSG_ERROR_DIB_MEMORY;
  		}
-@@ -426,19 +446,23 @@ Load(FreeImageIO *io, fi_handle handle,
+@@ -426,16 +446,17 @@ Load(FreeImageIO *io, fi_handle handle,
  
  				if (palette_id == 0x0C) {
  					BYTE *cmap = (BYTE*)malloc(768 * sizeof(BYTE));
 -					io->read_proc(cmap, 768, 1, handle);
- 
+-
 -					pal = FreeImage_GetPalette(dib);
 -					BYTE *pColormap = &cmap[0];
-+					if(cmap) {
-+						io->read_proc(cmap, 768, 1, handle);
- 
+-
 -					for(int i = 0; i < 256; i++) {
 -						pal[i].rgbRed   = pColormap[0];
 -						pal[i].rgbGreen = pColormap[1];
 -						pal[i].rgbBlue  = pColormap[2];
 -						pColormap += 3;
++					if(cmap) {
++						io->read_proc(cmap, 768, 1, handle);
 +						pal = FreeImage_GetPalette(dib);
 +						BYTE *pColormap = &cmap[0];
 +
@@ -105,15 +105,10 @@ Index: freeimage/Source/FreeImage/PluginPCX.cpp
 +							pal[i].rgbBlue  = pColormap[2];
 +							pColormap += 3;
 +						}
-+
-+						free(cmap);
  					}
  
--					free(cmap);
- 				}
- 
- 				// wrong palette ID, perhaps a gray scale is needed ?
-@@ -466,9 +490,9 @@ Load(FreeImageIO *io, fi_handle handle,
+ 					free(cmap);
+@@ -466,9 +487,9 @@ Load(FreeImageIO *io, fi_handle handle,
  		// calculate the line length for the PCX and the DIB
  
  		// length of raster line in bytes
