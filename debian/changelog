@@ -1,3 +1,15 @@
+freeimage (3.15.4-6) unstable; urgency=medium
+
+  * [2ae274b] Move package under the Debian science team.
+  * [d526203] Apply cme fix dpkg-control.
+  * [d526a52] Use compat level 9.
+  * [c8cc95b] Simplify d/rules, .install.
+  * [2682cec] Fix integer overflow in the ljpeg_start function CVE-2015-3885.
+              (Closes: #786790)
+  * [64a044f] Ignore quilt dir
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 29 Oct 2015 23:17:04 +0100
+
 freeimage (3.15.4-5) unstable; urgency=medium
 
   [ W. Martin Borgert ]
