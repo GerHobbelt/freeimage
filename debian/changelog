@@ -1,3 +1,10 @@
+freeimage (3.15.4-4.2) jessie-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Fix integer overflow CVE-2015-0852. (Closes: #797165)
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 29 Oct 2015 19:06:00 +0100
+
 freeimage (3.15.4-4.1) unstable; urgency=medium
 
   * Non-maintainer upload
