@@ -41,6 +41,18 @@ override_dh_auto_install:
 	dh_auto_install -- INCDIR="$(INSTALL_INCDIR)" INSTALLDIR="$(INSTALL_LIBDIR)"
 	$(MAKE) -f Makefile.fip install INCDIR="$(INSTALL_INCDIR)" INSTALLDIR="$(INSTALL_LIBDIR)"
 
+override_dh_auto_test-arch:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	echo "Building and running the FreeImage testsuite..."
+	cd $(CURDIR)/TestAPI && \
+	$(CXX) $(CXXFLAGS) -I$(CURDIR)/Dist *.cpp $(LDFLAGS) -L$(CURDIR)/Dist -lfreeimage -o testAPI && \
+	LD_LIBRARY_PATH=$(CURDIR)/Dist ./testAPI
+	echo "Building and running the FreeImagePlus testsuite..."
+	cd $(CURDIR)/Wrapper/FreeImagePlus/test && \
+	$(CXX) $(CXXFLAGS) -I$(CURDIR)/Dist *.cpp $(LDFLAGS) -L$(CURDIR)/Dist -lfreeimageplus -lfreeimage -o fipTest && \
+	LD_LIBRARY_PATH=$(CURDIR)/Dist ./fipTest
+endif
+
 override_dh_auto_clean:
 	dh_auto_clean
 	$(MAKE) -f Makefile.fip clean
