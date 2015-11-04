@@ -64,3 +64,46 @@ Description: Support library for graphics image formats (debugging symbols)
  with Linux, 32 bit Windows and Mac OS X).
  .
  This package contains the debugging symbols for the FreeImage library.
+
+Package: libfreeimageplus-dev
+Architecture: any
+Section: libdevel
+Depends: libfreeimageplus3 (= ${binary:Version}),
+         ${misc:Depends}
+Description: C++ wrappers for FreeImage (development files)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the headers and static libraries needed to develop
+ programs using FreeImagePlus.
+
+Package: libfreeimageplus3
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: C++ wrappers for freeimage (library)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the FreeImagePlus library.
+
+Package: libfreeimageplus3-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends: libfreeimageplus3 (= ${binary:Version}),
+         ${misc:Depends}
+Description: C++ wrappers for FreeImage (debugging symbols)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the debugging symbols for the FreeImagePlus library.

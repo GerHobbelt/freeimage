@@ -36,4 +36,5 @@ override_dh_installchangelogs:
 	dh_installchangelogs Whatsnew.txt
 
 override_dh_strip:
-	dh_strip --dbg-package=libfreeimage3-dbg
+	dh_strip --package=libfreeimage3 --dbg-package=libfreeimage3-dbg
+	dh_strip --package=libfreeimageplus3 --dbg-package=libfreeimageplus3-dbg
