@@ -17,6 +17,7 @@ Build-Depends: debhelper (>= 9),
                pkg-config,
                tofrodos,
                zlib1g-dev
+Build-Depends-Indep: doxygen
 Standards-Version: 3.9.6
 Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/freeimage.git
 Vcs-Git: git://anonscm.debian.org/debian-science/packages/freeimage.git
@@ -73,6 +74,7 @@ Architecture: any
 Section: libdevel
 Depends: libfreeimageplus3 (= ${binary:Version}),
          ${misc:Depends}
+Suggests: libfreeimageplus-doc
 Description: C++ wrappers for FreeImage (development files)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
@@ -82,6 +84,19 @@ Description: C++ wrappers for FreeImage (development files)
  .
  This package contains the headers and static libraries needed to develop
  programs using FreeImagePlus.
+
+Package: libfreeimageplus-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Description: C++ wrappers for FreeImage (documentation)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the documentation for FreeImagePlus.
 
 Package: libfreeimageplus3
 Architecture: any
