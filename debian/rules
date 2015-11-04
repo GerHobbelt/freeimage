@@ -5,6 +5,14 @@ CFLAGS := $(shell dpkg-buildflags --get CFLAGS) -fPIC
 CXXFLAGS := $(shell dpkg-buildflags --get CXXFLAGS) -fPIC
 LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS)
 
+# Environment information.
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+# Installation paths.
+DESTDIR = $(CURDIR)/debian/tmp
+INSTALL_INCDIR = $(DESTDIR)/usr/include
+INSTALL_LIBDIR = $(DESTDIR)/usr/lib/$(DEB_HOST_MULTIARCH)
+
 %:
 	dh $@ --with=autoreconf --parallel
 
@@ -22,8 +30,8 @@ override_dh_auto_build:
 	$(MAKE) -f Makefile.fip CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 override_dh_auto_install:
-	dh_auto_install
-	$(MAKE) -f Makefile.fip install DESTDIR=$(CURDIR)/debian/tmp
+	dh_auto_install -- INCDIR="$(INSTALL_INCDIR)" INSTALLDIR="$(INSTALL_LIBDIR)"
+	$(MAKE) -f Makefile.fip install INCDIR="$(INSTALL_INCDIR)" INSTALLDIR="$(INSTALL_LIBDIR)"
 
 override_dh_auto_clean:
 	dh_auto_clean

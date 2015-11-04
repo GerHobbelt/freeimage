@@ -1,2 +1,2 @@
 usr/include/FreeImage.h
-usr/lib/libfreeimage.so
+usr/lib/*/libfreeimage.so

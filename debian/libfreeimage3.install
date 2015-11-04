@@ -1,2 +1,2 @@
-usr/lib/libfreeimage-*.so
-usr/lib/libfreeimage.so.*
+usr/lib/*/libfreeimage-*.so
+usr/lib/*/libfreeimage.so.*

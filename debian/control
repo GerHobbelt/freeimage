@@ -39,8 +39,10 @@ Description: Support library for graphics image formats (development files)
 
 Package: libfreeimage3
 Architecture: any
+Multi-Arch: same
 Depends: ${misc:Depends},
          ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
 Description: Support library for graphics image formats (library)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
@@ -52,6 +54,7 @@ Description: Support library for graphics image formats (library)
 
 Package: libfreeimage3-dbg
 Architecture: any
+Multi-Arch: same
 Section: debug
 Priority: extra
 Depends: libfreeimage3 (= ${binary:Version}),
@@ -82,8 +85,10 @@ Description: C++ wrappers for FreeImage (development files)
 
 Package: libfreeimageplus3
 Architecture: any
+Multi-Arch: same
 Depends: ${misc:Depends},
          ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
 Description: C++ wrappers for freeimage (library)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
@@ -95,6 +100,7 @@ Description: C++ wrappers for freeimage (library)
 
 Package: libfreeimageplus3-dbg
 Architecture: any
+Multi-Arch: same
 Section: debug
 Priority: extra
 Depends: libfreeimageplus3 (= ${binary:Version}),
