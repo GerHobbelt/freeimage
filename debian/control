@@ -6,6 +6,7 @@ Section: libs
 Priority: optional
 Build-Depends: debhelper (>= 9),
                dh-autoreconf,
+               dos2unix,
                libjpeg-dev,
                libjxr-dev,
                libopenexr-dev,
@@ -15,7 +16,6 @@ Build-Depends: debhelper (>= 9),
                libtiff-dev,
                libwebp-dev,
                pkg-config,
-               tofrodos,
                zlib1g-dev
 Build-Depends-Indep: doxygen
 Standards-Version: 3.9.6

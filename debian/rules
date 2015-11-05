@@ -22,10 +22,10 @@ INSTALL_LIBDIR = $(DESTDIR)/usr/lib/$(DEB_HOST_MULTIARCH)
 	dh $@ --with=autoreconf --parallel
 
 gen-src-list:
-	fromdos gensrclist.sh
-	fromdos genfipsrclist.sh
 	sh gensrclist.sh
+	$(MAKE) -f Makefile.gnu dos2unix
 	sh genfipsrclist.sh
+	$(MAKE) -f Makefile.fip dos2unix
 
 override_dh_autoreconf:
 	dh_autoreconf $(MAKE) -- -f $(CURDIR)/debian/rules gen-src-list
