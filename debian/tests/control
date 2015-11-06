@@ -1,0 +1,3 @@
+Tests: test-freeimage test-freeimageplus
+Depends: @, build-essential
+Restrictions: allow-stderr
