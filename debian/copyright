@@ -1,6 +1,10 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: freeimage
 Source: http://freeimage.sourceforge.net/
+Files-Excluded: Source/Lib*
+                Source/OpenEXR
+                Source/ZLib
+Comment: Strip vendored libraries from source tarball.
 
 Files: *
 Copyright: 2003-2007 FreeImage Group
