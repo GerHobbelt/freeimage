@@ -1,0 +1,52 @@
+From: Ghislain Antony Vaillant <ghisvail@gmail.com>
+Date: Wed, 4 Nov 2015 19:07:47 +0000
+Subject: Fix doxygen output settings.
+
+>From Fedora's FreeImage-3.17.0_doxygen patch. Uses relative paths for output
+directory, logfile and input, instead of hardcoded Windows paths.
+---
+ Wrapper/FreeImagePlus/doc/FreeImagePlus.dox | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox b/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox
+index 8c32d39..33fa374 100644
+--- a/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox
++++ b/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox
+@@ -31,7 +31,7 @@ PROJECT_NAME           = FreeImagePlus
+ # This could be handy for archiving the generated documentation or 
+ # if some version control system is used.
+ 
+-PROJECT_NUMBER         = "- FreeImage 3.15.1"
++PROJECT_NUMBER         = "- FreeImage 3.17.0"
+ 
+ # Using the PROJECT_BRIEF tag one can provide an optional one line description 
+ # for a project that appears at the top of each page and should give viewer 
+@@ -51,7 +51,7 @@ PROJECT_LOGO           =
+ # If a relative path is entered, it will be relative to the location 
+ # where doxygen was started. If left blank the current directory will be used.
+ 
+-OUTPUT_DIRECTORY       = D:/Projects/FreeImage/Wrapper/FreeImagePlus/
++OUTPUT_DIRECTORY       =
+ 
+ # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
+ # 4096 sub-directories (in 2 levels) under the output directory of each output 
+@@ -598,7 +598,7 @@ WARN_FORMAT            = "$file:$line: $text"
+ # and error messages should be written. If left blank the output is written 
+ # to stderr.
+ 
+-WARN_LOGFILE           = D:\Projects\FreeImage\Wrapper\FreeImagePlus\doc\doxygen.log
++WARN_LOGFILE           =
+ 
+ #---------------------------------------------------------------------------
+ # configuration options related to the input files
+@@ -609,8 +609,8 @@ WARN_LOGFILE           = D:\Projects\FreeImage\Wrapper\FreeImagePlus\doc\doxygen
+ # directories like "/usr/src/myproject". Separate the files or directories 
+ # with spaces.
+ 
+-INPUT                  = D:/Projects/FreeImage/Source/FreeImage.h \
+-                         D:/Projects/FreeImage/Wrapper/FreeImagePlus/FreeImagePlus.h
++INPUT                  = ../../../Source/FreeImage.h \
++                         ../FreeImagePlus.h
+ 
+ # This tag can be used to specify the character encoding of the source files 
+ # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
