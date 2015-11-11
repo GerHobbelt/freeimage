@@ -1,3 +1,9 @@
+freeimage (3.17.0+dfsg1-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Wed, 11 Nov 2015 13:40:17 +0000
+
 freeimage (3.15.4-6) unstable; urgency=medium
 
   * [2ae274b] Move package under the Debian science team. (Closes: #604614)
