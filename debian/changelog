@@ -1,6 +1,43 @@
 freeimage (3.17.0+ds1-1) UNRELEASED; urgency=medium
 
   * New upstream release.
+  * Use repacked upstream source tarball:
+    - d/copyright: exclude vendored libraries.
+    - d/watch: use more flexible regexes.
+    - Remove *get-orig script, no longer used.
+    - Remove *lintian-overrides, no longer used.
+  * d/copyright: update licensing information.
+  * Add gbp.conf file.
+  * d/control: refresh list of build dependencies.
+  * Add new binary packages for FreeImagePlus.
+    Packages: libfreeimageplus{3,3-dbg,-dev,-doc}
+  * d/rules:
+    - Add multi-arch support.
+    - Use modern hardening settings.
+    - Run FreeImage and FreeImagePlus testsuites.
+    - Call upstream dos2unix target.
+  * Add autopkgtest support.
+  * Refresh patch queue:
+    - Drop disable_embedded_libraries.patch, replaced by new set of patches
+      derived from Fedora's.
+      Files: Disable-vendored-dependencies.patch,
+             Use-system-dependencies.patch
+    - Drop patch for CVE-2015-3885, FreeImage now uses the system libraw.
+    - Disable tests for any functonality requiring the vendored libraries.
+      File: Disable-testing-of-JPEG-transform.patch
+    - Temporary disable failing JXR MemIO test.
+      File: Disable-testing-of-JXR-MemIO.patch
+    - Improve compatibility with system libraries.
+      Files: Fix-macro-redefinition-of-64-bit-integer-types.patch,
+             Fix-compatibility-with-system-libpng.patch
+    - Various bug fixes caught whilst testing.
+      Files: Fix-unsafe-usage-of-printf-in-testsuite.patch,
+             Fix-missing-cstdio-include-in-testsuite.patch,
+             Fix-endianness-detection.patch
+    - Disable HTML timestamps in Doxygen documentation.
+      File: Disable-usage-of-HTML-timestamps-in-doxygen.patch
+    - Rename patch fixing CVE-2015-0852.
+      File: Fix-CVE-2015-0852.patch
 
  -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Wed, 11 Nov 2015 13:40:17 +0000
 
