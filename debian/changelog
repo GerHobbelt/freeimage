@@ -23,7 +23,7 @@ freeimage (3.17.0+ds1-1) UNRELEASED; urgency=medium
       Files: Disable-vendored-dependencies.patch,
              Use-system-dependencies.patch
     - Drop patch for CVE-2015-3885, FreeImage now uses the system libraw.
-    - Disable tests for any functonality requiring the vendored libraries.
+    - Disable tests for any functionality requiring the vendored libraries.
       File: Disable-testing-of-JPEG-transform.patch
     - Temporary disable failing JXR MemIO test.
       File: Disable-testing-of-JXR-MemIO.patch
