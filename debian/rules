@@ -37,9 +37,11 @@ override_dh_auto_build-arch:
 override_dh_auto_build-indep:
 	cd $(CURDIR)/Wrapper/FreeImagePlus/doc && doxygen FreeImagePlus.dox
 
-override_dh_auto_install:
+override_dh_auto_install-arch:
 	dh_auto_install -- INCDIR="$(INSTALL_INCDIR)" INSTALLDIR="$(INSTALL_LIBDIR)"
 	$(MAKE) -f Makefile.fip install INCDIR="$(INSTALL_INCDIR)" INSTALLDIR="$(INSTALL_LIBDIR)"
+
+override_dh_auto_install-indep:
 
 override_dh_auto_test-arch:
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
@@ -56,6 +58,9 @@ endif
 override_dh_auto_clean:
 	dh_auto_clean
 	$(MAKE) -f Makefile.fip clean
+
+override_dh_install-indep:
+	dh_installdocs --indep
 
 override_dh_installdocs-indep:
 	dh_installdocs --indep
