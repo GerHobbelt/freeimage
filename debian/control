@@ -89,7 +89,8 @@ Description: C++ wrappers for FreeImage (development files)
 Package: libfreeimageplus-doc
 Architecture: all
 Section: doc
-Depends: ${misc:Depends}
+Depends: ${misc:Depends},
+         libjs-jquery
 Description: C++ wrappers for FreeImage (documentation)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF

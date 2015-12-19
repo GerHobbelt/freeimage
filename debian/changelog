@@ -1,5 +1,6 @@
-freeimage (3.17.0+ds1-1) UNRELEASED; urgency=medium
+freeimage (3.17.0+ds1-1) experimental; urgency=medium
 
+  [ Ghislain Antony Vaillant ]
   * New upstream release.
   * Use repacked upstream source tarball:
     - d/copyright: exclude vendored libraries.
@@ -38,6 +39,10 @@ freeimage (3.17.0+ds1-1) UNRELEASED; urgency=medium
       File: Disable-usage-of-HTML-timestamps-in-doxygen.patch
     - Rename patch fixing CVE-2015-0852.
       File: Fix-CVE-2015-0852.patch
+
+  [ Anton Gladky ]
+  * Fix typo in d/control.
+  * Use packaged jquery.js instead of embedded.
 
  -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Wed, 11 Nov 2015 13:40:17 +0000
 
