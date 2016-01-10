@@ -1,3 +1,9 @@
-Tests: test-freeimage test-freeimageplus
-Depends: @, build-essential
+Tests: test-freeimage
+Depends: build-essential,
+         libfreeimage-dev
+Restrictions: allow-stderr
+
+Tests: test-freeimageplus
+Depends: build-essential,
+         libfreeimageplus-dev
 Restrictions: allow-stderr
