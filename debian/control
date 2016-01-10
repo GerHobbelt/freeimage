@@ -73,7 +73,8 @@ Description: Support library for graphics image formats (debugging symbols)
 Package: libfreeimageplus-dev
 Architecture: any
 Section: libdevel
-Depends: libfreeimageplus3 (= ${binary:Version}),
+Depends: libfreeimage-dev (>= 3.17.0+ds1-1~exp2),
+         libfreeimageplus3 (= ${binary:Version}),
          ${misc:Depends}
 Suggests: libfreeimageplus-doc
 Breaks: libfreeimage-dev (<< 3.17.0+ds1-1~exp2)
