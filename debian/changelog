@@ -1,3 +1,14 @@
+freeimage (3.17.0+ds1-1~exp2) UNRELEASED; urgency=medium
+
+  * Add missing breaks / replaces relationship for libfreeimageplus-dev.
+    Thanks to Andreas Beckmann (Closes: #810570)
+  * Add missing depends on libfreeimage-dev for libfreeimageplus-dev.
+  * autopkgtest: use respective -dev packages for fi and fip tests.
+  * Add patch fixing the encoding of the FreeImage public header.
+    Thanks to Christophe Trophime (Closes: #798003)
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Sun, 10 Jan 2016 16:07:26 +0000
+
 freeimage (3.17.0+ds1-1~exp1) experimental; urgency=medium
 
   [ Ghislain Antony Vaillant ]
