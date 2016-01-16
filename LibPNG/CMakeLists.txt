@@ -38,3 +38,7 @@ else()
 endif()
 
 xmake_project_link(PNG ZLIB)
+
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(PNG COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()

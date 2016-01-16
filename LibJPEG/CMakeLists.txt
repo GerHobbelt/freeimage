@@ -70,3 +70,7 @@ xmake_create_static_library(JPEG jpeg ${HEADERS} ${SRCS})
 if (WIN32)
     xmake_add_to_list_property(JPEG COMPILE_DEFINITIONS "_CRT_SECURE_NO_DEPRECATE")
 endif()
+
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(JPEG COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()

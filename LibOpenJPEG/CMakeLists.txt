@@ -59,5 +59,9 @@ else()
     xmake_add_to_list_property(OPENJPEG COMPILE_DEFINITIONS "_CRT_SECURE_NO_DEPRECATE")
 endif()
 
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(OPENJPEG COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()
+
 # Exportations
 xmake_export_compile_definitions(OPENJPEG "OPJ_STATIC")

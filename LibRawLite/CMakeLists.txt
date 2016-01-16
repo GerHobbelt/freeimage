@@ -33,3 +33,7 @@ else()
     xmake_add_to_property(RAWLITE COMPILE_FLAGS "/W0")
     xmake_add_to_list_property(RAWLITE COMPILE_DEFINITIONS "_CRT_SECURE_NO_DEPRECATE")
 endif()
+
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(RAWLITE COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()

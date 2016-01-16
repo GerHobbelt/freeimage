@@ -36,6 +36,14 @@ endif()
 
 include("${XMAKE_DEPENDENCIES_DIR}/XMake/XMake.cmake")
 
+##########################################################################################
+# Global parameters
+
+# Endianess seems to work weird, is there a bug in the library?
+if (DEFINED FREEIMAGE_FORCE_BIGENDIAN)
+#need to check xmake to support multiplatform
+    set(FREEIMAGE_CPP_FLAGS "FREEIMAGE_BIGENDIAN")
+endif()
 
 ##########################################################################################
 # Process subdirectories
@@ -170,8 +178,17 @@ else()
     xmake_add_to_list_property(FREEIMAGE COMPILE_DEFINITIONS "_CRT_SECURE_NO_DEPRECATE")
 endif()
 
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(FREEIMAGE COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()
+
 xmake_project_link(FREEIMAGE JPEG MNG OPENEXR OPENJPEG PNG RAWLITE TIFF ZLIB)
 
 # Exportations
 xmake_export_include_paths(FREEIMAGE ${FREEIMAGE_SOURCE_DIR})
 xmake_export_compile_definitions(FREEIMAGE "FREEIMAGE_LIB" "OPJ_STATIC" "LIBRAW_NODLL")
+
+#Should use xmake?
+set(FREEIMAGE_CPP_FLAGS "${FREEIMAGE_CPP_FLAGS} -DFREEIMAGE_LIB -DOPJ_STATIC -DLIBRAW_NODLL")
+set(GLOBAL_CPP_FLAGS "${GLOBAL_CPP_FLAGS} -D${FREEIMAGE_CPP_FLAGS}" PARENT_SCOPE)
+set(GLOBAL_INCLUDE_PATH "${GLOBAL_INCLUDE_PATH};${CMAKE_CURRENT_SOURCE_DIR}" PARENT_SCOPE)
