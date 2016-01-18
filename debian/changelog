@@ -1,3 +1,9 @@
+freeimage (3.17.0+ds1-1) unstable; urgency=medium
+
+  * Move from experimental to unstable.
+
+ -- Anton Gladky <gladk@debian.org>  Mon, 18 Jan 2016 08:33:15 +0100
+
 freeimage (3.17.0+ds1-1~exp2) experimental; urgency=medium
 
   * Add missing breaks / replaces relationship for libfreeimageplus-dev.
