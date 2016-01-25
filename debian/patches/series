@@ -11,4 +11,3 @@ Fix-missing-cstdio-include-in-testsuite.patch
 Fix-endianness-detection.patch
 Fix-CVE-2015-0852.patch
 Fix-encoding-of-fi-header.patch
-libpng16.patch
