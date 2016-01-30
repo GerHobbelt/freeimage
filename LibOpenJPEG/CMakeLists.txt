@@ -65,3 +65,5 @@ endif()
 
 # Exportations
 xmake_export_compile_definitions(OPENJPEG "OPJ_STATIC")
+
+set_target_properties(openjpeg PROPERTIES FOLDER "LibsExtern/freeimage")

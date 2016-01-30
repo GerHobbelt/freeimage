@@ -223,3 +223,5 @@ endif()
 
 # Exportations
 xmake_export_include_paths(OPENEXR ${INCLUDE_PATHS})
+
+set_target_properties(openexr PROPERTIES FOLDER "LibsExtern/freeimage")

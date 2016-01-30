@@ -74,3 +74,5 @@ endif()
 if (DEFINED FREEIMAGE_CPP_FLAGS)
     xmake_add_to_list_property(JPEG COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
 endif()
+
+set_target_properties(jpeg PROPERTIES FOLDER "LibsExtern/freeimage")

@@ -65,3 +65,5 @@ if (DEFINED FREEIMAGE_CPP_FLAGS)
 endif()
 
 xmake_project_link(MNG ZLIB)
+
+set_target_properties(mng PROPERTIES FOLDER "LibsExtern/freeimage")

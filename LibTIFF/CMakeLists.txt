@@ -68,3 +68,5 @@ if (DEFINED FREEIMAGE_CPP_FLAGS)
 endif()
 
 xmake_project_link(TIFF ZLIB)
+
+set_target_properties(tiff PROPERTIES FOLDER "LibsExtern/freeimage")
