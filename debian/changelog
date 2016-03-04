@@ -1,3 +1,10 @@
+freeimage (3.17.0+ds1-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * FTBFS with libpng1.6: New patch libpng16.patch (Closes: #742560)
+
+ -- Tobias Frost <tobi@debian.org>  Fri, 22 Jan 2016 06:33:47 +0100
+
 freeimage (3.17.0+ds1-1) unstable; urgency=medium
 
   * Move from experimental to unstable.
