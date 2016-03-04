@@ -1,4 +1,4 @@
-freeimage (3.17.0+ds1-2) UNRELEASED; urgency=medium
+freeimage (3.17.0+ds1-2) unstable; urgency=medium
 
   * Improve build reproducibility by applying suggested s/sort/LC_ALL=C sort/
     to Disable-vendored-dependencies.patch.
@@ -6,7 +6,7 @@ freeimage (3.17.0+ds1-2) UNRELEASED; urgency=medium
   * Use secure Vcs-Git URI.
   * Bump standards version to 3.9.7, no changes required.
 
- -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Fri, 04 Mar 2016 09:59:26 +0000
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Fri, 04 Mar 2016 09:59:58 +0000
 
 freeimage (3.17.0+ds1-1.1) unstable; urgency=medium
 
