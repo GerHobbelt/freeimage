@@ -2,15 +2,19 @@ From: Ghislain Antony Vaillant <ghisvail@gmail.com>
 Date: Tue, 3 Nov 2015 15:20:45 +0000
 Subject: Fix compatibility with system libpng.
 
+[Ghislain Antony Vaillant]
 The PNG plugin of FreeImage makes use of optional features of libpng, which
 are not enabled in Debian. This commit adds the necessary guards for FreeImage
 to compile and run without these features.
+
+[Tobias Frost]
+Fix FTBFS with libpng 1.6.
 ---
- Source/FreeImage/PluginPNG.cpp | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+ Source/FreeImage/PluginPNG.cpp | 35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
 diff --git a/Source/FreeImage/PluginPNG.cpp b/Source/FreeImage/PluginPNG.cpp
-index c3c5cd6..3c8f0e0 100644
+index c3c5cd6..66b8ccb 100644
 --- a/Source/FreeImage/PluginPNG.cpp
 +++ b/Source/FreeImage/PluginPNG.cpp
 @@ -109,9 +109,11 @@ ReadMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
@@ -61,16 +65,28 @@ index c3c5cd6..3c8f0e0 100644
  		// set the tag 
  		png_set_text(png_ptr, info_ptr, &text_metadata, 1);
  		bResult &= TRUE;
-@@ -705,7 +713,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
+@@ -705,11 +713,19 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
  
  			if (png_get_valid(png_ptr, info_ptr, PNG_INFO_iCCP)) {
  				png_charp profile_name = NULL;
 -				png_bytep profile_data = NULL;
++#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
++				png_bytepp profile_data = NULL;
++#else
 +				png_charp profile_data = NULL;
++#endif
  				png_uint_32 profile_length = 0;
  				int  compression_type;
  
-@@ -744,8 +752,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
++#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
++				png_get_iCCP(png_ptr, info_ptr, &profile_name, &compression_type, profile_data, &profile_length);
++#else
+ 				png_get_iCCP(png_ptr, info_ptr, &profile_name, &compression_type, &profile_data, &profile_length);
++#endif
+ 
+ 				// copy ICC profile data (must be done after FreeImage_AllocateHeader)
+ 
+@@ -744,8 +760,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
  			for (png_uint_32 k = 0; k < height; k++) {
  				row_pointers[height - 1 - k] = FreeImage_GetScanLine(dib, k);
  			}
@@ -81,12 +97,16 @@ index c3c5cd6..3c8f0e0 100644
  			png_read_image(png_ptr, row_pointers);
  
  			// check if the bitmap contains transparency, if so enable it in the header
-@@ -991,7 +1000,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
+@@ -991,7 +1008,11 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
  
  			FIICCPROFILE *iccProfile = FreeImage_GetICCProfile(dib);
  			if (iccProfile->size && iccProfile->data) {
 -				png_set_iCCP(png_ptr, info_ptr, "Embedded Profile", 0, (png_const_bytep)iccProfile->data, iccProfile->size);
++#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
++				//png_set_iCCP(png_ptr, info_ptr, "Embedded Profile", 0, (png_const_bytep)iccProfile->data, iccProfile->size);
++#else
 +				png_set_iCCP(png_ptr, info_ptr, "Embedded Profile", 0, (png_charp)iccProfile->data, iccProfile->size);
++#endif
  			}
  
  			// write metadata
