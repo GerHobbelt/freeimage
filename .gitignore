@@ -245,3 +245,8 @@ _Pvt_Extensions
 *.exe
 *.out
 *.app
+
+# Other
+*.bat
+*.db
+*.opendb
