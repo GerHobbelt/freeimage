@@ -313,7 +313,8 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 							strcpy(buffer, s_search_list[count]);
 							strncat(buffer, find_data.name, MAX_PATH + 200);
 
-							HINSTANCE instance = LoadLibrary(buffer);
+							//TODO:  use LoadLibrary as LoadLibraryW instate, with proper unicode file names. 
+							HINSTANCE instance = LoadLibraryA(buffer); //! No Unicode Support for now !
 
 							if (instance != NULL) {
 								FARPROC proc_address = GetProcAddress(instance, "_Init@8");
@@ -518,7 +519,8 @@ FreeImage_RegisterLocalPlugin(FI_InitProc proc_address, const char *format, cons
 FREE_IMAGE_FORMAT DLL_CALLCONV
 FreeImage_RegisterExternalPlugin(const char *path, const char *format, const char *description, const char *extension, const char *regexpr) {
 	if (path != NULL) {
-		HINSTANCE instance = LoadLibrary(path);
+		//TODO:  use LoadLibrary as LoadLibraryW instate, with proper unicode file names. 
+		HINSTANCE instance = LoadLibraryA(path); //! No Unicode Support for now !
 
 		if (instance != NULL) {
 			FARPROC proc_address = GetProcAddress(instance, "_Init@8");
