@@ -250,6 +250,7 @@
       <CompileAs>Default</CompileAs>
       <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
       <Optimization>Full</Optimization>
+      <Cpp0xSupport>true</Cpp0xSupport>
     </ClCompile>
     <Lib />
   </ItemDefinitionGroup>

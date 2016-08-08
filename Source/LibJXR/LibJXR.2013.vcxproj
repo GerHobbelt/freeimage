@@ -225,6 +225,7 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Cpp0xSupport>true</Cpp0xSupport>
     </ClCompile>
     <Lib />
   </ItemDefinitionGroup>
