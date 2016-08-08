@@ -99,7 +99,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>.\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)_obj\$(ProjectName)\$(PlatformName)_$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
@@ -111,11 +111,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>.\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)_obj\$(ProjectName)\$(PlatformName)_$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Intel|x64'">
     <OutDir>$(SolutionDir)lib\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>.\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)_obj\$(ProjectName)\$(PlatformName)_$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
