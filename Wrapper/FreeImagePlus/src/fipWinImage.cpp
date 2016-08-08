@@ -273,7 +273,7 @@ BOOL fipWinImage::copyToClipboard(HWND hWndNewOwner) const {
 	if(OpenClipboard(hWndNewOwner)) {
 		if(EmptyClipboard()) {
 			if(SetClipboardData(CF_DIB, hDIB) == NULL) {
-				MessageBox(hWndNewOwner, "Unable to set Clipboard data", "FreeImage", MB_ICONERROR);
+				MessageBox(hWndNewOwner,TEXT("Unable to set Clipboard data"), TEXT("FreeImage"), MB_ICONERROR);
 				CloseClipboard();
 				return FALSE;
 			}
