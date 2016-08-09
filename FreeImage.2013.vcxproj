@@ -313,7 +313,7 @@ copy Source\FreeImage.h Dist\x64
       </HeaderFileName>
     </Midl>
     <ClCompile>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeedHighLevel</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -332,6 +332,7 @@ copy Source\FreeImage.h Dist\x64
       <StructMemberAlignment>16Bytes</StructMemberAlignment>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Cpp0xSupport>true</Cpp0xSupport>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
