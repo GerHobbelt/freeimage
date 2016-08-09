@@ -570,7 +570,6 @@ copy Source\FreeImage.h Dist\x64
     <ClInclude Include="Source\FreeImageToolkit\Resize.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Todo.txt" />
     <Text Include="Whatsnew.txt" />
   </ItemGroup>
   <ItemGroup>
