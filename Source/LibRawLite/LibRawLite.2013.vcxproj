@@ -252,6 +252,7 @@
       <Optimization>MaxSpeedHighLevel</Optimization>
       <Cpp0xSupport>true</Cpp0xSupport>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Lib />
   </ItemDefinitionGroup>

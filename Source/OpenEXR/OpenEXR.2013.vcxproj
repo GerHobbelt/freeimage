@@ -246,6 +246,7 @@
       <RecognizeRestrictKeyword>true</RecognizeRestrictKeyword>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -310,7 +311,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="IexMath\IexMathFpu.cpp" />
-    <ClCompile Include="IlmImf\b44ExpLogTable.cpp" />
+    <ClCompile Include="IlmImf\b44ExpLogTable.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Intel|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Intel|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="IlmImf\ImfAcesFile.cpp" />
     <ClCompile Include="IlmImf\ImfAttribute.cpp" />
     <ClCompile Include="IlmImf\ImfB44Compressor.cpp" />
