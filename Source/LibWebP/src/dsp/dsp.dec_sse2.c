@@ -21,7 +21,9 @@
 // #define USE_TRANSFORM_AC3
 
 #include <emmintrin.h>
+#include "./common_sse2.h"
 #include "../dec/vp8i.h"
+#include "../utils/utils.h"
 
 //------------------------------------------------------------------------------
 // Transforms (Paragraph 14.4)
@@ -102,34 +104,7 @@ static void Transform(const int16_t* in, uint8_t* dst, int do_two) {
     const __m128i tmp3 = _mm_sub_epi16(a, d);
 
     // Transpose the two 4x4.
-    // a00 a01 a02 a03   b00 b01 b02 b03
-    // a10 a11 a12 a13   b10 b11 b12 b13
-    // a20 a21 a22 a23   b20 b21 b22 b23
-    // a30 a31 a32 a33   b30 b31 b32 b33
-    const __m128i transpose0_0 = _mm_unpacklo_epi16(tmp0, tmp1);
-    const __m128i transpose0_1 = _mm_unpacklo_epi16(tmp2, tmp3);
-    const __m128i transpose0_2 = _mm_unpackhi_epi16(tmp0, tmp1);
-    const __m128i transpose0_3 = _mm_unpackhi_epi16(tmp2, tmp3);
-    // a00 a10 a01 a11   a02 a12 a03 a13
-    // a20 a30 a21 a31   a22 a32 a23 a33
-    // b00 b10 b01 b11   b02 b12 b03 b13
-    // b20 b30 b21 b31   b22 b32 b23 b33
-    const __m128i transpose1_0 = _mm_unpacklo_epi32(transpose0_0, transpose0_1);
-    const __m128i transpose1_1 = _mm_unpacklo_epi32(transpose0_2, transpose0_3);
-    const __m128i transpose1_2 = _mm_unpackhi_epi32(transpose0_0, transpose0_1);
-    const __m128i transpose1_3 = _mm_unpackhi_epi32(transpose0_2, transpose0_3);
-    // a00 a10 a20 a30 a01 a11 a21 a31
-    // b00 b10 b20 b30 b01 b11 b21 b31
-    // a02 a12 a22 a32 a03 a13 a23 a33
-    // b02 b12 a22 b32 b03 b13 b23 b33
-    T0 = _mm_unpacklo_epi64(transpose1_0, transpose1_1);
-    T1 = _mm_unpackhi_epi64(transpose1_0, transpose1_1);
-    T2 = _mm_unpacklo_epi64(transpose1_2, transpose1_3);
-    T3 = _mm_unpackhi_epi64(transpose1_2, transpose1_3);
-    // a00 a10 a20 a30   b00 b10 b20 b30
-    // a01 a11 a21 a31   b01 b11 b21 b31
-    // a02 a12 a22 a32   b02 b12 b22 b32
-    // a03 a13 a23 a33   b03 b13 b23 b33
+    VP8Transpose_2_4x4_16b(&tmp0, &tmp1, &tmp2, &tmp3, &T0, &T1, &T2, &T3);
   }
 
   // Horizontal pass and subsequent transpose.
@@ -164,34 +139,8 @@ static void Transform(const int16_t* in, uint8_t* dst, int do_two) {
     const __m128i shifted3 = _mm_srai_epi16(tmp3, 3);
 
     // Transpose the two 4x4.
-    // a00 a01 a02 a03   b00 b01 b02 b03
-    // a10 a11 a12 a13   b10 b11 b12 b13
-    // a20 a21 a22 a23   b20 b21 b22 b23
-    // a30 a31 a32 a33   b30 b31 b32 b33
-    const __m128i transpose0_0 = _mm_unpacklo_epi16(shifted0, shifted1);
-    const __m128i transpose0_1 = _mm_unpacklo_epi16(shifted2, shifted3);
-    const __m128i transpose0_2 = _mm_unpackhi_epi16(shifted0, shifted1);
-    const __m128i transpose0_3 = _mm_unpackhi_epi16(shifted2, shifted3);
-    // a00 a10 a01 a11   a02 a12 a03 a13
-    // a20 a30 a21 a31   a22 a32 a23 a33
-    // b00 b10 b01 b11   b02 b12 b03 b13
-    // b20 b30 b21 b31   b22 b32 b23 b33
-    const __m128i transpose1_0 = _mm_unpacklo_epi32(transpose0_0, transpose0_1);
-    const __m128i transpose1_1 = _mm_unpacklo_epi32(transpose0_2, transpose0_3);
-    const __m128i transpose1_2 = _mm_unpackhi_epi32(transpose0_0, transpose0_1);
-    const __m128i transpose1_3 = _mm_unpackhi_epi32(transpose0_2, transpose0_3);
-    // a00 a10 a20 a30 a01 a11 a21 a31
-    // b00 b10 b20 b30 b01 b11 b21 b31
-    // a02 a12 a22 a32 a03 a13 a23 a33
-    // b02 b12 a22 b32 b03 b13 b23 b33
-    T0 = _mm_unpacklo_epi64(transpose1_0, transpose1_1);
-    T1 = _mm_unpackhi_epi64(transpose1_0, transpose1_1);
-    T2 = _mm_unpacklo_epi64(transpose1_2, transpose1_3);
-    T3 = _mm_unpackhi_epi64(transpose1_2, transpose1_3);
-    // a00 a10 a20 a30   b00 b10 b20 b30
-    // a01 a11 a21 a31   b01 b11 b21 b31
-    // a02 a12 a22 a32   b02 b12 b22 b32
-    // a03 a13 a23 a33   b03 b13 b23 b33
+    VP8Transpose_2_4x4_16b(&shifted0, &shifted1, &shifted2, &shifted3, &T0, &T1,
+                           &T2, &T3);
   }
 
   // Add inverse transform to 'dst' and store.
@@ -207,10 +156,10 @@ static void Transform(const int16_t* in, uint8_t* dst, int do_two) {
       dst3 = _mm_loadl_epi64((__m128i*)(dst + 3 * BPS));
     } else {
       // Load four bytes/pixels per line.
-      dst0 = _mm_cvtsi32_si128(*(int*)(dst + 0 * BPS));
-      dst1 = _mm_cvtsi32_si128(*(int*)(dst + 1 * BPS));
-      dst2 = _mm_cvtsi32_si128(*(int*)(dst + 2 * BPS));
-      dst3 = _mm_cvtsi32_si128(*(int*)(dst + 3 * BPS));
+      dst0 = _mm_cvtsi32_si128(WebPMemToUint32(dst + 0 * BPS));
+      dst1 = _mm_cvtsi32_si128(WebPMemToUint32(dst + 1 * BPS));
+      dst2 = _mm_cvtsi32_si128(WebPMemToUint32(dst + 2 * BPS));
+      dst3 = _mm_cvtsi32_si128(WebPMemToUint32(dst + 3 * BPS));
     }
     // Convert to 16b.
     dst0 = _mm_unpacklo_epi8(dst0, zero);
@@ -236,10 +185,10 @@ static void Transform(const int16_t* in, uint8_t* dst, int do_two) {
       _mm_storel_epi64((__m128i*)(dst + 3 * BPS), dst3);
     } else {
       // Store four bytes/pixels per line.
-      *(int*)(dst + 0 * BPS) = _mm_cvtsi128_si32(dst0);
-      *(int*)(dst + 1 * BPS) = _mm_cvtsi128_si32(dst1);
-      *(int*)(dst + 2 * BPS) = _mm_cvtsi128_si32(dst2);
-      *(int*)(dst + 3 * BPS) = _mm_cvtsi128_si32(dst3);
+      WebPUint32ToMem(dst + 0 * BPS, _mm_cvtsi128_si32(dst0));
+      WebPUint32ToMem(dst + 1 * BPS, _mm_cvtsi128_si32(dst1));
+      WebPUint32ToMem(dst + 2 * BPS, _mm_cvtsi128_si32(dst2));
+      WebPUint32ToMem(dst + 3 * BPS, _mm_cvtsi128_si32(dst3));
     }
   }
 }
@@ -262,10 +211,10 @@ static void TransformAC3(const int16_t* in, uint8_t* dst) {
   const __m128i m3 = _mm_subs_epi16(B, d4);
   const __m128i zero = _mm_setzero_si128();
   // Load the source pixels.
-  __m128i dst0 = _mm_cvtsi32_si128(*(int*)(dst + 0 * BPS));
-  __m128i dst1 = _mm_cvtsi32_si128(*(int*)(dst + 1 * BPS));
-  __m128i dst2 = _mm_cvtsi32_si128(*(int*)(dst + 2 * BPS));
-  __m128i dst3 = _mm_cvtsi32_si128(*(int*)(dst + 3 * BPS));
+  __m128i dst0 = _mm_cvtsi32_si128(WebPMemToUint32(dst + 0 * BPS));
+  __m128i dst1 = _mm_cvtsi32_si128(WebPMemToUint32(dst + 1 * BPS));
+  __m128i dst2 = _mm_cvtsi32_si128(WebPMemToUint32(dst + 2 * BPS));
+  __m128i dst3 = _mm_cvtsi32_si128(WebPMemToUint32(dst + 3 * BPS));
   // Convert to 16b.
   dst0 = _mm_unpacklo_epi8(dst0, zero);
   dst1 = _mm_unpacklo_epi8(dst1, zero);
@@ -282,10 +231,10 @@ static void TransformAC3(const int16_t* in, uint8_t* dst) {
   dst2 = _mm_packus_epi16(dst2, dst2);
   dst3 = _mm_packus_epi16(dst3, dst3);
   // Store the results.
-  *(int*)(dst + 0 * BPS) = _mm_cvtsi128_si32(dst0);
-  *(int*)(dst + 1 * BPS) = _mm_cvtsi128_si32(dst1);
-  *(int*)(dst + 2 * BPS) = _mm_cvtsi128_si32(dst2);
-  *(int*)(dst + 3 * BPS) = _mm_cvtsi128_si32(dst3);
+  WebPUint32ToMem(dst + 0 * BPS, _mm_cvtsi128_si32(dst0));
+  WebPUint32ToMem(dst + 1 * BPS, _mm_cvtsi128_si32(dst1));
+  WebPUint32ToMem(dst + 2 * BPS, _mm_cvtsi128_si32(dst2));
+  WebPUint32ToMem(dst + 3 * BPS, _mm_cvtsi128_si32(dst3));
 }
 #undef MUL
 #endif   // USE_TRANSFORM_AC3
@@ -301,11 +250,10 @@ static void TransformAC3(const int16_t* in, uint8_t* dst) {
 // Shift each byte of "x" by 3 bits while preserving by the sign bit.
 static WEBP_INLINE void SignedShift8b(__m128i* const x) {
   const __m128i zero = _mm_setzero_si128();
-  const __m128i signs = _mm_cmpgt_epi8(zero, *x);
-  const __m128i lo_0 = _mm_unpacklo_epi8(*x, signs);  // s8 -> s16 sign extend
-  const __m128i hi_0 = _mm_unpackhi_epi8(*x, signs);
-  const __m128i lo_1 = _mm_srai_epi16(lo_0, 3);
-  const __m128i hi_1 = _mm_srai_epi16(hi_0, 3);
+  const __m128i lo_0 = _mm_unpacklo_epi8(zero, *x);
+  const __m128i hi_0 = _mm_unpackhi_epi8(zero, *x);
+  const __m128i lo_1 = _mm_srai_epi16(lo_0, 3 + 8);
+  const __m128i hi_1 = _mm_srai_epi16(hi_0, 3 + 8);
   *x = _mm_packs_epi16(lo_1, hi_1);
 }
 
@@ -330,11 +278,10 @@ static WEBP_INLINE void GetNotHEV(const __m128i* const p1,
   const __m128i t_2 = MM_ABS(*q1, *q0);
 
   const __m128i h = _mm_set1_epi8(hev_thresh);
-  const __m128i t_3 = _mm_subs_epu8(t_1, h);  // abs(p1 - p0) - hev_tresh
-  const __m128i t_4 = _mm_subs_epu8(t_2, h);  // abs(q1 - q0) - hev_tresh
+  const __m128i t_max = _mm_max_epu8(t_1, t_2);
 
-  *not_hev = _mm_or_si128(t_3, t_4);
-  *not_hev = _mm_cmpeq_epi8(*not_hev, zero);  // not_hev <= t1 && not_hev <= t2
+  const __m128i t_max_h = _mm_subs_epu8(t_max, h);
+  *not_hev = _mm_cmpeq_epi8(t_max_h, zero);  // not_hev <= t1 && not_hev <= t2
 }
 
 // input pixels are int8_t
@@ -428,9 +375,11 @@ static WEBP_INLINE void DoFilter2(__m128i* const p1, __m128i* const p0,
 static WEBP_INLINE void DoFilter4(__m128i* const p1, __m128i* const p0,
                                   __m128i* const q0, __m128i* const q1,
                                   const __m128i* const mask, int hev_thresh) {
-  const __m128i sign_bit = _mm_set1_epi8(0x80);
-  const __m128i k64 = _mm_set1_epi8(0x40);
   const __m128i zero = _mm_setzero_si128();
+  const __m128i sign_bit = _mm_set1_epi8(0x80);
+  const __m128i k64 = _mm_set1_epi8(64);
+  const __m128i k3 = _mm_set1_epi8(3);
+  const __m128i k4 = _mm_set1_epi8(4);
   __m128i not_hev;
   __m128i t1, t2, t3;
 
@@ -448,10 +397,8 @@ static WEBP_INLINE void DoFilter4(__m128i* const p1, __m128i* const p0,
   t1 = _mm_adds_epi8(t1, t2);          // hev(p1 - q1) + 3 * (q0 - p0)
   t1 = _mm_and_si128(t1, *mask);       // mask filter values we don't care about
 
-  t2 = _mm_set1_epi8(3);
-  t3 = _mm_set1_epi8(4);
-  t2 = _mm_adds_epi8(t1, t2);        // 3 * (q0 - p0) + (p1 - q1) + 3
-  t3 = _mm_adds_epi8(t1, t3);        // 3 * (q0 - p0) + (p1 - q1) + 4
+  t2 = _mm_adds_epi8(t1, k3);        // 3 * (q0 - p0) + hev(p1 - q1) + 3
+  t3 = _mm_adds_epi8(t1, k4);        // 3 * (q0 - p0) + hev(p1 - q1) + 4
   SignedShift8b(&t2);                // (3 * (q0 - p0) + hev(p1 - q1) + 3) >> 3
   SignedShift8b(&t3);                // (3 * (q0 - p0) + hev(p1 - q1) + 4) >> 3
   *p0 = _mm_adds_epi8(*p0, t2);      // p0 += t2
@@ -520,47 +467,31 @@ static WEBP_INLINE void DoFilter6(__m128i* const p2, __m128i* const p1,
 }
 
 // reads 8 rows across a vertical edge.
-//
-// TODO(somnath): Investigate _mm_shuffle* also see if it can be broken into
-// two Load4x4() to avoid code duplication.
 static WEBP_INLINE void Load8x4(const uint8_t* const b, int stride,
                                 __m128i* const p, __m128i* const q) {
-  __m128i t1, t2;
+  // A0 = 63 62 61 60 23 22 21 20 43 42 41 40 03 02 01 00
+  // A1 = 73 72 71 70 33 32 31 30 53 52 51 50 13 12 11 10
+  const __m128i A0 = _mm_set_epi32(
+      WebPMemToUint32(&b[6 * stride]), WebPMemToUint32(&b[2 * stride]),
+      WebPMemToUint32(&b[4 * stride]), WebPMemToUint32(&b[0 * stride]));
+  const __m128i A1 = _mm_set_epi32(
+      WebPMemToUint32(&b[7 * stride]), WebPMemToUint32(&b[3 * stride]),
+      WebPMemToUint32(&b[5 * stride]), WebPMemToUint32(&b[1 * stride]));
 
-  // Load 0th, 1st, 4th and 5th rows
-  __m128i r0 =  _mm_cvtsi32_si128(*(const int*)&b[0 * stride]);  // 03 02 01 00
-  __m128i r1 =  _mm_cvtsi32_si128(*(const int*)&b[1 * stride]);  // 13 12 11 10
-  __m128i r4 =  _mm_cvtsi32_si128(*(const int*)&b[4 * stride]);  // 43 42 41 40
-  __m128i r5 =  _mm_cvtsi32_si128(*(const int*)&b[5 * stride]);  // 53 52 51 50
+  // B0 = 53 43 52 42 51 41 50 40 13 03 12 02 11 01 10 00
+  // B1 = 73 63 72 62 71 61 70 60 33 23 32 22 31 21 30 20
+  const __m128i B0 = _mm_unpacklo_epi8(A0, A1);
+  const __m128i B1 = _mm_unpackhi_epi8(A0, A1);
 
-  r0 = _mm_unpacklo_epi32(r0, r4);               // 43 42 41 40 03 02 01 00
-  r1 = _mm_unpacklo_epi32(r1, r5);               // 53 52 51 50 13 12 11 10
-
-  // t1 = 53 43 52 42 51 41 50 40 13 03 12 02 11 01 10 00
-  t1 = _mm_unpacklo_epi8(r0, r1);
-
-  // Load 2nd, 3rd, 6th and 7th rows
-  r0 =  _mm_cvtsi32_si128(*(const int*)&b[2 * stride]);          // 23 22 21 22
-  r1 =  _mm_cvtsi32_si128(*(const int*)&b[3 * stride]);          // 33 32 31 30
-  r4 =  _mm_cvtsi32_si128(*(const int*)&b[6 * stride]);          // 63 62 61 60
-  r5 =  _mm_cvtsi32_si128(*(const int*)&b[7 * stride]);          // 73 72 71 70
-
-  r0 = _mm_unpacklo_epi32(r0, r4);               // 63 62 61 60 23 22 21 20
-  r1 = _mm_unpacklo_epi32(r1, r5);               // 73 72 71 70 33 32 31 30
-
-  // t2 = 73 63 72 62 71 61 70 60 33 23 32 22 31 21 30 20
-  t2 = _mm_unpacklo_epi8(r0, r1);
-
-  // t1 = 33 23 13 03 32 22 12 02 31 21 11 01 30 20 10 00
-  // t2 = 73 63 53 43 72 62 52 42 71 61 51 41 70 60 50 40
-  r0 = t1;
-  t1 = _mm_unpacklo_epi16(t1, t2);
-  t2 = _mm_unpackhi_epi16(r0, t2);
+  // C0 = 33 23 13 03 32 22 12 02 31 21 11 01 30 20 10 00
+  // C1 = 73 63 53 43 72 62 52 42 71 61 51 41 70 60 50 40
+  const __m128i C0 = _mm_unpacklo_epi16(B0, B1);
+  const __m128i C1 = _mm_unpackhi_epi16(B0, B1);
 
   // *p = 71 61 51 41 31 21 11 01 70 60 50 40 30 20 10 00
   // *q = 73 63 53 43 33 23 13 03 72 62 52 42 32 22 12 02
-  *p = _mm_unpacklo_epi32(t1, t2);
-  *q = _mm_unpackhi_epi32(t1, t2);
+  *p = _mm_unpacklo_epi32(C0, C1);
+  *q = _mm_unpackhi_epi32(C0, C1);
 }
 
 static WEBP_INLINE void Load16x4(const uint8_t* const r0,
@@ -568,7 +499,6 @@ static WEBP_INLINE void Load16x4(const uint8_t* const r0,
                                  int stride,
                                  __m128i* const p1, __m128i* const p0,
                                  __m128i* const q0, __m128i* const q1) {
-  __m128i t1, t2;
   // Assume the pixels around the edge (|) are numbered as follows
   //                00 01 | 02 03
   //                10 11 | 12 13
@@ -587,22 +517,24 @@ static WEBP_INLINE void Load16x4(const uint8_t* const r0,
   Load8x4(r0, stride, p1, q0);
   Load8x4(r8, stride, p0, q1);
 
-  t1 = *p1;
-  t2 = *q0;
-  // p1 = f0 e0 d0 c0 b0 a0 90 80 70 60 50 40 30 20 10 00
-  // p0 = f1 e1 d1 c1 b1 a1 91 81 71 61 51 41 31 21 11 01
-  // q0 = f2 e2 d2 c2 b2 a2 92 82 72 62 52 42 32 22 12 02
-  // q1 = f3 e3 d3 c3 b3 a3 93 83 73 63 53 43 33 23 13 03
-  *p1 = _mm_unpacklo_epi64(t1, *p0);
-  *p0 = _mm_unpackhi_epi64(t1, *p0);
-  *q0 = _mm_unpacklo_epi64(t2, *q1);
-  *q1 = _mm_unpackhi_epi64(t2, *q1);
+  {
+    // p1 = f0 e0 d0 c0 b0 a0 90 80 70 60 50 40 30 20 10 00
+    // p0 = f1 e1 d1 c1 b1 a1 91 81 71 61 51 41 31 21 11 01
+    // q0 = f2 e2 d2 c2 b2 a2 92 82 72 62 52 42 32 22 12 02
+    // q1 = f3 e3 d3 c3 b3 a3 93 83 73 63 53 43 33 23 13 03
+    const __m128i t1 = *p1;
+    const __m128i t2 = *q0;
+    *p1 = _mm_unpacklo_epi64(t1, *p0);
+    *p0 = _mm_unpackhi_epi64(t1, *p0);
+    *q0 = _mm_unpacklo_epi64(t2, *q1);
+    *q1 = _mm_unpackhi_epi64(t2, *q1);
+  }
 }
 
 static WEBP_INLINE void Store4x4(__m128i* const x, uint8_t* dst, int stride) {
   int i;
   for (i = 0; i < 4; ++i, dst += stride) {
-    *((int32_t*)dst) = _mm_cvtsi128_si32(*x);
+    WebPUint32ToMem(dst, _mm_cvtsi128_si32(*x));
     *x = _mm_srli_si128(*x, 4);
   }
 }
@@ -973,7 +905,7 @@ static void VE4(uint8_t* dst) {    // vertical
   const uint32_t vals = _mm_cvtsi128_si32(avg);
   int i;
   for (i = 0; i < 4; ++i) {
-    *(uint32_t*)(dst + i * BPS) = vals;
+    WebPUint32ToMem(dst + i * BPS, vals);
   }
 }
 
@@ -987,10 +919,10 @@ static void LD4(uint8_t* dst) {   // Down-Left
   const __m128i lsb = _mm_and_si128(_mm_xor_si128(ABCDEFGH, CDEFGHH0), one);
   const __m128i avg2 = _mm_subs_epu8(avg1, lsb);
   const __m128i abcdefg = _mm_avg_epu8(avg2, BCDEFGH0);
-  *(uint32_t*)(dst + 0 * BPS) = _mm_cvtsi128_si32(               abcdefg    );
-  *(uint32_t*)(dst + 1 * BPS) = _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 1));
-  *(uint32_t*)(dst + 2 * BPS) = _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 2));
-  *(uint32_t*)(dst + 3 * BPS) = _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 3));
+  WebPUint32ToMem(dst + 0 * BPS, _mm_cvtsi128_si32(               abcdefg    ));
+  WebPUint32ToMem(dst + 1 * BPS, _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 1)));
+  WebPUint32ToMem(dst + 2 * BPS, _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 2)));
+  WebPUint32ToMem(dst + 3 * BPS, _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 3)));
 }
 
 static void VR4(uint8_t* dst) {   // Vertical-Right
@@ -1008,10 +940,10 @@ static void VR4(uint8_t* dst) {   // Vertical-Right
   const __m128i lsb = _mm_and_si128(_mm_xor_si128(IXABCD, ABCD0), one);
   const __m128i avg2 = _mm_subs_epu8(avg1, lsb);
   const __m128i efgh = _mm_avg_epu8(avg2, XABCD);
-  *(uint32_t*)(dst + 0 * BPS) = _mm_cvtsi128_si32(               abcd    );
-  *(uint32_t*)(dst + 1 * BPS) = _mm_cvtsi128_si32(               efgh    );
-  *(uint32_t*)(dst + 2 * BPS) = _mm_cvtsi128_si32(_mm_slli_si128(abcd, 1));
-  *(uint32_t*)(dst + 3 * BPS) = _mm_cvtsi128_si32(_mm_slli_si128(efgh, 1));
+  WebPUint32ToMem(dst + 0 * BPS, _mm_cvtsi128_si32(               abcd    ));
+  WebPUint32ToMem(dst + 1 * BPS, _mm_cvtsi128_si32(               efgh    ));
+  WebPUint32ToMem(dst + 2 * BPS, _mm_cvtsi128_si32(_mm_slli_si128(abcd, 1)));
+  WebPUint32ToMem(dst + 3 * BPS, _mm_cvtsi128_si32(_mm_slli_si128(efgh, 1)));
 
   // these two are hard to implement in SSE2, so we keep the C-version:
   DST(0, 2) = AVG3(J, I, X);
@@ -1033,10 +965,10 @@ static void VL4(uint8_t* dst) {   // Vertical-Left
   const __m128i lsb2 = _mm_and_si128(abbc, lsb1);
   const __m128i avg4 = _mm_subs_epu8(avg3, lsb2);
   const uint32_t extra_out = _mm_cvtsi128_si32(_mm_srli_si128(avg4, 4));
-  *(uint32_t*)(dst + 0 * BPS) = _mm_cvtsi128_si32(               avg1    );
-  *(uint32_t*)(dst + 1 * BPS) = _mm_cvtsi128_si32(               avg4    );
-  *(uint32_t*)(dst + 2 * BPS) = _mm_cvtsi128_si32(_mm_srli_si128(avg1, 1));
-  *(uint32_t*)(dst + 3 * BPS) = _mm_cvtsi128_si32(_mm_srli_si128(avg4, 1));
+  WebPUint32ToMem(dst + 0 * BPS, _mm_cvtsi128_si32(               avg1    ));
+  WebPUint32ToMem(dst + 1 * BPS, _mm_cvtsi128_si32(               avg4    ));
+  WebPUint32ToMem(dst + 2 * BPS, _mm_cvtsi128_si32(_mm_srli_si128(avg1, 1)));
+  WebPUint32ToMem(dst + 3 * BPS, _mm_cvtsi128_si32(_mm_srli_si128(avg4, 1)));
 
   // these two are hard to get and irregular
   DST(3, 2) = (extra_out >> 0) & 0xff;
@@ -1060,10 +992,10 @@ static void RD4(uint8_t* dst) {   // Down-right
   const __m128i lsb = _mm_and_si128(_mm_xor_si128(JIXABCD__, LKJIXABCD), one);
   const __m128i avg2 = _mm_subs_epu8(avg1, lsb);
   const __m128i abcdefg = _mm_avg_epu8(avg2, KJIXABCD_);
-  *(uint32_t*)(dst + 3 * BPS) = _mm_cvtsi128_si32(               abcdefg    );
-  *(uint32_t*)(dst + 2 * BPS) = _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 1));
-  *(uint32_t*)(dst + 1 * BPS) = _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 2));
-  *(uint32_t*)(dst + 0 * BPS) = _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 3));
+  WebPUint32ToMem(dst + 3 * BPS, _mm_cvtsi128_si32(               abcdefg    ));
+  WebPUint32ToMem(dst + 2 * BPS, _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 1)));
+  WebPUint32ToMem(dst + 1 * BPS, _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 2)));
+  WebPUint32ToMem(dst + 0 * BPS, _mm_cvtsi128_si32(_mm_srli_si128(abcdefg, 3)));
 }
 
 #undef DST
@@ -1077,13 +1009,13 @@ static WEBP_INLINE void TrueMotion(uint8_t* dst, int size) {
   const __m128i zero = _mm_setzero_si128();
   int y;
   if (size == 4) {
-    const __m128i top_values = _mm_cvtsi32_si128(*(const int*)top);
+    const __m128i top_values = _mm_cvtsi32_si128(WebPMemToUint32(top));
     const __m128i top_base = _mm_unpacklo_epi8(top_values, zero);
     for (y = 0; y < 4; ++y, dst += BPS) {
       const int val = dst[-1] - top[-1];
       const __m128i base = _mm_set1_epi16(val);
       const __m128i out = _mm_packus_epi16(_mm_add_epi16(base, top_base), zero);
-      *(int*)dst = _mm_cvtsi128_si32(out);
+      WebPUint32ToMem(dst, _mm_cvtsi128_si32(out));
     }
   } else if (size == 8) {
     const __m128i top_values = _mm_loadl_epi64((const __m128i*)top);
@@ -1139,12 +1071,20 @@ static WEBP_INLINE void Put16(uint8_t v, uint8_t* dst) {
 }
 
 static void DC16(uint8_t* dst) {    // DC
-  int DC = 16;
+  const __m128i zero = _mm_setzero_si128();
+  const __m128i top = _mm_loadu_si128((const __m128i*)(dst - BPS));
+  const __m128i sad8x2 = _mm_sad_epu8(top, zero);
+  // sum the two sads: sad8x2[0:1] + sad8x2[8:9]
+  const __m128i sum = _mm_add_epi16(sad8x2, _mm_shuffle_epi32(sad8x2, 2));
+  int left = 0;
   int j;
   for (j = 0; j < 16; ++j) {
-    DC += dst[-1 + j * BPS] + dst[j - BPS];
+    left += dst[-1 + j * BPS];
   }
-  Put16(DC >> 5, dst);
+  {
+    const int DC = _mm_cvtsi128_si32(sum) + left + 16;
+    Put16(DC >> 5, dst);
+  }
 }
 
 static void DC16NoTop(uint8_t* dst) {   // DC with top samples not available
@@ -1157,11 +1097,12 @@ static void DC16NoTop(uint8_t* dst) {   // DC with top samples not available
 }
 
 static void DC16NoLeft(uint8_t* dst) {  // DC with left samples not available
-  int DC = 8;
-  int i;
-  for (i = 0; i < 16; ++i) {
-    DC += dst[i - BPS];
-  }
+  const __m128i zero = _mm_setzero_si128();
+  const __m128i top = _mm_loadu_si128((const __m128i*)(dst - BPS));
+  const __m128i sad8x2 = _mm_sad_epu8(top, zero);
+  // sum the two sads: sad8x2[0:1] + sad8x2[8:9]
+  const __m128i sum = _mm_add_epi16(sad8x2, _mm_shuffle_epi32(sad8x2, 2));
+  const int DC = _mm_cvtsi128_si32(sum) + 8;
   Put16(DC >> 4, dst);
 }
 
@@ -1199,21 +1140,26 @@ static WEBP_INLINE void Put8x8uv(uint8_t v, uint8_t* dst) {
 }
 
 static void DC8uv(uint8_t* dst) {     // DC
-  int dc0 = 8;
-  int i;
-  for (i = 0; i < 8; ++i) {
-    dc0 += dst[i - BPS] + dst[-1 + i * BPS];
+  const __m128i zero = _mm_setzero_si128();
+  const __m128i top = _mm_loadl_epi64((const __m128i*)(dst - BPS));
+  const __m128i sum = _mm_sad_epu8(top, zero);
+  int left = 0;
+  int j;
+  for (j = 0; j < 8; ++j) {
+    left += dst[-1 + j * BPS];
   }
-  Put8x8uv(dc0 >> 4, dst);
+  {
+    const int DC = _mm_cvtsi128_si32(sum) + left + 8;
+    Put8x8uv(DC >> 4, dst);
+  }
 }
 
 static void DC8uvNoLeft(uint8_t* dst) {   // DC with no left samples
-  int dc0 = 4;
-  int i;
-  for (i = 0; i < 8; ++i) {
-    dc0 += dst[i - BPS];
-  }
-  Put8x8uv(dc0 >> 3, dst);
+  const __m128i zero = _mm_setzero_si128();
+  const __m128i top = _mm_loadl_epi64((const __m128i*)(dst - BPS));
+  const __m128i sum = _mm_sad_epu8(top, zero);
+  const int DC = _mm_cvtsi128_si32(sum) + 4;
+  Put8x8uv(DC >> 3, dst);
 }
 
 static void DC8uvNoTop(uint8_t* dst) {  // DC with no top samples
@@ -1229,15 +1175,12 @@ static void DC8uvNoTopLeft(uint8_t* dst) {    // DC with nothing
   Put8x8uv(0x80, dst);
 }
 
-#endif   // WEBP_USE_SSE2
-
 //------------------------------------------------------------------------------
 // Entry point
 
 extern void VP8DspInitSSE2(void);
 
 WEBP_TSAN_IGNORE_FUNCTION void VP8DspInitSSE2(void) {
-#if defined(WEBP_USE_SSE2)
   VP8Transform = Transform;
 #if defined(USE_TRANSFORM_AC3)
   VP8TransformAC3 = TransformAC3;
@@ -1279,6 +1222,10 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8DspInitSSE2(void) {
   VP8PredChroma8[4] = DC8uvNoTop;
   VP8PredChroma8[5] = DC8uvNoLeft;
   VP8PredChroma8[6] = DC8uvNoTopLeft;
-
-#endif   // WEBP_USE_SSE2
 }
+
+#else  // !WEBP_USE_SSE2
+
+WEBP_DSP_INIT_STUB(VP8DspInitSSE2)
+
+#endif  // WEBP_USE_SSE2

@@ -249,7 +249,7 @@ static int MBAnalyzeBestIntra16Mode(VP8EncIterator* const it) {
     int alpha;
 
     InitHistogram(&histo);
-    VP8CollectHistogram(it->yuv_in_ + Y_OFF,
+    VP8CollectHistogram(it->yuv_in_ + Y_OFF_ENC,
                         it->yuv_p_ + VP8I16ModeOffsets[mode],
                         0, 16, &histo);
     alpha = GetAlpha(&histo);
@@ -260,6 +260,29 @@ static int MBAnalyzeBestIntra16Mode(VP8EncIterator* const it) {
   }
   VP8SetIntra16Mode(it, best_mode);
   return best_alpha;
+}
+
+static int FastMBAnalyze(VP8EncIterator* const it) {
+  // Empirical cut-off value, should be around 16 (~=block size). We use the
+  // [8-17] range and favor intra4 at high quality, intra16 for low quality.
+  const int q = (int)it->enc_->config_->quality;
+  const uint32_t kThreshold = 8 + (17 - 8) * q / 100;
+  int k;
+  uint32_t dc[16], m, m2;
+  for (k = 0; k < 16; k += 4) {
+    VP8Mean16x4(it->yuv_in_ + Y_OFF_ENC + k * BPS, &dc[k]);
+  }
+  for (m = 0, m2 = 0, k = 0; k < 16; ++k) {
+    m += dc[k];
+    m2 += dc[k] * dc[k];
+  }
+  if (kThreshold * m2 < m * m) {
+    VP8SetIntra16Mode(it, 0);   // DC16
+  } else {
+    const uint8_t modes[16] = { 0 };  // DC4
+    VP8SetIntra4Mode(it, modes);
+  }
+  return 0;
 }
 
 static int MBAnalyzeBestIntra4Mode(VP8EncIterator* const it,
@@ -276,7 +299,7 @@ static int MBAnalyzeBestIntra4Mode(VP8EncIterator* const it,
     int mode;
     int best_mode_alpha = DEFAULT_ALPHA;
     VP8Histogram histos[2];
-    const uint8_t* const src = it->yuv_in_ + Y_OFF + VP8Scan[it->i4_];
+    const uint8_t* const src = it->yuv_in_ + Y_OFF_ENC + VP8Scan[it->i4_];
 
     VP8MakeIntra4Preds(it);
     for (mode = 0; mode < max_mode; ++mode) {
@@ -295,7 +318,7 @@ static int MBAnalyzeBestIntra4Mode(VP8EncIterator* const it,
     // accumulate best histogram
     MergeHistograms(&histos[cur_histo ^ 1], &total_histo);
     // Note: we reuse the original samples for predictors
-  } while (VP8IteratorRotateI4(it, it->yuv_in_ + Y_OFF));
+  } while (VP8IteratorRotateI4(it, it->yuv_in_ + Y_OFF_ENC));
 
   i4_alpha = GetAlpha(&total_histo);
   if (IS_BETTER_ALPHA(i4_alpha, best_alpha)) {
@@ -316,7 +339,7 @@ static int MBAnalyzeBestUVMode(VP8EncIterator* const it) {
     VP8Histogram histo;
     int alpha;
     InitHistogram(&histo);
-    VP8CollectHistogram(it->yuv_in_ + U_OFF,
+    VP8CollectHistogram(it->yuv_in_ + U_OFF_ENC,
                         it->yuv_p_ + VP8UVModeOffsets[mode],
                         16, 16 + 4 + 4, &histo);
     alpha = GetAlpha(&histo);
@@ -339,13 +362,17 @@ static void MBAnalyze(VP8EncIterator* const it,
   VP8SetSkip(it, 0);         // not skipped
   VP8SetSegment(it, 0);      // default segment, spec-wise.
 
-  best_alpha = MBAnalyzeBestIntra16Mode(it);
-  if (enc->method_ >= 5) {
-    // We go and make a fast decision for intra4/intra16.
-    // It's usually not a good and definitive pick, but helps seeding the stats
-    // about level bit-cost.
-    // TODO(skal): improve criterion.
-    best_alpha = MBAnalyzeBestIntra4Mode(it, best_alpha);
+  if (enc->method_ <= 1) {
+    best_alpha = FastMBAnalyze(it);
+  } else {
+    best_alpha = MBAnalyzeBestIntra16Mode(it);
+    if (enc->method_ >= 5) {
+      // We go and make a fast decision for intra4/intra16.
+      // It's usually not a good and definitive pick, but helps seeding the
+      // stats about level bit-cost.
+      // TODO(skal): improve criterion.
+      best_alpha = MBAnalyzeBestIntra4Mode(it, best_alpha);
+    }
   }
   best_uv_alpha = MBAnalyzeBestUVMode(it);
 
@@ -405,8 +432,8 @@ typedef struct {
 static int DoSegmentsJob(SegmentJob* const job, VP8EncIterator* const it) {
   int ok = 1;
   if (!VP8IteratorIsDone(it)) {
-    uint8_t tmp[32 + ALIGN_CST];
-    uint8_t* const scratch = (uint8_t*)DO_ALIGN(tmp);
+    uint8_t tmp[32 + WEBP_ALIGN_CST];
+    uint8_t* const scratch = (uint8_t*)WEBP_ALIGN(tmp);
     do {
       // Let's pretend we have perfect lossless reconstruction.
       VP8IteratorImport(it, scratch);
@@ -448,7 +475,7 @@ int VP8EncAnalyze(VP8Encoder* const enc) {
   const int do_segments =
       enc->config_->emulate_jpeg_size ||   // We need the complexity evaluation.
       (enc->segment_hdr_.num_segments_ > 1) ||
-      (enc->method_ == 0);  // for method 0, we need preds_[] to be filled.
+      (enc->method_ <= 1);  // for method 0 - 1, we need preds_[] to be filled.
   if (do_segments) {
     const int last_row = enc->mb_h_;
     // We give a little more than a half work to the main thread.

@@ -16,21 +16,31 @@
 #endif
 
 #include "./bit_reader_inl.h"
+#include "../utils/utils.h"
 
 //------------------------------------------------------------------------------
 // VP8BitReader
 
+void VP8BitReaderSetBuffer(VP8BitReader* const br,
+                           const uint8_t* const start,
+                           size_t size) {
+  br->buf_     = start;
+  br->buf_end_ = start + size;
+  br->buf_max_ =
+      (size >= sizeof(lbit_t)) ? start + size - sizeof(lbit_t) + 1
+                               : start;
+}
+
 void VP8InitBitReader(VP8BitReader* const br,
-                      const uint8_t* const start, const uint8_t* const end) {
+                      const uint8_t* const start, size_t size) {
   assert(br != NULL);
   assert(start != NULL);
-  assert(start <= end);
+  assert(size < (1u << 31));   // limit ensured by format and upstream checks
   br->range_   = 255 - 1;
-  br->buf_     = start;
-  br->buf_end_ = end;
   br->value_   = 0;
   br->bits_    = -8;   // to load the very first 8bits
   br->eof_     = 0;
+  VP8BitReaderSetBuffer(br, start, size);
   VP8LoadNewBytes(br);
 }
 
@@ -38,6 +48,7 @@ void VP8RemapBitReader(VP8BitReader* const br, ptrdiff_t offset) {
   if (br->buf_ != NULL) {
     br->buf_ += offset;
     br->buf_end_ += offset;
+    br->buf_max_ += offset;
   }
 }
 
@@ -83,6 +94,8 @@ void VP8LoadFinalBytes(VP8BitReader* const br) {
     br->value_ <<= 8;
     br->bits_ += 8;
     br->eof_ = 1;
+  } else {
+    br->bits_ = 0;  // This is to avoid undefined behaviour with shifts.
   }
 }
 
@@ -107,11 +120,10 @@ int32_t VP8GetSignedValue(VP8BitReader* const br, int bits) {
 
 #define VP8L_LOG8_WBITS 4  // Number of bytes needed to store VP8L_WBITS bits.
 
-#if !defined(WEBP_FORCE_ALIGNED) && \
-    (defined(__arm__) || defined(_M_ARM) || defined(__aarch64__) || \
-     defined(__i386__) || defined(_M_IX86) || \
-     defined(__x86_64__) || defined(_M_X64))
-#define VP8L_USE_UNALIGNED_LOAD
+#if defined(__arm__) || defined(_M_ARM) || defined(__aarch64__) || \
+    defined(__i386__) || defined(_M_IX86) || \
+    defined(__x86_64__) || defined(_M_X64)
+#define VP8L_USE_FAST_LOAD
 #endif
 
 static const uint32_t kBitMask[VP8L_MAX_NUM_BIT_READ + 1] = {
@@ -159,6 +171,11 @@ void VP8LBitReaderSetBuffer(VP8LBitReader* const br,
   br->eos_ = (br->pos_ > br->len_) || VP8LIsEndOfStream(br);
 }
 
+static void VP8LSetEndOfStream(VP8LBitReader* const br) {
+  br->eos_ = 1;
+  br->bit_pos_ = 0;  // To avoid undefined behaviour with shifts.
+}
+
 // If not at EOS, reload up to VP8L_LBITS byte-by-byte
 static void ShiftBytes(VP8LBitReader* const br) {
   while (br->bit_pos_ >= 8 && br->pos_ < br->len_) {
@@ -167,20 +184,18 @@ static void ShiftBytes(VP8LBitReader* const br) {
     ++br->pos_;
     br->bit_pos_ -= 8;
   }
-  br->eos_ = VP8LIsEndOfStream(br);
+  if (VP8LIsEndOfStream(br)) {
+    VP8LSetEndOfStream(br);
+  }
 }
 
 void VP8LDoFillBitWindow(VP8LBitReader* const br) {
   assert(br->bit_pos_ >= VP8L_WBITS);
-  // TODO(jzern): given the fixed read size it may be possible to force
-  //              alignment in this block.
-#if defined(VP8L_USE_UNALIGNED_LOAD)
+#if defined(VP8L_USE_FAST_LOAD)
   if (br->pos_ + sizeof(br->val_) < br->len_) {
     br->val_ >>= VP8L_WBITS;
     br->bit_pos_ -= VP8L_WBITS;
-    // The expression below needs a little-endian arch to work correctly.
-    // This gives a large speedup for decoding speed.
-    br->val_ |= (vp8l_val_t)*(const uint32_t*)(br->buf_ + br->pos_) <<
+    br->val_ |= (vp8l_val_t)HToLE32(WebPMemToUint32(br->buf_ + br->pos_)) <<
                 (VP8L_LBITS - VP8L_WBITS);
     br->pos_ += VP8L_LOG8_WBITS;
     return;
@@ -193,14 +208,13 @@ uint32_t VP8LReadBits(VP8LBitReader* const br, int n_bits) {
   assert(n_bits >= 0);
   // Flag an error if end_of_stream or n_bits is more than allowed limit.
   if (!br->eos_ && n_bits <= VP8L_MAX_NUM_BIT_READ) {
-    const uint32_t val =
-        (uint32_t)(br->val_ >> br->bit_pos_) & kBitMask[n_bits];
+    const uint32_t val = VP8LPrefetchBits(br) & kBitMask[n_bits];
     const int new_bits = br->bit_pos_ + n_bits;
     br->bit_pos_ = new_bits;
     ShiftBytes(br);
     return val;
   } else {
-    br->eos_ = 1;
+    VP8LSetEndOfStream(br);
     return 0;
   }
 }

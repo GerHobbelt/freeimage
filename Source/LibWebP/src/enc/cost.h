@@ -33,7 +33,6 @@ struct VP8Residual {
   int coeff_type;
   ProbaArray*   prob;
   StatsArray*   stats;
-  CostArray*    cost;    // TODO(skal): remove in favor of *costs
   CostArrayPtr  costs;
 };
 
@@ -42,6 +41,20 @@ void VP8InitResidual(int first, int coeff_type,
 
 int VP8RecordCoeffs(int ctx, const VP8Residual* const res);
 
+// Record proba context used.
+static WEBP_INLINE int VP8RecordStats(int bit, proba_t* const stats) {
+  proba_t p = *stats;
+  // An overflow is inbound. Note we handle this at 0xfffe0000u instead of
+  // 0xffff0000u to make sure p + 1u does not overflow.
+  if (p >= 0xfffe0000u) {
+    p = ((p + 1u) >> 1) & 0x7fff7fffu;  // -> divide the stats by 2.
+  }
+  // record bit count (lower 16 bits) and increment total count (upper 16 bits).
+  p += 0x00010000u + bit;
+  *stats = p;
+  return bit;
+}
+
 // Cost of coding one event with probability 'proba'.
 static WEBP_INLINE int VP8BitCost(int bit, uint8_t proba) {
   return !bit ? VP8EntropyCost[proba] : VP8EntropyCost[255 - proba];
@@ -49,7 +62,7 @@ static WEBP_INLINE int VP8BitCost(int bit, uint8_t proba) {
 
 // Level cost calculations
 extern const uint16_t VP8LevelCodes[MAX_VARIABLE_LEVEL][2];
-void VP8CalculateLevelCosts(VP8Proba* const proba);
+void VP8CalculateLevelCosts(VP8EncProba* const proba);
 static WEBP_INLINE int VP8LevelCost(const uint16_t* const table, int level) {
   return VP8LevelFixedCosts[level]
        + table[(level > MAX_VARIABLE_LEVEL) ? MAX_VARIABLE_LEVEL : level];

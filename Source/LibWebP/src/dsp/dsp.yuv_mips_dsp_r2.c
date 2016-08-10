@@ -30,33 +30,33 @@
   "mul              %[temp2],   %[t_con_3],     %[temp4]        \n\t"          \
   "mul              %[temp4],   %[t_con_4],     %[temp4]        \n\t"          \
   "mul              %[temp0],   %[t_con_5],     %[temp0]        \n\t"          \
-  "addu             %[temp1],   %[temp1],       %[t_con_6]      \n\t"          \
+  "subu             %[temp1],   %[temp1],       %[t_con_6]      \n\t"          \
   "subu             %[temp3],   %[temp3],       %[t_con_7]      \n\t"          \
   "addu             %[temp2],   %[temp2],       %[temp3]        \n\t"          \
-  "addu             %[temp4],   %[temp4],       %[t_con_8]      \n\t"          \
+  "subu             %[temp4],   %[temp4],       %[t_con_8]      \n\t"          \
 
 #define ROW_FUNC_PART_2(R, G, B, K)                                            \
   "addu             %[temp5],   %[temp0],       %[temp1]        \n\t"          \
   "subu             %[temp6],   %[temp0],       %[temp2]        \n\t"          \
   "addu             %[temp7],   %[temp0],       %[temp4]        \n\t"          \
-".if "#K"                                                       \n\t"          \
+".if " #K "                                                     \n\t"          \
   "lbu              %[temp0],   1(%[y])                         \n\t"          \
 ".endif                                                         \n\t"          \
-  "shll_s.w         %[temp5],   %[temp5],       9               \n\t"          \
-  "shll_s.w         %[temp6],   %[temp6],       9               \n\t"          \
-".if "#K"                                                       \n\t"          \
+  "shll_s.w         %[temp5],   %[temp5],       17              \n\t"          \
+  "shll_s.w         %[temp6],   %[temp6],       17              \n\t"          \
+".if " #K "                                                     \n\t"          \
   "mul              %[temp0],   %[t_con_5],     %[temp0]        \n\t"          \
 ".endif                                                         \n\t"          \
-  "shll_s.w         %[temp7],   %[temp7],       9               \n\t"          \
+  "shll_s.w         %[temp7],   %[temp7],       17              \n\t"          \
   "precrqu_s.qb.ph  %[temp5],   %[temp5],       $zero           \n\t"          \
   "precrqu_s.qb.ph  %[temp6],   %[temp6],       $zero           \n\t"          \
   "precrqu_s.qb.ph  %[temp7],   %[temp7],       $zero           \n\t"          \
   "srl              %[temp5],   %[temp5],       24              \n\t"          \
   "srl              %[temp6],   %[temp6],       24              \n\t"          \
   "srl              %[temp7],   %[temp7],       24              \n\t"          \
-  "sb               %[temp5],   "#R"(%[dst])                    \n\t"          \
-  "sb               %[temp6],   "#G"(%[dst])                    \n\t"          \
-  "sb               %[temp7],   "#B"(%[dst])                    \n\t"          \
+  "sb               %[temp5],   " #R "(%[dst])                  \n\t"          \
+  "sb               %[temp6],   " #G "(%[dst])                  \n\t"          \
+  "sb               %[temp7],   " #B "(%[dst])                  \n\t"          \
 
 #define ASM_CLOBBER_LIST()                                                     \
   : [temp0]"=&r"(temp0), [temp1]"=&r"(temp1), [temp2]"=&r"(temp2),             \
@@ -74,14 +74,14 @@ static void FUNC_NAME(const uint8_t* y,                                        \
                       uint8_t* dst, int len) {                                 \
   int i;                                                                       \
   uint32_t temp0, temp1, temp2, temp3, temp4, temp5, temp6, temp7;             \
-  const int t_con_1 = kVToR;                                                   \
-  const int t_con_2 = kVToG;                                                   \
-  const int t_con_3 = kUToG;                                                   \
-  const int t_con_4 = kUToB;                                                   \
-  const int t_con_5 = kYScale;                                                 \
-  const int t_con_6 = kRCst;                                                   \
-  const int t_con_7 = kGCst;                                                   \
-  const int t_con_8 = kBCst;                                                   \
+  const int t_con_1 = 26149;                                                   \
+  const int t_con_2 = 13320;                                                   \
+  const int t_con_3 = 6419;                                                    \
+  const int t_con_4 = 33050;                                                   \
+  const int t_con_5 = 19077;                                                   \
+  const int t_con_6 = 14234;                                                   \
+  const int t_con_7 = 8708;                                                    \
+  const int t_con_8 = 17685;                                                   \
   for (i = 0; i < (len >> 1); i++) {                                           \
     __asm__ volatile (                                                         \
       ROW_FUNC_PART_1()                                                        \
@@ -115,17 +115,20 @@ ROW_FUNC(YuvToBgraRow,     4, 2, 1, 0, 3)
 #undef ROW_FUNC_PART_2
 #undef ROW_FUNC_PART_1
 
-#endif  // WEBP_USE_MIPS_DSP_R2
-
 //------------------------------------------------------------------------------
+// Entry point
 
 extern void WebPInitSamplersMIPSdspR2(void);
 
 WEBP_TSAN_IGNORE_FUNCTION void WebPInitSamplersMIPSdspR2(void) {
-#if defined(WEBP_USE_MIPS_DSP_R2)
   WebPSamplers[MODE_RGB]  = YuvToRgbRow;
   WebPSamplers[MODE_RGBA] = YuvToRgbaRow;
   WebPSamplers[MODE_BGR]  = YuvToBgrRow;
   WebPSamplers[MODE_BGRA] = YuvToBgraRow;
-#endif  // WEBP_USE_MIPS_DSP_R2
 }
+
+#else  // !WEBP_USE_MIPS_DSP_R2
+
+WEBP_DSP_INIT_STUB(WebPInitSamplersMIPSdspR2)
+
+#endif  // WEBP_USE_MIPS_DSP_R2

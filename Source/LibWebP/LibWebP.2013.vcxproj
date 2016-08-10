@@ -255,6 +255,7 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <Cpp0xSupport>true</Cpp0xSupport>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Lib />
   </ItemDefinitionGroup>
@@ -269,7 +270,6 @@
     <ClInclude Include="src\dsp\mips_macro.h" />
     <ClInclude Include="src\dsp\neon.h" />
     <ClInclude Include="src\dsp\yuv.h" />
-    <ClInclude Include="src\dsp\yuv_tables_sse2.h" />
     <ClInclude Include="src\enc\backward_references.h" />
     <ClInclude Include="src\enc\cost.h" />
     <ClInclude Include="src\enc\histogram.h" />
@@ -309,10 +309,12 @@
     <ClCompile Include="src\dec\dec.vp8.c" />
     <ClCompile Include="src\dec\dec.vp8l.c" />
     <ClCompile Include="src\dec\dec.webp.c" />
+    <ClCompile Include="src\demux\demux.anim_decode.c" />
     <ClCompile Include="src\demux\demux.demux.c" />
     <ClCompile Include="src\dsp\dsp.alpha_processing.c" />
     <ClCompile Include="src\dsp\dsp.alpha_processing_mips_dsp_r2.c" />
     <ClCompile Include="src\dsp\dsp.alpha_processing_sse2.c" />
+    <ClCompile Include="src\dsp\dsp.alpha_processing_sse41.c" />
     <ClCompile Include="src\dsp\dsp.argb.c" />
     <ClCompile Include="src\dsp\dsp.argb_mips_dsp_r2.c" />
     <ClCompile Include="src\dsp\dsp.argb_sse2.c" />
@@ -325,27 +327,43 @@
     <ClCompile Include="src\dsp\dsp.dec_clip_tables.c" />
     <ClCompile Include="src\dsp\dsp.dec_mips32.c" />
     <ClCompile Include="src\dsp\dsp.dec_mips_dsp_r2.c" />
+    <ClCompile Include="src\dsp\dsp.dec_msa.c" />
     <ClCompile Include="src\dsp\dsp.dec_neon.c" />
     <ClCompile Include="src\dsp\dsp.dec_sse2.c" />
+    <ClCompile Include="src\dsp\dsp.dec_sse41.c" />
     <ClCompile Include="src\dsp\dsp.enc.c" />
     <ClCompile Include="src\dsp\dsp.enc_avx2.c" />
     <ClCompile Include="src\dsp\dsp.enc_mips32.c" />
     <ClCompile Include="src\dsp\dsp.enc_mips_dsp_r2.c" />
+    <ClCompile Include="src\dsp\dsp.enc_msa.c" />
     <ClCompile Include="src\dsp\dsp.enc_neon.c" />
     <ClCompile Include="src\dsp\dsp.enc_sse2.c" />
+    <ClCompile Include="src\dsp\dsp.enc_sse41.c" />
     <ClCompile Include="src\dsp\dsp.filters.c" />
     <ClCompile Include="src\dsp\dsp.filters_mips_dsp_r2.c" />
+    <ClCompile Include="src\dsp\dsp.filters_msa.c" />
     <ClCompile Include="src\dsp\dsp.filters_sse2.c" />
     <ClCompile Include="src\dsp\dsp.lossless.c" />
-    <ClCompile Include="src\dsp\dsp.lossless_mips32.c" />
+    <ClCompile Include="src\dsp\dsp.lossless_enc.c" />
+    <ClCompile Include="src\dsp\dsp.lossless_enc_mips32.c" />
+    <ClCompile Include="src\dsp\dsp.lossless_enc_mips_dsp_r2.c" />
+    <ClCompile Include="src\dsp\dsp.lossless_enc_msa.c" />
+    <ClCompile Include="src\dsp\dsp.lossless_enc_neon.c" />
+    <ClCompile Include="src\dsp\dsp.lossless_enc_sse2.c" />
+    <ClCompile Include="src\dsp\dsp.lossless_enc_sse41.c" />
     <ClCompile Include="src\dsp\dsp.lossless_mips_dsp_r2.c" />
+    <ClCompile Include="src\dsp\dsp.lossless_msa.c" />
     <ClCompile Include="src\dsp\dsp.lossless_neon.c" />
     <ClCompile Include="src\dsp\dsp.lossless_sse2.c" />
     <ClCompile Include="src\dsp\dsp.rescaler.c" />
     <ClCompile Include="src\dsp\dsp.rescaler_mips32.c" />
     <ClCompile Include="src\dsp\dsp.rescaler_mips_dsp_r2.c" />
+    <ClCompile Include="src\dsp\dsp.rescaler_msa.c" />
+    <ClCompile Include="src\dsp\dsp.rescaler_neon.c" />
+    <ClCompile Include="src\dsp\dsp.rescaler_sse2.c" />
     <ClCompile Include="src\dsp\dsp.upsampling.c" />
     <ClCompile Include="src\dsp\dsp.upsampling_mips_dsp_r2.c" />
+    <ClCompile Include="src\dsp\dsp.upsampling_msa.c" />
     <ClCompile Include="src\dsp\dsp.upsampling_neon.c" />
     <ClCompile Include="src\dsp\dsp.upsampling_sse2.c" />
     <ClCompile Include="src\dsp\dsp.yuv.c" />
@@ -357,6 +375,7 @@
     <ClCompile Include="src\enc\enc.backward_references.c" />
     <ClCompile Include="src\enc\enc.config.c" />
     <ClCompile Include="src\enc\enc.cost.c" />
+    <ClCompile Include="src\enc\enc.delta_palettization.c" />
     <ClCompile Include="src\enc\enc.filter.c" />
     <ClCompile Include="src\enc\enc.frame.c" />
     <ClCompile Include="src\enc\enc.histogram.c" />

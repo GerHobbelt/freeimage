@@ -14,10 +14,6 @@
 #ifndef WEBP_ENC_HISTOGRAM_H_
 #define WEBP_ENC_HISTOGRAM_H_
 
-#include <assert.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "./backward_references.h"
@@ -27,6 +23,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Not a trivial literal symbol.
+#define VP8L_NON_TRIVIAL_SYM (0xffffffff)
 
 // A simple container for histograms of data.
 typedef struct {
@@ -106,6 +105,16 @@ int VP8LGetHistoImageSymbols(int xsize, int ysize,
                              VP8LHistogramSet* const image_in,
                              VP8LHistogramSet* const tmp_histos,
                              uint16_t* const histogram_symbols);
+
+// Returns the entropy for the symbols in the input array.
+// Also sets trivial_symbol to the code value, if the array has only one code
+// value. Otherwise, set it to VP8L_NON_TRIVIAL_SYM.
+double VP8LBitsEntropy(const uint32_t* const array, int n,
+                       uint32_t* const trivial_symbol);
+
+// Estimate how many bits the combined entropy of literals and distance
+// approximately maps to.
+double VP8LHistogramEstimateBits(const VP8LHistogram* const p);
 
 #ifdef __cplusplus
 }

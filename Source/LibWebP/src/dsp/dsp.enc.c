@@ -41,8 +41,8 @@ const int VP8DspScan[16 + 4 + 4] = {
 };
 
 // general-purpose util function
-void VP8LSetHistogramData(const int distribution[MAX_COEFF_THRESH + 1],
-                          VP8Histogram* const histo) {
+void VP8SetHistogramData(const int distribution[MAX_COEFF_THRESH + 1],
+                         VP8Histogram* const histo) {
   int max_value = 0, last_non_zero = 1;
   int k;
   for (k = 0; k <= MAX_COEFF_THRESH; ++k) {
@@ -69,12 +69,12 @@ static void CollectHistogram(const uint8_t* ref, const uint8_t* pred,
 
     // Convert coefficients to bin.
     for (k = 0; k < 16; ++k) {
-      const int v = abs(out[k]) >> 3;  // TODO(skal): add rounding?
+      const int v = abs(out[k]) >> 3;
       const int clipped_value = clip_max(v, MAX_COEFF_THRESH);
       ++distribution[clipped_value];
     }
   }
-  VP8LSetHistogramData(distribution, histo);
+  VP8SetHistogramData(distribution, histo);
 }
 
 //------------------------------------------------------------------------------
@@ -177,6 +177,11 @@ static void FTransform(const uint8_t* src, const uint8_t* ref, int16_t* out) {
   }
 }
 
+static void FTransform2(const uint8_t* src, const uint8_t* ref, int16_t* out) {
+  VP8FTransform(src, ref, out);
+  VP8FTransform(src + 4, ref + 4, out + 16);
+}
+
 static void FTransformWHT(const int16_t* in, int16_t* out) {
   // input is 12b signed
   int32_t tmp[16];
@@ -212,8 +217,6 @@ static void FTransformWHT(const int16_t* in, int16_t* out) {
 
 //------------------------------------------------------------------------------
 // Intra predictions
-
-#define DST(x, y) dst[(x) + (y) * BPS]
 
 static WEBP_INLINE void Fill(uint8_t* dst, int value, int size) {
   int j;
@@ -331,6 +334,7 @@ static void Intra16Preds(uint8_t* dst,
 //------------------------------------------------------------------------------
 // luma 4x4 prediction
 
+#define DST(x, y) dst[(x) + (y) * BPS]
 #define AVG3(a, b, c) (((a) + 2 * (b) + (c) + 2) >> 2)
 #define AVG2(a, b) (((a) + (b) + 1) >> 1)
 
@@ -353,10 +357,10 @@ static void HE4(uint8_t* dst, const uint8_t* top) {    // horizontal
   const int J = top[-3];
   const int K = top[-4];
   const int L = top[-5];
-  *(uint32_t*)(dst + 0 * BPS) = 0x01010101U * AVG3(X, I, J);
-  *(uint32_t*)(dst + 1 * BPS) = 0x01010101U * AVG3(I, J, K);
-  *(uint32_t*)(dst + 2 * BPS) = 0x01010101U * AVG3(J, K, L);
-  *(uint32_t*)(dst + 3 * BPS) = 0x01010101U * AVG3(K, L, L);
+  WebPUint32ToMem(dst + 0 * BPS, 0x01010101U * AVG3(X, I, J));
+  WebPUint32ToMem(dst + 1 * BPS, 0x01010101U * AVG3(I, J, K));
+  WebPUint32ToMem(dst + 2 * BPS, 0x01010101U * AVG3(J, K, L));
+  WebPUint32ToMem(dst + 3 * BPS, 0x01010101U * AVG3(K, L, L));
 }
 
 static void DC4(uint8_t* dst, const uint8_t* top) {
@@ -547,6 +551,20 @@ static int SSE4x4(const uint8_t* a, const uint8_t* b) {
   return GetSSE(a, b, 4, 4);
 }
 
+static void Mean16x4(const uint8_t* ref, uint32_t dc[4]) {
+  int k, x, y;
+  for (k = 0; k < 4; ++k) {
+    uint32_t avg = 0;
+    for (y = 0; y < 4; ++y) {
+      for (x = 0; x < 4; ++x) {
+        avg += ref[x + y * BPS];
+      }
+    }
+    dc[k] = avg;
+    ref += 4;   // go to next 4x4 block.
+  }
+}
+
 //------------------------------------------------------------------------------
 // Texture distortion
 //
@@ -555,6 +573,7 @@ static int SSE4x4(const uint8_t* a, const uint8_t* b) {
 
 // Hadamard transform
 // Returns the weighted sum of the absolute value of transformed coefficients.
+// w[] contains a row-major 4 by 4 symmetric matrix.
 static int TTransform(const uint8_t* in, const uint16_t* w) {
   int sum = 0;
   int tmp[16];
@@ -632,7 +651,7 @@ static int QuantizeBlock(int16_t in[16], int16_t out[16],
       int level = QUANTDIV(coeff, iQ, B);
       if (level > MAX_LEVEL) level = MAX_LEVEL;
       if (sign) level = -level;
-      in[j] = level * Q;
+      in[j] = level * (int)Q;
       out[n] = level;
       if (level) last = n;
     } else {
@@ -649,32 +668,6 @@ static int Quantize2Blocks(int16_t in[32], int16_t out[32],
   nz  = VP8EncQuantizeBlock(in + 0 * 16, out + 0 * 16, mtx) << 0;
   nz |= VP8EncQuantizeBlock(in + 1 * 16, out + 1 * 16, mtx) << 1;
   return nz;
-}
-
-static int QuantizeBlockWHT(int16_t in[16], int16_t out[16],
-                            const VP8Matrix* const mtx) {
-  int n, last = -1;
-  for (n = 0; n < 16; ++n) {
-    const int j = kZigzag[n];
-    const int sign = (in[j] < 0);
-    const uint32_t coeff = sign ? -in[j] : in[j];
-    assert(mtx->sharpen_[j] == 0);
-    if (coeff > mtx->zthresh_[j]) {
-      const uint32_t Q = mtx->q_[j];
-      const uint32_t iQ = mtx->iq_[j];
-      const uint32_t B = mtx->bias_[j];
-      int level = QUANTDIV(coeff, iQ, B);
-      if (level > MAX_LEVEL) level = MAX_LEVEL;
-      if (sign) level = -level;
-      in[j] = level * Q;
-      out[n] = level;
-      if (level) last = n;
-    } else {
-      out[n] = 0;
-      in[j] = 0;
-    }
-  }
-  return (last >= 0);
 }
 
 //------------------------------------------------------------------------------
@@ -698,6 +691,68 @@ static void Copy16x8(const uint8_t* src, uint8_t* dst) {
 }
 
 //------------------------------------------------------------------------------
+
+static void SSIMAccumulateClipped(const uint8_t* src1, int stride1,
+                                  const uint8_t* src2, int stride2,
+                                  int xo, int yo, int W, int H,
+                                  VP8DistoStats* const stats) {
+  const int ymin = (yo - VP8_SSIM_KERNEL < 0) ? 0 : yo - VP8_SSIM_KERNEL;
+  const int ymax = (yo + VP8_SSIM_KERNEL > H - 1) ? H - 1
+                                                  : yo + VP8_SSIM_KERNEL;
+  const int xmin = (xo - VP8_SSIM_KERNEL < 0) ? 0 : xo - VP8_SSIM_KERNEL;
+  const int xmax = (xo + VP8_SSIM_KERNEL > W - 1) ? W - 1
+                                                  : xo + VP8_SSIM_KERNEL;
+  int x, y;
+  src1 += ymin * stride1;
+  src2 += ymin * stride2;
+  for (y = ymin; y <= ymax; ++y, src1 += stride1, src2 += stride2) {
+    for (x = xmin; x <= xmax; ++x) {
+      const int s1 = src1[x];
+      const int s2 = src2[x];
+      stats->w   += 1;
+      stats->xm  += s1;
+      stats->ym  += s2;
+      stats->xxm += s1 * s1;
+      stats->xym += s1 * s2;
+      stats->yym += s2 * s2;
+    }
+  }
+}
+
+static void SSIMAccumulate(const uint8_t* src1, int stride1,
+                           const uint8_t* src2, int stride2,
+                           VP8DistoStats* const stats) {
+  int x, y;
+  for (y = 0; y <= 2 * VP8_SSIM_KERNEL; ++y, src1 += stride1, src2 += stride2) {
+    for (x = 0; x <= 2 * VP8_SSIM_KERNEL; ++x) {
+      const int s1 = src1[x];
+      const int s2 = src2[x];
+      stats->w   += 1;
+      stats->xm  += s1;
+      stats->ym  += s2;
+      stats->xxm += s1 * s1;
+      stats->xym += s1 * s2;
+      stats->yym += s2 * s2;
+    }
+  }
+}
+
+VP8SSIMAccumulateFunc VP8SSIMAccumulate;
+VP8SSIMAccumulateClippedFunc VP8SSIMAccumulateClipped;
+
+static volatile VP8CPUInfo ssim_last_cpuinfo_used =
+    (VP8CPUInfo)&ssim_last_cpuinfo_used;
+
+WEBP_TSAN_IGNORE_FUNCTION void VP8SSIMDspInit(void) {
+  if (ssim_last_cpuinfo_used == VP8GetCPUInfo) return;
+
+  VP8SSIMAccumulate = SSIMAccumulate;
+  VP8SSIMAccumulateClipped = SSIMAccumulateClipped;
+
+  ssim_last_cpuinfo_used = VP8GetCPUInfo;
+}
+
+//------------------------------------------------------------------------------
 // Initialization
 
 // Speed-critical function pointers. We have to initialize them to the default
@@ -705,6 +760,7 @@ static void Copy16x8(const uint8_t* src, uint8_t* dst) {
 VP8CHisto VP8CollectHistogram;
 VP8Idct VP8ITransform;
 VP8Fdct VP8FTransform;
+VP8Fdct VP8FTransform2;
 VP8WHT VP8FTransformWHT;
 VP8Intra4Preds VP8EncPredLuma4;
 VP8IntraPreds VP8EncPredLuma16;
@@ -715,6 +771,7 @@ VP8Metric VP8SSE16x8;
 VP8Metric VP8SSE4x4;
 VP8WMetric VP8TDisto4x4;
 VP8WMetric VP8TDisto16x16;
+VP8MeanMetric VP8Mean16x4;
 VP8QuantizeBlock VP8EncQuantizeBlock;
 VP8Quantize2Blocks VP8EncQuantize2Blocks;
 VP8QuantizeBlockWHT VP8EncQuantizeBlockWHT;
@@ -722,10 +779,12 @@ VP8BlockCopy VP8Copy4x4;
 VP8BlockCopy VP8Copy16x8;
 
 extern void VP8EncDspInitSSE2(void);
+extern void VP8EncDspInitSSE41(void);
 extern void VP8EncDspInitAVX2(void);
 extern void VP8EncDspInitNEON(void);
 extern void VP8EncDspInitMIPS32(void);
 extern void VP8EncDspInitMIPSdspR2(void);
+extern void VP8EncDspInitMSA(void);
 
 static volatile VP8CPUInfo enc_last_cpuinfo_used =
     (VP8CPUInfo)&enc_last_cpuinfo_used;
@@ -740,6 +799,7 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8EncDspInit(void) {
   VP8CollectHistogram = CollectHistogram;
   VP8ITransform = ITransform;
   VP8FTransform = FTransform;
+  VP8FTransform2 = FTransform2;
   VP8FTransformWHT = FTransformWHT;
   VP8EncPredLuma4 = Intra4Preds;
   VP8EncPredLuma16 = Intra16Preds;
@@ -750,9 +810,10 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8EncDspInit(void) {
   VP8SSE4x4 = SSE4x4;
   VP8TDisto4x4 = Disto4x4;
   VP8TDisto16x16 = Disto16x16;
+  VP8Mean16x4 = Mean16x4;
   VP8EncQuantizeBlock = QuantizeBlock;
   VP8EncQuantize2Blocks = Quantize2Blocks;
-  VP8EncQuantizeBlockWHT = QuantizeBlockWHT;
+  VP8EncQuantizeBlockWHT = QuantizeBlock;
   VP8Copy4x4 = Copy4x4;
   VP8Copy16x8 = Copy16x8;
 
@@ -761,6 +822,11 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8EncDspInit(void) {
 #if defined(WEBP_USE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8EncDspInitSSE2();
+#if defined(WEBP_USE_SSE41)
+      if (VP8GetCPUInfo(kSSE4_1)) {
+        VP8EncDspInitSSE41();
+      }
+#endif
     }
 #endif
 #if defined(WEBP_USE_AVX2)
@@ -781,6 +847,11 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8EncDspInit(void) {
 #if defined(WEBP_USE_MIPS_DSP_R2)
     if (VP8GetCPUInfo(kMIPSdspR2)) {
       VP8EncDspInitMIPSdspR2();
+    }
+#endif
+#if defined(WEBP_USE_MSA)
+    if (VP8GetCPUInfo(kMSA)) {
+      VP8EncDspInitMSA();
     }
 #endif
   }

@@ -186,8 +186,8 @@ static int PutWebPHeaders(const VP8Encoder* const enc, size_t size0,
 // Segmentation header
 static void PutSegmentHeader(VP8BitWriter* const bw,
                              const VP8Encoder* const enc) {
-  const VP8SegmentHeader* const hdr = &enc->segment_hdr_;
-  const VP8Proba* const proba = &enc->proba_;
+  const VP8EncSegmentHeader* const hdr = &enc->segment_hdr_;
+  const VP8EncProba* const proba = &enc->proba_;
   if (VP8PutBitUniform(bw, (hdr->num_segments_ > 1))) {
     // We always 'update' the quant and filter strength values
     const int update_data = 1;
@@ -215,7 +215,7 @@ static void PutSegmentHeader(VP8BitWriter* const bw,
 
 // Filtering parameters header
 static void PutFilterHeader(VP8BitWriter* const bw,
-                            const VP8FilterHeader* const hdr) {
+                            const VP8EncFilterHeader* const hdr) {
   const int use_lf_delta = (hdr->i4x4_lf_delta_ != 0);
   VP8PutBitUniform(bw, hdr->simple_);
   VP8PutBits(bw, hdr->level_, 6);
@@ -362,8 +362,7 @@ int VP8EncWrite(VP8Encoder* const enc) {
   for (p = 0; p < enc->num_parts_; ++p) {
     const uint8_t* const buf = VP8BitWriterBuf(enc->parts_ + p);
     const size_t size = VP8BitWriterSize(enc->parts_ + p);
-    if (size)
-      ok = ok && pic->writer(buf, size, pic);
+    if (size) ok = ok && pic->writer(buf, size, pic);
     VP8BitWriterWipeOut(enc->parts_ + p);    // will free the internal buffer.
     ok = ok && WebPReportProgress(pic, enc->percent_ + percent_per_part,
                                   &enc->percent_);

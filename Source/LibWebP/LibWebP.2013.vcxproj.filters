@@ -74,9 +74,6 @@
     <ClInclude Include="src\dsp\yuv.h">
       <Filter>Header Files\dsp</Filter>
     </ClInclude>
-    <ClInclude Include="src\dsp\yuv_tables_sse2.h">
-      <Filter>Header Files\dsp</Filter>
-    </ClInclude>
     <ClInclude Include="src\enc\backward_references.h">
       <Filter>Header Files\enc</Filter>
     </ClInclude>
@@ -280,9 +277,6 @@
     <ClCompile Include="src\dsp\dsp.lossless_mips_dsp_r2.c">
       <Filter>Source Files\dsp</Filter>
     </ClCompile>
-    <ClCompile Include="src\dsp\dsp.lossless_mips32.c">
-      <Filter>Source Files\dsp</Filter>
-    </ClCompile>
     <ClCompile Include="src\dsp\dsp.lossless_neon.c">
       <Filter>Source Files\dsp</Filter>
     </ClCompile>
@@ -432,6 +426,66 @@
     </ClCompile>
     <ClCompile Include="src\utils\utils.utils.c">
       <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\enc\enc.delta_palettization.c">
+      <Filter>Source Files\enc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.lossless_enc_mips32.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.lossless_enc_msa.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.lossless_enc_neon.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.lossless_enc_sse2.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.lossless_enc_sse41.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.lossless_enc.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.lossless_enc_mips_dsp_r2.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.lossless_msa.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.alpha_processing_sse41.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.dec_msa.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.dec_sse41.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.enc_msa.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.enc_sse41.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.filters_msa.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.rescaler_neon.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.rescaler_sse2.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.upsampling_msa.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dsp\dsp.rescaler_msa.c">
+      <Filter>Source Files\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demux\demux.anim_decode.c">
+      <Filter>Source Files\demux</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -38,18 +38,18 @@ extern "C" {
 # define LOCAL_GCC_PREREQ(maj, min) 0
 #endif
 
-#ifdef __clang__
-# define LOCAL_CLANG_VERSION ((__clang_major__ << 8) | __clang_minor__)
-# define LOCAL_CLANG_PREREQ(maj, min) \
-    (LOCAL_CLANG_VERSION >= (((maj) << 8) | (min)))
-#else
-# define LOCAL_CLANG_VERSION 0
-# define LOCAL_CLANG_PREREQ(maj, min) 0
-#endif  // __clang__
+#ifndef __has_builtin
+# define __has_builtin(x) 0
+#endif
 
 #if defined(_MSC_VER) && _MSC_VER > 1310 && \
     (defined(_M_X64) || defined(_M_IX86))
 #define WEBP_MSC_SSE2  // Visual C++ SSE2 targets
+#endif
+
+#if defined(_MSC_VER) && _MSC_VER >= 1500 && \
+    (defined(_M_X64) || defined(_M_IX86))
+#define WEBP_MSC_SSE41  // Visual C++ SSE4.1 targets
 #endif
 
 // WEBP_HAVE_* are used to indicate the presence of the instruction set in dsp
@@ -60,6 +60,10 @@ extern "C" {
 #define WEBP_USE_SSE2
 #endif
 
+#if defined(__SSE4_1__) || defined(WEBP_MSC_SSE41) || defined(WEBP_HAVE_SSE41)
+#define WEBP_USE_SSE41
+#endif
+
 #if defined(__AVX2__) || defined(WEBP_HAVE_AVX2)
 #define WEBP_USE_AVX2
 #endif
@@ -68,7 +72,11 @@ extern "C" {
 #define WEBP_ANDROID_NEON  // Android targets that might support NEON
 #endif
 
-#if defined(__ARM_NEON__) || defined(WEBP_ANDROID_NEON) || defined(__aarch64__)
+// The intrinsics currently cause compiler errors with arm-nacl-gcc and the
+// inline assembly would need to be modified for use with Native Client.
+#if (defined(__ARM_NEON__) || defined(WEBP_ANDROID_NEON) || \
+     defined(__aarch64__) || defined(WEBP_HAVE_NEON)) && \
+    !defined(__native_client__)
 #define WEBP_USE_NEON
 #endif
 
@@ -77,7 +85,8 @@ extern "C" {
 #define WEBP_USE_INTRINSICS
 #endif
 
-#if defined(__mips__) && !defined(__mips64) && (__mips_isa_rev < 6)
+#if defined(__mips__) && !defined(__mips64) && \
+    defined(__mips_isa_rev) && (__mips_isa_rev >= 1) && (__mips_isa_rev < 6)
 #define WEBP_USE_MIPS32
 #if (__mips_isa_rev >= 2)
 #define WEBP_USE_MIPS32_R2
@@ -85,6 +94,10 @@ extern "C" {
 #define WEBP_USE_MIPS_DSP_R2
 #endif
 #endif
+#endif
+
+#if defined(__mips_msa) && defined(__mips_isa_rev) && (__mips_isa_rev >= 5)
+#define WEBP_USE_MSA
 #endif
 
 // This macro prevents thread_sanitizer from reporting known concurrent writes.
@@ -96,18 +109,50 @@ extern "C" {
 #endif
 #endif
 
+#define WEBP_UBSAN_IGNORE_UNDEF
+#define WEBP_UBSAN_IGNORE_UNSIGNED_OVERFLOW
+#if !defined(WEBP_FORCE_ALIGNED) && defined(__clang__) && \
+    defined(__has_attribute)
+#if __has_attribute(no_sanitize)
+// This macro prevents the undefined behavior sanitizer from reporting
+// failures. This is only meant to silence unaligned loads on platforms that
+// are known to support them.
+#undef WEBP_UBSAN_IGNORE_UNDEF
+#define WEBP_UBSAN_IGNORE_UNDEF \
+  __attribute__((no_sanitize("undefined")))
+
+// This macro prevents the undefined behavior sanitizer from reporting
+// failures related to unsigned integer overflows. This is only meant to
+// silence cases where this well defined behavior is expected.
+#undef WEBP_UBSAN_IGNORE_UNSIGNED_OVERFLOW
+#define WEBP_UBSAN_IGNORE_UNSIGNED_OVERFLOW \
+  __attribute__((no_sanitize("unsigned-integer-overflow")))
+#endif
+#endif
+
 typedef enum {
   kSSE2,
   kSSE3,
+  kSSE4_1,
   kAVX,
   kAVX2,
   kNEON,
   kMIPS32,
-  kMIPSdspR2
+  kMIPSdspR2,
+  kMSA
 } CPUFeature;
 // returns true if the CPU supports the feature.
 typedef int (*VP8CPUInfo)(CPUFeature feature);
 WEBP_EXTERN(VP8CPUInfo) VP8GetCPUInfo;
+
+//------------------------------------------------------------------------------
+// Init stub generator
+
+// Defines an init function stub to ensure each module exposes a symbol,
+// avoiding a compiler warning.
+#define WEBP_DSP_INIT_STUB(func) \
+  extern void func(void); \
+  WEBP_TSAN_IGNORE_FUNCTION void func(void) {}
 
 //------------------------------------------------------------------------------
 // Encoding
@@ -121,6 +166,7 @@ typedef void (*VP8Fdct)(const uint8_t* src, const uint8_t* ref, int16_t* out);
 typedef void (*VP8WHT)(const int16_t* in, int16_t* out);
 extern VP8Idct VP8ITransform;
 extern VP8Fdct VP8FTransform;
+extern VP8Fdct VP8FTransform2;   // performs two transforms at a time
 extern VP8WHT VP8FTransformWHT;
 // Predictions
 // *dst is the destination block. *top and *left can be NULL.
@@ -135,7 +181,14 @@ typedef int (*VP8Metric)(const uint8_t* pix, const uint8_t* ref);
 extern VP8Metric VP8SSE16x16, VP8SSE16x8, VP8SSE8x8, VP8SSE4x4;
 typedef int (*VP8WMetric)(const uint8_t* pix, const uint8_t* ref,
                           const uint16_t* const weights);
+// The weights for VP8TDisto4x4 and VP8TDisto16x16 contain a row-major
+// 4 by 4 symmetric matrix.
 extern VP8WMetric VP8TDisto4x4, VP8TDisto16x16;
+
+// Compute the average (DC) of four 4x4 blocks.
+// Each sub-4x4 block #i sum is stored in dc[i].
+typedef void (*VP8MeanMetric)(const uint8_t* ref, uint32_t dc[4]);
+extern VP8MeanMetric VP8Mean16x4;
 
 typedef void (*VP8BlockCopy)(const uint8_t* src, uint8_t* dst);
 extern VP8BlockCopy VP8Copy4x4;
@@ -170,8 +223,8 @@ typedef void (*VP8CHisto)(const uint8_t* ref, const uint8_t* pred,
                           VP8Histogram* const histo);
 extern VP8CHisto VP8CollectHistogram;
 // General-purpose util function to help VP8CollectHistogram().
-void VP8LSetHistogramData(const int distribution[MAX_COEFF_THRESH + 1],
-                          VP8Histogram* const histo);
+void VP8SetHistogramData(const int distribution[MAX_COEFF_THRESH + 1],
+                         VP8Histogram* const histo);
 
 // must be called before using any of the above
 void VP8EncDspInit(void);
@@ -196,6 +249,35 @@ extern VP8GetResidualCostFunc VP8GetResidualCost;
 
 // must be called before anything using the above
 void VP8EncDspCostInit(void);
+
+//------------------------------------------------------------------------------
+// SSIM utils
+
+// struct for accumulating statistical moments
+typedef struct {
+  double w;              // sum(w_i) : sum of weights
+  double xm, ym;         // sum(w_i * x_i), sum(w_i * y_i)
+  double xxm, xym, yym;  // sum(w_i * x_i * x_i), etc.
+} VP8DistoStats;
+
+#define VP8_SSIM_KERNEL 3   // total size of the kernel: 2 * VP8_SSIM_KERNEL + 1
+typedef void (*VP8SSIMAccumulateClippedFunc)(const uint8_t* src1, int stride1,
+                                             const uint8_t* src2, int stride2,
+                                             int xo, int yo,  // center position
+                                             int W, int H,    // plane dimension
+                                             VP8DistoStats* const stats);
+
+// This version is called with the guarantee that you can load 8 bytes and
+// 8 rows at offset src1 and src2
+typedef void (*VP8SSIMAccumulateFunc)(const uint8_t* src1, int stride1,
+                                      const uint8_t* src2, int stride2,
+                                      VP8DistoStats* const stats);
+
+extern VP8SSIMAccumulateFunc VP8SSIMAccumulate;         // unclipped / unchecked
+extern VP8SSIMAccumulateClippedFunc VP8SSIMAccumulateClipped;   // with clipping
+
+// must be called before using any of the above directly
+void VP8SSIMDspInit(void);
 
 //------------------------------------------------------------------------------
 // Decoding
@@ -248,6 +330,15 @@ extern VP8LumaFilterFunc VP8VFilter16i;   // filtering 3 inner edges altogether
 extern VP8LumaFilterFunc VP8HFilter16i;
 extern VP8ChromaFilterFunc VP8VFilter8i;  // filtering u and v altogether
 extern VP8ChromaFilterFunc VP8HFilter8i;
+
+// Dithering. Combines dithering values (centered around 128) with dst[],
+// according to: dst[] = clip(dst[] + (((dither[]-128) + 8) >> 4)
+#define VP8_DITHER_DESCALE 4
+#define VP8_DITHER_DESCALE_ROUNDER (1 << (VP8_DITHER_DESCALE - 1))
+#define VP8_DITHER_AMP_BITS 7
+#define VP8_DITHER_AMP_CENTER (1 << VP8_DITHER_AMP_BITS)
+extern void (*VP8DitherCombine8x8)(const uint8_t* dither, uint8_t* dst,
+                                   int dst_stride);
 
 // must be called before anything using the above
 void VP8DspInit(void);
@@ -306,20 +397,67 @@ void WebPInitSamplers(void);
 void WebPInitYUV444Converters(void);
 
 //------------------------------------------------------------------------------
+// ARGB -> YUV converters
+
+// Convert ARGB samples to luma Y.
+extern void (*WebPConvertARGBToY)(const uint32_t* argb, uint8_t* y, int width);
+// Convert ARGB samples to U/V with downsampling. do_store should be '1' for
+// even lines and '0' for odd ones. 'src_width' is the original width, not
+// the U/V one.
+extern void (*WebPConvertARGBToUV)(const uint32_t* argb, uint8_t* u, uint8_t* v,
+                                   int src_width, int do_store);
+
+// Convert a row of accumulated (four-values) of rgba32 toward U/V
+extern void (*WebPConvertRGBA32ToUV)(const uint16_t* rgb,
+                                     uint8_t* u, uint8_t* v, int width);
+
+// Convert RGB or BGR to Y
+extern void (*WebPConvertRGB24ToY)(const uint8_t* rgb, uint8_t* y, int width);
+extern void (*WebPConvertBGR24ToY)(const uint8_t* bgr, uint8_t* y, int width);
+
+// used for plain-C fallback.
+extern void WebPConvertARGBToUV_C(const uint32_t* argb, uint8_t* u, uint8_t* v,
+                                  int src_width, int do_store);
+extern void WebPConvertRGBA32ToUV_C(const uint16_t* rgb,
+                                    uint8_t* u, uint8_t* v, int width);
+
+// Must be called before using the above.
+void WebPInitConvertARGBToYUV(void);
+
+//------------------------------------------------------------------------------
 // Rescaler
 
 struct WebPRescaler;
 
 // Import a row of data and save its contribution in the rescaler.
-// 'channel' denotes the channel number to be imported.
-extern void (*WebPRescalerImportRow)(struct WebPRescaler* const wrk,
-                                     const uint8_t* const src, int channel);
+// 'channel' denotes the channel number to be imported. 'Expand' corresponds to
+// the wrk->x_expand case. Otherwise, 'Shrink' is to be used.
+typedef void (*WebPRescalerImportRowFunc)(struct WebPRescaler* const wrk,
+                                          const uint8_t* src);
+
+extern WebPRescalerImportRowFunc WebPRescalerImportRowExpand;
+extern WebPRescalerImportRowFunc WebPRescalerImportRowShrink;
 
 // Export one row (starting at x_out position) from rescaler.
-extern void (*WebPRescalerExportRow)(struct WebPRescaler* const wrk, int x_out);
+// 'Expand' corresponds to the wrk->y_expand case.
+// Otherwise 'Shrink' is to be used
+typedef void (*WebPRescalerExportRowFunc)(struct WebPRescaler* const wrk);
+extern WebPRescalerExportRowFunc WebPRescalerExportRowExpand;
+extern WebPRescalerExportRowFunc WebPRescalerExportRowShrink;
 
 // Plain-C implementation, as fall-back.
-extern void WebPRescalerExportRowC(struct WebPRescaler* const wrk, int x_out);
+extern void WebPRescalerImportRowExpandC(struct WebPRescaler* const wrk,
+                                         const uint8_t* src);
+extern void WebPRescalerImportRowShrinkC(struct WebPRescaler* const wrk,
+                                         const uint8_t* src);
+extern void WebPRescalerExportRowExpandC(struct WebPRescaler* const wrk);
+extern void WebPRescalerExportRowShrinkC(struct WebPRescaler* const wrk);
+
+// Main entry calls:
+extern void WebPRescalerImportRow(struct WebPRescaler* const wrk,
+                                  const uint8_t* src);
+// Export one row (starting at x_out position) from rescaler.
+extern void WebPRescalerExportRow(struct WebPRescaler* const wrk);
 
 // Must be called first before using the above.
 void WebPRescalerDspInit(void);
@@ -409,8 +547,10 @@ typedef enum {     // Filter types.
 
 typedef void (*WebPFilterFunc)(const uint8_t* in, int width, int height,
                                int stride, uint8_t* out);
-typedef void (*WebPUnfilterFunc)(int width, int height, int stride,
-                                 int row, int num_rows, uint8_t* data);
+// In-place un-filtering.
+// Warning! 'prev_line' pointer can be equal to 'cur_line' or 'preds'.
+typedef void (*WebPUnfilterFunc)(const uint8_t* prev_line, const uint8_t* preds,
+                                 uint8_t* cur_line, int width);
 
 // Filter the given data using the given predictor.
 // 'in' corresponds to a 2-dimensional pixel array of size (stride * height)
