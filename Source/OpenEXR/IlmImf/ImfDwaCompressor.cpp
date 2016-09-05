@@ -2163,7 +2163,7 @@ DwaCompressor::compress
     if (*unknownUncompressedSize > 0)
     {
         uLongf inSize  = (uLongf)(*unknownUncompressedSize);
-        uLongf outSize = (uLongf)(ceil ((float)inSize * 1.01f) + 100);
+        size_t outSize = (size_t)(ceil ((float)inSize * 1.01f) + 100);
 
         if (Z_OK != ::compress2 ((Bytef *)outDataPtr,
                                  &outSize,
@@ -2201,7 +2201,7 @@ DwaCompressor::compress
           case DEFLATE:
 
             {
-                uLongf destLen = (uLongf)
+                size_t destLen = (size_t)
                     (2 * (*totalAcUncompressedCount) * sizeof (unsigned short));
 
                 if (Z_OK != ::compress2
@@ -2254,8 +2254,8 @@ DwaCompressor::compress
              _planarUncBuffer[RLE],
              (signed char *)_rleBuffer);
 
-        uLongf dstLen =
-            (uLongf)ceil (1.01f * (float) * rleUncompressedSize) + 24;
+        size_t dstLen =
+            (size_t)ceil (1.01f * (float) * rleUncompressedSize) + 24;
 
         if (Z_OK != ::compress2
                         ((Bytef *)outDataPtr, 
@@ -2493,7 +2493,7 @@ DwaCompressor::uncompress
 
     if (unknownCompressedSize > 0)
     {
-        uLongf outSize = static_cast<uLongf>(
+        size_t outSize = static_cast<size_t>(
                 ceil( (float)unknownUncompressedSize * 1.01) + 100);
 
         if (unknownUncompressedSize < 0 || 
@@ -2543,7 +2543,7 @@ DwaCompressor::uncompress
 
           case DEFLATE:
             {
-                uLongf destLen =
+                size_t destLen =
                     (int)(totalAcUncompressedCount) * sizeof (unsigned short);
 
                 if (Z_OK != ::uncompress
@@ -2604,7 +2604,7 @@ DwaCompressor::uncompress
                                 "(corrupt header).");
         }
  
-        uLongf dstLen = (uLongf)rleUncompressedSize;
+        size_t dstLen = (size_t)rleUncompressedSize;
 
         if (Z_OK != ::uncompress
                         ((Bytef *)_rleBuffer,

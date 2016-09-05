@@ -124,7 +124,7 @@ Imf::Zip::compress(const char *raw, int rawSize, char *compressed)
     // Compress the data using zlib
     //
 
-    uLongf outSize = int(ceil(rawSize * 1.01)) + 100;
+    size_t outSize = int(ceil(rawSize * 1.01)) + 100;
 
     if (Z_OK != ::compress ((Bytef *)compressed, &outSize,
                 (const Bytef *) _tmpBuffer, rawSize))
@@ -143,7 +143,7 @@ Imf::Zip::uncompress(const char *compressed, int compressedSize,
     // Decompress the data using zlib
     //
 
-    uLongf outSize = _maxRawSize;
+    size_t outSize = _maxRawSize;
 
     if (Z_OK != ::uncompress ((Bytef *)_tmpBuffer, &outSize,
                      (const Bytef *) compressed, compressedSize))

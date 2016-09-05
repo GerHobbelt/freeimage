@@ -397,7 +397,7 @@ Pxr24Compressor::compress (const char *inPtr,
 	}
     }
 
-    uLongf outSize = int (ceil ((tmpBufferEnd - _tmpBuffer) * 1.01)) + 100;
+    size_t outSize = int (ceil ((tmpBufferEnd - _tmpBuffer) * 1.01)) + 100;
 
     if (Z_OK != ::compress ((Bytef *) _outBuffer,
 			    &outSize,
@@ -424,7 +424,7 @@ Pxr24Compressor::uncompress (const char *inPtr,
 	return 0;
     }
 
-    uLongf tmpSize = _maxScanLineSize * _numScanLines;
+    size_t tmpSize = _maxScanLineSize * _numScanLines;
 
     if (Z_OK != ::uncompress ((Bytef *)_tmpBuffer,
 			      &tmpSize,
