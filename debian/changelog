@@ -1,3 +1,20 @@
+freeimage (3.17.0+ds1-3) unstable; urgency=medium
+
+  * Fix CVE-2016-5864: apply patch from wheezy-security.
+    Thanks to Salvatore Bonaccorso, Balint Reczey and Chris Lamb
+    (Closes: #839827)
+  * d/gbp.conf: use master as packaging branch.
+  * Bump standards version to 3.9.8, no changes required.
+  * Upgrade to debhelper 10.
+    - Bump compat version to 10.
+    - Bump versioned depends of debhelper to 10.
+    - Drop explicit usage of `--with autoreconf` from dh command.
+    - Drop explicit usage of `--parallel` from dh command.
+  * Use DEB_BUILD_MAINT_OPTIONS for hardening.
+  * Disable PIE hardening feature.
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Mon, 10 Oct 2016 15:12:26 +0100
+
 freeimage (3.17.0+ds1-2) unstable; urgency=medium
 
   * Improve build reproducibility by applying suggested s/sort/LC_ALL=C sort/
