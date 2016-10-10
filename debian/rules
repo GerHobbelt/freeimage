@@ -1,14 +1,10 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
-# Hardening options.
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 export DEB_CFLAGS_MAINT_APPEND = -Wall -pedantic -fPIC
 export DEB_CXXFLAGS_MAINT_APPEND = -Wall -pedantic -fPIC
 export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
-
-# Export build flags.
-DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/buildflags.mk
 
 # Environment information.
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
