@@ -4,8 +4,7 @@ Uploaders: Anton Gladky <gladk@debian.org>,
            Ghislain Antony Vaillant <ghisvail@gmail.com>
 Section: libs
 Priority: optional
-Build-Depends: debhelper (>= 9),
-               dh-autoreconf,
+Build-Depends: debhelper (>= 10),
                dos2unix,
                libjpeg-dev,
                libjxr-dev,

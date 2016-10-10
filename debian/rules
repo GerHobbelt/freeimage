@@ -19,7 +19,7 @@ INSTALL_INCDIR = $(DESTDIR)/usr/include
 INSTALL_LIBDIR = $(DESTDIR)/usr/lib/$(DEB_HOST_MULTIARCH)
 
 %:
-	dh $@ --with=autoreconf --parallel
+	dh $@
 
 gen-src-list:
 	sh gensrclist.sh
