@@ -6,3 +6,4 @@ fix-big-endian-detection.patch
 build_using_libjpeg62_transupp.c.patch
 fix_integer_overflow.patch
 fix_Integer_overflow_in_ljpeg_start.patch
+Fix-CVE-2016-5684.patch
