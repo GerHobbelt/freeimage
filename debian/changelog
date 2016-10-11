@@ -1,9 +1,12 @@
-freeimage (3.15.4-4.2+deb8u1) jessie-security; urgency=high
+freeimage (3.15.4-4.2+deb8u1) jessie-security; urgency=medium
 
-  * Non-maintainer upload
-  * Fix integer overflow in the ljpeg_start function CVE-2015-3885. (Closes: #786790)
+  * [f51f898] Fix CVE-2015-3885: integer overflow in the ljpeg_start function
+              (Closes: #786790)
+  * [b2e0c3f] Fix CVE-2016-5864: apply patch from wheezy-security.
+              Thanks to Salvatore Bonaccorso, Balint Reczey and Chris Lamb
+              (Closes: #839827)
 
- -- Anton Gladky <gladk@debian.org>  Tue, 03 Nov 2015 23:45:34 +0100
+ -- Anton Gladky <gladk@debian.org>  Tue, 11 Oct 2016 21:00:24 +0200
 
 freeimage (3.15.4-4.2) jessie-security; urgency=high
 
