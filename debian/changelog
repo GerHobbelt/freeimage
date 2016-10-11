@@ -1,4 +1,4 @@
-freeimage (3.17.0+ds1-3) unstable; urgency=medium
+freeimage (3.17.0+ds1-3) unstable; urgency=critical
 
   * Fix CVE-2016-5864: apply patch from wheezy-security.
     Thanks to Salvatore Bonaccorso, Balint Reczey and Chris Lamb
