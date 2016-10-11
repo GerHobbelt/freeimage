@@ -1,4 +1,4 @@
-freeimage (3.15.4-4.2+deb8u1) jessie-security; urgency=medium
+freeimage (3.15.4-4.2+deb8u1) jessie-security; urgency=high
 
   * [f51f898] Fix CVE-2015-3885: integer overflow in the ljpeg_start function
               (Closes: #786790)
