@@ -1,5 +1,6 @@
 freeimage (3.17.0+ds1-3) unstable; urgency=critical
 
+  [ Ghislain Antony Vaillant ]
   * Fix CVE-2016-5864: apply patch from wheezy-security.
     Thanks to Salvatore Bonaccorso, Balint Reczey and Chris Lamb
     (Closes: #839827)
@@ -12,6 +13,9 @@ freeimage (3.17.0+ds1-3) unstable; urgency=critical
     - Drop explicit usage of `--parallel` from dh command.
   * Use DEB_BUILD_MAINT_OPTIONS for hardening.
   * Disable PIE hardening feature.
+
+  [ Anton Gladky ]
+  * Change the urgency to critical.
 
  -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Mon, 10 Oct 2016 15:12:26 +0100
 
