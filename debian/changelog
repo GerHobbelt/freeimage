@@ -1,7 +1,7 @@
 freeimage (3.17.0+ds1-3) unstable; urgency=critical
 
   [ Ghislain Antony Vaillant ]
-  * Fix CVE-2016-5864: apply patch from wheezy-security.
+  * Fix CVE-2016-5684: apply patch from wheezy-security.
     Thanks to Salvatore Bonaccorso, Balint Reczey and Chris Lamb
     (Closes: #839827)
   * d/gbp.conf: use master as packaging branch.
