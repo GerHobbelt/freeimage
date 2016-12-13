@@ -10,7 +10,7 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
 ---
  Source/FreeImage.h                 | 15 ++++++-
  Source/FreeImage/J2KHelper.cpp     |  2 +-
- Source/FreeImage/Plugin.cpp        |  4 ++
+ Source/FreeImage/Plugin.cpp        | 26 +++++++++++--
  Source/FreeImage/PluginEXR.cpp     | 20 +++++-----
  Source/FreeImage/PluginJ2K.cpp     |  2 +-
  Source/FreeImage/PluginJP2.cpp     |  2 +-
@@ -24,7 +24,7 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  Source/Metadata/XTIFF.cpp          | 80 +++++++++++++++++++-------------------
  genfipsrclist.sh                   |  9 +----
  gensrclist.sh                      | 11 ++----
- 16 files changed, 89 insertions(+), 87 deletions(-)
+ 16 files changed, 107 insertions(+), 91 deletions(-)
 
 diff --git a/Source/FreeImage.h b/Source/FreeImage.h
 index e2d1c5a..94d817d 100644
@@ -94,21 +94,84 @@ index 1776c3b..538f1c5 100644
  
  // --------------------------------------------------------------------------
 diff --git a/Source/FreeImage/Plugin.cpp b/Source/FreeImage/Plugin.cpp
-index 57ebffd..c883a31 100644
+index 57ebffd..7d0b466 100644
 --- a/Source/FreeImage/Plugin.cpp
 +++ b/Source/FreeImage/Plugin.cpp
-@@ -263,7 +263,11 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
+@@ -134,7 +134,13 @@ PluginList::AddNode(FI_InitProc init_proc, void *instance, const char *format, c
+ 
+ 		delete plugin;
+ 		delete node;
+-	}
++	} else {
++    //allows adding a NULL node in order to not mess up plugin
++    //numbering when some are disabled. Otherwise there will be a
++    //discrepancy between FREE_IMAGE_FORMAT enumerator values and the
++    //actual format.
++    m_plugin_map[(const int)m_plugin_map.size()] = 0;
++  }
+ 
+ 	return FIF_UNKNOWN;
+ }
+@@ -142,6 +148,9 @@ PluginList::AddNode(FI_InitProc init_proc, void *instance, const char *format, c
+ PluginNode *
+ PluginList::FindNodeFromFormat(const char *format) {
+ 	for (map<int, PluginNode *>::iterator i = m_plugin_map.begin(); i != m_plugin_map.end(); ++i) {
++    if (i->second == NULL) {
++      continue;
++    }
+ 		const char *the_format = ((*i).second->m_format != NULL) ? (*i).second->m_format : (*i).second->m_plugin->format_proc();
+ 
+ 		if ((*i).second->m_enabled) {
+@@ -157,6 +166,9 @@ PluginList::FindNodeFromFormat(const char *format) {
+ PluginNode *
+ PluginList::FindNodeFromMime(const char *mime) {
+ 	for (map<int, PluginNode *>::iterator i = m_plugin_map.begin(); i != m_plugin_map.end(); ++i) {
++    if (i->second == NULL) {
++      continue;
++    }
+ 		const char *the_mime = ((*i).second->m_plugin->mime_proc != NULL) ? (*i).second->m_plugin->mime_proc() : "";
+ 
+ 		if ((*i).second->m_enabled) {
+@@ -192,6 +204,10 @@ PluginList::IsEmpty() const {
+ 
+ PluginList::~PluginList() {
+ 	for (map<int, PluginNode *>::iterator i = m_plugin_map.begin(); i != m_plugin_map.end(); ++i) {
++    if (i->second == NULL) {
++      continue;
++    }
++
+ #ifdef _WIN32
+ 		if ((*i).second->m_instance != NULL) {
+ 			FreeLibrary((HINSTANCE)(*i).second->m_instance);
+@@ -263,7 +279,9 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
  			s_plugins->AddNode(InitDDS);
  	        s_plugins->AddNode(InitGIF);
  	        s_plugins->AddNode(InitHDR);
+-			s_plugins->AddNode(InitG3);
 +/* The G3 fax format plugin is deliberately disabled in our build of FreeImage
 +   since it requires usage of the vendored copy of libtiff. */
-+#if 0
- 			s_plugins->AddNode(InitG3);
-+#endif
++			s_plugins->AddNode(NULL);
  			s_plugins->AddNode(InitSGI);
  			s_plugins->AddNode(InitEXR);
  			s_plugins->AddNode(InitJ2K);
+@@ -358,7 +376,7 @@ FreeImage_DeInitialise() {
+ 
+ void * DLL_CALLCONV
+ FreeImage_Open(PluginNode *node, FreeImageIO *io, fi_handle handle, BOOL open_for_reading) {
+-	if (node->m_plugin->open_proc != NULL) {
++	if (node && node->m_plugin->open_proc != NULL) {
+        return node->m_plugin->open_proc(io, handle, open_for_reading);
+ 	}
+ 
+@@ -367,7 +385,7 @@ FreeImage_Open(PluginNode *node, FreeImageIO *io, fi_handle handle, BOOL open_fo
+ 
+ void DLL_CALLCONV
+ FreeImage_Close(PluginNode *node, FreeImageIO *io, fi_handle handle, void *data) {
+-	if (node->m_plugin->close_proc != NULL) {
++	if (node && node->m_plugin->close_proc != NULL) {
+ 		node->m_plugin->close_proc(io, handle, data);
+ 	}
+ }
 diff --git a/Source/FreeImage/PluginEXR.cpp b/Source/FreeImage/PluginEXR.cpp
 index b286430..9bf3ada 100644
 --- a/Source/FreeImage/PluginEXR.cpp
