@@ -1,3 +1,17 @@
+freeimage (3.17.0+ds1-4) unstable; urgency=medium
+
+  [ Anton Gladky ]
+  * Fix CVE-number.
+
+  [ Ghislain Antony Vaillant ]
+  * Fix FTCBFS: use triplet-prefixed build tools.
+    Thanks to Helmut Grohne for the fix (Closes: #845279)
+  * Fix wrong file type detection for certain plugins.
+    Update Disable-vendored-dependencies.patch
+    Thanks to Boris Lesner for the fix (Closes: #841089)
+
+ -- Ghislain Antony Vaillant <ghisvail@gmail.com>  Tue, 13 Dec 2016 16:48:47 +0000
+
 freeimage (3.17.0+ds1-3) unstable; urgency=critical
 
   [ Ghislain Antony Vaillant ]
