@@ -12,3 +12,4 @@ Fix-endianness-detection.patch
 Fix-CVE-2015-0852.patch
 Fix-encoding-of-fi-header.patch
 Fix-CVE-2016-5684.patch
+Enable-substitution-of-pkg-config.patch
