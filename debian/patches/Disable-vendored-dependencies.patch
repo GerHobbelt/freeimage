@@ -8,10 +8,10 @@ packaged dependencies are delibarately disabled for security reasons.
 
 This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
 ---
- Source/FreeImage.h                 | 15 ++++++-
+ Source/FreeImage.h                 |  9 ++++-
  Source/FreeImage/J2KHelper.cpp     |  2 +-
- Source/FreeImage/Plugin.cpp        | 26 +++++++++++--
  Source/FreeImage/PluginEXR.cpp     | 20 +++++-----
+ Source/FreeImage/PluginG3.cpp      |  9 +++--
  Source/FreeImage/PluginJ2K.cpp     |  2 +-
  Source/FreeImage/PluginJP2.cpp     |  2 +-
  Source/FreeImage/PluginJPEG.cpp    |  6 +--
@@ -24,26 +24,13 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  Source/Metadata/XTIFF.cpp          | 80 +++++++++++++++++++-------------------
  genfipsrclist.sh                   |  9 +----
  gensrclist.sh                      | 11 ++----
- 16 files changed, 107 insertions(+), 91 deletions(-)
+ 16 files changed, 85 insertions(+), 90 deletions(-)
 
 diff --git a/Source/FreeImage.h b/Source/FreeImage.h
-index e2d1c5a..94d817d 100644
+index e2d1c5a..ac35bec 100644
 --- a/Source/FreeImage.h
 +++ b/Source/FreeImage.h
-@@ -410,7 +410,11 @@ FI_ENUM(FREE_IMAGE_FORMAT) {
- 	FIF_DDS		= 24,
- 	FIF_GIF     = 25,
- 	FIF_HDR		= 26,
--	FIF_FAXG3	= 27,
-+/* Debian: The G3 fax format plugin is deliberately disabled in our build of
-+   FreeImage, since it requires usage of the vendored copy of libtiff. */
-+#if 0
-+ 	FIF_FAXG3	= 27,
-+#endif
- 	FIF_SGI		= 28,
- 	FIF_EXR		= 29,
- 	FIF_J2K		= 30,
-@@ -473,6 +477,9 @@ FI_ENUM(FREE_IMAGE_DITHER) {
+@@ -473,6 +473,9 @@ FI_ENUM(FREE_IMAGE_DITHER) {
  	FID_BAYER16x16	= 6		//! Bayer ordered dispersed dot dithering (order 4 dithering matrix)
  };
  
@@ -53,7 +40,7 @@ index e2d1c5a..94d817d 100644
  /** Lossless JPEG transformations
  Constants used in FreeImage_JPEGTransform
  */
-@@ -486,6 +493,7 @@ FI_ENUM(FREE_IMAGE_JPEG_OPERATION) {
+@@ -486,6 +489,7 @@ FI_ENUM(FREE_IMAGE_JPEG_OPERATION) {
  	FIJPEG_OP_ROTATE_180	= 6,	//! 180-degree rotation
  	FIJPEG_OP_ROTATE_270	= 7		//! 270-degree clockwise (or 90 ccw)
  };
@@ -61,7 +48,7 @@ index e2d1c5a..94d817d 100644
  
  /** Tone mapping operators.
  Constants used in FreeImage_ToneMapping.
-@@ -1076,7 +1084,9 @@ DLL_API const char* DLL_CALLCONV FreeImage_TagToString(FREE_IMAGE_MDMODEL model,
+@@ -1076,7 +1080,9 @@ DLL_API const char* DLL_CALLCONV FreeImage_TagToString(FREE_IMAGE_MDMODEL model,
  // --------------------------------------------------------------------------
  // JPEG lossless transformation routines
  // --------------------------------------------------------------------------
@@ -72,7 +59,7 @@ index e2d1c5a..94d817d 100644
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransform(const char *src_file, const char *dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect FI_DEFAULT(TRUE));
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformU(const wchar_t *src_file, const wchar_t *dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect FI_DEFAULT(TRUE));
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGCrop(const char *src_file, const char *dst_file, int left, int top, int right, int bottom);
-@@ -1085,6 +1095,7 @@ DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformFromHandle(FreeImageIO* src_io,
+@@ -1085,6 +1091,7 @@ DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformFromHandle(FreeImageIO* src_io,
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformCombined(const char *src_file, const char *dst_file, FREE_IMAGE_JPEG_OPERATION operation, int* left, int* top, int* right, int* bottom, BOOL perfect FI_DEFAULT(TRUE));
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformCombinedU(const wchar_t *src_file, const wchar_t *dst_file, FREE_IMAGE_JPEG_OPERATION operation, int* left, int* top, int* right, int* bottom, BOOL perfect FI_DEFAULT(TRUE));
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformCombinedFromMemory(FIMEMORY* src_stream, FIMEMORY* dst_stream, FREE_IMAGE_JPEG_OPERATION operation, int* left, int* top, int* right, int* bottom, BOOL perfect FI_DEFAULT(TRUE));
@@ -93,85 +80,6 @@ index 1776c3b..538f1c5 100644
  #include "J2KHelper.h"
  
  // --------------------------------------------------------------------------
-diff --git a/Source/FreeImage/Plugin.cpp b/Source/FreeImage/Plugin.cpp
-index 57ebffd..7d0b466 100644
---- a/Source/FreeImage/Plugin.cpp
-+++ b/Source/FreeImage/Plugin.cpp
-@@ -134,7 +134,13 @@ PluginList::AddNode(FI_InitProc init_proc, void *instance, const char *format, c
- 
- 		delete plugin;
- 		delete node;
--	}
-+	} else {
-+    //allows adding a NULL node in order to not mess up plugin
-+    //numbering when some are disabled. Otherwise there will be a
-+    //discrepancy between FREE_IMAGE_FORMAT enumerator values and the
-+    //actual format.
-+    m_plugin_map[(const int)m_plugin_map.size()] = 0;
-+  }
- 
- 	return FIF_UNKNOWN;
- }
-@@ -142,6 +148,9 @@ PluginList::AddNode(FI_InitProc init_proc, void *instance, const char *format, c
- PluginNode *
- PluginList::FindNodeFromFormat(const char *format) {
- 	for (map<int, PluginNode *>::iterator i = m_plugin_map.begin(); i != m_plugin_map.end(); ++i) {
-+    if (i->second == NULL) {
-+      continue;
-+    }
- 		const char *the_format = ((*i).second->m_format != NULL) ? (*i).second->m_format : (*i).second->m_plugin->format_proc();
- 
- 		if ((*i).second->m_enabled) {
-@@ -157,6 +166,9 @@ PluginList::FindNodeFromFormat(const char *format) {
- PluginNode *
- PluginList::FindNodeFromMime(const char *mime) {
- 	for (map<int, PluginNode *>::iterator i = m_plugin_map.begin(); i != m_plugin_map.end(); ++i) {
-+    if (i->second == NULL) {
-+      continue;
-+    }
- 		const char *the_mime = ((*i).second->m_plugin->mime_proc != NULL) ? (*i).second->m_plugin->mime_proc() : "";
- 
- 		if ((*i).second->m_enabled) {
-@@ -192,6 +204,10 @@ PluginList::IsEmpty() const {
- 
- PluginList::~PluginList() {
- 	for (map<int, PluginNode *>::iterator i = m_plugin_map.begin(); i != m_plugin_map.end(); ++i) {
-+    if (i->second == NULL) {
-+      continue;
-+    }
-+
- #ifdef _WIN32
- 		if ((*i).second->m_instance != NULL) {
- 			FreeLibrary((HINSTANCE)(*i).second->m_instance);
-@@ -263,7 +279,9 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
- 			s_plugins->AddNode(InitDDS);
- 	        s_plugins->AddNode(InitGIF);
- 	        s_plugins->AddNode(InitHDR);
--			s_plugins->AddNode(InitG3);
-+/* The G3 fax format plugin is deliberately disabled in our build of FreeImage
-+   since it requires usage of the vendored copy of libtiff. */
-+			s_plugins->AddNode(NULL);
- 			s_plugins->AddNode(InitSGI);
- 			s_plugins->AddNode(InitEXR);
- 			s_plugins->AddNode(InitJ2K);
-@@ -358,7 +376,7 @@ FreeImage_DeInitialise() {
- 
- void * DLL_CALLCONV
- FreeImage_Open(PluginNode *node, FreeImageIO *io, fi_handle handle, BOOL open_for_reading) {
--	if (node->m_plugin->open_proc != NULL) {
-+	if (node && node->m_plugin->open_proc != NULL) {
-        return node->m_plugin->open_proc(io, handle, open_for_reading);
- 	}
- 
-@@ -367,7 +385,7 @@ FreeImage_Open(PluginNode *node, FreeImageIO *io, fi_handle handle, BOOL open_fo
- 
- void DLL_CALLCONV
- FreeImage_Close(PluginNode *node, FreeImageIO *io, fi_handle handle, void *data) {
--	if (node->m_plugin->close_proc != NULL) {
-+	if (node && node->m_plugin->close_proc != NULL) {
- 		node->m_plugin->close_proc(io, handle, data);
- 	}
- }
 diff --git a/Source/FreeImage/PluginEXR.cpp b/Source/FreeImage/PluginEXR.cpp
 index b286430..9bf3ada 100644
 --- a/Source/FreeImage/PluginEXR.cpp
@@ -203,6 +111,61 @@ index b286430..9bf3ada 100644
  
  
  // ==========================================================
+diff --git a/Source/FreeImage/PluginG3.cpp b/Source/FreeImage/PluginG3.cpp
+index 0a083b4..cef145c 100644
+--- a/Source/FreeImage/PluginG3.cpp
++++ b/Source/FreeImage/PluginG3.cpp
+@@ -20,8 +20,6 @@
+ // Use at your own risk!
+ // ==========================================================
+ 
+-#include "../LibTIFF4/tiffiop.h"
+-
+ #include "FreeImage.h"
+ #include "Utilities.h"
+ 
+@@ -31,6 +29,7 @@
+ 
+ static int s_format_id;
+ 
++#if 0
+ // ==========================================================
+ //   Constant/Macro declarations
+ // ==========================================================
+@@ -192,6 +191,7 @@ copyFaxFile(FreeImageIO *io, fi_handle handle, TIFF* tifin, uint32 xsize, int st
+ 
+ 	return (row);
+ }
++#endif
+ 
+ 
+ // ==========================================================
+@@ -229,7 +229,7 @@ SupportsExportDepth(int depth) {
+ }
+ 
+ // ----------------------------------------------------------
+-
++#if 0
+ static FIBITMAP * DLL_CALLCONV
+ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
+ 	TIFF *faxTIFF = NULL;
+@@ -406,6 +406,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
+ 	return dib;
+ 
+ }
++#endif
+ 
+ // ==========================================================
+ //   Init
+@@ -423,7 +424,7 @@ InitG3(Plugin *plugin, int format_id) {
+ 	plugin->close_proc = NULL;
+ 	plugin->pagecount_proc = NULL;
+ 	plugin->pagecapability_proc = NULL;
+-	plugin->load_proc = Load;
++	plugin->load_proc = NULL;
+ 	plugin->save_proc = NULL;
+ 	plugin->validate_proc = NULL;
+ 	plugin->mime_proc = MimeType;
 diff --git a/Source/FreeImage/PluginJ2K.cpp b/Source/FreeImage/PluginJ2K.cpp
 index b8bcfc8..621a903 100644
 --- a/Source/FreeImage/PluginJ2K.cpp
@@ -492,7 +455,7 @@ index 41f946d..33b3877 100644
  
  echo -n "INCLUDE =" >> fipMakefile.srcs
 diff --git a/gensrclist.sh b/gensrclist.sh
-index dbfb98d..3e4747d 100644
+index dbfb98d..31f269c 100644
 --- a/gensrclist.sh
 +++ b/gensrclist.sh
 @@ -1,21 +1,16 @@
@@ -511,7 +474,7 @@ index dbfb98d..3e4747d 100644
 -		egrep 'RelativePath=.*\.(c|cpp)' $DIR/*.2008.vcproj | cut -d'"' -f2 | tr '\\' '/' | awk '{print "'$DIR'/"$0}' | tr '\r\n' '  ' | tr -s ' ' >> Makefile.srcs
 -	fi
 -done
-+find Source -name '*.c' -or -name '*.cpp' -not -name 'PluginG3.cpp' -not -name 'JPEGTransform.cpp' | LC_ALL=C sort | xargs echo -n >> Makefile.srcs
++find Source -name '*.c' -or -name '*.cpp' -not -name 'JPEGTransform.cpp' | LC_ALL=C sort | xargs echo -n >> Makefile.srcs
  echo >> Makefile.srcs
  
  echo -n "INCLS = " >> Makefile.srcs
