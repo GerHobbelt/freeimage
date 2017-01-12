@@ -1,11 +1,11 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: freeimage
 Upstream-Contact: Herve Drolon <drolon@infonie.fr>
 Source: http://freeimage.sourceforge.net/
+Comment: Strip vendored libraries from source tarball.
 Files-Excluded: Source/Lib*
                 Source/OpenEXR
                 Source/ZLib
-Comment: Strip vendored libraries from source tarball.
 
 Files: *
 Copyright: 2003-2007 FreeImage Group
@@ -15,22 +15,6 @@ Files: debian/*
 Copyright: 2007 Federico Di Gregorio
            2015 Ghislain Antony Vaillant
 License: GPL-2.0
-
-License: GPL-2.0
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 dated June, 1991.
- .
- On Debian systems, the complete text of version 2 of the GNU General
- Public License can be found in '/usr/share/common-licenses/GPL-2'.
-
-License: GPL-3.0
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 3 dated June, 2007.
- .
- On Debian systems, the complete text of version 3 of the GNU General
- Public License can be found in '/usr/share/common-licenses/GPL-3'.
 
 License: FIPL-1.0
  FreeImage Public License - Version 1.0
@@ -175,3 +159,19 @@ License: FIPL-1.0
  "The contents of this file are subject to the FreeImage Public License Version 1.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://home.wxs.nl/~flvdberg/freeimage-license.txt
  .
  Software distributed under the License is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.
+
+License: GPL-2.0
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 2 dated June, 1991.
+ .
+ On Debian systems, the complete text of version 2 of the GNU General
+ Public License can be found in '/usr/share/common-licenses/GPL-2'.
+
+License: GPL-3.0
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 3 dated June, 2007.
+ .
+ On Debian systems, the complete text of version 3 of the GNU General
+ Public License can be found in '/usr/share/common-licenses/GPL-3'.
