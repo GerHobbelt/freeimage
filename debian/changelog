@@ -1,3 +1,14 @@
+freeimage (3.17.0+ds1-5) unstable; urgency=medium
+
+  [ James Cowgill ]
+  * [ab6c23d] Make the FaxG3 plugin visible but with no implementation
+    (Closes: #850027)
+
+  [ Anton Gladky ]
+  * [a4e7243] Apply cme fix dpkg.
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 12 Jan 2017 20:45:54 +0100
+
 freeimage (3.17.0+ds1-4) unstable; urgency=medium
 
   [ Anton Gladky ]
