@@ -67,3 +67,9 @@ endif()
 xmake_project_link(MNG ZLIB)
 
 set_target_properties(mng PROPERTIES FOLDER "LibsExtern/freeimage")
+
+#make variable available for parent scope
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(hasParent)
+	set(GLOBAL_LIBRARIES "${GLOBAL_LIBRARIES};mng" PARENT_SCOPE)
+endif()	

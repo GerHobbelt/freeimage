@@ -39,3 +39,9 @@ if (DEFINED FREEIMAGE_CPP_FLAGS)
 endif()
 
 set_target_properties(rawlite PROPERTIES FOLDER "LibsExtern/freeimage")
+
+#make variable available for parent scope
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(hasParent)
+	set(GLOBAL_LIBRARIES "${GLOBAL_LIBRARIES};rawlite" PARENT_SCOPE)
+endif()	

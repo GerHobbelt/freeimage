@@ -67,3 +67,9 @@ endif()
 xmake_export_compile_definitions(OPENJPEG "OPJ_STATIC")
 
 set_target_properties(openjpeg PROPERTIES FOLDER "LibsExtern/freeimage")
+
+#make variable available for parent scope
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(hasParent)
+	set(GLOBAL_LIBRARIES "${GLOBAL_LIBRARIES};openjpeg" PARENT_SCOPE)
+endif()	
