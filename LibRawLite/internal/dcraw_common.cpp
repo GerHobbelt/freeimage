@@ -14,6 +14,10 @@
 #include "internal/defines.h"
 #include "internal/var_defines.h"
 
+#if defined (ANDROID)
+#define swab(var1, var2, var3) var1;var2;var3
+#endif
+
 #line 267 "dcraw/dcraw.c"
 
 #ifndef __GLIBC__
@@ -3100,6 +3104,7 @@ void CLASS lin_interpolate()
  */
 void CLASS vng_interpolate()
 {
+#if !defined (ANDROID)
   static const signed char *cp, terms[] = {
     -2,-2,+0,-1,0,0x01, -2,-2,+0,+0,1,0x01, -2,-1,-1,+0,0,0x01,
     -2,-1,+0,-1,0,0x02, -2,-1,+0,+0,0,0x03, -2,-1,+0,+1,1,0x01,
@@ -3226,6 +3231,7 @@ void CLASS vng_interpolate()
   memcpy (image[(row-1)*width+2], brow[1]+2, (width-4)*sizeof *image);
   free (brow[4]);
   free (code[0][0]);
+#endif
 }
 
 /*
@@ -5204,6 +5210,7 @@ void CLASS adobe_coeff (char *p_make, char *p_model)
     const char *prefix;
     short t_black, t_maximum, trans[12];
   } table[] = {
+#if !defined (ANDROID)
     { "Apple QuickTake", 0, 0,		/* DJC */
 	{ 17576,-3191,-3318,5210,6733,-1942,9031,1280,-124 } },
     { "Canon EOS D2000", 0, 0,
@@ -5626,6 +5633,10 @@ void CLASS adobe_coeff (char *p_make, char *p_model)
 	{ 5775,-805,-359,-8574,16295,2391,-1943,2341,7249 } },
     { "SONY DSLR-A900", 254, 0x1ffe,
 	{ 5209,-1072,-397,-8845,16120,2919,-1618,1803,8654 } }
+#else
+	{ "FAKE", 0, 0,
+	{ 0,0} }
+#endif
   };
   double cam_xyz[4][3];
   char name[130];
@@ -7354,7 +7365,7 @@ void CLASS tiff_head (struct tiff_hdr *th, int full)
   strncpy (th->t_desc, desc, 512);
   strncpy (th->t_make, make, 64);
   strncpy (th->t_model, model, 64);
-  strcpy (th->soft, "dcraw v"VERSION);
+  strcpy (th->soft, "dcraw v" VERSION);
   t = gmtime (&timestamp);
   sprintf (th->date, "%04d:%02d:%02d %02d:%02d:%02d",
       t->tm_year+1900,t->tm_mon+1,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec);
