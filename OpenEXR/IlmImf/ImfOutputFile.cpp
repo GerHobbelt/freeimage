@@ -63,6 +63,7 @@
 #include <algorithm>
 #endif //_MSC_VER
 
+#include <algorithm>
 
 namespace Imf {
 
