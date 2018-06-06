@@ -161,7 +161,7 @@ typedef uint32_t DWORD;
 typedef int32_t LONG;
 #else
 // MS is not C99 ISO compliant
-typedef long BOOL;
+typedef int BOOL;
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
