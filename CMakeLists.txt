@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.8.0)
 
+if(POLICY CMP0042)
+  cmake_policy(SET CMP0042 NEW)
+endif()
+
 # FreeImage version
 SET( FREEIMAGE_VERSION_MAIN 3)
 SET( FREEIMAGE_VERSION_MIDDLE 16)
@@ -10,8 +14,8 @@ SET( FREEIMAGE_VERSION_BUILD ${FREEIMAGE_VERSION_MAIN}.${FREEIMAGE_VERSION_MIDDL
 
 
 OPTION(ENABLE_PNG "Enable PNG support" 1)
-OPTION(ENABLE_JPEG "Enable JPEG support" 1)
-OPTION(ENABLE_TIFF "Enable TIFF support" 1)
+OPTION(ENABLE_JPEG "Enable JPEG support" 0)
+OPTION(ENABLE_TIFF "Enable TIFF support" 0)
 OPTION(ENABLE_WEBP "Enable WebP support" 0)
 OPTION(ENABLE_RAW "Enable RAW support" 0)
 OPTION(ENABLE_OPENJP "Enable OpenJPEG support" 0)
