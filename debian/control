@@ -21,7 +21,6 @@ Standards-Version: 3.9.8
 Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/freeimage.git
 Vcs-Git: https://anonscm.debian.org/git/debian-science/packages/freeimage.git
 Homepage: http://freeimage.sourceforge.net/
-Testsuite: autopkgtest
 
 Package: libfreeimage-dev
 Architecture: any
