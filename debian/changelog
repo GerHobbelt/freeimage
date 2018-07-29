@@ -5,6 +5,7 @@ freeimage (3.17.0+ds1-6) UNRELEASED; urgency=medium
   * debhelper 11
   * Point Vcs fields to salsa.debian.org
   * Standards-Version: 4.1.5
+  * Drop explicit -dbg packages
 
  -- Andreas Tille <tille@debian.org>  Sun, 29 Jul 2018 04:43:32 +0200
 
