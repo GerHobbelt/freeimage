@@ -2,6 +2,7 @@ freeimage (3.17.0+ds1-6) UNRELEASED; urgency=medium
 
   * Team upload.
   * Drop redundant Testsuite: autopkgtest
+  * debhelper 11
 
  -- Andreas Tille <tille@debian.org>  Sun, 29 Jul 2018 04:43:32 +0200
 
