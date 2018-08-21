@@ -9,11 +9,9 @@ temporarily disabled.
  TestAPI/MainTestSuite.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/TestAPI/MainTestSuite.cpp b/TestAPI/MainTestSuite.cpp
-index 1b5a1b5..540ec47 100644
 --- a/TestAPI/MainTestSuite.cpp
 +++ b/TestAPI/MainTestSuite.cpp
-@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
+@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
  
  	// test memory IO
  	testMemIO("sample.png");
