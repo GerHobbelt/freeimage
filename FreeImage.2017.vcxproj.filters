@@ -309,6 +309,9 @@
     <ClInclude Include="Source\CacheFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DeprecationManager\DeprecationMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Metadata\FIRational.h">
       <Filter>Header Files</Filter>
     </ClInclude>
