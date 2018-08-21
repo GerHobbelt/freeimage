@@ -1,3 +1,10 @@
+freeimage (3.18.0+ds1-1) UNRELEASED; urgency=medium
+
+  * Team upload.
+  * New upstream version
+
+ -- Andreas Tille <tille@debian.org>  Tue, 21 Aug 2018 14:43:14 +0200
+
 freeimage (3.17.0+ds1-6) unstable; urgency=medium
 
   * Team upload.
