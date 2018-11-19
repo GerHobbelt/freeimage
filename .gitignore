@@ -4,6 +4,10 @@
 *.VC.opendb
 *.VC.db
 
+*.o
+*.a
+*.so
+
 **/Dist/*
 **/Win32/*
 **/x64/*
