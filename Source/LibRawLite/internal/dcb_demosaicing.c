@@ -39,6 +39,7 @@
  
 // last modification: 11.07.2010 
  
+ #include "libraw_internal_funcs.h"
 
 // interpolates green vertically and saves it to image3
 void CLASS dcb_ver(float (*image3)[3])
