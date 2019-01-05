@@ -8,10 +8,10 @@ result of the stripping of the vendored dependencies.
  TestAPI/testJPEG.cpp | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/TestAPI/testJPEG.cpp b/TestAPI/testJPEG.cpp
-index 798033d..94638b9 100644
---- a/TestAPI/testJPEG.cpp
-+++ b/TestAPI/testJPEG.cpp
+Index: FreeImage/TestAPI/testJPEG.cpp
+===================================================================
+--- FreeImage.orig/TestAPI/testJPEG.cpp
++++ FreeImage/TestAPI/testJPEG.cpp
 @@ -25,6 +25,7 @@
  // Local test functions
  // ----------------------------------------------------------
@@ -20,7 +20,7 @@ index 798033d..94638b9 100644
  void testJPEGTransform(const char *src_file) {
  	BOOL bResult;
  	BOOL perfect;
-@@ -193,11 +194,13 @@ void testJPEGSameFile(const char *src_file) {
+@@ -193,11 +194,13 @@ void testJPEGSameFile(const char *src_fi
  	bResult = FreeImage_JPEGTransform("test.jpg", "test.jpg", FIJPEG_OP_ROTATE_270, perfect);
  	assert(bResult);
  }

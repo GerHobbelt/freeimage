@@ -9,8 +9,10 @@ temporarily disabled.
  TestAPI/MainTestSuite.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/TestAPI/MainTestSuite.cpp
-+++ b/TestAPI/MainTestSuite.cpp
+Index: FreeImage/TestAPI/MainTestSuite.cpp
+===================================================================
+--- FreeImage.orig/TestAPI/MainTestSuite.cpp
++++ FreeImage/TestAPI/MainTestSuite.cpp
 @@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
  
  	// test memory IO

@@ -26,8 +26,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  gensrclist.sh                      | 11 ++----
  16 files changed, 85 insertions(+), 90 deletions(-)
 
---- a/Source/FreeImage.h
-+++ b/Source/FreeImage.h
+Index: FreeImage/Source/FreeImage.h
+===================================================================
+--- FreeImage.orig/Source/FreeImage.h
++++ FreeImage/Source/FreeImage.h
 @@ -473,6 +473,9 @@ FI_ENUM(FREE_IMAGE_DITHER) {
  	FID_BAYER16x16	= 6		//! Bayer ordered dispersed dot dithering (order 4 dithering matrix)
  };
@@ -65,8 +67,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  
  
  // --------------------------------------------------------------------------
---- a/Source/FreeImage/J2KHelper.cpp
-+++ b/Source/FreeImage/J2KHelper.cpp
+Index: FreeImage/Source/FreeImage/J2KHelper.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/J2KHelper.cpp
++++ FreeImage/Source/FreeImage/J2KHelper.cpp
 @@ -21,7 +21,7 @@
  
  #include "FreeImage.h"
@@ -76,8 +80,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  #include "J2KHelper.h"
  
  // --------------------------------------------------------------------------
---- a/Source/FreeImage/PluginEXR.cpp
-+++ b/Source/FreeImage/PluginEXR.cpp
+Index: FreeImage/Source/FreeImage/PluginEXR.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginEXR.cpp
++++ FreeImage/Source/FreeImage/PluginEXR.cpp
 @@ -28,16 +28,16 @@
  #pragma warning (disable : 4800) // ImfVersion.h - 'const int' : forcing value to bool 'true' or 'false' (performance warning)
  #endif 
@@ -105,8 +111,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  
  
  // ==========================================================
---- a/Source/FreeImage/PluginG3.cpp
-+++ b/Source/FreeImage/PluginG3.cpp
+Index: FreeImage/Source/FreeImage/PluginG3.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginG3.cpp
++++ FreeImage/Source/FreeImage/PluginG3.cpp
 @@ -20,8 +20,6 @@
  // Use at your own risk!
  // ==========================================================
@@ -158,8 +166,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  	plugin->save_proc = NULL;
  	plugin->validate_proc = NULL;
  	plugin->mime_proc = MimeType;
---- a/Source/FreeImage/PluginJ2K.cpp
-+++ b/Source/FreeImage/PluginJ2K.cpp
+Index: FreeImage/Source/FreeImage/PluginJ2K.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginJ2K.cpp
++++ FreeImage/Source/FreeImage/PluginJ2K.cpp
 @@ -21,7 +21,7 @@
  
  #include "FreeImage.h"
@@ -169,8 +179,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  #include "J2KHelper.h"
  
  // ==========================================================
---- a/Source/FreeImage/PluginJP2.cpp
-+++ b/Source/FreeImage/PluginJP2.cpp
+Index: FreeImage/Source/FreeImage/PluginJP2.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginJP2.cpp
++++ FreeImage/Source/FreeImage/PluginJP2.cpp
 @@ -21,7 +21,7 @@
  
  #include "FreeImage.h"
@@ -180,8 +192,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  #include "J2KHelper.h"
  
  // ==========================================================
---- a/Source/FreeImage/PluginJPEG.cpp
-+++ b/Source/FreeImage/PluginJPEG.cpp
+Index: FreeImage/Source/FreeImage/PluginJPEG.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginJPEG.cpp
++++ FreeImage/Source/FreeImage/PluginJPEG.cpp
 @@ -35,9 +35,9 @@ extern "C" {
  #undef FAR
  #include <setjmp.h>
@@ -195,8 +209,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  }
  
  #include "FreeImage.h"
---- a/Source/FreeImage/PluginJXR.cpp
-+++ b/Source/FreeImage/PluginJXR.cpp
+Index: FreeImage/Source/FreeImage/PluginJXR.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginJXR.cpp
++++ FreeImage/Source/FreeImage/PluginJXR.cpp
 @@ -23,7 +23,7 @@
  #include "Utilities.h"
  #include "../Metadata/FreeImageTag.h"
@@ -206,8 +222,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  
  // ==========================================================
  // Plugin Interface
---- a/Source/FreeImage/PluginPNG.cpp
-+++ b/Source/FreeImage/PluginPNG.cpp
+Index: FreeImage/Source/FreeImage/PluginPNG.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginPNG.cpp
++++ FreeImage/Source/FreeImage/PluginPNG.cpp
 @@ -40,8 +40,8 @@
  
  // ----------------------------------------------------------
@@ -219,8 +237,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  
  // ----------------------------------------------------------
  
---- a/Source/FreeImage/PluginRAW.cpp
-+++ b/Source/FreeImage/PluginRAW.cpp
+Index: FreeImage/Source/FreeImage/PluginRAW.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginRAW.cpp
++++ FreeImage/Source/FreeImage/PluginRAW.cpp
 @@ -19,7 +19,7 @@
  // Use at your own risk!
  // ==========================================================
@@ -230,8 +250,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  
  #include "FreeImage.h"
  #include "Utilities.h"
---- a/Source/FreeImage/ZLibInterface.cpp
-+++ b/Source/FreeImage/ZLibInterface.cpp
+Index: FreeImage/Source/FreeImage/ZLibInterface.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/ZLibInterface.cpp
++++ FreeImage/Source/FreeImage/ZLibInterface.cpp
 @@ -19,10 +19,9 @@
  // Use at your own risk!
  // ==========================================================
@@ -253,8 +275,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
   	        crc = crc32(crc, source, source_size);
  	        memcpy(target + 4 + dest_len, &crc, 4);
  	        memcpy(target + 8 + dest_len, &source_size, 4);
---- a/Source/Metadata/XTIFF.cpp
-+++ b/Source/Metadata/XTIFF.cpp
+Index: FreeImage/Source/Metadata/XTIFF.cpp
+===================================================================
+--- FreeImage.orig/Source/Metadata/XTIFF.cpp
++++ FreeImage/Source/Metadata/XTIFF.cpp
 @@ -29,13 +29,18 @@
  #pragma warning (disable : 4786) // identifier was truncated to 'number' characters
  #endif
@@ -370,8 +394,10 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  
  		if(skip_write_field(tif, tag_id)) {
  			// skip tags that are already handled by the LibTIFF writing process
---- a/Source/FreeImage/PluginTIFF.cpp
-+++ b/Source/FreeImage/PluginTIFF.cpp
+Index: FreeImage/Source/FreeImage/PluginTIFF.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginTIFF.cpp
++++ FreeImage/Source/FreeImage/PluginTIFF.cpp
 @@ -37,9 +37,9 @@
  
  #include "FreeImage.h"
@@ -380,12 +406,14 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
 +#include <tiffio.h>
  #include "../Metadata/FreeImageTag.h"
 -#include "../OpenEXR/Half/half.h"
-+#include <OpenEXR/Half/half.h>
++#include "OpenEXR/half.h"
  
  #include "FreeImageIO.h"
  #include "PSDParser.h"
---- a/Source/FreeImage/PluginWebP.cpp
-+++ b/Source/FreeImage/PluginWebP.cpp
+Index: FreeImage/Source/FreeImage/PluginWebP.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginWebP.cpp
++++ FreeImage/Source/FreeImage/PluginWebP.cpp
 @@ -24,9 +24,9 @@
  
  #include "../Metadata/FreeImageTag.h"
@@ -393,44 +421,17 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
 -#include "../LibWebP/src/webp/decode.h"
 -#include "../LibWebP/src/webp/encode.h"
 -#include "../LibWebP/src/webp/mux.h"
-+#include <webp/decode.h>
-+#include <webp/encode.h>
-+#include <webp/mux.h>
++#include "webp/decode.h"
++#include "webp/encode.h"
++#include "webp/mux.h"
  
  // ==========================================================
  // Plugin Interface
---- a/genfipsrclist.sh
-+++ b/genfipsrclist.sh
-@@ -1,18 +1,12 @@
- #!/bin/sh
- 
--DIRLIST=". Source Source/Metadata Source/FreeImageToolkit Source/LibJPEG Source/LibPNG Source/LibTIFF4 Source/ZLib Source/LibOpenJPEG Source/OpenEXR Source/OpenEXR/Half Source/OpenEXR/Iex Source/OpenEXR/IlmImf Source/OpenEXR/IlmThread Source/OpenEXR/Imath Source/OpenEXR/IexMath Source/LibRawLite Source/LibRawLite/dcraw Source/LibRawLite/internal Source/LibRawLite/libraw Source/LibRawLite/src Source/LibWebP Source/LibJXR Source/LibJXR/common/include Source/LibJXR/image/sys Source/LibJXR/jxrgluelib Wrapper/FreeImagePlus"
--
-+DIRLIST="Wrapper/FreeImagePlus"
- 
- echo "VER_MAJOR = 3" > fipMakefile.srcs
- echo "VER_MINOR = 18.0" >> fipMakefile.srcs
- 
- echo -n "SRCS = " >> fipMakefile.srcs
--for DIR in $DIRLIST; do
--	VCPRJS=`echo $DIR/*.2013.vcxproj`
--	if [ "$VCPRJS" != "$DIR/*.2013.vcxproj" ]; then
--		egrep 'ClCompile Include=.*\.(c|cpp)' $DIR/*.2013.vcxproj | cut -d'"' -f2 | tr '\\' '/' | awk '{print "'$DIR'/"$0}' | tr '\r\n' '  ' | tr -s ' ' >> fipMakefile.srcs
--	fi
--done
-+find Wrapper/FreeImagePlus/src -name '*.cpp' -print | LC_ALL=C sort | xargs echo -n >> fipMakefile.srcs
- echo >> fipMakefile.srcs
- 
- echo -n "INCLUDE =" >> fipMakefile.srcs
---- a/gensrclist.sh
-+++ b/gensrclist.sh
-@@ -1,17 +1,12 @@
- #!/bin/sh
- 
--DIRLIST=". Source Source/Metadata Source/FreeImageToolkit Source/LibJPEG Source/LibPNG Source/LibTIFF4 Source/ZLib Source/LibOpenJPEG Source/OpenEXR Source/OpenEXR/Half Source/OpenEXR/Iex Source/OpenEXR/IlmImf Source/OpenEXR/IlmThread Source/OpenEXR/Imath Source/OpenEXR/IexMath Source/LibRawLite Source/LibRawLite/dcraw Source/LibRawLite/internal Source/LibRawLite/libraw Source/LibRawLite/src Source/LibWebP Source/LibJXR Source/LibJXR/common/include Source/LibJXR/image/sys Source/LibJXR/jxrgluelib"
-+DIRLIST=`find Source -type d | LC_ALL=C sort`
- 
- echo "VER_MAJOR = 3" > Makefile.srcs
+Index: FreeImage/gensrclist.sh
+===================================================================
+--- FreeImage.orig/gensrclist.sh
++++ FreeImage/gensrclist.sh
+@@ -6,16 +6,11 @@ echo "VER_MAJOR = 3" > Makefile.srcs
  echo "VER_MINOR = 18.0" >> Makefile.srcs
  
  echo -n "SRCS = " >> Makefile.srcs
@@ -444,13 +445,26 @@ This patch is based on Fedora's FreeImage-3.17.0_unbundle patch.
  echo >> Makefile.srcs
  
  echo -n "INCLS = " >> Makefile.srcs
-@@ -19,8 +14,6 @@ find . -name "*.h" -print | xargs echo >
- echo >> Makefile.srcs
- 
- echo -n "INCLUDE =" >> Makefile.srcs
--for DIR in $DIRLIST; do
--	echo -n " -I$DIR" >> Makefile.srcs
--done
+-find . -name "*.h" -print | xargs echo >> Makefile.srcs
 +find Source -name '*.h' | LC_ALL=C sort | xargs echo -n >> Makefile.srcs
  echo >> Makefile.srcs
  
+ echo -n "INCLUDE =" >> Makefile.srcs
+Index: FreeImage/genfipsrclist.sh
+===================================================================
+--- FreeImage.orig/genfipsrclist.sh
++++ FreeImage/genfipsrclist.sh
+@@ -7,12 +7,7 @@ echo "VER_MAJOR = 3" > fipMakefile.srcs
+ echo "VER_MINOR = 18.0" >> fipMakefile.srcs
+ 
+ echo -n "SRCS = " >> fipMakefile.srcs
+-for DIR in $DIRLIST; do
+-	VCPRJS=`echo $DIR/*.2013.vcxproj`
+-	if [ "$VCPRJS" != "$DIR/*.2013.vcxproj" ]; then
+-		egrep 'ClCompile Include=.*\.(c|cpp)' $DIR/*.2013.vcxproj | cut -d'"' -f2 | tr '\\' '/' | awk '{print "'$DIR'/"$0}' | tr '\r\n' '  ' | tr -s ' ' >> fipMakefile.srcs
+-	fi
+-done
++find Wrapper/FreeImagePlus/src -name '*.cpp' -print | LC_ALL=C sort | xargs echo -n >> fipMakefile.srcs
+ echo >> fipMakefile.srcs
+ 
+ echo -n "INCLUDE =" >> fipMakefile.srcs

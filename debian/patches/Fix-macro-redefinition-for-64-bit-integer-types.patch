@@ -9,10 +9,10 @@ these types inside the FreeImage.h public header.
  Source/FreeImage.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Source/FreeImage.h b/Source/FreeImage.h
-index 94d817d..38910b8 100644
---- a/Source/FreeImage.h
-+++ b/Source/FreeImage.h
+Index: FreeImage/Source/FreeImage.h
+===================================================================
+--- FreeImage.orig/Source/FreeImage.h
++++ FreeImage/Source/FreeImage.h
 @@ -155,8 +155,10 @@ typedef uint8_t BYTE;
  typedef uint16_t WORD;
  typedef uint32_t DWORD;

@@ -6,10 +6,10 @@ Subject: Enable substitution of pkg-config
  Makefile.gnu | 9 ++++++---
  1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/Makefile.gnu b/Makefile.gnu
-index 4e61efa..fd867ca 100644
---- a/Makefile.gnu
-+++ b/Makefile.gnu
+Index: FreeImage/Makefile.gnu
+===================================================================
+--- FreeImage.orig/Makefile.gnu
++++ FreeImage/Makefile.gnu
 @@ -11,7 +11,10 @@ INSTALLDIR ?= $(DESTDIR)/usr/lib
  # Converts cr/lf to just lf
  DOS2UNIX = dos2unix

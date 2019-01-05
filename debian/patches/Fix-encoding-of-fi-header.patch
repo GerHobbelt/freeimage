@@ -6,8 +6,10 @@ Subject: Fix encoding of fi header.
  Source/FreeImage.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Source/FreeImage.h
-+++ b/Source/FreeImage.h
+Index: FreeImage/Source/FreeImage.h
+===================================================================
+--- FreeImage.orig/Source/FreeImage.h
++++ FreeImage/Source/FreeImage.h
 @@ -3,7 +3,7 @@
  //
  // Design and implementation by

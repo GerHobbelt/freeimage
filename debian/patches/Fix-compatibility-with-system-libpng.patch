@@ -13,8 +13,10 @@ Fix FTBFS with libpng 1.6.
  Source/FreeImage/PluginPNG.cpp | 35 ++++++++++++++++++++++++++++-------
  1 file changed, 28 insertions(+), 7 deletions(-)
 
---- a/Source/FreeImage/PluginPNG.cpp
-+++ b/Source/FreeImage/PluginPNG.cpp
+Index: FreeImage/Source/FreeImage/PluginPNG.cpp
+===================================================================
+--- FreeImage.orig/Source/FreeImage/PluginPNG.cpp
++++ FreeImage/Source/FreeImage/PluginPNG.cpp
 @@ -115,9 +115,11 @@ ReadMetadata(png_structp png_ptr, png_in
  			// create a tag
  			tag = FreeImage_CreateTag();

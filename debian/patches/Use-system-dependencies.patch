@@ -19,7 +19,7 @@ index b59c419..98733cf 100644
  DOS2UNIX = dos2unix
  
 -LIBRARIES = -lstdc++
-+LIBRARIES = -lstdc++ -LDist -lfreeimage
++LIBRARIES = -lstdc++ -ljxrglue $(shell pkg-config --libs libjpeg libopenjp2 libpng libraw libtiff-4 libwebpmux OpenEXR zlib) -lm
  
  MODULES = $(SRCS:.c=.o)
  MODULES := $(MODULES:.cpp=.o)
