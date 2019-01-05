@@ -6,5 +6,4 @@ Disable-usage-of-HTML-timestamps-in-doxygen.patch
 Disable-testing-of-JPEG-transform.patch
 Disable-testing-of-JXR-MemIO.patch
 Fix-encoding-of-fi-header.patch
-Fix-CVE-2016-5684.patch
 Enable-substitution-of-pkg-config.patch
