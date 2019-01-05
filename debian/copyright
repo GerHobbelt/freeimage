@@ -6,6 +6,7 @@ Comment: Strip vendored libraries from source tarball.
 Files-Excluded: Source/Lib*
                 Source/OpenEXR
                 Source/ZLib
+                Source/FreeImageToolkit/JPEGTransform.cpp
 
 Files: *
 Copyright: 2003-2007 FreeImage Group
