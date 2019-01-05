@@ -1,3 +1,9 @@
+freeimage (3.18.0+ds2-1) unstable; urgency=medium
+
+  * Upload into unstable.
+
+ -- Anton Gladky <gladk@debian.org>  Sat, 05 Jan 2019 16:45:35 +0100
+
 freeimage (3.18.0+ds2-1~exp1) experimental; urgency=medium
 
   [ Andreas Tille ]
@@ -11,7 +17,7 @@ freeimage (3.18.0+ds2-1~exp1) experimental; urgency=medium
   * [7ca9b46] Update -docs
   * [b8ae146] Use standards-version 4.2.1
 
- -- Anton Gladky <gladk@debian.org>  Sat, 05 Jan 2019 10:15:55 +0100
+ -- Anton Gladky <gladk@debian.org>  Sat, 05 Jan 2019 16:45:20 +0100
 
 freeimage (3.17.0+ds1-6) unstable; urgency=medium
 
