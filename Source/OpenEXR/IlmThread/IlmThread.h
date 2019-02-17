@@ -120,7 +120,7 @@ class ILMTHREAD_EXPORT Thread
   public:
 
     Thread ();
-    virtual ~Thread () noexcept(false);
+    virtual ~Thread ();
 
     void		start ();
     virtual void	run () = 0;
