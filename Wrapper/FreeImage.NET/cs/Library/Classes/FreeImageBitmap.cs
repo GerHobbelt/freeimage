@@ -44,6 +44,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FreeImageAPI.Metadata;
 using System.Diagnostics;
+using FreeImageAPI.IO;
 
 namespace FreeImageAPI
 {
@@ -820,7 +821,6 @@ namespace FreeImageAPI
 		/// <param name="type">The type for the new <see cref="FreeImageBitmap"/>.</param>
 		/// <param name="scan0">Pointer to an array of bytes that contains the pixel data.</param>
 		/// <exception cref="Exception">The operation failed.</exception>
-		/// <exception cref="ArgumentException"><paramref name="format"/> is invalid.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// <paramref name="width"/> or <paramref name="height"/> are less or equal zero.</exception>
 		public FreeImageBitmap(int width, int height, int stride, int bpp, FREE_IMAGE_TYPE type, IntPtr scan0)
@@ -867,7 +867,6 @@ namespace FreeImageAPI
 		/// <param name="type">The type for the new <see cref="FreeImageBitmap"/>.</param>
 		/// <param name="bits">Array of bytes containing the bitmap data.</param>
 		/// <exception cref="Exception">The operation failed.</exception>
-		/// <exception cref="ArgumentException"><paramref name="format"/> is invalid.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// <paramref name="width"/> or <paramref name="height"/> are less or equal zero.</exception>
 		/// <exception cref="ArgumentNullException"><paramref name="bits"/> is null</exception>
@@ -3608,12 +3607,6 @@ namespace FreeImageAPI
 		/// <param name="swap">If true, source and destination palette indices are swapped, that is,
 		/// each destination index is also mapped to the corresponding source index.</param>
 		/// <returns>The total number of pixels changed.</returns>
-		/// <exception cref="ArgumentNullException">
-		/// <paramref name="srccolors"/> or <paramref name="dstcolors"/> is a null reference.
-		/// </exception>
-		/// <exception cref="ArgumentException">
-		/// <paramref name="srccolors"/> has a different length than <paramref name="dstcolors"/>.
-		/// </exception>
 		public uint ApplyPaletteIndexMapping(byte[] srcindices, byte[] dstindices, uint count, bool swap)
 		{
 			EnsureNotDisposed();
@@ -3901,6 +3894,28 @@ namespace FreeImageAPI
 		public static bool JPEGTransform(string source, string destination, FREE_IMAGE_JPEG_OPERATION operation, bool perfect)
 		{
 			return FreeImage.JPEGTransform(source, destination, operation, perfect);
+		}
+
+		/// <summary>
+		/// Performs a lossless rotation or flipping on a JPEG stream.
+		/// </summary>
+		/// <param name="source">Source file.</param>
+		/// <param name="destination">Destination file; can be the source file; will be overwritten.</param>
+		/// <param name="operation">The operation to apply.</param>
+		/// <param name="perfect">To avoid lossy transformation, you can set the perfect parameter to true.</param>
+		/// <returns>Returns true on success, false on failure.</returns>
+		public static bool JPEGTransform(Stream source, Stream destination, FREE_IMAGE_JPEG_OPERATION operation, bool perfect)
+		{
+			FreeImageIO io = FreeImageStreamIO.io;
+
+			fi_handle src_handle = new fi_handle(source);
+			fi_handle dst_handle = new fi_handle(destination);
+
+			source.Position = 0;
+			bool result = FreeImage.JPEGTransformFromHandle(ref io, src_handle, ref io, dst_handle, operation, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, perfect);
+			destination.Position = 0;
+
+			return result;
 		}
 
 		/// <summary>

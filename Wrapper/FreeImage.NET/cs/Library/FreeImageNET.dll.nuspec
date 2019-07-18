@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>V2.FreeImageNET</id>
+    <version>1.0.0</version>
+    <authors>Velocity Squared, LLC</authors>
+    <owners>Velocity Squared, LLC</owners>
+    <projectUrl>http://velocitysquared.com</projectUrl>
+    <iconUrl>http://velocitysquared.com/images/favicon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A fork of FreeImageNET tailored for Velocity Squared's needs.</description>
+    <dependencies>
+    </dependencies>
+    <references>
+      <reference file="V2.FreeImageNET.dll" />
+    </references>
+  </metadata>
+  <files>
+    <file src="bin\Release\FreeImageNET.dll" target="lib\net40\V2.FreeImageNET.dll" />
+    <file src="bin\Release\FreeImageNET.xml" target="lib\net40\V2.FreeImageNET.xml" />
+    <file src="..\lib\FreeImage.dll" target="runtimes\win7-x64\native\FreeImage.dll" />
+  </files>
+</package>

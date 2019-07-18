@@ -238,13 +238,13 @@ namespace FreeImageAPI
 			return ((obj is FIRGBF) && (this == ((FIRGBF)obj)));
 		}
 
-		/// <summary>
-		/// Tests whether the specified <see cref="FIRGBF"/> structure is equivalent to this <see cref="FIRGBF"/> structure.
-		/// </summary>
-		/// <param name="other">A <see cref="FIRGBF"/> structure to compare to this instance.</param>
-		/// <returns><b>true</b> if <paramref name="obj"/> is a <see cref="FIRGBF"/> structure
-		/// equivalent to this <see cref="FIRGBF"/> structure; otherwise, <b>false</b>.</returns>
-		public bool Equals(FIRGBF other)
+        /// <summary>
+        /// Tests whether the specified <see cref="FIRGBF"/> structure is equivalent to this <see cref="FIRGBF"/> structure.
+        /// </summary>
+        /// <param name="other">A <see cref="FIRGBF"/> structure to compare to this instance.</param>
+        /// <returns><b>true</b> if <paramref name="other"/> is a <see cref="FIRGBF"/> structure
+        /// equivalent to this <see cref="FIRGBF"/> structure; otherwise, <b>false</b>.</returns>
+        public bool Equals(FIRGBF other)
 		{
 			return (this == other);
 		}
