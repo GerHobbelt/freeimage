@@ -10,14 +10,21 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A fork of FreeImageNET tailored for Velocity Squared's needs.</description>
     <dependencies>
+      <group targetFramework=".NETFramework4.6" />
+      <group targetFramework=".NETFramework4.5" />
+      <group targetFramework=".NETFramework4.0" />
+      <group targetFramework=".NETFramework4.5.2" />
+      <group targetFramework=".NETFramework4.5.1" />
+      <group targetFramework=".NETFramework4.6.1" />
     </dependencies>
-    <references>
-      <reference file="V2.FreeImageNET.dll" />
-    </references>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.5, .NETFramework4.5.1, .NETFramework4.5.2, .NETFramework4.6, .NETFramework4.6.1" />
+      <frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.5, .NETFramework4.5.1, .NETFramework4.5.2, .NETFramework4.6, .NETFramework4.6.1" />
+    </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="bin\Release\FreeImageNET.dll" target="lib\net40\V2.FreeImageNET.dll" />
-    <file src="bin\Release\FreeImageNET.xml" target="lib\net40\V2.FreeImageNET.xml" />
-    <file src="..\lib\FreeImage.dll" target="runtimes\win7-x64\native\FreeImage.dll" />
+    <file src="bin\Release\V2.FreeImageNET.dll" target="lib\net40\V2.FreeImageNET.dll" />
+    <file src="..\lib\x32\FreeImage.dll" target="runtimes\win7-x86\native\FreeImage.dll" />
+    <file src="..\lib\x64\FreeImage.dll" target="runtimes\win7-x64\native\FreeImage.dll" />
   </files>
 </package>
