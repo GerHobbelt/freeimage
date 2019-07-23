@@ -68,6 +68,7 @@
     <NoWarn>419</NoWarn>
     <DocumentationFile>bin\Release\V2.FreeImageNET.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
