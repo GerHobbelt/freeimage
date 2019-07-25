@@ -24,7 +24,8 @@
   </metadata>
   <files>
     <file src="bin\Release\V2.FreeImageNET.dll" target="lib\net40\V2.FreeImageNET.dll" />
-    <file src="..\lib\x32\FreeImage.dll" target="runtimes\win7-x86\native\FreeImage.dll" />
-    <file src="..\lib\x64\FreeImage.dll" target="runtimes\win7-x64\native\FreeImage.dll" />
+    <file src="..\lib\x32\FreeImage.dll" target="build\x86\" />
+    <file src="..\lib\x64\FreeImage.dll" target="build\x64\" />
+    <file src="V2.FreeImageNET.targets" target="build\" />
   </files>
 </package>
