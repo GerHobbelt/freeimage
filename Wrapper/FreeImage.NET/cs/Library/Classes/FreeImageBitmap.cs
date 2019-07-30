@@ -3915,6 +3915,9 @@ namespace FreeImageAPI
 			bool result = FreeImage.JPEGTransformFromHandle(ref io, src_handle, ref io, dst_handle, operation, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, perfect);
 			destination.Position = 0;
 
+			src_handle.Dispose();
+			dst_handle.Dispose();
+
 			return result;
 		}
 
