@@ -11,6 +11,7 @@ freeimage (3.18.0+ds2-3) unstable; urgency=medium
   * [2a2e206] Bump debhelper from old 11 to 12.
   * [044ea9c] Set debhelper-compat version in Build-Depends.
   * [f776923] Set Standards-Version to 4.4.1. No changes
+  * [5417d72] Replace ADTTMP by AUTOPKGTEST_TMP
 
  -- Anton Gladky <gladk@debian.org>  Tue, 31 Dec 2019 20:58:58 +0100
 
