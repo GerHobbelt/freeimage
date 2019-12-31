@@ -236,7 +236,7 @@ freeimage (3.15.4-2) unstable; urgency=low
 freeimage (3.15.4-1) unstable; urgency=low
 
   * QA Upload
-  * New upstream minor release 
+  * New upstream minor release
     - Includes fix to build on !linux (Closes: #650485)
   * Refreshed patches (line endings had to change)
     - Remove document-mode.patch (accepted upstream)
@@ -323,7 +323,7 @@ freeimage (3.10.0-2) unstable; urgency=low
     (Closes: #518647)
   * Adjusted patched to not need -p0 (Closes: #485251).
   * Made package priority optional.
-  * Moved libfreeimage3-dbg package into debug section. 
+  * Moved libfreeimage3-dbg package into debug section.
   * Added debian/README.source.
   * Added watch file.
   * Added myself to Uploaders.
@@ -367,4 +367,3 @@ freeimage (3.9.3-1) unstable; urgency=low
   * Initial release (Closes: #419696)
 
  -- Federico Di Gregorio <fog@debian.org>  Sat, 21 Apr 2007 09:36:44 +0200
-
