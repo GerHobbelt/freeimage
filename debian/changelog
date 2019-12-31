@@ -1,7 +1,6 @@
 freeimage (3.18.0+ds2-3) unstable; urgency=medium
 
   [ Hugo Lefeuvre ]
-  * Non-maintainer upload by the Security Team.
   * CVE-2019-12213: stack exhaustion caused by unwanted recursion in
     ReadThumbnail (Closes: #929597).
   * CVE-2019-12211: heap buffer overflow caused by invalid memcpy in
