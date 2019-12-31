@@ -1,3 +1,13 @@
+freeimage (3.18.0+ds2-1+deb10u1) buster-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * CVE-2019-12213: stack exhaustion caused by unwanted recursion in
+    ReadThumbnail (Closes: #929597).
+  * CVE-2019-12211: heap buffer overflow caused by invalid memcpy in
+    PluginTIFF.
+
+ -- Hugo Lefeuvre <hle@debian.org>  Tue, 10 Dec 2019 16:34:27 +0100
+
 freeimage (3.18.0+ds2-1) unstable; urgency=medium
 
   * Upload into unstable.

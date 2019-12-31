@@ -7,3 +7,4 @@ Disable-testing-of-JPEG-transform.patch
 Disable-testing-of-JXR-MemIO.patch
 Fix-encoding-of-fi-header.patch
 Enable-substitution-of-pkg-config.patch
+CVE-2019-12211-13.patch
