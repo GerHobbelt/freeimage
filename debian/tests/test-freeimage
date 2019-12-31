@@ -5,9 +5,9 @@
 set -e
 
 # Fetch the upstream testsuite.
-cp -a TestAPI "$ADTTMP"
+cp -a TestAPI "$AUTOPKGTEST_TMP"
 
 # Build using the installed FreeImagePlus package.
-cd "$ADTTMP/TestAPI" && \
+cd "$AUTOPKGTEST_TMP/TestAPI" && \
 g++ *.cpp -lfreeimage -o test-freeimage && \
 ./test-freeimage

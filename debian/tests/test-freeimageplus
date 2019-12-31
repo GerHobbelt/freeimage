@@ -5,9 +5,9 @@
 set -e
 
 # Fetch the upstream testsuite.
-cp -a Wrapper/FreeImagePlus/test "$ADTTMP"
+cp -a Wrapper/FreeImagePlus/test "$AUTOPKGTEST_TMP"
 
 # Build using the installed FreeImagePlus package.
-cd "$ADTTMP/test" && \
+cd "$AUTOPKGTEST_TMP/test" && \
 g++ *.cpp -lfreeimageplus -lfreeimage -o test-freeimageplus && \
 ./test-freeimageplus
