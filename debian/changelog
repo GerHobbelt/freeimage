@@ -1,12 +1,19 @@
-freeimage (3.18.0+ds2-2) unstable; urgency=high
+freeimage (3.18.0+ds2-3) unstable; urgency=medium
 
+  [ Hugo Lefeuvre ]
   * Non-maintainer upload by the Security Team.
   * CVE-2019-12213: stack exhaustion caused by unwanted recursion in
     ReadThumbnail (Closes: #929597).
   * CVE-2019-12211: heap buffer overflow caused by invalid memcpy in
     PluginTIFF.
 
- -- Hugo Lefeuvre <hle@debian.org>  Tue, 10 Dec 2019 16:34:27 +0100
+  [ Anton Gladky ]
+  * [2a2e206] Bump debhelper from old 11 to 12.
+  * [044ea9c] Set debhelper-compat version in Build-Depends.
+  * [f776923] Set Standards-Version to 4.4.1. No changes
+  * [b0c13be] Add Rules-Requires-Root: no
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 31 Dec 2019 20:58:58 +0100
 
 freeimage (3.18.0+ds2-1) unstable; urgency=medium
 
