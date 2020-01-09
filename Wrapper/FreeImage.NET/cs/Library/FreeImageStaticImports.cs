@@ -1907,7 +1907,7 @@ namespace FreeImageAPI
         /// <param name="bottom"></param>
         /// <param name="perfect">To avoid lossy transformation, you can set the perfect parameter to true.</param>
         /// <returns>Returns true on success, false on failure.</returns>
-        [DllImport(FreeImageLibrary, CharSet = CharSet.Unicode, EntryPoint = "FreeImage_JPEGTransformFromHandle")]
+        [DllImport(FreeImageLibrary, EntryPoint = "FreeImage_JPEGTransformFromHandle")]
         public static extern bool JPEGTransformFromHandle(ref FreeImageIO src_io, fi_handle src_handle,
             ref FreeImageIO dst_io, fi_handle dst_handle, FREE_IMAGE_JPEG_OPERATION operation,
             IntPtr left, IntPtr top, IntPtr right, IntPtr bottom, bool perfect);

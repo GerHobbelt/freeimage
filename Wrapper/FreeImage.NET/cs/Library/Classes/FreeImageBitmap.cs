@@ -3908,14 +3908,16 @@ namespace FreeImageAPI
 		{
 			FreeImageIO io = FreeImageStreamIO.io;
 
-			using (fi_handle src_handle = new fi_handle(source))
-			using (fi_handle dst_handle = new fi_handle(destination))
-			{
-				source.Position = 0;
-				bool result = FreeImage.JPEGTransformFromHandle(ref io, src_handle, ref io, dst_handle, operation, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, perfect);
-				destination.Position = 0;
-				return result;
-			}
+			using (fi_handle src_handle = new fi_handle(source)) 
+            { 
+			    using (fi_handle dst_handle = new fi_handle(destination))
+			    {
+				    source.Position = 0;
+				    bool result = FreeImage.JPEGTransformFromHandle(ref io, src_handle, ref io, dst_handle, operation, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, perfect);
+				    destination.Position = 0;
+				    return result;
+			    }
+            }
 		}
 
 		/// <summary>
