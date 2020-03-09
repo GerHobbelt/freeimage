@@ -1,4 +1,7 @@
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
+IF (ENABLE_PNG)
+	INCLUDE_DIRECTORIES(${PNG_PNG_INCLUDE_DIR})
+ENDIF()
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 set( FREEIMAGE_SOURCES
@@ -17,33 +20,42 @@ set( FREEIMAGE_SOURCES
         FreeImage/ConversionRGBA16.cpp
 	FreeImage/ConversionRGBF.cpp FreeImage/ConversionRGB16.cpp FreeImage/ConversionType.cpp 
 	FreeImage/ConversionUINT16.cpp
-	FreeImage/FreeImage.cpp FreeImage/FreeImageIO.cpp FreeImage/GetType.cpp 
+	FreeImage/FreeImage.cpp
+		FreeImage/FreeImageIO.cpp
+		FreeImage/GetType.cpp
 	FreeImage/Halftoning.cpp
-        FreeImage/LFPQuantizer.cpp
+		FreeImage/LFPQuantizer.cpp
 	FreeImage/MemoryIO.cpp
 	FreeImage/MultiPage.cpp FreeImage/NNQuantizer.cpp 
-	FreeImage/PixelAccess.cpp FreeImage/Plugin.cpp FreeImage/PluginBMP.cpp 
-	FreeImage/PluginCUT.cpp FreeImage/PluginDDS.cpp
-        # FreeImage/PluginEXR.cpp
-	FreeImage/PluginGIF.cpp FreeImage/PluginHDR.cpp
-	FreeImage/PluginICO.cpp FreeImage/PluginIFF.cpp
-        
-
-	FreeImage/PluginKOALA.cpp
-	FreeImage/PluginPCD.cpp FreeImage/PluginPCX.cpp FreeImage/PluginPFM.cpp 
-	FreeImage/PluginPICT.cpp
-	FreeImage/PluginPNM.cpp
-	FreeImage/PluginPSD.cpp FreeImage/PluginRAS.cpp
-	FreeImage/PluginSGI.cpp FreeImage/PluginTARGA.cpp
-	FreeImage/PluginWBMP.cpp
-	FreeImage/PluginXBM.cpp FreeImage/PluginXPM.cpp 
-	FreeImage/PSDParser.cpp
-	FreeImage/TIFFLogLuv.cpp 
-	FreeImage/tmoColorConvert.cpp FreeImage/tmoDrago03.cpp 
+	FreeImage/PixelAccess.cpp FreeImage/Plugin.cpp
+		FreeImage/PluginBMP.cpp
+		#FreeImage/PluginCUT.cpp
+		#FreeImage/PluginDDS.cpp
+        #FreeImage/PluginEXR.cpp
+		#FreeImage/PluginGIF.cpp
+		#FreeImage/PluginHDR.cpp
+		#FreeImage/PluginICO.cpp
+		#FreeImage/PluginIFF.cpp
+		#FreeImage/PluginKOALA.cpp
+		#FreeImage/PluginPCD.cpp
+		#FreeImage/PluginPCX.cpp
+		#FreeImage/PluginPFM.cpp
+		#FreeImage/PluginPICT.cpp
+		#FreeImage/PluginPNM.cpp
+		#FreeImage/PluginPSD.cpp
+		#FreeImage/PluginRAS.cpp
+		#FreeImage/PluginSGI.cpp
+		#FreeImage/PluginTARGA.cpp
+		#FreeImage/PluginWBMP.cpp
+		#FreeImage/PluginXBM.cpp
+		#FreeImage/PluginXPM.cpp
+		#FreeImage/PSDParser.cpp
+		#FreeImage/TIFFLogLuv.cpp
+		FreeImage/tmoColorConvert.cpp FreeImage/tmoDrago03.cpp
 	FreeImage/tmoFattal02.cpp FreeImage/tmoReinhard05.cpp 
 	FreeImage/ToneMapping.cpp 
 	FreeImage/WuQuantizer.cpp 
-	FreeImage/PSDParser.h 
+		#FreeImage/PSDParser.h
 
 	FreeImageToolkit/Background.cpp FreeImageToolkit/BSplineRotate.cpp 
 	FreeImageToolkit/Channels.cpp FreeImageToolkit/ClassicRotate.cpp 
@@ -60,12 +72,11 @@ set( FREEIMAGE_SOURCES
 	Metadata/FIRational.h
 	
 	# needs zlib
-	FreeImage/MNGHelper.cpp
-	FreeImage/PluginJNG.cpp
-	FreeImage/PluginMNG.cpp
+	#FreeImage/MNGHelper.cpp
+	#FreeImage/PluginJNG.cpp
+	#FreeImage/PluginMNG.cpp
 	FreeImage/ZLibInterface.cpp
-
-        OpenEXR/Half/half.cpp 
+	#OpenEXR/Half/half.cpp
 )
 
 IF(ENABLE_PNG)
