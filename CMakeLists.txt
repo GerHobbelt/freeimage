@@ -9,14 +9,19 @@ SET( FREEIMAGE_VERSION ${FREEIMAGE_VERSION_MAIN}.${FREEIMAGE_VERSION_MIDDLE}.${F
 SET( FREEIMAGE_VERSION_BUILD ${FREEIMAGE_VERSION_MAIN}.${FREEIMAGE_VERSION_MIDDLE}.${FREEIMAGE_VERSION_LOWER}.${FREEIMAGE_VERSION_MINOR} )
 
 
-OPTION(ENABLE_PNG "Enable PNG support" 1)
-OPTION(ENABLE_JPEG "Enable JPEG support" 1)
-OPTION(ENABLE_TIFF "Enable TIFF support" 1)
+OPTION(ENABLE_PNG "Enable PNG support" 0)
+OPTION(ENABLE_JPEG "Enable JPEG support" 0)
+OPTION(ENABLE_TIFF "Enable TIFF support" 0)
 OPTION(ENABLE_WEBP "Enable WebP support" 0)
 OPTION(ENABLE_RAW "Enable RAW support" 0)
 OPTION(ENABLE_OPENJP "Enable OpenJPEG support" 0)
 OPTION(ENABLE_TESTS "Make built in tests" 0)
 OPTION(FREEIMAGE_DYNAMIC_C_RUNTIME "If ON build FreeImage with dynamicly linked C/C++ runtime. If OFF FreeImage is staticly linked with C/C++ runtime.")
+
+if (EMSCRIPTEN)
+  set(FREEIMAGE_BUILD_STATIC 1)
+  set(FREEIMAGE_BUILD_DLL 0)
+endif()
 
 IF(NOT FREEIMAGE_DYNAMIC_C_RUNTIME)
 # Set to link staticly with runtime
@@ -81,6 +86,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+set(INSTALL_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Installation directory for executables")
+set(INSTALL_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Installation directory for libraries")
+set(INSTALL_INC_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "Installation directory for headers")
+set(INSTALL_MAN_DIR "${CMAKE_INSTALL_PREFIX}/share/man" CACHE PATH "Installation directory for manual pages")
+set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_PREFIX}/share/pkgconfig" CACHE PATH "Installation directory for pkgconfig (.pc) files")
+
 # Set libraries for static or DLL build
 IF(FREEIMAGE_BUILD_STATIC)
   SET(FREEIMAGE_BUILD_FLAGS -DFREEIMAGE_LIB)
@@ -98,3 +109,4 @@ IF(ENABLE_TESTS)
   ENABLE_TESTING()
   add_subdirectory(TestAPI)
 ENDIF()
+
