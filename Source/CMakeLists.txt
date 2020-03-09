@@ -2,6 +2,9 @@ INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 IF (ENABLE_PNG)
 	INCLUDE_DIRECTORIES(${PNG_PNG_INCLUDE_DIR})
 ENDIF()
+IF (ENABLE_JPEG)
+	INCLUDE_DIRECTORIES(${JPEG_INCLUDE_DIR})
+ENDIF()
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 set( FREEIMAGE_SOURCES
@@ -32,7 +35,7 @@ set( FREEIMAGE_SOURCES
 		#FreeImage/PluginCUT.cpp
 		#FreeImage/PluginDDS.cpp
         #FreeImage/PluginEXR.cpp
-		#FreeImage/PluginGIF.cpp
+		FreeImage/PluginGIF.cpp
 		#FreeImage/PluginHDR.cpp
 		#FreeImage/PluginICO.cpp
 		#FreeImage/PluginIFF.cpp
@@ -47,15 +50,17 @@ set( FREEIMAGE_SOURCES
 		#FreeImage/PluginSGI.cpp
 		#FreeImage/PluginTARGA.cpp
 		#FreeImage/PluginWBMP.cpp
-		#FreeImage/PluginXBM.cpp
+		FreeImage/PluginXBM.cpp
 		#FreeImage/PluginXPM.cpp
 		#FreeImage/PSDParser.cpp
 		#FreeImage/TIFFLogLuv.cpp
-		FreeImage/tmoColorConvert.cpp FreeImage/tmoDrago03.cpp
-	FreeImage/tmoFattal02.cpp FreeImage/tmoReinhard05.cpp 
-	FreeImage/ToneMapping.cpp 
-	FreeImage/WuQuantizer.cpp 
 		#FreeImage/PSDParser.h
+		FreeImage/tmoColorConvert.cpp
+		FreeImage/tmoDrago03.cpp
+		FreeImage/tmoFattal02.cpp
+		FreeImage/tmoReinhard05.cpp
+		FreeImage/ToneMapping.cpp
+		FreeImage/WuQuantizer.cpp
 
 	FreeImageToolkit/Background.cpp FreeImageToolkit/BSplineRotate.cpp 
 	FreeImageToolkit/Channels.cpp FreeImageToolkit/ClassicRotate.cpp 
@@ -75,7 +80,7 @@ set( FREEIMAGE_SOURCES
 	#FreeImage/MNGHelper.cpp
 	#FreeImage/PluginJNG.cpp
 	#FreeImage/PluginMNG.cpp
-	FreeImage/ZLibInterface.cpp
+	#FreeImage/ZLibInterface.cpp
 	#OpenEXR/Half/half.cpp
 )
 
