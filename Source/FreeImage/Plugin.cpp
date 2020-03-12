@@ -280,7 +280,7 @@ void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only) {
 #ifdef _WIN32
       if (!load_local_plugins_only) {
         int count = 0;
-        char buffer[MAX_PATH + 200];
+        char buffer[MAX_PATH + 201]; buffer[MAX_PATH+200] = 0;
         wchar_t current_dir[2 * _MAX_PATH], module[2 * _MAX_PATH];
         BOOL bOk = FALSE;
 
