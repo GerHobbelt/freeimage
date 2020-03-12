@@ -82,7 +82,7 @@ public:
   // 'catch' is redefined discard the catch expression as well as eliminate the catch block at compile time
   // (thanks to C++17 'if constexpr'), while still defining 'anException' so that the block compiles (thanks to
   // C++17 if with initialization statement)
-  #define catch(x) if constexpr(const char* text = nullptr, message = nullptr; false)
+  #define catch(x) if constexpr(const char *text = nullptr, *message = nullptr; false)
 #endif
 
 #endif

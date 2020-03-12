@@ -27,12 +27,11 @@ if (EMSCRIPTEN)
     add_compile_options(-s STRICT=1)
 endif()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  add_compile_options(-Wno-switch)
-endif()
-
 if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
   add_compile_options(-Wno-format)
+  add_compile_options(-Wno-unused-result)
+  add_compile_options(-Wno-switch)
+  add_compile_options(-Wno-unused-value)
 endif()
 
   # FreeImage version
