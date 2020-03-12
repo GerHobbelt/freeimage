@@ -25,6 +25,8 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#include "FreeImage.h"
+
 // ==========================================================
 //   Standard includes used by the library
 // ==========================================================
