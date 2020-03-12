@@ -18,22 +18,6 @@ if (DEFINED JPEG_ROOT)
   list(APPEND CMAKE_FIND_ROOT_PATH ${JPEG_ROOT})
 endif()
 
-if (EMSCRIPTEN)
-    # Target C++ 17
-    set(CMAKE_CXX_STANDARD 17)
-    # Fully disable exceptions
-    add_compile_options(-fno-exceptions)
-    # Emscripten Strict Mode
-    add_compile_options(-s STRICT=1)
-endif()
-
-if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
-  add_compile_options(-Wno-format)
-  add_compile_options(-Wno-unused-result)
-  add_compile_options(-Wno-switch)
-  add_compile_options(-Wno-unused-value)
-endif()
-
   # FreeImage version
 SET( FREEIMAGE_VERSION_MAIN 3)
 SET( FREEIMAGE_VERSION_MIDDLE 16)
@@ -59,7 +43,7 @@ else()
   set(FREEIMAGE_BUILD_DLL 1)
 endif()
 
-IF(NOT FREEIMAGE_DYNAMIC_C_RUNTIME)
+IF(NOT FREEIMAGE_DYNAMIC_C_RUNTIME AND NOT EMSCRIPTEN)
   # Set to link staticly with runtime
   set(CMAKE_USER_MAKE_RULES_OVERRIDE
           ${CMAKE_CURRENT_SOURCE_DIR}/c_flag_overrides.cmake)
@@ -69,6 +53,22 @@ ENDIF(NOT FREEIMAGE_DYNAMIC_C_RUNTIME)
 
 project (FreeImage)
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
+
+if (EMSCRIPTEN)
+  # Target C++ 17
+  set(CMAKE_CXX_STANDARD 17)
+  # Fully disable exceptions
+  add_compile_options(-fno-exceptions)
+  # Emscripten Strict Mode
+  add_compile_options(-s STRICT=1)
+endif()
+
+if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
+  add_compile_options(-Wno-format)
+  add_compile_options(-Wno-unused-result)
+  add_compile_options(-Wno-switch)
+  add_compile_options(-Wno-unused-value)
+endif()
 
 # Check parameters
 INCLUDE(CheckIncludeFile)
