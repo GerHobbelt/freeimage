@@ -48,6 +48,9 @@ public:
         std::cerr << "Exception thrown: " << typeid(theStdException).name() << ": \"" << theStdException.what()
                   << "\"" << std::endl;
     }
+    _FreeImageTerminateOnException(const char* theExceptionStr) {
+        std::cerr << "Exception thrown: \"" << theExceptionStr << "\"" << std::endl;
+    }
     // Destructor
     // NB: notice the [[noreturn]] attribute on destructor: it will never return by calling std::terminate()
     [[noreturn]] ~_FreeImageTerminateOnException() {
