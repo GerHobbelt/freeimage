@@ -61,17 +61,23 @@ public:
     _FreeImageTerminateOnException & operator = (_FreeImageTerminateOnException &&) = delete;
 };
 
-// 'throw' is redefined use _TerminateWithStandardFailure functionality
-// NB: notice the assignment operator at the end. This is intended, to "absorb" the thrown failure object;
-#define throw _FreeImageTerminateOnException _absorb_failure =
+#if !defined(throw)
+  // 'throw' is redefined use _TerminateWithStandardFailure functionality
+  // NB: notice the assignment operator at the end. This is intended, to "absorb" the thrown failure object;
+  #define throw _FreeImageTerminateOnException _absorb_failure =
+#endif
 
-// 'try' is redefined to do nothing
-#define try
+#if !defined(try)
+  // 'try' is redefined to do nothing
+  #define try
+#endif
 
-// 'catch' is redefined discard the catch expression as well as eliminate the catch block at compile time
-// (thanks to C++17 'if constexpr'), while still defining 'anException' so that the block compiles (thanks to
-// C++17 if with initialization statement)
-#define catch(x) if constexpr(std::exception anException{}; false)
+#if !defined(catch)
+  // 'catch' is redefined discard the catch expression as well as eliminate the catch block at compile time
+  // (thanks to C++17 'if constexpr'), while still defining 'anException' so that the block compiles (thanks to
+  // C++17 if with initialization statement)
+  #define catch(x) if constexpr(std::exception anException{}; false)
+#endif
 
 #endif
 
