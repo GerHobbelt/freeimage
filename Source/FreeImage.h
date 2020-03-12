@@ -43,24 +43,12 @@
 
 class _FreeImageTerminateOnException {
 public:
-    // Constructors
-    _FreeImageTerminateOnException(std::exception const & theStdException) {
-        std::cerr << "Exception thrown: " << typeid(theStdException).name() << ": \"" << theStdException.what()
-                  << "\"" << std::endl;
-    }
-    _FreeImageTerminateOnException(const char* theExceptionStr) {
-        std::cerr << "Exception thrown: \"" << theExceptionStr << "\"" << std::endl;
-    }
-    _FreeImageTerminateOnException(int theExceptionInt) {
-        std::cerr << "Exception thrown: \"" << theExceptionInt << "\"" << std::endl;
-    }
-    // Destructor
-    // NB: notice the [[noreturn]] attribute on destructor: it will never return by calling std::terminate()
-    [[noreturn]] ~_FreeImageTerminateOnException() {
-        std::terminate();
-    }
+    _FreeImageTerminateOnException(std::exception const & theStdException);
+    _FreeImageTerminateOnException(const char* theExceptionStr);
+    _FreeImageTerminateOnException(int theExceptionInt);
 
-    // Discarded defaults
+    [[noreturn]] ~_FreeImageTerminateOnException();
+
     _FreeImageTerminateOnException(_FreeImageTerminateOnException const &) = delete;
     _FreeImageTerminateOnException(_FreeImageTerminateOnException &&) = delete;
     _FreeImageTerminateOnException & operator = (_FreeImageTerminateOnException const &) = delete;
@@ -86,7 +74,6 @@ public:
 #endif
 
 #endif
-
 
 #include <wchar.h> // needed for UNICODE functions
 

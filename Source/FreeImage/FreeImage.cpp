@@ -29,6 +29,30 @@
 #include "FreeImage.h"
 #include "Utilities.h"
 
+#if defined(__EMSCRIPTEN__)
+
+#include <iostream>
+#include <exception>
+#include <typeinfo>
+
+_FreeImageTerminateOnException::_FreeImageTerminateOnException(std::exception const & theStdException) {
+  std::cerr << "Exception thrown: " << typeid(theStdException).name() << ": \"" << theStdException.what() << "\"" << std::endl;
+}
+
+_FreeImageTerminateOnException::_FreeImageTerminateOnException(const char* theExceptionStr) {
+  std::cerr << "Exception thrown: \"" << theExceptionStr << "\"" << std::endl;
+}
+
+_FreeImageTerminateOnException::_FreeImageTerminateOnException(int theExceptionInt) {
+  std::cerr << "Exception thrown: \"" << theExceptionInt << "\"" << std::endl;
+}
+
+[[noreturn]] _FreeImageTerminateOnException::~_FreeImageTerminateOnException() {
+  std::terminate();
+}
+
+#endif
+
 //----------------------------------------------------------------------
 
 static const char *s_copyright = "This program uses FreeImage, a free, open source image library supporting all common bitmap formats. See http://freeimage.sourceforge.net for details";
@@ -59,7 +83,7 @@ DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
 
 #endif // FREEIMAGE_LIB
 
-#else // !_WIN32 
+#else // !_WIN32
 #ifndef FREEIMAGE_LIB
 
 void FreeImage_SO_Initialise() __attribute__((constructor));
@@ -105,7 +129,7 @@ FreeImage_IsLittleEndian() {
 //----------------------------------------------------------------------
 
 static FreeImage_OutputMessageFunction freeimage_outputmessage_proc = NULL;
-static FreeImage_OutputMessageFunctionStdCall freeimage_outputmessagestdcall_proc = NULL; 
+static FreeImage_OutputMessageFunctionStdCall freeimage_outputmessagestdcall_proc = NULL;
 
 void DLL_CALLCONV
 FreeImage_SetOutputMessage(FreeImage_OutputMessageFunction omf) {
@@ -221,6 +245,6 @@ FreeImage_OutputMessageProc(int fif, const char *fmt, ...) {
 			freeimage_outputmessage_proc((FREE_IMAGE_FORMAT)fif, message);
 
 		if (freeimage_outputmessagestdcall_proc != NULL)
-			freeimage_outputmessagestdcall_proc((FREE_IMAGE_FORMAT)fif, message); 
+			freeimage_outputmessagestdcall_proc((FREE_IMAGE_FORMAT)fif, message);
 	}
 }
