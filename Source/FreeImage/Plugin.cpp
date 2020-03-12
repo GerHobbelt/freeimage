@@ -24,8 +24,7 @@
 // =====================================================================
 
 #ifdef _MSC_VER
-#pragma warning(
-    disable : 4786) // identifier was truncated to 'number' characters
+#pragma warning(disable : 4786) // identifier was truncated to 'number' characters
 #endif
 
 #ifdef _WIN32
