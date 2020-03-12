@@ -18,6 +18,15 @@ if (DEFINED JPEG_ROOT)
   list(APPEND CMAKE_FIND_ROOT_PATH ${JPEG_ROOT})
 endif()
 
+if (EMSCRIPTEN)
+    # Target C++ 17
+    set(CMAKE_CXX_STANDARD 17)
+    # Fully disable exceptions
+    add_compile_options(-fno-exceptions)
+    # Emscripten Strict Mode
+    add_compile_options(-s STRICT=1)
+endif()
+
 # FreeImage version
 SET( FREEIMAGE_VERSION_MAIN 3)
 SET( FREEIMAGE_VERSION_MIDDLE 16)

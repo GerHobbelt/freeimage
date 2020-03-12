@@ -35,6 +35,47 @@
 
 // Compiler options ---------------------------------------------------------
 
+#if defined(__EMSCRIPTEN__)
+
+#include <iostream>
+#include <exception>
+#include <typeid>
+
+class _FreeImageTerminateOnException {
+public:
+    // Constructors
+    _FreeImageTerminateOnException(std::exception const & theStdException) {
+        std::cerr << "Exception thrown: " << typeid(theStdException).name() << ": \"" << theStdException.what()
+                  << "\"" << std::endl;
+    }
+    // Destructor
+    // NB: notice the [[noreturn]] attribute on destructor: it will never return by calling std::terminate()
+    [[noreturn]] ~_FreeImageTerminateOnException() {
+        std::terminate();
+    }
+
+    // Discarded defaults
+    _FreeImageTerminateOnException(_FreeImageTerminateOnException const &) = delete;
+    _FreeImageTerminateOnException(_FreeImageTerminateOnException &&) = delete;
+    _FreeImageTerminateOnException & operator = (_FreeImageTerminateOnException const &) = delete;
+    _FreeImageTerminateOnException & operator = (_FreeImageTerminateOnException &&) = delete;
+};
+
+// 'throw' is redefined use _TerminateWithStandardFailure functionality
+// NB: notice the assignment operator at the end. This is intended, to "absorb" the thrown failure object;
+#define throw _FreeImageTerminateOnException _absorb_failure =
+
+// 'try' is redefined to do nothing
+#define try
+
+// 'catch' is redefined discard the catch expression as well as eliminate the catch block at compile time
+// (thanks to C++17 'if constexpr'), while still defining 'anException' so that the block compiles (thanks to
+// C++17 if with initialization statement)
+#define catch(x) if constexpr(std::exception anException{}; false)
+
+#endif
+
+
 #include <wchar.h> // needed for UNICODE functions
 
 #if defined(FREEIMAGE_LIB)
