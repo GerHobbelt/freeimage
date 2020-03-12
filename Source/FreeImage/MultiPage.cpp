@@ -338,7 +338,7 @@ FreeImage_OpenMultiBitmapFromHandle(FREE_IMAGE_FORMAT fif, FreeImageIO *io, fi_h
 				PluginNode *node = list->FindNodeFromFIF(fif);
 			
 				if (node) {
-					std::aunique_ptr<FIMULTIBITMAP> bitmap (new FIMULTIBITMAP);
+					std::unique_ptr<FIMULTIBITMAP> bitmap (new FIMULTIBITMAP);
 					std::unique_ptr<MULTIBITMAPHEADER> header (new MULTIBITMAPHEADER);
 					std::unique_ptr<FreeImageIO> tmp_io (new FreeImageIO (*io));
 					header->io = tmp_io.get();

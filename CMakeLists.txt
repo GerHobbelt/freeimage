@@ -27,7 +27,11 @@ if (EMSCRIPTEN)
     add_compile_options(-s STRICT=1)
 endif()
 
-# FreeImage version
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_compile_options(-fno-switch)
+endif()
+
+  # FreeImage version
 SET( FREEIMAGE_VERSION_MAIN 3)
 SET( FREEIMAGE_VERSION_MIDDLE 16)
 SET( FREEIMAGE_VERSION_LOWER 0)
