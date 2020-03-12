@@ -39,7 +39,7 @@
 
 #include <iostream>
 #include <exception>
-#include <typeid>
+#include <typeinfo>
 
 class _FreeImageTerminateOnException {
 public:
