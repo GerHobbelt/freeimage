@@ -33,7 +33,6 @@ OPTION(ENABLE_WEBP "Enable WebP support" 0)
 OPTION(ENABLE_RAW "Enable RAW support" 0)
 OPTION(ENABLE_OPENJP "Enable OpenJPEG support" 0)
 OPTION(ENABLE_TESTS "Make built in tests" 0)
-OPTION(FREEIMAGE_DYNAMIC_C_RUNTIME "If ON build FreeImage with dynamicly linked C/C++ runtime. If OFF FreeImage is staticly linked with C/C++ runtime.")
 
 if (NOT BUILD_SHARED_LIBS)
   set(FREEIMAGE_BUILD_STATIC 1)
@@ -42,14 +41,6 @@ else()
   set(FREEIMAGE_BUILD_STATIC 0)
   set(FREEIMAGE_BUILD_DLL 1)
 endif()
-
-IF(NOT FREEIMAGE_DYNAMIC_C_RUNTIME AND NOT EMSCRIPTEN)
-  # Set to link staticly with runtime
-  set(CMAKE_USER_MAKE_RULES_OVERRIDE
-          ${CMAKE_CURRENT_SOURCE_DIR}/c_flag_overrides.cmake)
-  set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX
-          ${CMAKE_CURRENT_SOURCE_DIR}/cxx_flag_overrides.cmake)
-ENDIF()
 
 project (FreeImage)
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
