@@ -50,7 +50,7 @@ set(FREEIMAGE_SOURCES
         #FreeImage/PluginSGI.cpp
         #FreeImage/PluginTARGA.cpp
         #FreeImage/PluginWBMP.cpp
-        FreeImage/PluginXBM.cpp
+        #FreeImage/PluginXBM.cpp
         #FreeImage/PluginXPM.cpp
         #FreeImage/PSDParser.cpp
         #FreeImage/TIFFLogLuv.cpp

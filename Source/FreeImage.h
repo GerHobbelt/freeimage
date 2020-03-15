@@ -436,7 +436,7 @@ FI_STRUCT(FIICCPROFILE) {
 FI_ENUM(FREE_IMAGE_FORMAT){
     FIF_UNKNOWN = -1, FIF_BMP = 0, FIF_ICO = 1,    FIF_JPEG = 2, FIF_PBM = 3,
     FIF_PBMRAW = 4,   FIF_PGM = 5, FIF_PGMRAW = 6, FIF_PNG = 7,  FIF_PPM = 8,
-    FIF_PPMRAW = 9,   FIF_XBM = 10
+    FIF_PPMRAW = 9,
     //      FIF_BMP		= 0,  *
     //      FIF_ICO		= 1,  *
     //      FIF_JPEG	= 2,  *
@@ -455,7 +455,7 @@ FI_ENUM(FREE_IMAGE_FORMAT){
     //	FIF_PPM		= 14, *
     //	FIF_PPMRAW	= 15, *
     //	FIF_RAS		= 16,
-    //	FIF_TARGA	= 17, *
+    //	FIF_TARGA	= 17,
     //	FIF_TIFF	= 18,
     //	FIF_WBMP	= 19,
     //	FIF_PSD		= 20,
@@ -463,7 +463,7 @@ FI_ENUM(FREE_IMAGE_FORMAT){
     //	FIF_XBM		= 22,
     //	FIF_XPM		= 23,
     //	FIF_DDS		= 24,
-    //	FIF_GIF         = 25, *
+    //	FIF_GIF         = 25,
     //	FIF_HDR		= 26,
     //	FIF_FAXG3	= 27,
     //	FIF_SGI		= 28,
