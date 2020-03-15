@@ -116,6 +116,8 @@ IF (FREEIMAGE_BUILD_STATIC)
     ADD_DEFINITIONS(-DFREEIMAGE_LIB -DLIBRAW_NODLL -DOPJ_STATIC)
     add_library(FreeImage_static STATIC ${FREEIMAGE_SOURCES})
 
+    set_target_properties(zlibstatic PROPERTIES OUTPUT_NAME freeimage)
+
     install(TARGETS FreeImage_static
             RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
             ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"

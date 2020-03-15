@@ -45,6 +45,8 @@ endif()
 project (FreeImage)
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 
+set(CMAKE_DEBUG_POSTFIX "d")
+
 if (EMSCRIPTEN)
   # Target C++ 17
   set(CMAKE_CXX_STANDARD 17)
