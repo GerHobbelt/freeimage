@@ -37,14 +37,14 @@ set(FREEIMAGE_SOURCES
         #FreeImage/PluginEXR.cpp
         #FreeImage/PluginGIF.cpp
         #FreeImage/PluginHDR.cpp
-        FreeImage/PluginICO.cpp
+        #FreeImage/PluginICO.cpp
         #FreeImage/PluginIFF.cpp
         #FreeImage/PluginKOALA.cpp
         #FreeImage/PluginPCD.cpp
         #FreeImage/PluginPCX.cpp
         #FreeImage/PluginPFM.cpp
         #FreeImage/PluginPICT.cpp
-        FreeImage/PluginPNM.cpp
+        #FreeImage/PluginPNM.cpp
         #FreeImage/PluginPSD.cpp
         #FreeImage/PluginRAS.cpp
         #FreeImage/PluginSGI.cpp

@@ -434,26 +434,24 @@ FI_STRUCT(FIICCPROFILE) {
 /** I/O image format identifiers.
  */
 FI_ENUM(FREE_IMAGE_FORMAT){
-    FIF_UNKNOWN = -1, FIF_BMP = 0, FIF_ICO = 1,    FIF_JPEG = 2, FIF_PBM = 3,
-    FIF_PBMRAW = 4,   FIF_PGM = 5, FIF_PGMRAW = 6, FIF_PNG = 7,  FIF_PPM = 8,
-    FIF_PPMRAW = 9,
+    FIF_UNKNOWN = -1, FIF_BMP = 0, FIF_JPEG = 1, FIF_PNG = 2
     //      FIF_BMP		= 0,  *
-    //      FIF_ICO		= 1,  *
+    //      FIF_ICO		= 1,
     //      FIF_JPEG	= 2,  *
     //	FIF_JNG		= 3,
     //	FIF_KOALA	= 4,
     //	FIF_LBM		= 5,
     //	FIF_IFF         = FIF_LBM,
     //	FIF_MNG		= 6,
-    //	FIF_PBM		= 7,  *
-    //	FIF_PBMRAW	= 8,  *
+    //	FIF_PBM		= 7,
+    //	FIF_PBMRAW	= 8,
     //	FIF_PCD		= 9,
     //	FIF_PCX		= 10,
-    //	FIF_PGM		= 11, *
-    //	FIF_PGMRAW	= 12, *
+    //	FIF_PGM		= 11,
+    //	FIF_PGMRAW	= 12,
     //	FIF_PNG		= 13, *
-    //	FIF_PPM		= 14, *
-    //	FIF_PPMRAW	= 15, *
+    //	FIF_PPM		= 14,
+    //	FIF_PPMRAW	= 15,
     //	FIF_RAS		= 16,
     //	FIF_TARGA	= 17,
     //	FIF_TIFF	= 18,
