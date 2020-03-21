@@ -89,9 +89,10 @@ public:
 */
 //static const int netsize = 256;
 
+namespace constants {
 /**@name network definitions */
 //@{
-//static const int maxnetpos = (netsize - 1);
+// static const int maxnetpos = (netsize - 1);
 /// bias for colour values
 static const int netbiasshift = 4;
 /// no. of learning cycles
@@ -109,18 +110,18 @@ static const int gammashift = 10;
 /// beta = 1 / 1024
 static const int betashift = 10;
 static const int beta = (intbias >> betashift);
-static const int betagamma = (intbias << (gammashift-betashift));
+static const int betagamma = (intbias << (gammashift - betashift));
 //@}
 
 /**@name defs for decreasing radius factor */
 //@{
 /// for 256 cols, radius starts
-//static const int initrad = (netsize >> 3);
+// static const int initrad = (netsize >> 3);
 /// at 32.0 biased by 6 bits
 static const int radiusbiasshift = 6;
 static const int radiusbias = (((int)1) << radiusbiasshift);
-/// and decreases by a 
-//static const int initradius	= (initrad * radiusbias);
+/// and decreases by a
+// static const int initradius	= (initrad * radiusbias);
 // factor of 1/30 each cycle
 static const int radiusdec = 30;
 //@}
@@ -136,9 +137,10 @@ static const int initalpha = (((int)1) << alphabiasshift);
 //@{
 static const int radbiasshift = 8;
 static const int radbias = (((int)1) << radbiasshift);
-static const int alpharadbshift = (alphabiasshift+radbiasshift);
-static const int alpharadbias = (((int)1) << alpharadbshift);	
+static const int alpharadbshift = (alphabiasshift + radbiasshift);
+static const int alpharadbias = (((int)1) << alpharadbshift);
 //@}
+}
 
 class NNQuantizer
 {
