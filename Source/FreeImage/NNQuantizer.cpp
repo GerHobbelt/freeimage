@@ -34,6 +34,7 @@
 #include "FreeImage.h"
 #include "Utilities.h"
 
+using namespace freeimage_constants;
 
 // Four primes near 500 - assume no image has a length so large
 // that it is divisible by all four primes

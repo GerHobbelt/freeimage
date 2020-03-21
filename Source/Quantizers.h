@@ -89,7 +89,7 @@ public:
 */
 //static const int netsize = 256;
 
-namespace constants {
+namespace freeimage_constants {
 /**@name network definitions */
 //@{
 // static const int maxnetpos = (netsize - 1);
