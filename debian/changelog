@@ -1,3 +1,13 @@
+freeimage (3.18.0+ds2-4) unstable; urgency=medium
+
+  * [d2fd1a9] Add debian/.gitlab-ci.yml
+  * [0dbdc38] Fix compilation due to external-static mismatch. (Closes: #964653)
+  * [a244b61] Respect CPPFLAGS
+  * [736ea7b] Update standards version to 4.5.0, no changes needed.
+  * [e86eeb9] Add Rules-Requires-Root: no
+
+ -- Anton Gladky <gladk@debian.org>  Wed, 15 Jul 2020 23:05:20 +0200
+
 freeimage (3.18.0+ds2-3) unstable; urgency=medium
 
   [ Hugo Lefeuvre ]
