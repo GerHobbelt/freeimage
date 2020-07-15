@@ -34,8 +34,8 @@ override_dh_autoreconf:
 	dh_autoreconf $(MAKE) -- -f $(CURDIR)/debian/rules gen-src-list
 
 override_dh_auto_build-arch:
-	$(MAKE) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)"
-	$(MAKE) -f Makefile.fip CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)"
+	$(MAKE) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)"
+	$(MAKE) -f Makefile.fip CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 override_dh_auto_build-indep:
 	cd $(CURDIR)/Wrapper/FreeImagePlus/doc && doxygen FreeImagePlus.dox
@@ -50,11 +50,11 @@ override_dh_auto_test-arch:
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	echo "Building and running the FreeImage testsuite..."
 	cd $(CURDIR)/TestAPI && \
-	$(CXX) $(CXXFLAGS) -I$(CURDIR)/Dist *.cpp $(LDFLAGS) -L$(CURDIR)/Dist -lfreeimage -o testAPI && \
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -I$(CURDIR)/Dist *.cpp $(LDFLAGS) -L$(CURDIR)/Dist -lfreeimage -o testAPI && \
 	LD_LIBRARY_PATH=$(CURDIR)/Dist ./testAPI
 	echo "Building and running the FreeImagePlus testsuite..."
 	cd $(CURDIR)/Wrapper/FreeImagePlus/test && \
-	$(CXX) $(CXXFLAGS) -I$(CURDIR)/Dist *.cpp $(LDFLAGS) -L$(CURDIR)/Dist -lfreeimageplus -lfreeimage -o fipTest && \
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -I$(CURDIR)/Dist *.cpp $(LDFLAGS) -L$(CURDIR)/Dist -lfreeimageplus -lfreeimage -o fipTest && \
 	LD_LIBRARY_PATH=$(CURDIR)/Dist ./fipTest
 endif
 
