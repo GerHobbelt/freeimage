@@ -1,3 +1,9 @@
+freeimage (3.18.0+ds2-5) unstable; urgency=medium
+
+  * [bef22ed] Revert "Add Rules-Requires-Root: no"
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 16 Jul 2020 19:40:05 +0200
+
 freeimage (3.18.0+ds2-4) unstable; urgency=medium
 
   * [d2fd1a9] Add debian/.gitlab-ci.yml
