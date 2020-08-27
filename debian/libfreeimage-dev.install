@@ -1,2 +1,3 @@
 usr/include/FreeImage.h
 usr/lib/*/libfreeimage.so
+usr/lib/*/*.a
