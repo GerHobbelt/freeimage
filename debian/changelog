@@ -1,3 +1,11 @@
+freeimage (3.18.0+ds2-6) unstable; urgency=medium
+
+  * [cf6ffd2] Fix FTBFS against libraw 0.20.0. (Closes: #968637)
+  * [09d8830] Set compat-level to 13
+  * [d09f8b8] Install *.a files
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 27 Aug 2020 23:31:08 +0200
+
 freeimage (3.18.0+ds2-5) unstable; urgency=medium
 
   * [bef22ed] Revert "Add Rules-Requires-Root: no"
