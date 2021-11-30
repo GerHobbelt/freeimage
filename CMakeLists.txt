@@ -46,6 +46,13 @@ if (DEFINED FREEIMAGE_FORCE_BIGENDIAN)
 endif()
 
 ##########################################################################################
+#disable some warnings that won't be fixed
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    add_compile_options(/wd4244)#'conversion' conversion from 'type1' to 'type2', possible loss of data #Please note that I usually fixed these ones, but as it is in underlying library, I don't want to modify code too much
+    add_compile_options(/wd4267)#'var' : conversion from 'size_t' to 'type', possible loss of data #Please note that I usually fixed these ones, but as it is in underlying library, I don't want to modify code too much
+endif()
+
+##########################################################################################
 # Process subdirectories
 
 add_subdirectory(dependencies)
