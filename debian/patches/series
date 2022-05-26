@@ -10,3 +10,4 @@ Enable-substitution-of-pkg-config.patch
 CVE-2019-12211-13.patch
 Fix_compilation_external-static.patch
 Fix-libraw-compilation.patch
+Use-system-jpeg_read_icc_profile.patch
