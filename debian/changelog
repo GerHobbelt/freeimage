@@ -1,3 +1,18 @@
+freeimage (3.18.0+ds2-7) unstable; urgency=medium
+
+  [ Steve Langasek ]
+  * [242e474] Use jpeg_read_icc_profile() from libjpeg.
+
+  [ Anton Gladky ]
+  * [7fdce91] Update to the new ffmpeg_4.4.0+. (Closes: #1011416, #1011710)
+  * [53c97ea] Update .gitlab-ci.yml
+  * [2184c25] Update standards version to 4.6.0, no changes needed.
+  * [d32e2a2] Avoid explicitly specifying -Wl,--as-needed linker flag.
+  * [9060df4] Update watch file format version to 4.
+  * [e40bdff] Drop unnecesary build version restrictions
+
+ -- Anton Gladky <gladk@debian.org>  Thu, 26 May 2022 13:31:41 +0200
+
 freeimage (3.18.0+ds2-6) unstable; urgency=medium
 
   * [cf6ffd2] Fix FTBFS against libraw 0.20.0. (Closes: #968637)
