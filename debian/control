@@ -20,7 +20,7 @@ Build-Depends-Indep: doxygen
 Standards-Version: 4.6.1
 Vcs-Browser: https://salsa.debian.org/science-team/freeimage
 Vcs-Git: https://salsa.debian.org/science-team/freeimage.git
-Homepage: http://freeimage.sourceforge.net/
+Homepage: https://freeimage.sourceforge.net/
 
 Package: libfreeimage-dev
 Architecture: any
