@@ -27,6 +27,7 @@ Architecture: any
 Section: libdevel
 Depends: libfreeimage3 (= ${binary:Version}),
          ${misc:Depends}
+Multi-Arch: same
 Description: Support library for graphics image formats (development files)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
@@ -59,6 +60,7 @@ Depends: libfreeimage-dev,
          libfreeimageplus3 (= ${binary:Version}),
          ${misc:Depends}
 Suggests: libfreeimageplus-doc
+Multi-Arch: same
 Description: C++ wrappers for FreeImage (development files)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
@@ -74,6 +76,7 @@ Architecture: all
 Section: doc
 Depends: ${misc:Depends},
          libjs-jquery
+Multi-Arch: foreign
 Description: C++ wrappers for FreeImage (documentation)
  FreeImage is an Open Source C/C++ library project for developers who would
  like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
