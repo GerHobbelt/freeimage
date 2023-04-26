@@ -230,7 +230,7 @@ void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only) {
       as the one used to define the FREE_IMAGE_FORMAT enum.
       */
       s_plugins->AddNode(InitBMP);
-//s_plugins->AddNode(InitICO);
+      s_plugins->AddNode(InitICO);
       s_plugins->AddNode(InitJPEG);
       // s_plugins->AddNode(InitJNG);
       // s_plugins->AddNode(InitKOALA);
@@ -246,7 +246,7 @@ void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only) {
       s_plugins->AddNode(InitPNM, NULL, "PPM", "Portable Pixelmap (ASCII)",                   "ppm", "^P3");
       s_plugins->AddNode(InitPNM, NULL, "PPMRAW", "Portable Pixelmap (RAW)",                  "ppm", "^P6");
 // s_plugins->AddNode(InitRAS);
-//s_plugins->AddNode(InitTARGA);
+        s_plugins->AddNode(InitTARGA);
 // s_plugins->AddNode(InitTIFF);
 // s_plugins->AddNode(InitWBMP);
 // s_plugins->AddNode(InitPSD);
@@ -254,7 +254,7 @@ void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only) {
 // s_plugins->AddNode(InitXBM);
 // s_plugins->AddNode(InitXPM);
 // s_plugins->AddNode(InitDDS);
-//s_plugins->AddNode(InitGIF);
+        s_plugins->AddNode(InitGIF);
 // s_plugins->AddNode(InitHDR);
 // s_plugins->AddNode(InitG3);
 // s_plugins->AddNode(InitSGI);
