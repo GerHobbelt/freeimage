@@ -47,13 +47,6 @@ SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 
 set(CMAKE_DEBUG_POSTFIX "d")
 
-if (EMSCRIPTEN)
-  # Fully disable exceptions
-  add_compile_options(-fno-exceptions)
-  # Emscripten Strict Mode
-  add_compile_options(-s STRICT=1)
-endif()
-
 if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
   add_compile_options(-Wno-format)
   add_compile_options(-Wno-unused-result)

@@ -35,20 +35,20 @@ set(FREEIMAGE_SOURCES
         #FreeImage/PluginCUT.cpp
         #FreeImage/PluginDDS.cpp
         #FreeImage/PluginEXR.cpp
-        #FreeImage/PluginGIF.cpp
+        FreeImage/PluginGIF.cpp
         #FreeImage/PluginHDR.cpp
-        #FreeImage/PluginICO.cpp
+        FreeImage/PluginICO.cpp
         #FreeImage/PluginIFF.cpp
         #FreeImage/PluginKOALA.cpp
         #FreeImage/PluginPCD.cpp
         #FreeImage/PluginPCX.cpp
         #FreeImage/PluginPFM.cpp
         #FreeImage/PluginPICT.cpp
-        #FreeImage/PluginPNM.cpp
+        FreeImage/PluginPNM.cpp
         #FreeImage/PluginPSD.cpp
         #FreeImage/PluginRAS.cpp
         #FreeImage/PluginSGI.cpp
-        #FreeImage/PluginTARGA.cpp
+        FreeImage/PluginTARGA.cpp
         #FreeImage/PluginWBMP.cpp
         #FreeImage/PluginXBM.cpp
         #FreeImage/PluginXPM.cpp
