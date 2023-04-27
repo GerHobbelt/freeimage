@@ -58,6 +58,7 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" S
     add_compile_options(-Wno-clobbered)
     add_compile_options(-Wno-implicit-fallthrough)
     add_compile_options(-Wno-maybe-uninitialized)
+    add_compile_options(-Wno-unused-but-set-variable)
   endif()
   add_compile_options(-Wno-sign-compare)
   add_compile_options(-Wno-unused-parameter)
