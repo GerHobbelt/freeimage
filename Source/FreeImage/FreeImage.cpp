@@ -29,30 +29,6 @@
 #include "FreeImage.h"
 #include "Utilities.h"
 
-#if defined(__EMSCRIPTEN__)
-
-#include <iostream>
-#include <exception>
-#include <typeinfo>
-
-_FreeImageTerminateOnException::_FreeImageTerminateOnException(std::exception const & theStdException) {
-  std::cerr << "Exception thrown: " << typeid(theStdException).name() << ": \"" << theStdException.what() << "\"" << std::endl;
-}
-
-_FreeImageTerminateOnException::_FreeImageTerminateOnException(const char* theExceptionStr) {
-  std::cerr << "Exception thrown: \"" << theExceptionStr << "\"" << std::endl;
-}
-
-_FreeImageTerminateOnException::_FreeImageTerminateOnException(int theExceptionInt) {
-  std::cerr << "Exception thrown: \"" << theExceptionInt << "\"" << std::endl;
-}
-
-[[noreturn]] _FreeImageTerminateOnException::~_FreeImageTerminateOnException() {
-  std::terminate();
-}
-
-#endif
-
 //----------------------------------------------------------------------
 
 static const char *s_copyright = "This program uses FreeImage, a free, open source image library supporting all common bitmap formats. See http://freeimage.sourceforge.net for details";
