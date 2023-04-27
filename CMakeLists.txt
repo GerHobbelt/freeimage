@@ -100,6 +100,9 @@ ENDIF()
 IF(MSVC OR (WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "[Cc][Ll][Aa][Nn][Gg]" AND NOT MINGW))
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
+  if (MSVC)
+    add_definitions("/wd4477")
+  endif()
 ENDIF()
 
 # Set default output dirs
