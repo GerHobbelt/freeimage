@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
-cmake_policy(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10.2)
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.12)
   # GAB: Allow new behavior for find_package with <LIBNAME>_ROOT defined
