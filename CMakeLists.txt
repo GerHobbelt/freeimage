@@ -101,7 +101,7 @@ IF(MSVC OR (WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "[Cc][Ll][Aa][Nn][Gg]" AND N
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(-D_CRT_NONSTDC_NO_WARNINGS)
   if (MSVC)
-    add_definitions("/wd4477")
+    add_definitions("/wd4477 /wd4018")
   else()
     add_definitions("-Wno-microsoft-template")
     add_definitions("-Wno-typename-missing")
