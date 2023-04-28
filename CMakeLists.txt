@@ -57,6 +57,10 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" S
   endif()
 endif()
 
+if (MSVC)
+  add_compile_options("/wd4100 /wd4457 /wd4456 /wd4245 /wd4244 /wd4189 /wd4701 /wd4703 /wd4324 /wd4611 ")
+endif()
+
 # Check parameters
 INCLUDE(CheckIncludeFile)
 INCLUDE(CheckIncludeFileCXX)
