@@ -1,21 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2)
-
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.12)
-  # GAB: Allow new behavior for find_package with <LIBNAME>_ROOT defined
-  cmake_policy(SET CMP0074 NEW)
-endif()
-
-if (DEFINED ZLIB_ROOT)
-  list(APPEND CMAKE_FIND_ROOT_PATH ${ZLIB_ROOT})
-endif()
-
-if (DEFINED PNG_ROOT)
-  list(APPEND CMAKE_FIND_ROOT_PATH ${PNG_ROOT})
-endif()
-
-if (DEFINED JPEG_ROOT)
-  list(APPEND CMAKE_FIND_ROOT_PATH ${JPEG_ROOT})
-endif()
+cmake_minimum_required(VERSION 3.12)
 
   # FreeImage version
 SET( FREEIMAGE_VERSION_MAIN 3)
@@ -47,19 +30,12 @@ SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 set(CMAKE_DEBUG_POSTFIX "d")
 
 if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
+  #OMG there is soooo much warnings in this program!
   add_compile_options(-Wno-format)
   add_compile_options(-Wno-unused-result)
   add_compile_options(-Wno-switch)
   add_compile_options(-Wno-unused-value)
-  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    add_compile_options(-Wno-logical-op-parentheses)
-    add_compile_options(-Wno-unused-private-field)
-  elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    add_compile_options(-Wno-clobbered)
-    add_compile_options(-Wno-implicit-fallthrough)
-    add_compile_options(-Wno-maybe-uninitialized)
-    add_compile_options(-Wno-unused-but-set-variable)
-  endif()
+
   add_compile_options(-Wno-sign-compare)
   add_compile_options(-Wno-unused-parameter)
   add_compile_options(-Wno-unused-variable)
@@ -70,6 +46,15 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" S
   add_compile_options(-Wno-ignored-qualifiers)
   add_compile_options(-Wno-cast-function-type)
   add_compile_options(-Wno-parentheses)
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_compile_options(-Wno-logical-op-parentheses)
+    add_compile_options(-Wno-unused-private-field)
+  elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    add_compile_options(-Wno-clobbered)
+    add_compile_options(-Wno-implicit-fallthrough)
+    add_compile_options(-Wno-maybe-uninitialized)
+    add_compile_options(-Wno-unused-but-set-variable)
+  endif()
 endif()
 
 # Check parameters
