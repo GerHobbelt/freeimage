@@ -58,7 +58,16 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" S
 endif()
 
 if (MSVC)
-  add_compile_options("/wd4100 /wd4457 /wd4456 /wd4245 /wd4244 /wd4189 /wd4701 /wd4703 /wd4324 /wd4611 ")
+  add_compile_options(/wd4100)
+  add_compile_options(/wd4457)
+  add_compile_options(/wd4456)
+  add_compile_options(/wd4245)
+  add_compile_options(/wd4244)
+  add_compile_options(/wd4189)
+  add_compile_options(/wd4701)
+  add_compile_options(/wd4703)
+  add_compile_options(/wd4324)
+  add_compile_options(/wd4611)
 endif()
 
 # Check parameters
