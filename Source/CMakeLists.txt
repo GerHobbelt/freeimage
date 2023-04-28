@@ -62,15 +62,15 @@ set(FREEIMAGE_SOURCES
         FreeImage/ToneMapping.cpp
         FreeImage/WuQuantizer.cpp
 
-        #FreeImageToolkit/Background.cpp FreeImageToolkit/BSplineRotate.cpp
-        #FreeImageToolkit/Channels.cpp FreeImageToolkit/ClassicRotate.cpp
-        #FreeImageToolkit/Colors.cpp FreeImageToolkit/CopyPaste.cpp
-        #FreeImageToolkit/Display.cpp
-        #FreeImageToolkit/Flip.cpp
+        FreeImageToolkit/Background.cpp FreeImageToolkit/BSplineRotate.cpp
+        FreeImageToolkit/Channels.cpp FreeImageToolkit/ClassicRotate.cpp
+        FreeImageToolkit/Colors.cpp FreeImageToolkit/CopyPaste.cpp
+        FreeImageToolkit/Display.cpp
+        FreeImageToolkit/Flip.cpp
 
-        #FreeImageToolkit/MultigridPoissonSolver.cpp
-        #FreeImageToolkit/Rescale.cpp FreeImageToolkit/Resize.cpp
-        #FreeImageToolkit/Filters.h FreeImageToolkit/Resize.h
+        FreeImageToolkit/MultigridPoissonSolver.cpp
+        FreeImageToolkit/Rescale.cpp FreeImageToolkit/Resize.cpp
+        FreeImageToolkit/Filters.h FreeImageToolkit/Resize.h
 
         Metadata/Exif.cpp Metadata/FIRational.cpp Metadata/FreeImageTag.cpp
         Metadata/IPTC.cpp Metadata/TagConversion.cpp Metadata/TagLib.cpp
