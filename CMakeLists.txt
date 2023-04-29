@@ -61,6 +61,8 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" S
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options(-Wno-logical-op-parentheses)
     add_compile_options(-Wno-unused-private-field)
+    add_compile_options(-Wno-shorten-64-to-32)
+    add_compile_options(-Wno-unknown-warning-option)
   elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_compile_options(-Wno-clobbered)
     add_compile_options(-Wno-implicit-fallthrough)
