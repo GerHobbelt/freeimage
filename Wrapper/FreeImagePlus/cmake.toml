@@ -1,5 +1,5 @@
 [target.freeimageplus]
 type = "library"
 link-libraries = ["freeimagelib"]
-include-directories = ["/"]
+include-directories = ["."]
 sources = ["src/**.cpp"]
