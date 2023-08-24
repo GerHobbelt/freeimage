@@ -3,7 +3,7 @@ CMAKE_CXX_STANDARD = "14"
 
 [target.openexr]
 type = "library"
-compile-features = ["c_std_90", "cxx_std_14"]
+compile-features = ["cxx_std_14"]
 link-libraries = ["zlib"]
 include-directories = [".", "IlmImf/", "Imath/", "IexMath/", "Iex/", "Half/", "IlmThread/"]
 compile-definitions = ["_LIB"]

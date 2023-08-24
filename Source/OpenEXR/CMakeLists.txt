@@ -129,7 +129,6 @@ target_compile_definitions(openexr PUBLIC
 )
 
 target_compile_features(openexr PUBLIC
-	c_std_90
 	cxx_std_14
 )
 

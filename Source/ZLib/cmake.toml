@@ -3,7 +3,6 @@ CMAKE_C_STANDARD = "90"
 
 [target.zlib]
 type = "library"
-compile-features = ["c_std_90"]
 include-directories = ["."]
 compile-definitions = ["_LIB"]
 sources = ["*.c", "*.h"]

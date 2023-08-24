@@ -52,10 +52,6 @@ target_compile_definitions(zlib PUBLIC
 	_LIB
 )
 
-target_compile_features(zlib PUBLIC
-	c_std_90
-)
-
 target_include_directories(zlib PUBLIC
 	.
 )

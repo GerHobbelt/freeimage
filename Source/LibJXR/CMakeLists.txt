@@ -51,10 +51,6 @@ if(UNIX) # unix
 	)
 endif()
 
-target_compile_features(libjxr PUBLIC
-	c_std_99
-)
-
 target_include_directories(libjxr PUBLIC
 	.
 	"image/sys/"

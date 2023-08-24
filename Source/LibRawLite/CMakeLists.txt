@@ -31,7 +31,6 @@ target_compile_definitions(librawlite PUBLIC
 )
 
 target_compile_features(librawlite PUBLIC
-	c_std_90
 	cxx_std_14
 )
 
