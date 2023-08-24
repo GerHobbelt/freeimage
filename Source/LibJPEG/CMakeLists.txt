@@ -63,6 +63,10 @@ add_library(libjpeg)
 target_sources(libjpeg PRIVATE ${libjpeg_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libjpeg_SOURCES})
 
+target_compile_definitions(libjpeg PUBLIC
+	_LIB
+)
+
 target_include_directories(libjpeg PUBLIC
 	"/"
 )

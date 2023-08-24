@@ -1,4 +1,5 @@
 [target.zlib]
 type = "library"
 include-directories = ["/"]
+compile-definitions = ["_LIB"]
 sources = ["*.c", "*.h"]

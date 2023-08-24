@@ -31,6 +31,10 @@ add_library(libpng)
 target_sources(libpng PRIVATE ${libpng_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libpng_SOURCES})
 
+target_compile_definitions(libpng PUBLIC
+	_LIB
+)
+
 target_include_directories(libpng PUBLIC
 	"/"
 )

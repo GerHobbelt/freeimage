@@ -9,7 +9,6 @@ endif()
 # Target: openexr
 set(openexr_SOURCES
 	"IexMath/IexMathFpu.cpp"
-	"IlmImf/b44ExpLogTable.cpp"
 	"IlmImf/ImfAcesFile.cpp"
 	"IlmImf/ImfAttribute.cpp"
 	"IlmImf/ImfB44Compressor.cpp"
@@ -121,6 +120,10 @@ add_library(openexr)
 
 target_sources(openexr PRIVATE ${openexr_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${openexr_SOURCES})
+
+target_compile_definitions(openexr PUBLIC
+	_LIB
+)
 
 target_include_directories(openexr PUBLIC
 	"/"

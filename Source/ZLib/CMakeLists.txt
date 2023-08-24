@@ -42,6 +42,10 @@ add_library(zlib)
 target_sources(zlib PRIVATE ${zlib_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${zlib_SOURCES})
 
+target_compile_definitions(zlib PUBLIC
+	_LIB
+)
+
 target_include_directories(zlib PUBLIC
 	"/"
 )

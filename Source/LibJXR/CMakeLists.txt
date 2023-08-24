@@ -40,6 +40,11 @@ add_library(libjxr)
 target_sources(libjxr PRIVATE ${libjxr_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libjxr_SOURCES})
 
+target_compile_definitions(libjxr PUBLIC
+	_LIB
+	DISABLE_PERF_MEASUREMENT
+)
+
 target_include_directories(libjxr PUBLIC
 	"/"
 	"image/sys/"

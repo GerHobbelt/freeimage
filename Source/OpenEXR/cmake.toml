@@ -2,10 +2,11 @@
 type = "library"
 link-libraries = ["zlib"]
 include-directories = ["/", "IlmImf/", "Imath/", "IexMath/", "Iex/", "Half/", "IlmThread/"]
+compile-definitions = ["_LIB"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "IexMath/IexMathFpu.cpp",
-    "IlmImf/b44ExpLogTable.cpp",
+    # "IlmImf/b44ExpLogTable.cpp",
     "IlmImf/ImfAcesFile.cpp",
     "IlmImf/ImfAttribute.cpp",
     "IlmImf/ImfB44Compressor.cpp",

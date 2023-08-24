@@ -23,6 +23,7 @@ target_sources(librawlite PRIVATE ${librawlite_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${librawlite_SOURCES})
 
 target_compile_definitions(librawlite PUBLIC
+	_LIB
 	LIBRAW_NODLL
 )
 

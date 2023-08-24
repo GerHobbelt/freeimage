@@ -1,6 +1,7 @@
 [target.libjpeg]
 type = "library"
 include-directories = ["/"]
+compile-definitions = ["_LIB"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "jaricom.c",

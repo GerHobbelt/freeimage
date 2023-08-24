@@ -52,6 +52,10 @@ add_library(libtiff4)
 target_sources(libtiff4 PRIVATE ${libtiff4_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libtiff4_SOURCES})
 
+target_compile_definitions(libtiff4 PUBLIC
+	_LIB
+)
+
 target_include_directories(libtiff4 PUBLIC
 	"/"
 )

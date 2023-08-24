@@ -130,6 +130,10 @@ add_library(libwebp)
 target_sources(libwebp PRIVATE ${libwebp_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libwebp_SOURCES})
 
+target_compile_definitions(libwebp PUBLIC
+	_LIB
+)
+
 target_include_directories(libwebp PUBLIC
 	"/"
 )

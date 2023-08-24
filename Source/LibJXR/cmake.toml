@@ -1,4 +1,5 @@
 [target.libjxr]
 type = "library"
 include-directories = ["/", "image/sys/", "jxrgluelib/"]
+compile-definitions = ["_LIB", "DISABLE_PERF_MEASUREMENT"]
 sources = ["**.c"]

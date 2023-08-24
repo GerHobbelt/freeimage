@@ -35,6 +35,11 @@ add_library(libopenjpeg)
 target_sources(libopenjpeg PRIVATE ${libopenjpeg_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libopenjpeg_SOURCES})
 
+target_compile_definitions(libopenjpeg PUBLIC
+	_LIB
+	OPJ_STATIC
+)
+
 target_include_directories(libopenjpeg PUBLIC
 	"/"
 )

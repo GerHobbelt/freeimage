@@ -2,7 +2,7 @@
 type = "library"
 link-libraries = ["libjpeg"]
 include-directories = ["/"]
-compile-definitions = ["LIBRAW_NODLL"]
+compile-definitions = ["_LIB", "LIBRAW_NODLL"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "internal/dcraw_common.cpp",
