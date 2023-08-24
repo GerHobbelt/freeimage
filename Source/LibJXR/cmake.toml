@@ -1,0 +1,4 @@
+[target.libjxr]
+type = "library"
+include-directories = ["/", "image/sys/", "jxrgluelib/"]
+sources = ["**.c"]

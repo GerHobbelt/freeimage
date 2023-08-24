@@ -1,0 +1,4 @@
+[target.zlib]
+type = "library"
+include-directories = ["/"]
+sources = ["*.c", "*.h"]

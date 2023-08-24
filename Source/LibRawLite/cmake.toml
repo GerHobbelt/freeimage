@@ -1,0 +1,14 @@
+[target.librawlite]
+type = "library"
+link-libraries = ["libjpeg"]
+include-directories = ["/"]
+compile-definitions = ["LIBRAW_NODLL"]
+# @note: @es3n1n: no, we really can't glob here
+sources = [
+    "internal/dcraw_common.cpp",
+    "internal/dcraw_fileio.cpp",
+    "internal/demosaic_packs.cpp",
+    "src/libraw_c_api.cpp",
+    "src/libraw_cxx.cpp",
+    "src/libraw_datastream.cpp",
+]

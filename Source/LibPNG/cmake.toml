@@ -1,0 +1,22 @@
+[target.libpng]
+type = "library"
+link-libraries = ["zlib"]
+include-directories = ["/"]
+# @note: @es3n1n: no, we really can't glob here
+sources = [
+    "png.c",
+    "pngerror.c",
+    "pngget.c",
+    "pngmem.c",
+    "pngpread.c",
+    "pngread.c",
+    "pngrio.c",
+    "pngrtran.c",
+    "pngrutil.c",
+    "pngset.c",
+    "pngtrans.c",
+    "pngwio.c",
+    "pngwrite.c",
+    "pngwtran.c",
+    "pngwutil.c",
+]
