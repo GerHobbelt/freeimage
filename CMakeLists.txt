@@ -28,6 +28,10 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
+# Options
+option(BUILD_FREE_IMAGE_PLUS "" OFF)
+option(BUILD_FREE_IMAGE_LIB "" OFF)
+
 project(FreeImage
 	LANGUAGES
 		C

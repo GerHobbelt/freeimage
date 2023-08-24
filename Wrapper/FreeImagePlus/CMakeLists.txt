@@ -7,27 +7,29 @@ if(CMKR_ROOT_PROJECT)
 endif()
 
 # Target: freeimageplus
-set(freeimageplus_SOURCES
-	"src/FreeImagePlus.cpp"
-	"src/fipImage.cpp"
-	"src/fipMemoryIO.cpp"
-	"src/fipMetadataFind.cpp"
-	"src/fipMultiPage.cpp"
-	"src/fipTag.cpp"
-	"src/fipWinImage.cpp"
-	cmake.toml
-)
+if(BUILD_FREE_IMAGE_PLUS) # build-free-image-plus
+	set(freeimageplus_SOURCES
+		"src/FreeImagePlus.cpp"
+		"src/fipImage.cpp"
+		"src/fipMemoryIO.cpp"
+		"src/fipMetadataFind.cpp"
+		"src/fipMultiPage.cpp"
+		"src/fipTag.cpp"
+		"src/fipWinImage.cpp"
+		cmake.toml
+	)
 
-add_library(freeimageplus)
+	add_library(freeimageplus)
 
-target_sources(freeimageplus PRIVATE ${freeimageplus_SOURCES})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${freeimageplus_SOURCES})
+	target_sources(freeimageplus PRIVATE ${freeimageplus_SOURCES})
+	source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${freeimageplus_SOURCES})
 
-target_include_directories(freeimageplus PUBLIC
-	"/"
-)
+	target_include_directories(freeimageplus PUBLIC
+		.
+	)
 
-target_link_libraries(freeimageplus PUBLIC
-	freeimagelib
-)
+	target_link_libraries(freeimageplus PUBLIC
+		freeimagelib
+	)
 
+endif()

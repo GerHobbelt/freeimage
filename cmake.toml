@@ -7,5 +7,13 @@ name = "FreeImage"
 languages = ["C", "CXX"]
 msvc-runtime = "static"
 
+[options]
+BUILD_FREE_IMAGE_PLUS = false
+BUILD_FREE_IMAGE_LIB = false
+
+[conditions]
+build-free-image-plus = "BUILD_FREE_IMAGE_PLUS"
+build-free-image-lib = "BUILD_FREE_IMAGE_LIB"
+
 [subdir.Source]
 [subdir.Wrapper]

@@ -239,140 +239,142 @@ target_include_directories(freeimage PUBLIC
 )
 
 # Target: freeimagelib
-set(freeimagelib_SOURCES
-	"FreeImage/BitmapAccess.cpp"
-	"FreeImage/ColorLookup.cpp"
-	"FreeImage/ConversionRGBA16.cpp"
-	"FreeImage/ConversionRGBAF.cpp"
-	"FreeImage/FreeImage.cpp"
-	"FreeImage/FreeImageIO.cpp"
-	"FreeImage/GetType.cpp"
-	"FreeImage/LFPQuantizer.cpp"
-	"FreeImage/MemoryIO.cpp"
-	"FreeImage/PixelAccess.cpp"
-	"FreeImage/NNQuantizer.cpp"
-	"FreeImage/WuQuantizer.cpp"
-	"FreeImage/Conversion.cpp"
-	"FreeImage/Conversion16_555.cpp"
-	"FreeImage/Conversion16_565.cpp"
-	"FreeImage/Conversion24.cpp"
-	"FreeImage/Conversion32.cpp"
-	"FreeImage/Conversion4.cpp"
-	"FreeImage/Conversion8.cpp"
-	"FreeImage/ConversionFloat.cpp"
-	"FreeImage/ConversionRGB16.cpp"
-	"FreeImage/ConversionRGBF.cpp"
-	"FreeImage/ConversionType.cpp"
-	"FreeImage/ConversionUINT16.cpp"
-	"FreeImage/Halftoning.cpp"
-	"FreeImage/tmoColorConvert.cpp"
-	"FreeImage/tmoDrago03.cpp"
-	"FreeImage/tmoFattal02.cpp"
-	"FreeImage/tmoReinhard05.cpp"
-	"FreeImage/ToneMapping.cpp"
-	"FreeImage/J2KHelper.cpp"
-	"FreeImage/MNGHelper.cpp"
-	"FreeImage/Plugin.cpp"
-	"FreeImage/PluginBMP.cpp"
-	"FreeImage/PluginCUT.cpp"
-	"FreeImage/PluginDDS.cpp"
-	"FreeImage/PluginEXR.cpp"
-	"FreeImage/PluginG3.cpp"
-	"FreeImage/PluginGIF.cpp"
-	"FreeImage/PluginHDR.cpp"
-	"FreeImage/PluginICO.cpp"
-	"FreeImage/PluginIFF.cpp"
-	"FreeImage/PluginJ2K.cpp"
-	"FreeImage/PluginJNG.cpp"
-	"FreeImage/PluginJP2.cpp"
-	"FreeImage/PluginJPEG.cpp"
-	"FreeImage/PluginJXR.cpp"
-	"FreeImage/PluginKOALA.cpp"
-	"FreeImage/PluginMNG.cpp"
-	"FreeImage/PluginPCD.cpp"
-	"FreeImage/PluginPCX.cpp"
-	"FreeImage/PluginPFM.cpp"
-	"FreeImage/PluginPICT.cpp"
-	"FreeImage/PluginPNG.cpp"
-	"FreeImage/PluginPNM.cpp"
-	"FreeImage/PluginPSD.cpp"
-	"FreeImage/PluginRAS.cpp"
-	"FreeImage/PluginRAW.cpp"
-	"FreeImage/PluginSGI.cpp"
-	"FreeImage/PluginTARGA.cpp"
-	"FreeImage/PluginTIFF.cpp"
-	"FreeImage/PluginWBMP.cpp"
-	"FreeImage/PluginWebP.cpp"
-	"FreeImage/PluginXBM.cpp"
-	"FreeImage/PluginXPM.cpp"
-	"FreeImage/PSDParser.cpp"
-	"FreeImage/TIFFLogLuv.cpp"
-	"FreeImage/CacheFile.cpp"
-	"FreeImage/MultiPage.cpp"
-	"FreeImage/ZLibInterface.cpp"
-	"Metadata/Exif.cpp"
-	"Metadata/FIRational.cpp"
-	"Metadata/FreeImageTag.cpp"
-	"Metadata/IPTC.cpp"
-	"Metadata/TagConversion.cpp"
-	"Metadata/TagLib.cpp"
-	"Metadata/XTIFF.cpp"
-	"FreeImageToolkit/Background.cpp"
-	"FreeImageToolkit/BSplineRotate.cpp"
-	"FreeImageToolkit/Channels.cpp"
-	"FreeImageToolkit/ClassicRotate.cpp"
-	"FreeImageToolkit/Colors.cpp"
-	"FreeImageToolkit/CopyPaste.cpp"
-	"FreeImageToolkit/Display.cpp"
-	"FreeImageToolkit/Flip.cpp"
-	"FreeImageToolkit/JPEGTransform.cpp"
-	"FreeImageToolkit/MultigridPoissonSolver.cpp"
-	"FreeImageToolkit/Rescale.cpp"
-	"FreeImageToolkit/Resize.cpp"
-	cmake.toml
-)
-
-add_library(freeimagelib)
-
-target_sources(freeimagelib PRIVATE ${freeimagelib_SOURCES})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${freeimagelib_SOURCES})
-
-target_compile_definitions(freeimagelib PUBLIC
-	FREEIMAGE_LIB
-	_LIB
-)
-
-if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
-	target_compile_options(freeimagelib PUBLIC
-		-Wno-everything
+if(BUILD_FREE_IMAGE_LIB) # build-free-image-lib
+	set(freeimagelib_SOURCES
+		"FreeImage/BitmapAccess.cpp"
+		"FreeImage/ColorLookup.cpp"
+		"FreeImage/ConversionRGBA16.cpp"
+		"FreeImage/ConversionRGBAF.cpp"
+		"FreeImage/FreeImage.cpp"
+		"FreeImage/FreeImageIO.cpp"
+		"FreeImage/GetType.cpp"
+		"FreeImage/LFPQuantizer.cpp"
+		"FreeImage/MemoryIO.cpp"
+		"FreeImage/PixelAccess.cpp"
+		"FreeImage/NNQuantizer.cpp"
+		"FreeImage/WuQuantizer.cpp"
+		"FreeImage/Conversion.cpp"
+		"FreeImage/Conversion16_555.cpp"
+		"FreeImage/Conversion16_565.cpp"
+		"FreeImage/Conversion24.cpp"
+		"FreeImage/Conversion32.cpp"
+		"FreeImage/Conversion4.cpp"
+		"FreeImage/Conversion8.cpp"
+		"FreeImage/ConversionFloat.cpp"
+		"FreeImage/ConversionRGB16.cpp"
+		"FreeImage/ConversionRGBF.cpp"
+		"FreeImage/ConversionType.cpp"
+		"FreeImage/ConversionUINT16.cpp"
+		"FreeImage/Halftoning.cpp"
+		"FreeImage/tmoColorConvert.cpp"
+		"FreeImage/tmoDrago03.cpp"
+		"FreeImage/tmoFattal02.cpp"
+		"FreeImage/tmoReinhard05.cpp"
+		"FreeImage/ToneMapping.cpp"
+		"FreeImage/J2KHelper.cpp"
+		"FreeImage/MNGHelper.cpp"
+		"FreeImage/Plugin.cpp"
+		"FreeImage/PluginBMP.cpp"
+		"FreeImage/PluginCUT.cpp"
+		"FreeImage/PluginDDS.cpp"
+		"FreeImage/PluginEXR.cpp"
+		"FreeImage/PluginG3.cpp"
+		"FreeImage/PluginGIF.cpp"
+		"FreeImage/PluginHDR.cpp"
+		"FreeImage/PluginICO.cpp"
+		"FreeImage/PluginIFF.cpp"
+		"FreeImage/PluginJ2K.cpp"
+		"FreeImage/PluginJNG.cpp"
+		"FreeImage/PluginJP2.cpp"
+		"FreeImage/PluginJPEG.cpp"
+		"FreeImage/PluginJXR.cpp"
+		"FreeImage/PluginKOALA.cpp"
+		"FreeImage/PluginMNG.cpp"
+		"FreeImage/PluginPCD.cpp"
+		"FreeImage/PluginPCX.cpp"
+		"FreeImage/PluginPFM.cpp"
+		"FreeImage/PluginPICT.cpp"
+		"FreeImage/PluginPNG.cpp"
+		"FreeImage/PluginPNM.cpp"
+		"FreeImage/PluginPSD.cpp"
+		"FreeImage/PluginRAS.cpp"
+		"FreeImage/PluginRAW.cpp"
+		"FreeImage/PluginSGI.cpp"
+		"FreeImage/PluginTARGA.cpp"
+		"FreeImage/PluginTIFF.cpp"
+		"FreeImage/PluginWBMP.cpp"
+		"FreeImage/PluginWebP.cpp"
+		"FreeImage/PluginXBM.cpp"
+		"FreeImage/PluginXPM.cpp"
+		"FreeImage/PSDParser.cpp"
+		"FreeImage/TIFFLogLuv.cpp"
+		"FreeImage/CacheFile.cpp"
+		"FreeImage/MultiPage.cpp"
+		"FreeImage/ZLibInterface.cpp"
+		"Metadata/Exif.cpp"
+		"Metadata/FIRational.cpp"
+		"Metadata/FreeImageTag.cpp"
+		"Metadata/IPTC.cpp"
+		"Metadata/TagConversion.cpp"
+		"Metadata/TagLib.cpp"
+		"Metadata/XTIFF.cpp"
+		"FreeImageToolkit/Background.cpp"
+		"FreeImageToolkit/BSplineRotate.cpp"
+		"FreeImageToolkit/Channels.cpp"
+		"FreeImageToolkit/ClassicRotate.cpp"
+		"FreeImageToolkit/Colors.cpp"
+		"FreeImageToolkit/CopyPaste.cpp"
+		"FreeImageToolkit/Display.cpp"
+		"FreeImageToolkit/Flip.cpp"
+		"FreeImageToolkit/JPEGTransform.cpp"
+		"FreeImageToolkit/MultigridPoissonSolver.cpp"
+		"FreeImageToolkit/Rescale.cpp"
+		"FreeImageToolkit/Resize.cpp"
+		cmake.toml
 	)
-endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
-	target_compile_options(freeimagelib PUBLIC
-		-Wno-everything
+	add_library(freeimagelib)
+
+	target_sources(freeimagelib PRIVATE ${freeimagelib_SOURCES})
+	source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${freeimagelib_SOURCES})
+
+	target_compile_definitions(freeimagelib PUBLIC
+		FREEIMAGE_LIB
+		_LIB
 	)
-endif()
 
-if(MSVC) # msvc
-	target_compile_options(freeimagelib PUBLIC
-		"/W0"
+	if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
+		target_compile_options(freeimagelib PUBLIC
+			-Wno-everything
+		)
+	endif()
+
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
+		target_compile_options(freeimagelib PUBLIC
+			-Wno-everything
+		)
+	endif()
+
+	if(MSVC) # msvc
+		target_compile_options(freeimagelib PUBLIC
+			"/W0"
+		)
+	endif()
+
+	target_include_directories(freeimagelib PUBLIC
+		.
 	)
+
+	target_link_libraries(freeimagelib PUBLIC
+		libjpeg
+		libjxr
+		libopenjpeg
+		libpng
+		librawlite
+		libtiff4
+		libwebp
+		openexr
+		zlib
+	)
+
 endif()
-
-target_include_directories(freeimagelib PUBLIC
-	.
-)
-
-target_link_libraries(freeimagelib PUBLIC
-	libjpeg
-	libjxr
-	libopenjpeg
-	libpng
-	librawlite
-	libtiff4
-	libwebp
-	openexr
-	zlib
-)
-

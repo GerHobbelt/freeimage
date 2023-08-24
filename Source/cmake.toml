@@ -42,6 +42,7 @@ sources = ["FreeImage/**.cpp", "Metadata/**.cpp", "FreeImageToolkit/**.cpp"]
 
 [target.freeimagelib]
 type = "freeimageproject"
+condition = "build-free-image-lib"
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "FreeImage/BitmapAccess.cpp",
