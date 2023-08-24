@@ -27,15 +27,36 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${librawlite_SOURCES})
 
 target_compile_definitions(librawlite PUBLIC
 	_LIB
+)
+
+if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
+	target_compile_options(librawlite PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
+	target_compile_options(librawlite PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(MSVC) # msvc
+	target_compile_options(librawlite PUBLIC
+		"/W0"
+	)
+endif()
+
+target_include_directories(librawlite PUBLIC
+	.
+)
+
+target_compile_definitions(librawlite PUBLIC
 	LIBRAW_NODLL
 )
 
 target_compile_features(librawlite PUBLIC
 	cxx_std_14
-)
-
-target_include_directories(librawlite PUBLIC
-	.
 )
 
 target_link_libraries(librawlite PUBLIC

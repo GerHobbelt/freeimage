@@ -1,3 +1,11 @@
+[template.lib-no-warns]
+type = "library"
+compile-definitions = ["_LIB"]
+include-directories = ["."]
+clang.compile-options = ["-Wno-everything"]
+gcc.compile-options = ["-Wno-everything"]
+msvc.compile-options = ["/W0"]
+
 [subdir.LibJPEG]
 [subdir.LibJXR]
 [subdir.LibOpenJPEG]
@@ -21,16 +29,19 @@ link-libraries = [
     "zlib"
 ]
 type = "library"
-compile-definitions = ["FREEIMAGE_LIB"]
+compile-definitions = ["FREEIMAGE_LIB", "_LIB"]
+include-directories = ["."]
+clang.compile-options = ["-Wno-everything"]
+gcc.compile-options = ["-Wno-everything"]
+msvc.compile-options = ["/W0"]
 
 [target.freeimage]
 type = "freeimageproject"
-include-directories = [".", "FreeImagePlus/"]
+include-directories = ["FreeImagePlus/"]
 sources = ["FreeImage/**.cpp", "Metadata/**.cpp", "FreeImageToolkit/**.cpp"]
 
 [target.freeimagelib]
 type = "freeimageproject"
-include-directories = ["."]
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "FreeImage/BitmapAccess.cpp",

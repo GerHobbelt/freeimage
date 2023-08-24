@@ -37,10 +37,31 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libopenjpeg_SOURCES})
 
 target_compile_definitions(libopenjpeg PUBLIC
 	_LIB
-	OPJ_STATIC
 )
+
+if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
+	target_compile_options(libopenjpeg PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
+	target_compile_options(libopenjpeg PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(MSVC) # msvc
+	target_compile_options(libopenjpeg PUBLIC
+		"/W0"
+	)
+endif()
 
 target_include_directories(libopenjpeg PUBLIC
 	.
+)
+
+target_compile_definitions(libopenjpeg PUBLIC
+	OPJ_STATIC
 )
 

@@ -197,6 +197,29 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${freeimage_SOURCES})
 
 target_compile_definitions(freeimage PUBLIC
 	FREEIMAGE_LIB
+	_LIB
+)
+
+if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
+	target_compile_options(freeimage PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
+	target_compile_options(freeimage PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(MSVC) # msvc
+	target_compile_options(freeimage PUBLIC
+		"/W0"
+	)
+endif()
+
+target_include_directories(freeimage PUBLIC
+	.
 )
 
 target_link_libraries(freeimage PUBLIC
@@ -212,7 +235,6 @@ target_link_libraries(freeimage PUBLIC
 )
 
 target_include_directories(freeimage PUBLIC
-	.
 	"FreeImagePlus/"
 )
 
@@ -317,6 +339,29 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${freeimagelib_SOURCES})
 
 target_compile_definitions(freeimagelib PUBLIC
 	FREEIMAGE_LIB
+	_LIB
+)
+
+if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
+	target_compile_options(freeimagelib PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
+	target_compile_options(freeimagelib PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(MSVC) # msvc
+	target_compile_options(freeimagelib PUBLIC
+		"/W0"
+	)
+endif()
+
+target_include_directories(freeimagelib PUBLIC
+	.
 )
 
 target_link_libraries(freeimagelib PUBLIC
@@ -329,9 +374,5 @@ target_link_libraries(freeimagelib PUBLIC
 	libwebp
 	openexr
 	zlib
-)
-
-target_include_directories(freeimagelib PUBLIC
-	.
 )
 

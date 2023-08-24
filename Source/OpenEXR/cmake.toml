@@ -2,11 +2,10 @@
 CMAKE_CXX_STANDARD = "14"
 
 [target.openexr]
-type = "library"
+type = "lib-no-warns"
 compile-features = ["cxx_std_14"]
 link-libraries = ["zlib"]
-include-directories = [".", "IlmImf/", "Imath/", "IexMath/", "Iex/", "Half/", "IlmThread/"]
-compile-definitions = ["_LIB"]
+include-directories = ["IlmImf/", "Imath/", "IexMath/", "Iex/", "Half/", "IlmThread/"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "IexMath/IexMathFpu.cpp",

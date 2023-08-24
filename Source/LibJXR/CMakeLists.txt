@@ -42,6 +42,31 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libjxr_SOURCES})
 
 target_compile_definitions(libjxr PUBLIC
 	_LIB
+)
+
+if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
+	target_compile_options(libjxr PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
+	target_compile_options(libjxr PUBLIC
+		-Wno-everything
+	)
+endif()
+
+if(MSVC) # msvc
+	target_compile_options(libjxr PUBLIC
+		"/W0"
+	)
+endif()
+
+target_include_directories(libjxr PUBLIC
+	.
+)
+
+target_compile_definitions(libjxr PUBLIC
 	DISABLE_PERF_MEASUREMENT
 )
 
@@ -52,7 +77,6 @@ if(UNIX) # unix
 endif()
 
 target_include_directories(libjxr PUBLIC
-	.
 	"image/sys/"
 	"jxrgluelib/"
 	"common/include/"

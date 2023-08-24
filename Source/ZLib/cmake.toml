@@ -2,9 +2,6 @@
 CMAKE_C_STANDARD = "90"
 
 [target.zlib]
-type = "library"
-include-directories = ["."]
-compile-definitions = ["_LIB"]
+type = "lib-no-warns"
 sources = ["*.c", "*.h"]
-# unix.compile-options = ["-std=c90"]
 cmake-before = "project(zlib C)"

@@ -1,8 +1,6 @@
 [target.libtiff4]
-type = "library"
+type = "lib-no-warns"
 link-libraries = ["zlib", "libjpeg"]
-include-directories = ["."]
-compile-definitions = ["_LIB"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "tif_aux.c",

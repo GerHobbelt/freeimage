@@ -1,6 +1,6 @@
 [target.libjxr]
-type = "library"
-include-directories = [".", "image/sys/", "jxrgluelib/", "common/include/"]
-compile-definitions = ["_LIB", "DISABLE_PERF_MEASUREMENT"]
+type = "lib-no-warns"
+include-directories = ["image/sys/", "jxrgluelib/", "common/include/"]
+compile-definitions = ["DISABLE_PERF_MEASUREMENT"]
 unix.compile-definitions = ["__ANSI__"]
 sources = ["**.c"]

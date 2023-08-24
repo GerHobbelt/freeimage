@@ -2,11 +2,10 @@
 CMAKE_CXX_STANDARD = "14"
 
 [target.librawlite]
-type = "library"
+type = "lib-no-warns"
 compile-features = ["cxx_std_14"]
 link-libraries = ["libjpeg"]
-include-directories = ["."]
-compile-definitions = ["_LIB", "LIBRAW_NODLL"]
+compile-definitions = ["LIBRAW_NODLL"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "internal/dcraw_common.cpp",

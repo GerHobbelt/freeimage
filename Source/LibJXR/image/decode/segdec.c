@@ -53,13 +53,12 @@ static Int DecodeSignificantAbsLevel (struct CAdaptiveHuffman *pAHexpt, BitIOInf
 // Memory access functions
 //================================================================
 #if (defined(WIN32) && !defined(UNDER_CE) && (!defined(__MINGW32__) || defined(__MINGW64_TOOLCHAIN__))) || (defined(UNDER_CE) && defined(_ARM_))
-// WinCE ARM and Desktop x86
+#define _byteswap_ulong2(x) _byteswap_ulong(x)
 #else
-// other platform
 #ifdef _BIG__ENDIAN_
-#define _byteswap_ulong(x)  (x)
+#define _byteswap_ulong2(x)  (x)
 #else // _BIG__ENDIAN_
-U32 _byteswap_ulong(U32 bits)
+U32 _byteswap_ulong2(U32 bits)
 {
     U32 r = (bits & 0xffu) << 24;
     r |= (bits << 8) & 0xff0000u;
@@ -83,9 +82,9 @@ static U32 _FORCEINLINE _load4(void* pv)
     U32  v;
     v = ((U16 *) pv)[0];
     v |= ((U32)((U16 *) pv)[1]) << 16;
-    return _byteswap_ulong(v);
+    return _byteswap_ulong2(v);
 #else // _M_IA64
-    return _byteswap_ulong(*(U32*)pv);
+    return _byteswap_ulong2(*(U32*)pv);
 #endif // _M_IA64
 #endif // _BIG__ENDIAN_
 }
