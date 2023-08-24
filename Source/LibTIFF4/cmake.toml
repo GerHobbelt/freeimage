@@ -1,7 +1,7 @@
 [target.libtiff4]
 type = "library"
 link-libraries = ["zlib", "libjpeg"]
-include-directories = ["/"]
+include-directories = ["."]
 compile-definitions = ["_LIB"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [

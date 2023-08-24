@@ -1,7 +1,11 @@
+[variables]
+CMAKE_CXX_STANDARD = "14"
+
 [target.librawlite]
 type = "library"
+compile-features = ["c_std_90", "cxx_std_14"]
 link-libraries = ["libjpeg"]
-include-directories = ["/"]
+include-directories = ["."]
 compile-definitions = ["_LIB", "LIBRAW_NODLL"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [

@@ -6,7 +6,13 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
+# Variables
+set(CMAKE_C_STANDARD 90)
+
 # Target: zlib
+set(CMKR_TARGET zlib)
+project(zlib C)
+
 set(zlib_SOURCES
 	adler32.c
 	compress.c
@@ -46,7 +52,11 @@ target_compile_definitions(zlib PUBLIC
 	_LIB
 )
 
+target_compile_features(zlib PUBLIC
+	c_std_90
+)
+
 target_include_directories(zlib PUBLIC
-	"/"
+	.
 )
 

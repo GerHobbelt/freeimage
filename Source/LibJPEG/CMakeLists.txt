@@ -68,6 +68,6 @@ target_compile_definitions(libjpeg PUBLIC
 )
 
 target_include_directories(libjpeg PUBLIC
-	"/"
+	.
 )
 

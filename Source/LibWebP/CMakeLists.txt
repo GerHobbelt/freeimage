@@ -135,6 +135,6 @@ target_compile_definitions(libwebp PUBLIC
 )
 
 target_include_directories(libwebp PUBLIC
-	"/"
+	.
 )
 

@@ -41,6 +41,6 @@ target_compile_definitions(libopenjpeg PUBLIC
 )
 
 target_include_directories(libopenjpeg PUBLIC
-	"/"
+	.
 )
 

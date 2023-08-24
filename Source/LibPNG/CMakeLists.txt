@@ -36,7 +36,7 @@ target_compile_definitions(libpng PUBLIC
 )
 
 target_include_directories(libpng PUBLIC
-	"/"
+	.
 )
 
 target_link_libraries(libpng PUBLIC

@@ -1,6 +1,6 @@
 [target.libwebp]
 type = "library"
-include-directories = ["/"]
+include-directories = ["."]
 compile-definitions = ["_LIB"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [

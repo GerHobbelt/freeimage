@@ -212,7 +212,7 @@ target_link_libraries(freeimage PUBLIC
 )
 
 target_include_directories(freeimage PUBLIC
-	"/"
+	.
 	"FreeImagePlus/"
 )
 
@@ -332,6 +332,6 @@ target_link_libraries(freeimagelib PUBLIC
 )
 
 target_include_directories(freeimagelib PUBLIC
-	"/"
+	.
 )
 

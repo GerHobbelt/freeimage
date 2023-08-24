@@ -1,6 +1,6 @@
 [target.libopenjpeg]
 type = "library"
-include-directories = ["/"]
+include-directories = ["."]
 compile-definitions = ["_LIB", "OPJ_STATIC"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [

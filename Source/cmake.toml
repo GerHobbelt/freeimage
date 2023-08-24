@@ -1,4 +1,3 @@
-
 [subdir.LibJPEG]
 [subdir.LibJXR]
 [subdir.LibOpenJPEG]
@@ -26,12 +25,12 @@ compile-definitions = ["FREEIMAGE_LIB"]
 
 [target.freeimage]
 type = "freeimageproject"
-include-directories = ["/", "FreeImagePlus/"]
+include-directories = [".", "FreeImagePlus/"]
 sources = ["FreeImage/**.cpp", "Metadata/**.cpp", "FreeImageToolkit/**.cpp"]
 
 [target.freeimagelib]
 type = "freeimageproject"
-include-directories = ["/"]
+include-directories = ["."]
 # @note: @es3n1n: no, we really can't glob here
 sources = [
     "FreeImage/BitmapAccess.cpp",

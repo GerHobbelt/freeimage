@@ -1,7 +1,7 @@
 [target.libpng]
 type = "library"
 link-libraries = ["zlib"]
-include-directories = ["/"]
+include-directories = ["."]
 compile-definitions = ["_LIB"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [

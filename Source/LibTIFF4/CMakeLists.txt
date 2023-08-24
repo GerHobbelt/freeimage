@@ -57,7 +57,7 @@ target_compile_definitions(libtiff4 PUBLIC
 )
 
 target_include_directories(libtiff4 PUBLIC
-	"/"
+	.
 )
 
 target_link_libraries(libtiff4 PUBLIC

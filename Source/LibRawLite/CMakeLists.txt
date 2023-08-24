@@ -6,6 +6,9 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
+# Variables
+set(CMAKE_CXX_STANDARD 14)
+
 # Target: librawlite
 set(librawlite_SOURCES
 	"internal/dcraw_common.cpp"
@@ -27,8 +30,13 @@ target_compile_definitions(librawlite PUBLIC
 	LIBRAW_NODLL
 )
 
+target_compile_features(librawlite PUBLIC
+	c_std_90
+	cxx_std_14
+)
+
 target_include_directories(librawlite PUBLIC
-	"/"
+	.
 )
 
 target_link_libraries(librawlite PUBLIC

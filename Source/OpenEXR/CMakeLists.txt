@@ -6,6 +6,9 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
+# Variables
+set(CMAKE_CXX_STANDARD 14)
+
 # Target: openexr
 set(openexr_SOURCES
 	"IexMath/IexMathFpu.cpp"
@@ -125,8 +128,13 @@ target_compile_definitions(openexr PUBLIC
 	_LIB
 )
 
+target_compile_features(openexr PUBLIC
+	c_std_90
+	cxx_std_14
+)
+
 target_include_directories(openexr PUBLIC
-	"/"
+	.
 	"IlmImf/"
 	"Imath/"
 	"IexMath/"

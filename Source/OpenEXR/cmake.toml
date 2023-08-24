@@ -1,7 +1,11 @@
+[variables]
+CMAKE_CXX_STANDARD = "14"
+
 [target.openexr]
 type = "library"
+compile-features = ["c_std_90", "cxx_std_14"]
 link-libraries = ["zlib"]
-include-directories = ["/", "IlmImf/", "Imath/", "IexMath/", "Iex/", "Half/", "IlmThread/"]
+include-directories = [".", "IlmImf/", "Imath/", "IexMath/", "Iex/", "Half/", "IlmThread/"]
 compile-definitions = ["_LIB"]
 # @note: @es3n1n: no, we really can't glob here
 sources = [

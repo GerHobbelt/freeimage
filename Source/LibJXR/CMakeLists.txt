@@ -45,9 +45,20 @@ target_compile_definitions(libjxr PUBLIC
 	DISABLE_PERF_MEASUREMENT
 )
 
+if(UNIX) # unix
+	target_compile_definitions(libjxr PUBLIC
+		__ANSI__
+	)
+endif()
+
+target_compile_features(libjxr PUBLIC
+	c_std_99
+)
+
 target_include_directories(libjxr PUBLIC
-	"/"
+	.
 	"image/sys/"
 	"jxrgluelib/"
+	"common/include/"
 )
 
