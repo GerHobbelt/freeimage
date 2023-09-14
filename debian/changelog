@@ -1,3 +1,11 @@
+freeimage (3.18.0+ds2-9.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Add upstream fix for FTBFS with LibRaw 0.21. (Closes: #1040259)
+  * Add upstream fix for compilation on big endian. (Closes: #1002610)
+
+ -- Adrian Bunk <bunk@debian.org>  Mon, 10 Jul 2023 00:29:00 +0300
+
 freeimage (3.18.0+ds2-9) unstable; urgency=medium
 
   * Team upload.
