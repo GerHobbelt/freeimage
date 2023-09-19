@@ -1,3 +1,12 @@
+freeimage (3.18.0+ds2-10) unstable; urgency=medium
+
+  * Team upload
+  * Fix CVE-2020-21427 with upstream patches
+  * Fix CVE-2020-21428 with upstream patch
+  * Fix CVE-2020-22524 with upstream patch
+
+ -- Bastian Germann <bage@debian.org>  Tue, 19 Sep 2023 14:50:01 +0000
+
 freeimage (3.18.0+ds2-9.1) unstable; urgency=medium
 
   * Non-maintainer upload.
