@@ -16,3 +16,4 @@ Fix-big-endian.patch
 r1830-minor-refactoring.patch
 r1832-improved-BMP-plugin-when-working-with-malicious-images.patch
 r1836-improved-BMP-plugin-when-working-with-malicious-images.patch
+r1877-improved-DDS-plugin-against-malicious-images.patch
