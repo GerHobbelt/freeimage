@@ -13,3 +13,6 @@ Fix-libraw-compilation.patch
 Use-system-jpeg_read_icc_profile.patch
 Fix-libraw-compilation-2.patch
 Fix-big-endian.patch
+r1830-minor-refactoring.patch
+r1832-improved-BMP-plugin-when-working-with-malicious-images.patch
+r1836-improved-BMP-plugin-when-working-with-malicious-images.patch
