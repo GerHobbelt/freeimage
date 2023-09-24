@@ -287,13 +287,12 @@ ClampConvertRGBFTo24(FIBITMAP *src) {
 		const FIRGBF *src_pixel = (FIRGBF*)src_bits;
 		BYTE *dst_pixel = (BYTE*)dst_bits;
 		for(unsigned x = 0; x < width; x++) {
-			const float red   = (src_pixel[x].red > 1)   ? 1 : src_pixel[x].red;
-			const float green = (src_pixel[x].green > 1) ? 1 : src_pixel[x].green;
-			const float blue  = (src_pixel[x].blue > 1)  ? 1 : src_pixel[x].blue;
-			
-			dst_pixel[FI_RGBA_RED]   = (BYTE)(255.0F * red   + 0.5F);
-			dst_pixel[FI_RGBA_GREEN] = (BYTE)(255.0F * green + 0.5F);
-			dst_pixel[FI_RGBA_BLUE]  = (BYTE)(255.0F * blue  + 0.5F);
+			const float red   = CLAMP(src_pixel[x].red, 0.0F, 1.0F);
+			const float green = CLAMP(src_pixel[x].green, 0.0F, 1.0F);
+			const float blue  = CLAMP(src_pixel[x].blue, 0.0F, 1.0F);
+			dst_pixel[FI_RGBA_RED]   = (BYTE)CLAMP(255.0F * red   + 0.5F, 0.0F, 255.0F);
+			dst_pixel[FI_RGBA_GREEN] = (BYTE)CLAMP(255.0F * green + 0.5F, 0.0F, 255.0F);
+			dst_pixel[FI_RGBA_BLUE]  = (BYTE)CLAMP(255.0F * blue  + 0.5F, 0.0F, 255.0F);
 			dst_pixel += 3;
 		}
 		src_bits += src_pitch;
