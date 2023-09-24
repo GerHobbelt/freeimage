@@ -1308,7 +1308,7 @@ void psdParser::ReadImageLine(BYTE* dst, const BYTE* src, unsigned lineSize, uns
 }
 
 void psdParser::UnpackRLE(BYTE* line, const BYTE* rle_line, BYTE* line_end, unsigned srcSize) {
-	while (srcSize > 0) {
+	while (srcSize > 0 && line < line_end) {
 
 		int len = *rle_line++;
 		srcSize--;
