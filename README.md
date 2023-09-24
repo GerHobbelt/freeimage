@@ -12,4 +12,4 @@ Workspace files for Microsoft Visual Studio provided, as well as makefiles for L
 ----
 This is a clone of https://sourceforge.net/p/freeimage/svn/ .
 
-FreeImage is licensed under the GNU General Public License, version 2.0 (GPLv2) or version 3.0 (GPLv3), and the FreeImage Public License (FIPL). More details on the project homepage: https://freeimage.sourceforge.io/ .
+FreeImage is currently sporadically maintained by Hervé Drolon on SourceForge. It is licensed under the GNU General Public License, version 2.0 (GPLv2) or version 3.0 (GPLv3), and the FreeImage Public License (FIPL). More details on the project homepage: https://freeimage.sourceforge.io/ .
