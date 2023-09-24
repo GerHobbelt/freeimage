@@ -877,6 +877,10 @@ jpeg_read_exif_profile(FIBITMAP *dib, const BYTE *data, unsigned length) {
 		// This is an Exif profile
 		// should contain a TIFF header with up to 2 IFDs (IFD stands for 'Image File Directory')
 		// 0th IFD : the image attributes, 1st IFD : may be used for thumbnail
+		if (dwProfileLength < sizeof(exif_signature)) {
+			// Image not big enough to contain the Exif signature
+			return FALSE;
+		}
 
 		pbProfile += sizeof(exif_signature);
 		dwProfileLength -= sizeof(exif_signature);
