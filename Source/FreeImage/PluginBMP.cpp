@@ -388,6 +388,10 @@ LoadPixelDataRLE4(FreeImageIO *io, fi_handle handle, int width, int height, FIBI
 				BOOL hinibble = TRUE;
 
 				for (int cols = 0; cols < width; cols++){
+					if ((src + cols) >= end) {
+						throw(1);
+					}
+
 					if (hinibble) {
 						dst[cols >> 1] = (src[cols] << 4);
 					} else {
