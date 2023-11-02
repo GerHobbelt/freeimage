@@ -505,16 +505,16 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 		INPLACESWAP(top, bottom);
 	}
 	// check the size of the sub image
-	int src_width = FreeImage_GetWidth(src);
-	int src_height = FreeImage_GetHeight(src);
+	INT64 src_width = FreeImage_GetWidth(src);
+	INT64 src_height = FreeImage_GetHeight(src);
 	if ((left < 0) || (right > src_width) || (top < 0) || (bottom > src_height)) {
 		return NULL;
 	}
 
 	// allocate the sub image
 	unsigned bpp = FreeImage_GetBPP(src);
-	int dst_width = (right - left);
-	int dst_height = (bottom - top);
+	INT64 dst_width = (right - left);
+	INT64 dst_height = (bottom - top);
 
 	FIBITMAP *dst =
 		FreeImage_AllocateT(FreeImage_GetImageType(src),
@@ -526,9 +526,9 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 	if (NULL == dst) return NULL;
 
 	// get the dimensions
-	int dst_line = FreeImage_GetLine(dst);
-	int dst_pitch = FreeImage_GetPitch(dst);
-	int src_pitch = FreeImage_GetPitch(src);
+	INT64 dst_line = FreeImage_GetLine(dst);
+	INT64 dst_pitch = FreeImage_GetPitch(dst);
+	INT64 src_pitch = FreeImage_GetPitch(src);
 
 	// get the pointers to the bits and such
 
@@ -580,10 +580,10 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 		BYTE shift, value;
 		unsigned y_src, y_dst;
 
-		for (int y = 0; y < dst_height; y++) {
+		for (INT64 y = 0; y < dst_height; y++) {
 			y_src = y * src_pitch;
 			y_dst = y * dst_pitch;
-			for (int x = 0; x < dst_width; x++) {
+			for (INT64 x = 0; x < dst_width; x++) {
 				// get nibble at (y, x) in src image
 				shift = (BYTE)((1 - (left + x) % 2) << 2);
 				value = (src_bits[y_src + ((left + x) >> 1)] & (0x0F << shift)) >> shift;
@@ -596,7 +596,7 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 	}
 
 	else if (bpp >= 8) {
-		for (int y = 0; y < dst_height; y++) {
+		for (INT64 y = 0; y < dst_height; y++) {
 			memcpy(dst_bits + (y * dst_pitch), src_bits + (y * src_pitch), dst_line);
 		}
 	}
@@ -860,3 +860,11 @@ FreeImage_CreateView(FIBITMAP *dib, unsigned left, unsigned top, unsigned right,
 
 	return dst;
 }
+
+
+// void fnOutputDebug(std::string input) {
+//     std::stringstream ss;
+//     ss << "qpv: " << input;
+//     OutputDebugStringW(ss.str().data());
+// }
+
