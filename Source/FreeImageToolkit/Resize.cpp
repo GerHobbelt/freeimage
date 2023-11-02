@@ -524,6 +524,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                      src_offset_x >>= 3;
                      if (src_pal) {
                         // we have got a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 y = 0; y < height; y++) {
                            // scale each row
                            const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -548,6 +549,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                         }
                      } else {
                         // we do not have a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 y = 0; y < height; y++) {
                            // scale each row
                            const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -581,6 +583,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                      src_offset_x >>= 3;
                      if (src_pal) {
                         // we have got a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 y = 0; y < height; y++) {
                            // scale each row
                            const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -612,6 +615,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                         }
                      } else {
                         // we do not have a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 y = 0; y < height; y++) {
                            // scale each row
                            const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -648,7 +652,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                      // transparently convert the transparent 1-bit image to 32 bpp; 
                      // we always have got a palette here
                      src_offset_x >>= 3;
-
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 y = 0; y < height; y++) {
                         // scale each row
                         const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -694,7 +698,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                      // transparently convert the non-transparent 4-bit greyscale image to 8 bpp; 
                      // we always have got a palette for 4-bit images
                      src_offset_x >>= 1;
-
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 y = 0; y < height; y++) {
                         // scale each row
                         const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -725,7 +729,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                      // transparently convert the non-transparent 4-bit image to 24 bpp; 
                      // we always have got a palette for 4-bit images
                      src_offset_x >>= 1;
-
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 y = 0; y < height; y++) {
                         // scale each row
                         const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -763,7 +767,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                      // transparently convert the transparent 4-bit image to 32 bpp; 
                      // we always have got a palette for 4-bit images
                      src_offset_x >>= 1;
-
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 y = 0; y < height; y++) {
                         // scale each row
                         const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -810,6 +814,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                      // into an 8 bpp destination image
                      if (src_pal) {
                         // we have got a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 y = 0; y < height; y++) {
                            // scale each row
                            const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -835,6 +840,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                         }
                      } else {
                         // we do not have a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 y = 0; y < height; y++) {
                            // scale each row
                            const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -867,11 +873,11 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                      // transparently convert the non-transparent 8-bit image to 24 bpp
                      if (src_pal) {
                         // we have got a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 y = 0; y < height; y++) {
                            // scale each row
                            const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
                            BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
-
                            for (INT64 x = 0; x < dst_width; x++) {
                               // loop through row
                               const INT64 iLeft = weightsTable.getLeftBoundary(x);            // retrieve left boundary
@@ -899,6 +905,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                         }
                      } else {
                         // we do not have a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 y = 0; y < height; y++) {
                            // scale each row
                            const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -935,6 +942,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                   {
                      // transparently convert the transparent 8-bit image to 32 bpp; 
                      // we always have got a palette here
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 y = 0; y < height; y++) {
                         // scale each row
                         const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -978,6 +986,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                // transparently convert the 16-bit non-transparent image to 24 bpp
                if (IS_FORMAT_RGB565(src)) {
                   // image has 565 format
+                  #pragma omp parallel for schedule(dynamic) default(none)
                   for (INT64 y = 0; y < height; y++) {
                      // scale each row
                      const WORD * const src_bits = (WORD *)FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x / sizeof(WORD);
@@ -1010,6 +1019,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
                   }
                } else {
                   // image has 555 format
+                  #pragma omp parallel for schedule(dynamic) default(none)
                   for (INT64 y = 0; y < height; y++) {
                      // scale each row
                      const WORD * const src_bits = (WORD *)FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x;
@@ -1047,6 +1057,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
             case 24:
             {
                // scale the 24-bit non-transparent image into a 24 bpp destination image
+               #pragma omp parallel for schedule(dynamic) default(none)
                for (INT64 y = 0; y < height; y++) {
                   // scale each row
                   const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x * 3;
@@ -1083,6 +1094,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
             case 32:
             {
                // scale the 32-bit transparent image into a 32 bpp destination image
+               #pragma omp parallel for schedule(dynamic) default(none)
                for (INT64 y = 0; y < height; y++) {
                   // scale each row
                   const BYTE * const src_bits = FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x * 4;
@@ -1125,7 +1137,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
       {
          // Calculate the number of words per pixel (1 for 16-bit, 3 for 48-bit or 4 for 64-bit)
          const INT64 wordspp = (FreeImage_GetLine(src) / src_width) / sizeof(WORD);
-
+         #pragma omp parallel for schedule(dynamic) default(none)
          for (INT64 y = 0; y < height; y++) {
             // scale each row
             const WORD *src_bits = (WORD*)FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x / sizeof(WORD);
@@ -1159,7 +1171,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
       {
          // Calculate the number of words per pixel (1 for 16-bit, 3 for 48-bit or 4 for 64-bit)
          const INT64 wordspp = (FreeImage_GetLine(src) / src_width) / sizeof(WORD);
-
+         #pragma omp parallel for schedule(dynamic) default(none)
          for (INT64 y = 0; y < height; y++) {
             // scale each row
             const WORD *src_bits = (WORD*)FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x / sizeof(WORD);
@@ -1197,7 +1209,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
       {
          // Calculate the number of words per pixel (1 for 16-bit, 3 for 48-bit or 4 for 64-bit)
          const INT64 wordspp = (FreeImage_GetLine(src) / src_width) / sizeof(WORD);
-
+         #pragma omp parallel for schedule(dynamic) default(none)
          for (INT64 y = 0; y < height; y++) {
             // scale each row
             const WORD *src_bits = (WORD*)FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x / sizeof(WORD);
@@ -1239,7 +1251,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *const src, unsigned height, unsig
       {
          // Calculate the number of floats per pixel (1 for 32-bit, 3 for 96-bit or 4 for 128-bit)
          const INT64 floatspp = (FreeImage_GetLine(src) / src_width) / sizeof(float);
-
+         #pragma omp parallel for schedule(dynamic) default(none)
          for(INT64 y = 0; y < height; y++) {
             // scale each row
             const float *src_bits = (float*)FreeImage_GetScanLine(src, y + src_offset_y) + src_offset_x / sizeof(float);
@@ -1300,6 +1312,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                      // transparently convert the 1-bit non-transparent greyscale image to 8 bpp
                      if (src_pal) {
                         // we have got a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 x = 0; x < width; x++) {
                            // work on column x in dst
                            BYTE *dst_bits = dst_base + x;
@@ -1330,6 +1343,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                         }
                      } else {
                         // we do not have a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 x = 0; x < width; x++) {
                            // work on column x in dst
                            BYTE *dst_bits = dst_base + x;
@@ -1366,6 +1380,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                      // transparently convert the non-transparent 1-bit image to 24 bpp
                      if (src_pal) {
                         // we have got a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 x = 0; x < width; x++) {
                            // work on column x in dst
                            BYTE *dst_bits = dst_base + x * 3;
@@ -1401,6 +1416,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                         }
                      } else {
                         // we do not have a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 x = 0; x < width; x++) {
                            // work on column x in dst
                            BYTE *dst_bits = dst_base + x * 3;
@@ -1439,6 +1455,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                   {
                      // transparently convert the transparent 1-bit image to 32 bpp; 
                      // we always have got a palette here
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 x = 0; x < width; x++) {
                         // work on column x in dst
                         BYTE *dst_bits = dst_base + x * 4;
@@ -1490,6 +1507,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                   {
                      // transparently convert the non-transparent 4-bit greyscale image to 8 bpp; 
                      // we always have got a palette for 4-bit images
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 x = 0; x < width; x++) {
                         // work on column x in dst
                         BYTE *dst_bits = dst_base + x;
@@ -1523,6 +1541,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                   {
                      // transparently convert the non-transparent 4-bit image to 24 bpp; 
                      // we always have got a palette for 4-bit images
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 x = 0; x < width; x++) {
                         // work on column x in dst
                         BYTE *dst_bits = dst_base + x * 3;
@@ -1562,6 +1581,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                   {
                      // transparently convert the transparent 4-bit image to 32 bpp; 
                      // we always have got a palette for 4-bit images
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 x = 0; x < width; x++) {
                         // work on column x in dst
                         BYTE *dst_bits = dst_base + x * 4;
@@ -1613,6 +1633,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                      // scale the 8-bit non-transparent greyscale image into an 8 bpp destination image
                      if (src_pal) {
                         // we have got a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 x = 0; x < width; x++) {
                            // work on column x in dst
                            BYTE *dst_bits = dst_base + x;
@@ -1639,6 +1660,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                         }
                      } else {
                         // we do not have a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 x = 0; x < width; x++) {
                            // work on column x in dst
                            BYTE *dst_bits = dst_base + x;
@@ -1672,6 +1694,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                      // transparently convert the non-transparent 8-bit image to 24 bpp
                      if (src_pal) {
                         // we have got a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 x = 0; x < width; x++) {
                            // work on column x in dst
                            BYTE *dst_bits = dst_base + x * 3;
@@ -1704,6 +1727,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                         }
                      } else {
                         // we do not have a palette
+                        #pragma omp parallel for schedule(dynamic) default(none)
                         for (INT64 x = 0; x < width; x++) {
                            // work on column x in dst
                            BYTE *dst_bits = dst_base + x * 3;
@@ -1739,6 +1763,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                   {
                      // transparently convert the transparent 8-bit image to 32 bpp; 
                      // we always have got a palette here
+                     #pragma omp parallel for schedule(dynamic) default(none)
                      for (INT64 x = 0; x < width; x++) {
                         // work on column x in dst
                         BYTE *dst_bits = dst_base + x * 4;
@@ -1785,6 +1810,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
 
                if (IS_FORMAT_RGB565(src)) {
                   // image has 565 format
+                  #pragma omp parallel for schedule(dynamic) default(none)
                   for (INT64 x = 0; x < width; x++) {
                      // work on column x in dst
                      BYTE *dst_bits = dst_base + x * 3;
@@ -1816,6 +1842,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                   }
                } else {
                   // image has 555 format
+                  #pragma omp parallel for schedule(dynamic) default(none)
                   for (INT64 x = 0; x < width; x++) {
                      // work on column x in dst
                      BYTE *dst_bits = dst_base + x * 3;
@@ -1854,7 +1881,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                // scale the 24-bit transparent image into a 24 bpp destination image
                const INT64 src_pitch = FreeImage_GetPitch(src);
                const BYTE *const src_base = FreeImage_GetBits(src) + src_offset_y * src_pitch + src_offset_x * 3;
-
+               #pragma omp parallel for schedule(dynamic) default(none)
                for (INT64 x = 0; x < width; x++) {
                   // work on column x in dst
                   const INT64 index = x * 3;
@@ -1893,7 +1920,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
                // scale the 32-bit transparent image into a 32 bpp destination image
                const INT64 src_pitch = FreeImage_GetPitch(src);
                const BYTE *const src_base = FreeImage_GetBits(src) + src_offset_y * src_pitch + src_offset_x * 4;
-
+               #pragma omp parallel for schedule(dynamic) default(none)
                for (INT64 x = 0; x < width; x++) {
                   // work on column x in dst
                   const INT64 index = x * 4;
@@ -1942,7 +1969,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
 
          const INT64 src_pitch = FreeImage_GetPitch(src) / sizeof(WORD);
          const WORD *const src_base = (WORD *)FreeImage_GetBits(src)   + src_offset_y * src_pitch + src_offset_x * wordspp;
-
+         #pragma omp parallel for schedule(dynamic) default(none)
          for (INT64 x = 0; x < width; x++) {
             // work on column x in dst
             const INT64 index = x * wordspp;   // pixel index
@@ -1983,7 +2010,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
 
          const INT64 src_pitch = FreeImage_GetPitch(src) / sizeof(WORD);
          const WORD *const src_base = (WORD *)FreeImage_GetBits(src) + src_offset_y * src_pitch + src_offset_x * wordspp;
-
+         #pragma omp parallel for schedule(dynamic) default(none)
          for (INT64 x = 0; x < width; x++) {
             // work on column x in dst
             const INT64 index = x * wordspp;   // pixel index
@@ -2029,7 +2056,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
 
          const INT64 src_pitch = FreeImage_GetPitch(src) / sizeof(WORD);
          const WORD *const src_base = (WORD *)FreeImage_GetBits(src) + src_offset_y * src_pitch + src_offset_x * wordspp;
-
+         #pragma omp parallel for schedule(dynamic) default(none)
          for (INT64 x = 0; x < width; x++) {
             // work on column x in dst
             const INT64 index = x * wordspp;   // pixel index
@@ -2079,7 +2106,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *const src, unsigned width, unsigned
 
          const INT64 src_pitch = FreeImage_GetPitch(src) / sizeof(float);
          const float *const src_base = (float *)FreeImage_GetBits(src) + src_offset_y * src_pitch + src_offset_x * floatspp;
-
+         #pragma omp parallel for schedule(dynamic) default(none)
          for (INT64 x = 0; x < width; x++) {
             // work on column x in dst
             const INT64 index = x * floatspp;   // pixel index
