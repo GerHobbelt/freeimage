@@ -11,12 +11,12 @@
 //
 // Author: Skal (pascal.massimino@gmail.com)
 
-#include "src/dsp/dsp.h"
+#include "../dsp/dsp.h"
 
 #if defined(WEBP_USE_SSE41)
 #include <assert.h>
 #include <smmintrin.h>
-#include "src/dsp/lossless.h"
+#include "../dsp/lossless.h"
 
 // For sign-extended multiplying constants, pre-shifted by 5:
 #define CST_5b(X)  (((int16_t)((uint16_t)(X) << 8)) >> 5)

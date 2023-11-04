@@ -154,7 +154,9 @@ struct WebPIterator {
   int has_alpha;      // True if the frame contains transparency.
   WebPMuxAnimBlend blend_method;  // Blend operation for the frame.
 
-  uint32_t pad[2];         // padding for later use.
+  int fragment_num;
+  int num_fragments;
+  //uint32_t pad[2];         // padding for later use.
   void* private_;          // for internal use only.
 };
 

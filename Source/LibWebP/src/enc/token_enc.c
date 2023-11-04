@@ -20,9 +20,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "src/enc/cost_enc.h"
-#include "src/enc/vp8i_enc.h"
-#include "src/utils/utils.h"
+#include "../enc/cost_enc.h"
+#include "../enc/vp8i_enc.h"
+#include "../utils/utils.h"
 
 #if !defined(DISABLE_TOKEN_BUFFER)
 
