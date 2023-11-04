@@ -29,8 +29,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "encode.h"
-#include "strcodec.h"
-#include "common.h"
+#include "../sys/strcodec.h"
+#include "../sys/common.h"
 
 #ifdef MEM_TRACE
 #define TRACE_MALLOC    1

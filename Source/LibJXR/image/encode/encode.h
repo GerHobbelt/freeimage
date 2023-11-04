@@ -29,7 +29,7 @@
 #ifndef WMI_ENCODE_H
 #define WMI_ENCODE_H
 
-#include "strcodec.h"
+#include "../sys/strcodec.h"
 
 /*************************************************************************
     struct / class definitions

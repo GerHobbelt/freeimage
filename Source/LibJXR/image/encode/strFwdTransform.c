@@ -26,7 +26,7 @@
 //
 //*@@@---@@@@******************************************************************
 
-#include "strTransform.h"
+#include "../sys/strTransform.h"
 #include "encode.h"
 
 /** rotation by pi/8 **/

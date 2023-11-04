@@ -22,3 +22,5 @@ Wrapper/FreeImagePlus/test/*.tif
 Wrapper/FreeImagePlus/test/*.tiff
 *.user
 /TestAPI/test_view.bmp
+
+.temp

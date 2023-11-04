@@ -25,7 +25,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 //*@@@---@@@@******************************************************************
-#include "strcodec.h"
+#include "../sys/strcodec.h"
 
 #if defined(WMP_OPT_SSE2)
 #include <emmintrin.h>

@@ -51,7 +51,7 @@
 #ifdef __CYGWIN__
 #include <io.h>
 #endif
-#ifdef WIN32
+#ifdef _WIN32
 #include <sys/utime.h>
 #include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
@@ -67,6 +67,8 @@ typedef unsigned __int64 UINT64;
 typedef long long INT64;
 typedef unsigned long long UINT64;
 #endif
+
+#define NODEPS
 
 #ifdef NODEPS
 #define NO_JASPER
@@ -3855,7 +3857,7 @@ void CLASS bad_pixels (const char *cfname)
       free (fname);
       if (errno != ERANGE) return;
     }
-#if defined(WIN32) || defined(DJGPP)
+#if defined(_WIN32) || defined(DJGPP)
     if (fname[1] == ':')
       memmove (fname, fname+2, len-2);
     for (cp=fname; *cp; cp++)
@@ -10224,7 +10226,7 @@ int CLASS main (int argc, const char **argv)
       fprintf (stderr,_("Will not write an image to the terminal!\n"));
       return 1;
     }
-#if defined(WIN32) || defined(DJGPP) || defined(__CYGWIN__)
+#if defined(_WIN32) || defined(DJGPP) || defined(__CYGWIN__)
     if (setmode(1,O_BINARY) < 0) {
       perror ("setmode()");
       return 1;

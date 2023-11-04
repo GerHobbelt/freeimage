@@ -86,8 +86,8 @@ int TIFFJPEGIsFullStripRequired_12(TIFF* tif);
 # define HAVE_BOOLEAN            /* prevent jmorecfg.h from redefining it */
 #endif
 
-#include "jpeglib.h"
-#include "jerror.h"
+#include "../LibJPEG/jpeglib.h"
+#include "../LibJPEG/jerror.h"
 
 /* 
  * Do we want to do special processing suitable for when JSAMPLE is a

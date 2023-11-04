@@ -157,6 +157,7 @@ static INLINE long lrintf(float f){
 #include "mct.h"
 #include "opj_intmath.h"
 
+#define USE_JPIP
 #ifdef USE_JPIP
 #include "cidx_manager.h"
 #include "indexbox_manager.h"

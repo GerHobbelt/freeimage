@@ -25,11 +25,11 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 //*@@@---@@@@******************************************************************
-#include "strcodec.h"
+#include "../sys/strcodec.h"
 #include "encode.h"
-#include "strTransform.h"
+#include "../sys/strTransform.h"
 #include <math.h>
-#include "perfTimer.h"
+#include "../sys/perfTimer.h"
 
 #ifdef MEM_TRACE
 #define TRACE_MALLOC    1

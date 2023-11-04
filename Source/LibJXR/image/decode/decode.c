@@ -37,7 +37,7 @@ Author:
 
 Revision History:
 *******************************************************************************/
-#include "strcodec.h"
+#include "../sys/strcodec.h"
 #include "decode.h"
 
 #ifdef MEM_TRACE

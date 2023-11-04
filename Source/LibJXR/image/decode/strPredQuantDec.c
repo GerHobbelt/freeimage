@@ -26,7 +26,7 @@
 //
 //*@@@---@@@@******************************************************************
 
-#include "strcodec.h"
+#include "../sys/strcodec.h"
 
 #define DEQUANT(iRaw, iQP) ((iRaw) * (iQP))
 

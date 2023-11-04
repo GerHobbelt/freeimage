@@ -31,7 +31,7 @@
 extern "C" {
 #endif
 
-#include <JXRMeta.h>
+#include "JXRMeta.h"
 #include <guiddef.h>
 
 //================================================================

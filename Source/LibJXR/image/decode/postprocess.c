@@ -26,8 +26,8 @@
 //
 //*@@@---@@@@******************************************************************
 
-#include "windowsmediaphoto.h"
-#include "strcodec.h"
+#include "../sys/windowsmediaphoto.h"
+#include "../sys/strcodec.h"
 
 Void smoothMB(PixelI * p1, PixelI * p0, PixelI * q0, PixelI * q1)
 {

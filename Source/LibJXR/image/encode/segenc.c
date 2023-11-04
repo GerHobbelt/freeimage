@@ -28,7 +28,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "strcodec.h"
+#include "../sys/strcodec.h"
 #include "encode.h"
 
 #ifdef MEM_TRACE

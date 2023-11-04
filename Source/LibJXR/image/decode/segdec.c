@@ -26,7 +26,7 @@
 //
 //*@@@---@@@@******************************************************************
 
-#include "strcodec.h"
+#include "../sys/strcodec.h"
 #include "decode.h"
 
 #ifdef MEM_TRACE
@@ -944,11 +944,11 @@ Int DecodeMacroblockLowpass (CWMImageStrCodec * pSC, CCodingContext *pContext,
                 }
             }
             else {
-#ifdef WIN32
+#ifdef _WIN32
                 const Int iMask = (1 << iModelBits) - 1;
 #endif // WIN32
                 for (k = 1; k < 16; k++) {
-#ifdef WIN32
+#ifdef _WIN32
                     if (pCoeffs[k]) {
                         Int r1 = _rotl(pCoeffs[k], iModelBits);
                         pCoeffs[k] = (r1 ^ getBits(pIO, iModelBits)) - (r1 & iMask);

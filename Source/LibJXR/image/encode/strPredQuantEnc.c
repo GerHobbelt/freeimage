@@ -26,7 +26,7 @@
 //
 //*@@@---@@@@******************************************************************
 
-#include "strcodec.h"
+#include "../sys/strcodec.h"
 #include "encode.h"
 
 I32 QUANT_Mulless(PixelI v, PixelI o, I32 r)
