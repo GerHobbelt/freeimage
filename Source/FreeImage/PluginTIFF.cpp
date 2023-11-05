@@ -48,14 +48,14 @@
 // GeoTIFF profile (see XTIFF.cpp)
 // --------------------------------------------------------------------------
 void XTIFFInitialize();
-BOOL tiff_read_geotiff_profile(TIFF *tif, FIBITMAP *dib);
-BOOL tiff_write_geotiff_profile(TIFF *tif, FIBITMAP *dib);
+int tiff_read_geotiff_profile(TIFF *tif, FIBITMAP *dib);
+int tiff_write_geotiff_profile(TIFF *tif, FIBITMAP *dib);
 
 // --------------------------------------------------------------------------
 // TIFF Exif profile (see XTIFF.cpp)
 // ----------------------------------------------------------
-BOOL tiff_read_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib);
-BOOL tiff_write_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib);
+int tiff_read_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib);
+int tiff_write_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib);
 
 // --------------------------------------------------------------------------
 //   LogLuv conversion functions interface (see TIFFLogLuv.cpp)

@@ -4,11 +4,13 @@
 	<GlobalSolutionName>ThirdParty</GlobalSolutionName>
 	<GlobalNamespace>potato</GlobalNamespace>
 
-	<StaticLibrary>
+	<Library>
 		<Name>thirdparty_freeimage</Name>
 		<SourceRoot>Source</SourceRoot>
 		<ExportedIncludeDirectory>Source</ExportedIncludeDirectory>
 		<ThirdParty>true</ThirdParty>
+		<ThirdPartySharedGlobalExportDefine>FREEIMAGE_DLL</ThirdPartySharedGlobalExportDefine>
+		<ThirdPartySharedLocalBuildDefine>FREEIMAGE_EXPORTS</ThirdPartySharedLocalBuildDefine>		
 		<ThirdPartySourceFile>
 			FreeImage\FreeImageC.c;
 			DeprecationManager\Deprecated.cpp;
@@ -103,6 +105,6 @@
 		<Dependency>thirdparty_libjpeg</Dependency>
 		<Dependency>thirdparty_openexr</Dependency>
 		<Dependency>thirdparty_imath</Dependency>
-	</StaticLibrary>
+	</Library>
 
 </Module>

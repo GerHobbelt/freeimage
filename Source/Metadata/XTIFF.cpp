@@ -108,7 +108,7 @@ XTIFFInitialize(void) {
 //   GeoTIFF tag reading / writing
 // ----------------------------------------------------------
 
-BOOL
+int
 tiff_read_geotiff_profile(TIFF *tif, FIBITMAP *dib) {
 	char defaultKey[16];
 
@@ -189,7 +189,7 @@ tiff_read_geotiff_profile(TIFF *tif, FIBITMAP *dib) {
 	return TRUE;
 }
 
-BOOL
+int 
 tiff_write_geotiff_profile(TIFF *tif, FIBITMAP *dib) {
 	char defaultKey[16];
 
@@ -233,7 +233,7 @@ Read a single Exif tag
 @param md_model Metadata model where to store the tag
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static BOOL 
+int
 tiff_read_exif_tag(TIFF *tif, uint32 tag_id, FIBITMAP *dib, TagLib::MDMODEL md_model) {
 	uint32 value_count = 0;
 	int mem_alloc = 0;
@@ -558,7 +558,7 @@ Read all known exif tags
 @param dib Image being read
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-BOOL 
+int
 tiff_read_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib) {
 
 	TagLib& tagLib = TagLib::instance();
@@ -708,7 +708,7 @@ Write all known exif tags
 @param dib Image being written
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-BOOL 
+int
 tiff_write_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib) {
 	char defaultKey[16];
 	
