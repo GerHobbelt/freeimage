@@ -15,7 +15,18 @@ This is a clone of https://sourceforge.net/p/freeimage/svn/ .
 FreeImage is currently sporadically maintained by Hervé Drolon on SourceForge. It is licensed under the GNU General Public License, version 2.0 (GPLv2) or version 3.0 (GPLv3), and the FreeImage Public License (FIPL). More details on the project homepage: https://freeimage.sourceforge.io/ .
 
 --------
+
+This branch is used to compile the FreeImage.DLL used in Quick Picto Viewer. It brings the following changes:
+
+- fixed behavior with extreme values of the tone-mapping algorithms; 
+- fixed out of bounds read in PluginBMP
+- fixed integer wrap around and segmentation fault in Exif.cpp
+- fixed FreeImage_Copy() to not crash with very large images [over 5000 mgpx]
+- fixed FreeImage_Rescale() to work with very large images [over 5000 mgpx]; it no longer screws up the colors
+- fixed FreeImage_Rotate() to work with very large images [over 5000 mgpx]
+- multi-threaded image resizer and rotation using OpenMP pragma
+
+
 Limitations identified:
-1. Format encoders and decoders cannot work with files exceeding 2 Gigabytes.
-2. Downscaling very large images, eg, 3700 mgpx, causes colour splotches, glitches and artefacts in the resulted image, if it is above 486 mgpx. No issues observed when upscaling images, even to 8000 mgpx.
+- format encoders and decoders cannot work with files exceeding 2 Gigabytes.
 
