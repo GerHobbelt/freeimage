@@ -1,3 +1,4 @@
+Fix for CVE-2020-22524
 Origin: upstream, r1848
 Index: freeimage-3.18.0+ds2/Source/FreeImage/PluginPFM.cpp
 ===================================================================
