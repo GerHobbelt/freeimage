@@ -8,3 +8,8 @@ Disable-testing-of-JXR-MemIO.patch
 Fix-encoding-of-fi-header.patch
 Enable-substitution-of-pkg-config.patch
 CVE-2019-12211-13.patch
+r1830-minor-refactoring.patch
+r1832-improved-BMP-plugin-when-working-with-malicious-images.patch
+r1836-improved-BMP-plugin-when-working-with-malicious-images.patch
+r1848-improved-PFM-plugin-against-malicious-images.patch
+r1877-improved-DDS-plugin-against-malicious-images.patch
