@@ -229,7 +229,7 @@ CWeightsTable::~CWeightsTable() {
 
 // --------------------------------------------------------------------------
 
-FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_height, unsigned src_left, unsigned src_top, unsigned src_width, unsigned src_height, unsigned flags) {
+FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_height, unsigned src_left, unsigned src_top, unsigned src_width, unsigned src_height, unsigned flags, BOOL rawBits, int dst_pitch, BYTE *dst_bits) {
 
 	const FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(src);
 	const unsigned src_bpp = FreeImage_GetBPP(src);
@@ -333,12 +333,15 @@ FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_h
 		}
 	}
 
-	// allocate the dst image
-	FIBITMAP *dst = FreeImage_AllocateT(image_type, dst_width, dst_height, dst_bpp, 0, 0, 0);
-	if (!dst) {
-		return NULL;
-	}
-	
+   // allocate the dst image
+   FIBITMAP *dst = NULL;
+   if (rawBits==1) {
+      // dib = FreeImage_AllocateHeader(header_only, header.is_width, header.is_height, pixel_bits, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+      dst = FreeImage_AllocateHeaderForBits(dst_bits, dst_pitch, image_type, dst_width, dst_height, dst_bpp, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+   } else {
+      dst = FreeImage_AllocateT(image_type, dst_width, dst_height, dst_bpp, 0, 0, 0);
+   }
+
 	if (dst_bpp == 8) {
 		RGBQUAD * const dst_pal = FreeImage_GetPalette(dst);
 		if (color_type == FIC_MINISWHITE) {

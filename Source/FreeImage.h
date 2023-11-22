@@ -1110,6 +1110,7 @@ DLL_API BOOL DLL_CALLCONV FreeImage_FlipHorizontal(FIBITMAP *dib);
 DLL_API BOOL DLL_CALLCONV FreeImage_FlipVertical(FIBITMAP *dib);
 
 // upsampling / downsampling
+DLL_API BOOL DLL_CALLCONV FreeImage_RescaleRawBits(BYTE *src_bits, BYTE *dst_bits, FREE_IMAGE_TYPE type, int width, int height, int src_pitch, int dst_pitch, unsigned bpp, int dst_width, int dst_height, int src_left, int src_top, int src_right, int src_bottom, FREE_IMAGE_FILTER filter);
 DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Rescale(FIBITMAP *dib, int dst_width, int dst_height, FREE_IMAGE_FILTER filter FI_DEFAULT(FILTER_CATMULLROM));
 DLL_API FIBITMAP *DLL_CALLCONV FreeImage_MakeThumbnail(FIBITMAP *dib, int max_pixel_size, BOOL convert FI_DEFAULT(TRUE));
 DLL_API FIBITMAP *DLL_CALLCONV FreeImage_RescaleRect(FIBITMAP *dib, int dst_width, int dst_height, int left, int top, int right, int bottom, FREE_IMAGE_FILTER filter FI_DEFAULT(FILTER_CATMULLROM), unsigned flags FI_DEFAULT(0));
