@@ -15,3 +15,8 @@ Fix-CVE-2016-5684.patch
 Enable-substitution-of-pkg-config.patch
 fix-loading-rgbaf.patch
 CVE-2019-12211-13.patch
+CVE-2020-21427_1-3_r1830-minor-refactoring.patch
+CVE-2020-21427_2-3_r1832-improved-BMP-plugin-when-working-with-malicious-images.patch
+CVE-2020-21427_3-3_r1836-improved-BMP-plugin-when-working-with-malicious-images.patch
+#CVE-2020-21428_r1877-improved-DDS-plugin-against-malicious-images.patch
+CVE-2020-22524_r1848-improved-PFM-plugin-against-malicious-images.patch
