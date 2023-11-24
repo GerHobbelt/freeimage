@@ -1,9 +1,9 @@
-freeimage (3.18.0+ds2-1+deb10u2) UNRELEASED; urgency=medium
+freeimage (3.18.0+ds2-1+deb10u2) buster-security; urgency=medium
 
   * Non-maintainer upload by the LTS Security Team.
-  * Fix CVE-2020-21427 with upstream patches
-  * Fix CVE-2020-21428 with upstream patch
-  * Fix CVE-2020-22524 with upstream patch
+  * CVE-2020-21427: fix buffer overflow in PluginBMP with upstream patches.
+  * CVE-2020-21428: fix buffer overflow in PluginDDS with upstream patch.
+  * CVE-2020-22524: fix buffer overflow in PluginPFM with upstream patch.
 
  -- Anton Gladky <gladk@debian.org>  Tue, 21 Nov 2023 06:22:58 +0100
 
