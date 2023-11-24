@@ -5,7 +5,7 @@ freeimage (3.18.0+ds2-1+deb10u2) buster-security; urgency=medium
   * CVE-2020-21428: fix buffer overflow in PluginDDS with upstream patch.
   * CVE-2020-22524: fix buffer overflow in PluginPFM with upstream patch.
 
- -- Anton Gladky <gladk@debian.org>  Tue, 21 Nov 2023 06:22:58 +0100
+ -- Anton Gladky <gladk@debian.org>  Fri, 24 Nov 2023 06:37:28 +0100
 
 freeimage (3.18.0+ds2-1+deb10u1) buster-security; urgency=high
 
