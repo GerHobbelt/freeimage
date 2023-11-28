@@ -1,3 +1,11 @@
+freeimage (3.17.0+ds1-5+deb9u2) stretch-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * CVE-2020-21427: fix buffer overflow in PluginBMP with upstream patches.
+  * CVE-2020-22524: fix buffer overflow in PluginPFM with upstream patch.
+
+ -- Anton Gladky <gladk@debian.org>  Tue, 28 Nov 2023 06:54:00 +0100
+
 freeimage (3.17.0+ds1-5+deb9u1) stretch-security; urgency=high
 
   * Non-maintainer upload by the Security Team.
