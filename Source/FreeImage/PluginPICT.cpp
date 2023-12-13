@@ -371,7 +371,7 @@ ReadPixmap( FreeImageIO *io, fi_handle handle, MacpixMap* pPixMap ) {
 Reads a mac color table into a bitmap palette.
 */
 static void 
-ReadColorTable( FreeImageIO *io, fi_handle handle, WORD* pNumColors, RGBQUAD* pPal ) {
+ReadColorTable( FreeImageIO *io, fi_handle handle, WORD* pNumColors, RGBQUAD* pPal, WORD palColors ) {
 	LONG        ctSeed;
 	WORD        ctFlags;
 	WORD        val;
@@ -380,6 +380,10 @@ ReadColorTable( FreeImageIO *io, fi_handle handle, WORD* pNumColors, RGBQUAD* pP
 	ctSeed = Read32( io, handle );
 	ctFlags = Read16( io, handle );
 	WORD numColors = Read16( io, handle )+1;
+	// HACK: May access out of bounds in loop.
+	// The maximum length of input pPal is 256, 
+	// limit the number of colors allowed.
+	numColors = MIN(palColors, numColors);
 	*pNumColors = numColors;
 	
 	for (i = 0; i < numColors; i++) {
@@ -851,7 +855,7 @@ DecodePixmap( FreeImageIO *io, fi_handle handle, FIBITMAP* dib, BOOL isRegion, M
 	WORD numColors;    // Palette size.
 	RGBQUAD ct[256];
 	
-	ReadColorTable( io, handle, &numColors, ct );
+	ReadColorTable( io, handle, &numColors, ct, 256 );
 	if ( FreeImage_GetBPP( dib ) == 8 ) {
 		RGBQUAD* pal = FreeImage_GetPalette( dib );
 		if ( !pal ) {
@@ -1049,7 +1053,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 								ReadPixmap( io, handle, &p);
 								
 								RGBQUAD ct[256];
-								ReadColorTable(io, handle, &numColors, ct );
+								ReadColorTable(io, handle, &numColors, ct, 256 );
 								SkipBits( io, handle, &p.Bounds, rowBytes, p.pixelSize );
 								break;
 							}

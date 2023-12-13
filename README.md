@@ -18,15 +18,16 @@ FreeImage is currently sporadically maintained by Hervé Drolon on SourceForge. 
 
 This branch is used to compile the FreeImage.DLL used in Quick Picto Viewer. It brings the following changes:
 
+- fixed jxr encoder to be able to handle images over 1300 mgpx;
+- fixed bmp decoder/encoder to be able to handle images over 1300 mgpx;
 - fixed behavior with extreme values of the tone-mapping algorithms; 
-- fixed out of bounds read in PluginBMP
-- fixed integer wrap around and segmentation fault in Exif.cpp
-- fixed FreeImage_Copy() to not crash with very large images [over 5000 mgpx]
-- fixed FreeImage_Rescale() to work with very large images [over 5000 mgpx]; it no longer screws up the colors
-- fixed FreeImage_Rotate() to work with very large images [over 5000 mgpx]
-- multi-threaded image resizer and rotation using OpenMP pragma
+- fixed out of bounds read in PluginBMP;
+- fixed integer wrap around and segmentation fault in Exif.cpp;
+- fixed FreeImage_Copy() to not crash with very large images [over 5000 mgpx];
+- fixed FreeImage_Rescale() to work with very large images [over 5000 mgpx]; it no longer screws up the colors;
+- fixed FreeImage_Rotate() to work with very large images [over 5000 mgpx];
+- multi-threaded image resizer and rotation using OpenMP pragma;
+- added FreeImage_RescaleRawBits()
 
-
-Limitations identified:
-- format encoders and decoders cannot work with files exceeding 2 Gigabytes.
-
+Bugs or limitations identified:
+- images saved as JXR seem malformed; only Windows Photo opens them [Win10], but without an alpha channel; Affinity Photo 2.0 and paint.net v5.0 crash on open;
