@@ -426,89 +426,88 @@ Load image pixels for 8-bit RLE compressed dib
 */
 static BOOL 
 LoadPixelDataRLE8(FreeImageIO *io, fi_handle handle, int width, int height, FIBITMAP *dib) {
-	BYTE status_byte = 0;
-	BYTE second_byte = 0;
-	int scanline = 0;
-	int bits = 0;
-	int count = 0;
-	BYTE delta_x = 0;
-	BYTE delta_y = 0;
+   BYTE status_byte = 0;
+   BYTE second_byte = 0;
+   int scanline = 0;
+   int bits = 0;
+   int count = 0;
+   BYTE delta_x = 0;
+   BYTE delta_y = 0;
 
-	height = abs(height);
-	
-	while(scanline < height) {
+   height = abs(height);
+   
+   while(scanline < height) {
+      if (io->read_proc(&status_byte, sizeof(BYTE), 1, handle) != 1) {
+         return FALSE;
+      }
 
-		if (io->read_proc(&status_byte, sizeof(BYTE), 1, handle) != 1) {
-			return FALSE;
-		}
+      if (status_byte == RLE_COMMAND) {
+         if (io->read_proc(&status_byte, sizeof(BYTE), 1, handle) != 1) {
+            return FALSE;
+         }
 
-		if (status_byte == RLE_COMMAND) {
-			if (io->read_proc(&status_byte, sizeof(BYTE), 1, handle) != 1) {
-				return FALSE;
-			}
+         switch (status_byte) {
+            case RLE_ENDOFLINE:
+               bits = 0;
+               scanline++;
+               break;
 
-			switch (status_byte) {
-				case RLE_ENDOFLINE:
-					bits = 0;
-					scanline++;
-					break;
+            case RLE_ENDOFBITMAP:
+               return TRUE;
 
-				case RLE_ENDOFBITMAP:
-					return TRUE;
+            case RLE_DELTA:
+               // read the delta values
+               delta_x = 0;
+               delta_y = 0;
+               if (io->read_proc(&delta_x, sizeof(BYTE), 1, handle) != 1) {
+                  return FALSE;
+               }
+               if (io->read_proc(&delta_y, sizeof(BYTE), 1, handle) != 1) {
+                  return FALSE;
+               }
+               // apply them
+               bits += delta_x;
+               scanline += delta_y;
+               break;
 
-				case RLE_DELTA:
-					// read the delta values
-					delta_x = 0;
-					delta_y = 0;
-					if (io->read_proc(&delta_x, sizeof(BYTE), 1, handle) != 1) {
-						return FALSE;
-					}
-					if (io->read_proc(&delta_y, sizeof(BYTE), 1, handle) != 1) {
-						return FALSE;
-					}
-					// apply them
-					bits += delta_x;
-					scanline += delta_y;
-					break;
+            default:
+               // absolute mode
+               count = MIN((int)status_byte, width - bits);
+               if (count < 0) {
+                  return FALSE;
+               }
+               BYTE *sline = FreeImage_GetScanLine(dib, scanline);
+               if (io->read_proc((void *)(sline + bits), sizeof(BYTE) * count, 1, handle) != 1) {
+                  return FALSE;
+               }
+               // align run length to even number of bytes
+               if ((status_byte & 1) == 1) {
+                  if (io->read_proc(&second_byte, sizeof(BYTE), 1, handle) != 1) {
+                     return FALSE;
+                  }
+               }
+               bits += status_byte;            
+               break;
 
-				default:
-					// absolute mode
-					count = MIN((int)status_byte, width - bits);
-					if (count < 0) {
-						return FALSE;
-					}
-					BYTE *sline = FreeImage_GetScanLine(dib, scanline);
-					if (io->read_proc((void *)(sline + bits), sizeof(BYTE) * count, 1, handle) != 1) {
-						return FALSE;
-					}
-					// align run length to even number of bytes
-					if ((status_byte & 1) == 1) {
-						if (io->read_proc(&second_byte, sizeof(BYTE), 1, handle) != 1) {
-							return FALSE;
-						}
-					}
-					bits += status_byte;				
-					break;
-
-			} // switch (status_byte)
-		}
-		else {
-			count = MIN((int)status_byte, width - bits);
-			if (count < 0) {
-				return FALSE;
-			}
-			BYTE *sline = FreeImage_GetScanLine(dib, scanline);
-			if (io->read_proc(&second_byte, sizeof(BYTE), 1, handle) != 1) {
-				return FALSE;
-			}
-			for (int i = 0; i < count; i++) {
-				*(sline + bits) = second_byte;
-				bits++;
-			}
-		}
-	}
-	
-	return FALSE;
+         } // switch (status_byte)
+      }
+      else {
+         count = MIN((int)status_byte, width - bits);
+         if (count < 0) {
+            return FALSE;
+         }
+         BYTE *sline = FreeImage_GetScanLine(dib, scanline);
+         if (io->read_proc(&second_byte, sizeof(BYTE), 1, handle) != 1) {
+            return FALSE;
+         }
+         for (int i = 0; i < count; i++) {
+            *(sline + bits) = second_byte;
+            bits++;
+         }
+      }
+   }
+   
+   return scanline ? TRUE : FALSE;
 }
 
 // --------------------------------------------------------------------------
