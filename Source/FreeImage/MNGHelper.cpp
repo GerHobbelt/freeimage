@@ -1043,6 +1043,10 @@ mng_ReadChunks(int format_id, FreeImageIO *io, fi_handle handle, long Offset, in
 					break;
 
 				case pHYs:
+					// Bounds check
+					if (NULL == mChunk || mLength < 8)
+						break;
+
 					// unit is pixels per meter
 					memcpy(&res_x, &mChunk[0], 4);
 					mng_SwapLong(&res_x);
@@ -1051,6 +1055,10 @@ mng_ReadChunks(int format_id, FreeImageIO *io, fi_handle handle, long Offset, in
 					break;
 
 				case bKGD:
+					// Bounds check 
+					if (NULL == mChunk || mLength < 6)
+ 						break;
+
 					memcpy(&bk_red, &mChunk[0], 2);
 					mng_SwapShort(&bk_red);
 					rgbBkColor.rgbRed = (BYTE)bk_red;
