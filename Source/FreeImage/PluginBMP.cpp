@@ -223,18 +223,17 @@ LoadPixelData(FreeImageIO *io, fi_handle handle, FIBITMAP *dib, int height, unsi
 
 	// Load pixel data
 	// NB: height can be < 0 for BMP data
-	if (height > 0) {
-		count = io->read_proc((void *)FreeImage_GetBits(dib), height * pitch, 1, handle);
+	BYTE *scan0 = FreeImage_GetBits(dib);
+	INT64 positiveHeight = abs(height);
+	BYTE *line = NULL;
+	for (INT64 c = 0; c < positiveHeight; c++) {
+		if (height>0)
+		   line = (BYTE*)((unsigned long long)scan0 + (unsigned long long)pitch * c);
+		else
+		   line = (BYTE*)((unsigned long long)scan0 + (unsigned long long)pitch * (positiveHeight - c - 1));
+		count = io->read_proc(line, pitch, 1, handle);
 		if(count != 1) {
 			return FALSE;
-		}
-	} else {
-		int positiveHeight = abs(height);
-		for (int c = 0; c < positiveHeight; ++c) {
-			count = io->read_proc((void *)FreeImage_GetScanLine(dib, positiveHeight - c - 1), pitch, 1, handle);
-			if(count != 1) {
-				return FALSE;
-			}
 		}
 	}
 
@@ -286,11 +285,11 @@ LoadPixelDataRLE4(FreeImageIO *io, fi_handle handle, int width, int height, FIBI
 	try {
 		height = abs(height);
 
-		pixels = (BYTE*)malloc(width * height * sizeof(BYTE));
+		pixels = (BYTE*)malloc((unsigned long long)width * height * sizeof(BYTE));
 		if (!pixels) {
 			throw(1);
 		}
-		memset(pixels, 0, width * height * sizeof(BYTE));
+		memset(pixels, 0, (unsigned long long)width * height * sizeof(BYTE));
 
 		BYTE *q = pixels;
 		BYTE *end = pixels + height * width;
@@ -382,7 +381,7 @@ LoadPixelDataRLE4(FreeImageIO *io, fi_handle handle, int width, int height, FIBI
 		{
 			// Convert to 4-bit
 			for(int y = 0; y < height; y++) {
-				const BYTE *src = (BYTE*)pixels + y * width;
+				const BYTE *src = (BYTE*)pixels + (unsigned long long)y * width;
 				BYTE *dst = FreeImage_GetScanLine(dib, y);
 
 				BOOL hinibble = TRUE;
@@ -506,8 +505,9 @@ LoadPixelDataRLE8(FreeImageIO *io, fi_handle handle, int width, int height, FIBI
          }
       }
    }
-   
-   return scanline ? TRUE : FALSE;
+
+   // return true if the entire height was decoded even if RLE_ENDOFBITMAP was not reached
+   return (scanline>=height && count>0) ? TRUE : FALSE;
 }
 
 // --------------------------------------------------------------------------
@@ -536,12 +536,12 @@ LoadWindowsBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bit
 
 		// keep some general information about the bitmap
 
-		unsigned used_colors	= bih.biClrUsed;
-		int width				= bih.biWidth;
-		int height				= bih.biHeight;		// WARNING: height can be < 0 => check each call using 'height' as a parameter
+		unsigned used_colors		= bih.biClrUsed;
+		INT64 width					= bih.biWidth;
+		INT64 height				= bih.biHeight;		// WARNING: height can be < 0 => check each call using 'height' as a parameter
 		unsigned bit_count		= bih.biBitCount;
-		unsigned compression	= bih.biCompression;
-		unsigned pitch			= CalculatePitch(CalculateLine(width, bit_count));
+		unsigned compression		= bih.biCompression;
+		unsigned long pitch		= CalculatePitch(CalculateLine(width, bit_count));
 
 		switch (bit_count) {
 			case 1 :
@@ -1182,7 +1182,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		DWORD type = 0;
 
 		// we use this offset value to make seemingly absolute seeks relative in the file		
-		long offset_in_file = io->tell_proc(handle);
+		long long offset_in_file = io->tell_proc(handle);
 
 		// read the fileheader
 		memset(&bitmapfileheader, 0, sizeof(BITMAPFILEHEADER));
@@ -1202,7 +1202,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		// read the first byte of the infoheader
 		io->read_proc(&type, sizeof(DWORD), 1, handle);
-		io->seek_proc(handle, 0 - (long)sizeof(DWORD), SEEK_CUR);
+		io->seek_proc(handle, 0 - (long long)sizeof(DWORD), SEEK_CUR);
 
 #ifdef FREEIMAGE_BIGENDIAN
 		SwapLong(&type);
@@ -1392,18 +1392,18 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 	if ((dib != NULL) && (handle != NULL)) {
 		// write the file header
 
-		const unsigned dst_width = FreeImage_GetWidth(dib);
-		const unsigned dst_height = FreeImage_GetHeight(dib);
+		const UINT64 dst_width = FreeImage_GetWidth(dib);
+		const UINT64 dst_height = FreeImage_GetHeight(dib);
 
 		// note that the dib may have been created using FreeImage_CreateView
 		// we need to recalculate the dst pitch here
-		const unsigned dst_bpp = FreeImage_GetBPP(dib);
-		const unsigned dst_pitch = CalculatePitch(CalculateLine(dst_width, dst_bpp));
+		const UINT64 dst_bpp = FreeImage_GetBPP(dib);
+		const UINT64 dst_pitch = CalculatePitch(CalculateLine(dst_width, dst_bpp));
 
 		BITMAPFILEHEADER bitmapfileheader;
 		bitmapfileheader.bfType = 0x4D42;
 		bitmapfileheader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + FreeImage_GetColorsUsed(dib) * sizeof(RGBQUAD);
-		bitmapfileheader.bfSize = bitmapfileheader.bfOffBits + dst_height * dst_pitch;
+		bitmapfileheader.bfSize = (unsigned long long)bitmapfileheader.bfOffBits + (unsigned long long)dst_height * dst_pitch;
 		bitmapfileheader.bfReserved1 = 0;
 		bitmapfileheader.bfReserved2 = 0;
 
@@ -1490,7 +1490,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		// write the bitmap data... if RLE compression is enable, use it
 
 		if ((dst_bpp == 8) && ((flags & BMP_SAVE_RLE) == BMP_SAVE_RLE)) {
-			BYTE *buffer = (BYTE*)malloc(dst_pitch * 2 * sizeof(BYTE));
+			BYTE *buffer = (BYTE*)malloc((unsigned long long)dst_pitch * 2 * sizeof(BYTE));
 
 			for (unsigned i = 0; i < dst_height; ++i) {
 				int size = RLEEncodeLine(buffer, FreeImage_GetScanLine(dib, i), FreeImage_GetLine(dib));
@@ -1513,7 +1513,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 #ifdef FREEIMAGE_BIGENDIAN
 		} else if (dst_bpp == 16) {
-			int padding = dst_pitch - dst_width * sizeof(WORD);
+			INT64 padding = dst_pitch - (unsigned long long)dst_width * sizeof(WORD);
 			WORD pad = 0;
 			WORD pixel;
 			for(unsigned y = 0; y < dst_height; y++) {
@@ -1535,11 +1535,12 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_RGB
 		} else if (dst_bpp == 24) {
-			int padding = dst_pitch - dst_width * sizeof(FILE_BGR);
+			BYTE *dBits = FreeImage_GetBits(dib);
+			INT64 padding = dst_pitch - (unsigned long long)dst_width * sizeof(FILE_BGR);
 			DWORD pad = 0;
 			FILE_BGR bgr;
 			for(unsigned y = 0; y < dst_height; y++) {
-				BYTE *line = FreeImage_GetScanLine(dib, y);
+				BYTE *line = (BYTE*)((unsigned long long)dBits + dst_pitch * y);
 				for(unsigned x = 0; x < dst_width; x++) {
 					RGBTRIPLE *triple = ((RGBTRIPLE *)line)+x;
 					bgr.b = triple->rgbtBlue;
@@ -1557,9 +1558,10 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			}
 		} else if (dst_bpp == 32) {
 			FILE_BGRA bgra;
-			for(unsigned y = 0; y < dst_height; y++) {
-				BYTE *line = FreeImage_GetScanLine(dib, y);
-				for(unsigned x = 0; x < dst_width; x++) {
+			BYTE *dBits = FreeImage_GetBits(dib);
+			for(UINT64 y = 0; y < dst_height; y++) {
+				BYTE *line = (BYTE*)((unsigned long long)dBits + dst_pitch * y);
+				for(UINT64 x = 0; x < dst_width; x++) {
 					RGBQUAD *quad = ((RGBQUAD *)line)+x;
 					bgra.b = quad->rgbBlue;
 					bgra.g = quad->rgbGreen;
@@ -1571,14 +1573,10 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 				}
 			}
 #endif
-		} 
-		else if (FreeImage_GetPitch(dib) == dst_pitch) {
-			return (io->write_proc(FreeImage_GetBits(dib), dst_height * dst_pitch, 1, handle) != 1) ? FALSE : TRUE;
-		}
-		else {
-			for (unsigned y = 0; y < dst_height; y++) {
-				BYTE *line = (BYTE*)FreeImage_GetScanLine(dib, y);
-				
+		} else {
+			BYTE *dBits = FreeImage_GetBits(dib);
+			for (UINT64 y = 0; y < dst_height; y++) {
+				BYTE *line = (BYTE*)((unsigned long long)dBits + dst_pitch * y);
 				if (io->write_proc(line, dst_pitch, 1, handle) != 1) {
 					return FALSE;
 				}
