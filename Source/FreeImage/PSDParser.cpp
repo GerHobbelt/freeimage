@@ -1379,6 +1379,12 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 	// channel(plane) line (BYTE aligned)
 	const unsigned lineSize = (_headerInfo._BitsPerChannel == 1) ? (nWidth + 7) / 8 : nWidth * bytes;
 
+	// A PSD image can have up to 56 channels. 
+	if (nChannels > 56) {
+		FreeImage_OutputMessageProc(_fi_format_id, "Unsupported number of channels %d", nChannels);
+		return NULL;
+	}
+
 	if(nCompression == PSDP_COMPRESSION_RLE && depth > 16) {
 		FreeImage_OutputMessageProc(_fi_format_id, "Unsupported RLE with depth %d", depth);
 		return NULL;
@@ -1475,11 +1481,12 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 				}
 
 				const unsigned channelOffset = GetChannelOffset(bitmap, c) * bytes;
+				const unsigned limitLineSize = MIN(dstLineSize, lineSize);
 
 				BYTE* dst_line_start = dst_first_line + channelOffset;
 				for(unsigned h = 0; h < nHeight; ++h, dst_line_start -= dstLineSize) {//<*** flipped
 					io->read_proc(line_start, lineSize, 1, handle);
-					ReadImageLine(dst_line_start, line_start, lineSize, dstBpp, bytes);
+					ReadImageLine(dst_line_start, line_start, limitLineSize, dstBpp, bytes);
 				} //< h
 			}//< ch
 
