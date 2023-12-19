@@ -33,9 +33,9 @@ BOOL DLL_CALLCONV
 FreeImage_FlipHorizontal(FIBITMAP *src) {
 	if (!FreeImage_HasPixels(src)) return FALSE;
 
-	unsigned line   = FreeImage_GetLine(src);
-	unsigned width	= FreeImage_GetWidth(src);
-	unsigned height = FreeImage_GetHeight(src);
+	size_t line 	= FreeImage_GetLine(src);
+	size_t width	= FreeImage_GetWidth(src);
+	size_t height 	= FreeImage_GetHeight(src);
 
 	unsigned bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 
@@ -139,25 +139,23 @@ FreeImage_FlipVertical(FIBITMAP *src) {
 
 	size_t pitch  = FreeImage_GetPitch(src);
 	size_t height = FreeImage_GetHeight(src);
+	size_t line   = FreeImage_GetLine(src);
 
 	// copy between aligned memories
 	Mid = (BYTE*)FreeImage_Aligned_Malloc(pitch * sizeof(BYTE), FIBITMAP_ALIGNMENT);
 	if (!Mid) return FALSE;
 
 	From = FreeImage_GetBits(src);
-	
 	size_t line_s = 0;
 	size_t line_t = (height-1) * pitch;
 
 	for(size_t y = 0; y < height/2; y++) {
 
-		memcpy(Mid, From + line_s, pitch);
-		memcpy(From + line_s, From + line_t, pitch);
-		memcpy(From + line_t, Mid, pitch);
-
+		memcpy(Mid, From + line_s, line);
+		memcpy(From + line_s, From + line_t, line);
+		memcpy(From + line_t, Mid, line);
 		line_s += pitch;
 		line_t -= pitch;
-
 	}
 
 	FreeImage_Aligned_Free(Mid);

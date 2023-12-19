@@ -21,7 +21,7 @@ This branch is used to compile the FreeImage.DLL used in Quick Picto Viewer. It 
 - fixed jxr encoder to be able to handle images over 1300 mgpx;
 - fixed bmp decoder/encoder to be able to handle images over 1300 mgpx;
 - fixed behavior with extreme values of the tone-mapping algorithms; 
-- fixed some out of bounds access in PluginBMP, PluginMNG and PluginPICT;
+- fixed some out of bounds access in PluginBMP, PluginPSD, PluginMNG and PluginPICT;
 - fixed integer wrap around and segmentation fault in Exif.cpp;
 - fixed FreeImage_Copy() to not crash with very large images [over 5000 mgpx];
 - fixed FreeImage_Rescale() to work with very large images [over 5000 mgpx]; it no longer screws up the colors;
