@@ -442,8 +442,6 @@ Precise rotation, no filters required.
 */
 static FIBITMAP* 
 Rotate180(FIBITMAP *src) {
-	INT64 x, y, k, pos;
-
 	const int bpp = FreeImage_GetBPP(src);
 	const INT64 src_width  = FreeImage_GetWidth(src);
 	const INT64 src_height = FreeImage_GetHeight(src);
@@ -464,9 +462,9 @@ Rotate180(FIBITMAP *src) {
 					BYTE *dst_bits = FreeImage_GetScanLine(dst, dst_height - y - 1);
 					for(INT64 x = 0; x < src_width; x++) {
 						// get bit at (x, y)
-						k = (src_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
+						INT64 k = (src_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
 						// set bit at (dst_width - x - 1, dst_height - y - 1)
-						pos = dst_width - x - 1;
+						INT64 pos = dst_width - x - 1;
 						k ? dst_bits[pos >> 3] |= (0x80 >> (pos & 0x7)) : dst_bits[pos >> 3] &= (0xFF7F >> (pos & 0x7));
 					}			
 				}
@@ -483,10 +481,10 @@ Rotate180(FIBITMAP *src) {
 			 // Calculate the number of bytes per pixel
 			const INT64 bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 			#pragma omp parallel for schedule(dynamic) default(none)
-			for(y = 0; y < src_height; y++) {
+			for(INT64 y = 0; y < src_height; y++) {
 				BYTE *src_bits = FreeImage_GetScanLine(src, y);
 				BYTE *dst_bits = FreeImage_GetScanLine(dst, dst_height - y - 1) + (dst_width - 1) * bytespp;
-				for(x = 0; x < src_width; x++) {
+				for(INT64 x = 0; x < src_width; x++) {
 					// get pixel at (x, y)
 					// set pixel at (dst_width - x - 1, dst_height - y - 1)
 					AssignPixel(dst_bits, src_bits, bytespp);
@@ -510,8 +508,6 @@ Code adapted from CxImage (http://www.xdp.it/cximage.htm)
 */
 static FIBITMAP* 
 Rotate270(FIBITMAP *src) {
-	INT64 x2, dlineup;
-
 	const unsigned bpp = FreeImage_GetBPP(src);
 
 	const INT64 src_width  = FreeImage_GetWidth(src);
@@ -537,7 +533,7 @@ Rotate270(FIBITMAP *src) {
 				BYTE *bsrc  = FreeImage_GetBits(src); 
 				BYTE *bdest = FreeImage_GetBits(dst);
 				BYTE *dbitsmax = bdest + dst_height * dst_pitch - 1;
-				dlineup = 8 * dst_pitch - dst_width;
+				INT64 dlineup = 8 * dst_pitch - dst_width;
 				#pragma omp parallel for schedule(dynamic) default(none)
 				for(INT64 y = 0; y < src_height; y++) {
 					// figure out the column we are going to be copying to
@@ -582,7 +578,7 @@ Rotate270(FIBITMAP *src) {
 					// y-segment
 					for(INT64 ys = 0; ys < dst_height; ys += RBLOCK) {
 						for(INT64 x = xs; x < MIN(dst_width, xs + RBLOCK); x++) {    // do rotation
-							x2 = dst_width - x - 1;
+							INT64 x2 = dst_width - x - 1;
 							// point to src pixel at (ys, x2)
 							BYTE *src_bits = bsrc + (x2 * src_pitch) + (ys * bytespp);
 							// point to dst pixel at (x, ys)
