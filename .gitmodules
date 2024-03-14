@@ -3,4 +3,4 @@
 url=git@github.com:Kanma/XMake.git
 [submodule "dependencies/zlib"]
 	path = dependencies/zlib
-url=git@github.com:Kanma/zlib.git
+url=git@github.com:yuri-ash/zlib.git
