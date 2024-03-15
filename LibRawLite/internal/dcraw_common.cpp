@@ -3125,7 +3125,7 @@ void CLASS lin_interpolate()
  */
 void CLASS vng_interpolate()
 {
-#if !defined (ANDROID)
+#if !defined (ANDROID) && !defined (__APPLE__)
   static const signed char *cp, terms[] = {
     -2,-2,+0,-1,0,0x01, -2,-2,+0,+0,1,0x01, -2,-1,-1,+0,0,0x01,
     -2,-1,+0,-1,0,0x02, -2,-1,+0,+0,0,0x03, -2,-1,+0,+1,1,0x01,
@@ -5231,7 +5231,7 @@ void CLASS adobe_coeff (char *p_make, char *p_model)
     const char *prefix;
     short t_black, t_maximum, trans[12];
   } table[] = {
-#if !defined (ANDROID)
+#if !defined (ANDROID) && !defined (__APPLE__)
     { "Apple QuickTake", 0, 0,		/* DJC */
 	{ 17576,-3191,-3318,5210,6733,-1942,9031,1280,-124 } },
     { "Canon EOS D2000", 0, 0,
