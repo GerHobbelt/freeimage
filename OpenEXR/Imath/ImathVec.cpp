@@ -122,7 +122,7 @@ Vec2<short>::normalize ()
 
 template <>
 const Vec2<short> &
-Vec2<short>::normalizeExc () throw (Iex::MathExc)
+Vec2<short>::normalizeExc () throw ()
 {
     if ((x == 0) && (y == 0))
 	throw NullVecExc ("Cannot normalize null vector.");
@@ -150,7 +150,7 @@ Vec2<short>::normalized () const
 
 template <>
 Vec2<short>
-Vec2<short>::normalizedExc () const throw (Iex::MathExc)
+Vec2<short>::normalizedExc () const throw ()
 {
     if ((x == 0) && (y == 0))
 	throw NullVecExc ("Cannot normalize null vector.");
@@ -191,7 +191,7 @@ Vec2<int>::normalize ()
 
 template <>
 const Vec2<int> &
-Vec2<int>::normalizeExc () throw (Iex::MathExc)
+Vec2<int>::normalizeExc () throw ()
 {
     if ((x == 0) && (y == 0))
 	throw NullVecExc ("Cannot normalize null vector.");
@@ -219,7 +219,7 @@ Vec2<int>::normalized () const
 
 template <>
 Vec2<int>
-Vec2<int>::normalizedExc () const throw (Iex::MathExc)
+Vec2<int>::normalizedExc () const throw ()
 {
     if ((x == 0) && (y == 0))
 	throw NullVecExc ("Cannot normalize null vector.");
@@ -260,7 +260,7 @@ Vec3<short>::normalize ()
 
 template <>
 const Vec3<short> &
-Vec3<short>::normalizeExc () throw (Iex::MathExc)
+Vec3<short>::normalizeExc () throw ()
 {
     if ((x == 0) && (y == 0) && (z == 0))
 	throw NullVecExc ("Cannot normalize null vector.");
@@ -288,7 +288,7 @@ Vec3<short>::normalized () const
 
 template <>
 Vec3<short>
-Vec3<short>::normalizedExc () const throw (Iex::MathExc)
+Vec3<short>::normalizedExc () const throw ()
 {
     if ((x == 0) && (y == 0) && (z == 0))
 	throw NullVecExc ("Cannot normalize null vector.");
@@ -329,7 +329,7 @@ Vec3<int>::normalize ()
 
 template <>
 const Vec3<int> &
-Vec3<int>::normalizeExc () throw (Iex::MathExc)
+Vec3<int>::normalizeExc () throw ()
 {
     if ((x == 0) && (y == 0) && (z == 0))
 	throw NullVecExc ("Cannot normalize null vector.");
@@ -357,7 +357,7 @@ Vec3<int>::normalized () const
 
 template <>
 Vec3<int>
-Vec3<int>::normalizedExc () const throw (Iex::MathExc)
+Vec3<int>::normalizedExc () const throw ()
 {
     if ((x == 0) && (y == 0) && (z == 0))
 	throw NullVecExc ("Cannot normalize null vector.");

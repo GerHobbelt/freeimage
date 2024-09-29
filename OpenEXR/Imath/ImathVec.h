@@ -217,11 +217,11 @@ template <class T> class Vec2
     T			length2 () const;
 
     const Vec2 &	normalize ();           // modifies *this
-    const Vec2 &	normalizeExc () throw (Iex::MathExc);
+    const Vec2 &	normalizeExc () throw ();
     const Vec2 &	normalizeNonNull ();
 
     Vec2<T>		normalized () const;	// does not modify *this
-    Vec2<T>		normalizedExc () const throw (Iex::MathExc);
+    Vec2<T>		normalizedExc () const throw ();
     Vec2<T>		normalizedNonNull () const;
 
 
@@ -410,11 +410,11 @@ template <class T> class Vec3
     T			length2 () const;
 
     const Vec3 &	normalize ();           // modifies *this
-    const Vec3 &	normalizeExc () throw (Iex::MathExc);
+    const Vec3 &	normalizeExc () throw ();
     const Vec3 &	normalizeNonNull ();
 
     Vec3<T>		normalized () const;	// does not modify *this
-    Vec3<T>		normalizedExc () const throw (Iex::MathExc);
+    Vec3<T>		normalizedExc () const throw ();
     Vec3<T>		normalizedNonNull () const;
 
 
@@ -491,7 +491,7 @@ template <> const Vec2<short> &
 Vec2<short>::normalize ();
 
 template <> const Vec2<short> &
-Vec2<short>::normalizeExc () throw (Iex::MathExc);
+Vec2<short>::normalizeExc () throw ();
 
 template <> const Vec2<short> &
 Vec2<short>::normalizeNonNull ();
@@ -500,7 +500,7 @@ template <> Vec2<short>
 Vec2<short>::normalized () const;
 
 template <> Vec2<short>
-Vec2<short>::normalizedExc () const throw (Iex::MathExc);
+Vec2<short>::normalizedExc () const throw ();
 
 template <> Vec2<short>
 Vec2<short>::normalizedNonNull () const;
@@ -515,7 +515,7 @@ template <> const Vec2<int> &
 Vec2<int>::normalize ();
 
 template <> const Vec2<int> &
-Vec2<int>::normalizeExc () throw (Iex::MathExc);
+Vec2<int>::normalizeExc () throw ();
 
 template <> const Vec2<int> &
 Vec2<int>::normalizeNonNull ();
@@ -524,7 +524,7 @@ template <> Vec2<int>
 Vec2<int>::normalized () const;
 
 template <> Vec2<int>
-Vec2<int>::normalizedExc () const throw (Iex::MathExc);
+Vec2<int>::normalizedExc () const throw ();
 
 template <> Vec2<int>
 Vec2<int>::normalizedNonNull () const;
@@ -539,7 +539,7 @@ template <> const Vec3<short> &
 Vec3<short>::normalize ();
 
 template <> const Vec3<short> &
-Vec3<short>::normalizeExc () throw (Iex::MathExc);
+Vec3<short>::normalizeExc () throw ();
 
 template <> const Vec3<short> &
 Vec3<short>::normalizeNonNull ();
@@ -548,7 +548,7 @@ template <> Vec3<short>
 Vec3<short>::normalized () const;
 
 template <> Vec3<short>
-Vec3<short>::normalizedExc () const throw (Iex::MathExc);
+Vec3<short>::normalizedExc () const throw ();
 
 template <> Vec3<short>
 Vec3<short>::normalizedNonNull () const;
@@ -563,7 +563,7 @@ template <> const Vec3<int> &
 Vec3<int>::normalize ();
 
 template <> const Vec3<int> &
-Vec3<int>::normalizeExc () throw (Iex::MathExc);
+Vec3<int>::normalizeExc () throw ();
 
 template <> const Vec3<int> &
 Vec3<int>::normalizeNonNull ();
@@ -572,7 +572,7 @@ template <> Vec3<int>
 Vec3<int>::normalized () const;
 
 template <> Vec3<int>
-Vec3<int>::normalizedExc () const throw (Iex::MathExc);
+Vec3<int>::normalizedExc () const throw ();
 
 template <> Vec3<int>
 Vec3<int>::normalizedNonNull () const;
@@ -904,7 +904,7 @@ Vec2<T>::normalize ()
 
 template <class T>
 const Vec2<T> &
-Vec2<T>::normalizeExc () throw (Iex::MathExc)
+Vec2<T>::normalizeExc () throw ()
 {
     T l = length();
 
@@ -941,7 +941,7 @@ Vec2<T>::normalized () const
 
 template <class T>
 Vec2<T>
-Vec2<T>::normalizedExc () const throw (Iex::MathExc)
+Vec2<T>::normalizedExc () const throw ()
 {
     T l = length();
 
@@ -1320,7 +1320,7 @@ Vec3<T>::normalize ()
 
 template <class T>
 const Vec3<T> &
-Vec3<T>::normalizeExc () throw (Iex::MathExc)
+Vec3<T>::normalizeExc () throw ()
 {
     T l = length();
 
@@ -1359,7 +1359,7 @@ Vec3<T>::normalized () const
 
 template <class T>
 Vec3<T>
-Vec3<T>::normalizedExc () const throw (Iex::MathExc)
+Vec3<T>::normalizedExc () const throw ()
 {
     T l = length();
 
