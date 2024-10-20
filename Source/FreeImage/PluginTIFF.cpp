@@ -365,6 +365,9 @@ Fill the dib palette according to the TIFF photometric
 static void 
 ReadPalette(TIFF *tiff, uint16_t photometric, uint16_t bitspersample, FIBITMAP *dib) {
 	RGBQUAD *pal = FreeImage_GetPalette(dib);
+	if (!pal) {
+		return;
+	}
 
 	switch(photometric) {
 		case PHOTOMETRIC_MINISBLACK:	// bitmap and greyscale image types
@@ -1475,6 +1478,14 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			throw (char*)NULL;
 		}
 
+		if (planar_config == PLANARCONFIG_SEPARATE && bitspersample < 8) {
+			// Fix for CVE-2023-47997 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2023-47995.patch
+			FreeImage_OutputMessageProc(s_format_id,
+				"Unable to handle this format: bitspersample = 8, TIFFTAG_PLANARCONFIG = PLANARCONFIG_SEPARATE"
+			);
+			throw (char*)NULL;
+		}
+ 
 		// ---------------------------------------------------------------------------------
 
 		// get image data type
@@ -2132,10 +2143,14 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				uint32_t tileRowSize = (uint32_t)TIFFTileRowSize(tif);
 				uint32_t imageRowSize = (uint32_t)TIFFScanlineSize(tif);
 
+				if(width / tileWidth * tileRowSize * 8 > bitspersample * samplesperpixel * width) {
+					// Fix for CVE-2021-40263 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2021-40263.patch
+				   free(tileBuffer);
+				   throw "Corrupted tiled TIFF file";
+				}
 
 				// In the tiff file the lines are saved from up to down 
 				// In a DIB the lines must be saved from down to up
-
 				BYTE *bits = FreeImage_GetScanLine(dib, height - 1);
 				
 				for (uint32_t y = 0; y < height; y += tileHeight) {						

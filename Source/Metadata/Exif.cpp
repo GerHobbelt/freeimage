@@ -770,8 +770,13 @@ jpeg_read_exif_dir(FIBITMAP *dib, const BYTE *tiffp, DWORD dwOffsetIfd0, DWORD d
 	//
 
 	const WORD entriesCount0th = ReadUint16(msb_order, ifd0th);
-	
-	DWORD next_offset = ReadUint32(msb_order, DIR_ENTRY_ADDR(ifd0th, entriesCount0th));
+	const BYTE* de_addr = DIR_ENTRY_ADDR(ifd0th, entriesCount0th);
+	if(de_addr+4 >= (BYTE*)(dwLength + ifd0th - tiffp)) {
+		// Fix for CVE-2021-33367 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2021-33367.patch
+		return TRUE; //< no thumbnail
+	}
+
+	DWORD next_offset = ReadUint32(msb_order, de_addr);
 	if((next_offset == 0) || (next_offset >= dwLength)) {
 		return TRUE; //< no thumbnail
 	}

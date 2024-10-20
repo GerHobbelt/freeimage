@@ -779,6 +779,11 @@ int psdThumbnail::Read(FreeImageIO *io, fi_handle handle, int iResourceSize, boo
 	if(_dib) {
 		FreeImage_Unload(_dib);
 	}
+	
+	if (_WidthBytes != _Width * _BitPerPixel / 8) {
+		// Fix for CVE-2020-24293 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2020-24293.patch
+		throw "Invalid PSD image";
+	}
 
 	if(_Format == 1) {
 		// kJpegRGB thumbnail image
@@ -1468,8 +1473,8 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 	const unsigned dstBpp =  (depth == 1) ? 1 : FreeImage_GetBPP(bitmap)/8;
 	const unsigned dstLineSize = FreeImage_GetPitch(bitmap);
 	BYTE* const dst_first_line = FreeImage_GetScanLine(bitmap, nHeight - 1);//<*** flipped
-
 	BYTE* line_start = new BYTE[lineSize]; //< fileline cache
+   const unsigned dst_buffer_size = dstLineSize * nHeight;
 
 	switch ( nCompression ) {
 		case PSDP_COMPRESSION_NONE: // raw data
@@ -1484,6 +1489,11 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 				const unsigned limitLineSize = MIN(dstLineSize, lineSize);
 
 				BYTE* dst_line_start = dst_first_line + channelOffset;
+				if (channelOffset + lineSize > dst_buffer_size) {
+					// Fix for CVE-2020-24295 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2020-24295.patch 
+					throw "Invalid PSD image";
+				}
+
 				for(unsigned h = 0; h < nHeight; ++h, dst_line_start -= dstLineSize) {//<*** flipped
 					io->read_proc(line_start, lineSize, 1, handle);
 					ReadImageLine(dst_line_start, line_start, limitLineSize, dstBpp, bytes);
