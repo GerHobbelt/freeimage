@@ -17,11 +17,16 @@ FreeImage is currently sporadically maintained by Hervé Drolon on SourceForge. 
 --------
 
 This branch is used to compile the FreeImage.DLL used in Quick Picto Viewer. It brings the following changes:
-
+- applied patches/fixes found in the Fedora F39 repository for: CVE-2020-24292, CVE-2020-24293, CVE-2020-24295, CVE-2021-33367, CVE-2021-40263, CVE-2021-40266, CVE-2023-47995, CVE-2023-47997;
+-- Patches found at: https://src.fedoraproject.org/rpms/freeimage/tree/f39
+-- CVE-2021-40266 - NULL pointer dereference in ReadPalette() in PluginTIFF.cpp [fedora-all]
+-- CVE-2023-47995 - prevents memory allocation with dimensions that exceed the JPEG format limits
+-- CVE-2023-47997 - prevent an infinite loop in PluginTIFF.cpp::Load. 
+- fixed buffer overflows in PluginICO.cpp, PSDParser.cpp, PluginTIFF.cpp (with the aforementioned patches)
 - fixed jxr encoder to be able to handle images over 1300 mgpx;
 - fixed bmp decoder/encoder to be able to handle images over 1300 mgpx;
 - fixed behavior with extreme values of the tone-mapping algorithms; 
-- fixed some out of bounds access in PluginBMP, PluginPSD, PluginMNG and PluginPICT;
+- fixed out of bounds accesses in PluginBMP, PluginPSD, PluginMNG and PluginPICT;
 - fixed integer wrap around and segmentation fault in Exif.cpp;
 - fixed FreeImage_Copy() to not crash with very large images [over 5000 mgpx];
 - fixed FreeImage_Rescale() to work with very large images [over 5000 mgpx]; it no longer screws up the colors;
