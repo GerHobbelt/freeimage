@@ -32,6 +32,7 @@ This branch is used to compile the FreeImage.DLL used in Quick Picto Viewer. It 
 - fixed FreeImage_Rescale() to work with very large images [over 5000 mgpx]; it no longer screws up the colors;
 - fixed FreeImage_Rotate() to work with very large images [over 5000 mgpx];
 - multi-threaded image resizer and rotation using OpenMP pragma;
+- updated the OpenEXR library to version 3.1.3, from version 2.2.0;
 - added FreeImage_RescaleRawBits()
 
 Bugs or limitations identified:
