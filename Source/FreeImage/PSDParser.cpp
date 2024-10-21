@@ -779,8 +779,8 @@ int psdThumbnail::Read(FreeImageIO *io, fi_handle handle, int iResourceSize, boo
 	if(_dib) {
 		FreeImage_Unload(_dib);
 	}
-	
-	if (_WidthBytes != _Width * _BitPerPixel / 8) {
+
+	if (_WidthBytes < _Width * _BitPerPixel / 8) {
 		// Fix for CVE-2020-24293 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2020-24293.patch
 		throw "Invalid PSD image";
 	}
