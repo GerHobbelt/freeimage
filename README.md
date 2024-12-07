@@ -17,6 +17,7 @@ FreeImage is currently sporadically maintained by Hervé Drolon on SourceForge. 
 --------
 
 This branch is used to compile the FreeImage.DLL used in Quick Picto Viewer. It brings the following changes:
+- FillBackgroundBitmap() has a new optional parameter;
 - applied patches/fixes found in the Fedora F39 repository for: CVE-2020-24292, CVE-2020-24293, CVE-2020-24295, CVE-2021-33367, CVE-2021-40263, CVE-2021-40266, CVE-2023-47995, CVE-2023-47997;
 -- Patches found at: https://src.fedoraproject.org/rpms/freeimage/tree/f39
 -- CVE-2021-40266 - NULL pointer dereference in ReadPalette() in PluginTIFF.cpp [fedora-all]
