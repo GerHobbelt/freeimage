@@ -18,3 +18,4 @@ r1832-improved-BMP-plugin-when-working-with-malicious-images.patch
 r1836-improved-BMP-plugin-when-working-with-malicious-images.patch
 r1848-improved-PFM-plugin-against-malicious-images.patch
 r1877-improved-DDS-plugin-against-malicious-images.patch
+build-without-root.patch
