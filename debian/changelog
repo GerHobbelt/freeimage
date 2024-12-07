@@ -1,3 +1,10 @@
+freeimage (3.18.0+ds2-11) unstable; urgency=medium
+
+  * Team upload.
+  * Allow build without root. Closes: #1089328.
+
+ -- Santiago Vila <sanvila@debian.org>  Sat, 07 Dec 2024 23:20:00 +0100
+
 freeimage (3.18.0+ds2-10) unstable; urgency=medium
 
   * Team upload
