@@ -38,3 +38,4 @@ This branch is used to compile the FreeImage.DLL used in Quick Picto Viewer. It 
 
 Bugs or limitations identified:
 - images saved as JXR seem malformed; only Windows Photo opens them [Win10], but without an alpha channel; Affinity Photo 2.0 and paint.net v5.0 crash on open;
+- saving a RGB16 image as JXR results in a malformed image that looks skewed and it also has incorrect colors, when loaded by FreeImage;
