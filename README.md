@@ -24,6 +24,7 @@ Known issues:
     - incorrect behavior with extreme values for the tone-mapping algorithms;
     - the jxr encoder cannot handle very large images [eg. >1300 mgpx];
     - the bmp decoder/encoder cannot handle very large images [eg. >1300 mgpx];
+    - FreeImage_FlipVertical() does not work correctly with image objects created via FreeImage_CreateView();
     - FreeImage_Copy() crashes with very large images [eg. over 5000 mgpx];
     - FreeImage_Rescale() yields incorrect results for very large images [eg. >4000 mgpx];
     - FreeImage_Rotate() cannot handle very large images [eg. >5000 mgpx];
