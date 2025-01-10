@@ -13,3 +13,20 @@ Workspace files for Microsoft Visual Studio provided, as well as makefiles for L
 This is a clone of https://sourceforge.net/p/freeimage/svn/ .
 
 FreeImage is currently sporadically maintained by Hervé Drolon on SourceForge. It is licensed under the GNU General Public License, version 2.0 (GPLv2) or version 3.0 (GPLv3), and the FreeImage Public License (FIPL). More details on the project homepage: https://freeimage.sourceforge.io/ .
+
+Known issues:
+-----------------------------------------------------------------------------
+
+    - various CVEs identified and unpatched/fixed
+    - buffer overflows in PluginICO.cpp, PSDParser.cpp, PluginTIFF.cpp
+    - out of bounds accesses in PluginBMP, PluginPSD, PluginMNG and PluginPICT;
+    - integer wrap around and segmentation fault in Exif.cpp;
+    - incorrect behavior with extreme values for the tone-mapping algorithms;
+    - the jxr encoder cannot handle very large images [eg. >1300 mgpx];
+    - the bmp decoder/encoder cannot handle very large images [eg. >1300 mgpx];
+    - FreeImage_Copy() crashes with very large images [eg. over 5000 mgpx];
+    - FreeImage_Rescale() yields incorrect results for very large images [eg. >4000 mgpx];
+    - FreeImage_Rotate() cannot handle very large images [eg. >5000 mgpx];
+    - very old OpenEXR library - version 2.2.0;
+
+These issues have been fixed in the QPV branch on this repository.
