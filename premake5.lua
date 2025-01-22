@@ -1,5 +1,5 @@
 --
---  FreeImage v3.15.4 build script
+--  FreeImage v3.19.0 build script
 --
 
 -- Set a prefix for the install action below
@@ -11,14 +11,15 @@ solution "FreeImage"
     configurations { "Debug", "Release" }
     platforms { "x32", "x64" }
 	location "build"
------------------------------------------------------------------------------------------------------------------------------------------------------
 
-project "FreeImagelib"
-    kind "StaticLib"
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+project "FreeImage"
+	kind "SharedLib"
     language "C++"
 	cppdialect "C++11"
 	characterset("ASCII")
-    includedirs
+
+	includedirs
     {
 		"Source",
 		"Source/Zlib",
@@ -33,7 +34,7 @@ project "FreeImagelib"
     files 
     { 
 		"Source/*.h",
-		"Source/deprecationmanager/*.h",
+		"Source/*.cpp",
 		"Source/deprecationmanager/*.cpp",
 		"Source/FreeImage/*.cpp",
 		"Source/metadata/*.cpp",
@@ -43,27 +44,39 @@ project "FreeImagelib"
     
     excludes
     {
-      
     }
-    
-    defines 
-    { 
-      "WIN32",
-	  "_WINDOWS",
-      "WIN32_LEAN_AND_MEAN",
-      "VC_EXTRALEAN",
-      "_LIB",
-      "OPJ_STATIC",
-	  "LIBRAW_NODLL",
-      "FREEIMAGE_LIB",
-      "_CRT_SECURE_NO_DEPRECATE"
-    }
-    
+	
+	links 
+	{
+		"Zlib",
+		"OpenEXR",
+		"LibTIFF4",
+		"LibPNG",
+		"LibOpenJpeg",
+		"LibJPEG",
+		"LibJXR",
+		"LibWebP",
+		"LibRaw", 
+	}
+
+	defines 
+	{
+		"WIN32",
+		"_WIN32",
+		"_WINDOWS",
+
+		"_USRDLL",
+		"OPJ_STATIC",
+		"FREEIMAGE_EXPORTS",
+		"_CRT_SECURE_NO_DEPRECATE",
+		"LIBRAW_NODLL",
+	}
+
     filter "configurations:Debug"
         defines { "DEBUG" }
 		symbols "On" -- Generate debug symbols
         targetname "FreeImage"
-           
+
     filter "configurations:Release"
         defines { "NDEBUG" }
         optimize "On" -- Enable optimizations      	  
@@ -81,11 +94,92 @@ project "FreeImagelib"
     filter{"configurations:Release", "architecture:x64" }
         targetdir ( "build/lib/x64/Release" )
 	filter{}
-		
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+project "FreeImageLib"
+	kind "StaticLib"
+    language "C++"
+	cppdialect "C++11"
+	characterset("ASCII")
+
+    includedirs
+    {
+		"Source",
+		"Source/Zlib",
+		"Source/deprecationmanager",
+		"Source/OpenEXR/half",
+		"Source/OpenEXR/iex",
+		"Source/OpenEXR/ilmimf",
+		"Source/OpenEXR/imath",
+		"Source/OpenEXR/ilmthread",
+    }
+
+    files 
+    { 
+		"Source/*.h",
+		"Source/deprecationmanager/*.h",
+		"Source/deprecationmanager/*.cpp",
+		"Source/FreeImage/*.cpp",
+		"Source/metadata/*.cpp",
+		"Source/FreeImagetoolkit/*.h",
+		"Source/FreeImagetoolkit/*.cpp",	
+    }
+    
+    excludes
+    {
+    }
+
+	defines 
+	{
+		"WIN32",
+		"_WIN32",
+		"_WINDOWS",
+
+		"OPJ_STATIC",
+		"FREEIMAGE_LIB",
+		"_CRT_SECURE_NO_DEPRECATE",
+		"LIBRAW_NODLL",
+	}
+	
+	links 
+	{
+		"Zlib",
+		"OpenEXR",
+		"LibTIFF4",
+		"LibPNG",
+		"LibOpenJpeg",
+		"LibJPEG",
+		"LibJXR",
+		"LibWebP",
+		"LibRaw", 
+	}
+
+    filter "configurations:Debug"
+        defines { "DEBUG" }
+		symbols "On" -- Generate debug symbols
+        targetname "FreeImageLib"
+
+    filter "configurations:Release"
+        defines { "NDEBUG" }
+        optimize "On" -- Enable optimizations      	  
+        targetname "FreeImageLib"
+
+    filter{"configurations:Debug", "architecture:x32" }
+        targetdir ( "build/lib/x32/Debug" )
+
+    filter{"configurations:Debug", "architecture:x64" }
+        targetdir ( "build/lib/x64/Debug" )
+
+    filter{"configurations:Release", "architecture:x32" }
+        targetdir ( "build/lib/x32/Release" )
+
+    filter{"configurations:Release", "architecture:x64" }
+        targetdir ( "build/lib/x64/Release" )
+	filter{}
 ------------------------------------------------------------------------------------------------------------------------------------------------------- ===================================================================================================================================================================
   
 project "FreeImagePlus"
-    kind "StaticLib"
+	kind "SharedLib"
 	language "C++"
 	cppdialect "C++11"
 	characterset("ASCII")
@@ -105,21 +199,25 @@ project "FreeImagePlus"
     defines 
     { 
         "WIN32",
+		"_WIN32",
 		"_WINDOWS",		
-        "WIN32_LEAN_AND_MEAN",
-        "VC_EXTRALEAN",
-        "_LIB",
-        "FIP_EXPORTS",
-        "FREEIMAGE_LIB",
-        "_CRT_SECURE_NO_DEPRECATE"
+
+        "_USRDLL",
+		"FIP_EXPORTS",
+		"_CRT_SECURE_NO_DEPRECATE",
     }
+	
+	links
+	{
+		"FreeImage"
+	}
     
-    filter{"configurations:Debug"}
+    filter "configurations:Debug"
         defines { "DEBUG" }
         symbols "On" -- Generate debug symbols
         targetname "FreeImagePlus"
       
-    filter{"configurations:Release"}
+    filter "configurations:Release"
         defines { "NDEBUG" }
         optimize "On" -- Enable optimizations
         targetname "FreeImagePlus"
@@ -130,13 +228,13 @@ project "FreeImagePlus"
 
     filter{"configurations:Debug", "architecture:x64" }
         targetdir ( "build/lib/x64/Debug" )
-        
+
     filter{"configurations:Release", "architecture:x32" }
         targetdir ( "build/lib/x32/Release" )
-    
+
     filter{"configurations:Release", "architecture:x64" }
         targetdir ( "build/lib/x64/Release" )
-	filter{}		
+	filter{}
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 project "Zlib"
@@ -309,8 +407,6 @@ project "OpenEXR"
     defines 
     { 
         "WIN32",
-        "WIN32_LEAN_AND_MEAN",
-        "VC_EXTRALEAN",
         "_LIB",
         "_CRT_SECURE_NO_DEPRECATE"
     }
@@ -378,6 +474,7 @@ project "LibTIFF4"
     { 
         "WIN32",
         "_LIB",
+		"_CRT_SECURE_NO_DEPRECATE"
     }
     
     filter{"configurations:Debug"}
@@ -430,8 +527,6 @@ project "LibPNG"
     defines 
     { 
         "WIN32",
-        "WIN32_LEAN_AND_MEAN",
-        "VC_EXTRALEAN",
         "_LIB",
         "_CRT_SECURE_NO_DEPRECATE"
     }
@@ -486,9 +581,8 @@ project "LibOpenJpeg"
     defines 
     { 
         "WIN32",
-        "WIN32_LEAN_AND_MEAN",
-        "VC_EXTRALEAN",
         "_LIB",
+		
         "OPJ_STATIC",
         "_CRT_SECURE_NO_DEPRECATE",
 		"USE_JPIP",
@@ -557,8 +651,6 @@ project "LibJPEG"
     defines 
     { 
         "WIN32",
-        "WIN32_LEAN_AND_MEAN",
-        "VC_EXTRALEAN",
         "_LIB",
         "_CRT_SECURE_NO_DEPRECATE"
     }
@@ -603,8 +695,8 @@ project "LibJXR"
         
     files 
     { 
-        "Source/LibJXR/*.h",
-        "Source/LibJXR/*.c",
+        "Source/LibJXR/**.h",
+        "Source/LibJXR/**.c",
     }
     
     excludes
@@ -614,8 +706,6 @@ project "LibJXR"
     defines 
     { 
         "WIN32",
-        "WIN32_LEAN_AND_MEAN",
-        "VC_EXTRALEAN",
         "_LIB",
 		"DISABLE_PERF_MEASUREMENT"
     }
@@ -658,8 +748,8 @@ project "LibWebP"
         
     files 
     { 
-        "Source/LibWebP/*.h",
-        "Source/LibWebP/*.c",
+        "Source/LibWebP/**.h",
+        "Source/LibWebP/**.c",
     }
     
     excludes
@@ -671,8 +761,6 @@ project "LibWebP"
         "WIN32",
 		"_WINDOWS",
         "_LIB",
-        "WIN32_LEAN_AND_MEAN",
-        "VC_EXTRALEAN",
 	}
     
     filter{"configurations:Debug"}
@@ -708,14 +796,18 @@ project "LibRaw"
     
     includedirs
     {
-        "Source/LibRawLite"
+        "Source/LibRawLite",
+		"Source/LibJPEG",
     }
         
     files 
     { 
         "Source/LibRawLite/internal/*.h",
         "Source/LibRawLite/internal/*.cpp",
-        "Source/LibRawLite/src/*.cpp",
+        "Source/LibRawLite/libraw/*.h",
+        "Source/LibRawLite/libraw/*.cpp",
+        "Source/LibRawLite/src/**.h",
+		"Source/LibRawLite/src/**.cpp",
     }
     
     excludes
@@ -725,9 +817,11 @@ project "LibRaw"
     defines 
     { 
         "WIN32",
-        "_LIB",
-        "_CRT_SECURE_NO_DEPRECATE",
-        "LIBRAW_NODLL"
+		"_LIB",
+		"LIBRAW_NODLL",
+		"USE_JPEG",
+		"USE_X3FTOOLS",
+		"_CRT_SECURE_NO_WARNINGS",
     }
     
     filter{"configurations:Debug"}
@@ -772,7 +866,7 @@ newaction
         -- Library files created in Dist directory
         files = os.matchfiles("build/lib/x32/Debug/*.lib");
         for k, f in pairs(files) do
-            os.copyfile(f, prefix .. "/x32/" .. path.getbasename(f) .. "d.lib");
+            os.copyfile(f, prefix .. "/x32/" .. path.getbasename(f) .. "_d.lib");
         end
 
         files = os.matchfiles("build/lib/x32/Release/*.lib");
@@ -782,13 +876,23 @@ newaction
 
         files = os.matchfiles("build/lib/x64/Debug/*.lib");
         for k, f in pairs(files) do
-            os.copyfile(f, prefix .. "/x64/" .. path.getbasename(f) .. "d.lib");
+            os.copyfile(f, prefix .. "/x64/" .. path.getbasename(f) .. "_d.lib");
         end
 
         files = os.matchfiles("build/lib/x64/Release/*.lib");
         for k, f in pairs(files) do
             os.copyfile(f, prefix .. "/x64/" .. path.getname(f));
         end    
+
+		files = os.matchfiles("build/lib/x64/Debug/*.dll");
+        for k, f in pairs(files) do
+            os.copyfile(f, prefix .. "/x64/" .. path.getbasename(f) .. "_d.dll");
+        end
+
+        files = os.matchfiles("build/lib/x64/Release/*.dll");
+        for k, f in pairs(files) do
+            os.copyfile(f, prefix .. "/x64/" .. path.getname(f));
+        end    		
   end
 }
       
