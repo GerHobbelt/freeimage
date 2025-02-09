@@ -46,7 +46,7 @@ typedef struct {
   struct jpeg_destination_mgr pub; /* public fields */
 
   unsigned char ** outbuffer;	/* target buffer */
-  unsigned long * outsize;
+  size_t * outsize;
   unsigned char * newbuffer;	/* newly allocated buffer */
   JOCTET * buffer;		/* start of buffer */
   size_t bufsize;
