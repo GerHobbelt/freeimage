@@ -6,58 +6,62 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
-# Target: libpng
-set(libpng_SOURCES
-	png.c
-	pngerror.c
-	pngget.c
-	pngmem.c
-	pngpread.c
-	pngread.c
-	pngrio.c
-	pngrtran.c
-	pngrutil.c
-	pngset.c
-	pngtrans.c
-	pngwio.c
-	pngwrite.c
-	pngwtran.c
-	pngwutil.c
+# Target: libopenjpeg
+set(libopenjpeg_SOURCES
+	bio.c
+	cio.c
+	dwt.c
+	event.c
+	function_list.c
+	image.c
+	invert.c
+	j2k.c
+	jp2.c
+	mct.c
+	mqc.c
+	openjpeg.c
+	opj_clock.c
+	pi.c
+	raw.c
+	t1.c
+	t2.c
+	tcd.c
+	tgt.c
 	cmake.toml
 )
 
-add_library(libpng)
+add_library(libopenjpeg)
 
-target_sources(libpng PRIVATE ${libpng_SOURCES})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libpng_SOURCES})
+target_sources(libopenjpeg PRIVATE ${libopenjpeg_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libopenjpeg_SOURCES})
 
-target_compile_definitions(libpng PUBLIC
+target_compile_definitions(libopenjpeg PUBLIC
 	_LIB
 )
 
 if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
-	target_compile_options(libpng PUBLIC
+	target_compile_options(libopenjpeg PUBLIC
 		-Wno-everything
 	)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
-	target_compile_options(libpng PUBLIC
+	target_compile_options(libopenjpeg PUBLIC
 		-Wno-everything
 	)
 endif()
 
 if(MSVC) # msvc
-	target_compile_options(libpng PUBLIC
+	target_compile_options(libopenjpeg PUBLIC
 		"/W0"
 	)
 endif()
 
-target_include_directories(libpng PUBLIC
+target_include_directories(libopenjpeg PUBLIC
 	.
 )
 
-target_link_libraries(libpng PUBLIC
-	zlib
+target_compile_definitions(libopenjpeg PUBLIC
+	OPJ_STATIC
 )
 

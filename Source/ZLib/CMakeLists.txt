@@ -6,58 +6,71 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
-# Target: libpng
-set(libpng_SOURCES
-	png.c
-	pngerror.c
-	pngget.c
-	pngmem.c
-	pngpread.c
-	pngread.c
-	pngrio.c
-	pngrtran.c
-	pngrutil.c
-	pngset.c
-	pngtrans.c
-	pngwio.c
-	pngwrite.c
-	pngwtran.c
-	pngwutil.c
+# Variables
+set(CMAKE_C_STANDARD 90)
+
+# Target: zlib
+set(CMKR_TARGET zlib)
+project(zlib C)
+
+set(zlib_SOURCES
+	adler32.c
+	compress.c
+	crc32.c
+	deflate.c
+	gzclose.c
+	gzlib.c
+	gzread.c
+	gzwrite.c
+	infback.c
+	inffast.c
+	inflate.c
+	inftrees.c
+	trees.c
+	uncompr.c
+	zutil.c
+	crc32.h
+	deflate.h
+	gzguts.h
+	inffast.h
+	inffixed.h
+	inflate.h
+	inftrees.h
+	trees.h
+	zconf.h
+	zlib.h
+	zutil.h
 	cmake.toml
 )
 
-add_library(libpng)
+add_library(zlib)
 
-target_sources(libpng PRIVATE ${libpng_SOURCES})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${libpng_SOURCES})
+target_sources(zlib PRIVATE ${zlib_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${zlib_SOURCES})
 
-target_compile_definitions(libpng PUBLIC
+target_compile_definitions(zlib PUBLIC
 	_LIB
 )
 
 if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$") OR (CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES "^MSVC$")) # clang
-	target_compile_options(libpng PUBLIC
+	target_compile_options(zlib PUBLIC
 		-Wno-everything
 	)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "GNU") # gcc
-	target_compile_options(libpng PUBLIC
+	target_compile_options(zlib PUBLIC
 		-Wno-everything
 	)
 endif()
 
 if(MSVC) # msvc
-	target_compile_options(libpng PUBLIC
+	target_compile_options(zlib PUBLIC
 		"/W0"
 	)
 endif()
 
-target_include_directories(libpng PUBLIC
+target_include_directories(zlib PUBLIC
 	.
-)
-
-target_link_libraries(libpng PUBLIC
-	zlib
 )
 
