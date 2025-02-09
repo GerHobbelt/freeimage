@@ -6,7 +6,7 @@
 // - Rui Lopes (ruiglopes@yahoo.com)
 // - Detlev Vendt (detlev.vendt@brillit.de)
 // - Petr Pytelka (pyta@lightcomp.com)
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 //
 // This file is part of FreeImage 3
 //
@@ -319,7 +319,7 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
 					if ((find_handle = _wfindfirst64(buffer, &find_data)) != -1L) {
 						do {
 							wcscpy(buffer, s_search_list[count]);
-							wcscat(buffer, find_data.name);
+							wcsncat(buffer, find_data.name, nPathSize);
 
 							HINSTANCE instance = LoadLibraryW(buffer);
 
