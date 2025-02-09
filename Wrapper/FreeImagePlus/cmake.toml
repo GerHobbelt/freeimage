@@ -1,0 +1,6 @@
+[target.freeimageplus]
+condition = "build-free-image-plus"
+type = "library"
+link-libraries = ["freeimagelib"]
+include-directories = ["."]
+sources = ["src/**.cpp"]

@@ -1,14 +1,14 @@
 //*@@@+++@@@@******************************************************************
 //
-// Copyright © Microsoft Corp.
+// Copyright ï¿½ Microsoft Corp.
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are met:
 // 
-// • Redistributions of source code must retain the above copyright notice,
+// ï¿½ Redistributions of source code must retain the above copyright notice,
 //   this list of conditions and the following disclaimer.
-// • Redistributions in binary form must reproduce the above copyright notice,
+// ï¿½ Redistributions in binary form must reproduce the above copyright notice,
 //   this list of conditions and the following disclaimer in the documentation
 //   and/or other materials provided with the distribution.
 // 
@@ -52,6 +52,27 @@ static Int DecodeSignificantAbsLevel (struct CAdaptiveHuffman *pAHexpt, BitIOInf
 //================================================================
 // Memory access functions
 //================================================================
+#if (defined(WIN32) && !defined(UNDER_CE) && (!defined(__MINGW32__) || defined(__MINGW64_TOOLCHAIN__))) || (defined(UNDER_CE) && defined(_ARM_))
+#define _byteswap_ulong2(x) _byteswap_ulong(x)
+#else
+#ifdef _BIG__ENDIAN_
+#define _byteswap_ulong2(x)  (x)
+#else // _BIG__ENDIAN_
+U32 _byteswap_ulong2(U32 bits)
+{
+    U32 r = (bits & 0xffu) << 24;
+    r |= (bits << 8) & 0xff0000u;
+    r |= ((bits >> 8) & 0xff00u);
+    r |= ((bits >> 24) & 0xffu);
+
+    return r;
+}
+#endif // _BIG__ENDIAN_
+#endif
+
+//================================================================
+// Memory access functions
+//================================================================
 static U32 _FORCEINLINE _load4(void* pv)
 {
 #ifdef _BIG__ENDIAN_
@@ -61,9 +82,9 @@ static U32 _FORCEINLINE _load4(void* pv)
     U32  v;
     v = ((U16 *) pv)[0];
     v |= ((U32)((U16 *) pv)[1]) << 16;
-    return _byteswap_ulong(v);
+    return _byteswap_ulong2(v);
 #else // _M_IA64
-    return _byteswap_ulong(*(U32*)pv);
+    return _byteswap_ulong2(*(U32*)pv);
 #endif // _M_IA64
 #endif // _BIG__ENDIAN_
 }

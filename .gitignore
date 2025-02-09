@@ -28,3 +28,9 @@ Wrapper/FreeImagePlus/test/*.tiff
 /TestAPI/test_view.bmp
 
 .temp
+
+cmake-build*/
+build*/
+cmake/build*/
+.idea/
+.vscode/
