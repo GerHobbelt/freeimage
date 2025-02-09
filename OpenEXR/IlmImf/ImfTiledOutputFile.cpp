@@ -63,7 +63,12 @@
 #include <fstream>
 #include <assert.h>
 #include <map>
+//min and max are defined in algorithm in visual
+#ifdef _MSC_VER
+#include <algorithm>
+#endif //_MSC_VER
 
+#include <algorithm>
 
 namespace Imf {
 

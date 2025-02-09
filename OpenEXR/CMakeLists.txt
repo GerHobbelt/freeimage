@@ -217,6 +217,17 @@ endif()
 
 xmake_project_link(OPENEXR ZLIB)
 
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(OPENEXR COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()
 
 # Exportations
 xmake_export_include_paths(OPENEXR ${INCLUDE_PATHS})
+
+set_target_properties(openexr PROPERTIES FOLDER "LibsExtern/freeimage")
+
+#make variable available for parent scope
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(hasParent)
+	set(GLOBAL_LIBRARIES "${GLOBAL_LIBRARIES};openexr" PARENT_SCOPE)
+endif()	

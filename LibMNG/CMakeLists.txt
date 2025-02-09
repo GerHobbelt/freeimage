@@ -60,4 +60,16 @@ else()
     xmake_add_to_list_property(MNG COMPILE_DEFINITIONS "_CRT_SECURE_NO_DEPRECATE")
 endif()
 
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(MNG COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()
+
 xmake_project_link(MNG ZLIB)
+
+set_target_properties(mng PROPERTIES FOLDER "LibsExtern/freeimage")
+
+#make variable available for parent scope
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(hasParent)
+	set(GLOBAL_LIBRARIES "${GLOBAL_LIBRARIES};mng" PARENT_SCOPE)
+endif()	

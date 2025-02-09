@@ -87,7 +87,8 @@ Most compilers implement their own version of this keyword ...
 #endif
 
 /* MSVC does not have lrintf */
-#ifdef _MSC_VER
+/* it does in 2019, I should check if free image has a more recent version */
+#if defined( _MSC_VER ) && _MSC_VER < 1900
 static INLINE long lrintf(float f){
 #ifdef _M_X64
 	return (long)((f > 0.0f) ? (f + 0.5f) : (f - 0.5f));

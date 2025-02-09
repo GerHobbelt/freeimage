@@ -38,3 +38,15 @@ else()
 endif()
 
 xmake_project_link(PNG ZLIB)
+
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(PNG COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()
+
+set_target_properties(png PROPERTIES FOLDER "LibsExtern/freeimage")
+
+#make variable available for parent scope
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(hasParent)
+	set(GLOBAL_LIBRARIES "${GLOBAL_LIBRARIES};png" PARENT_SCOPE)
+endif()	

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.1)
 project(FREEIMAGE)
 
 
@@ -36,6 +36,21 @@ endif()
 
 include("${XMAKE_DEPENDENCIES_DIR}/XMake/XMake.cmake")
 
+##########################################################################################
+# Global parameters
+
+# Endianess seems to work weird, is there a bug in the library?
+if (DEFINED FREEIMAGE_FORCE_BIGENDIAN)
+#need to check xmake to support multiplatform
+    set(FREEIMAGE_CPP_FLAGS "FREEIMAGE_BIGENDIAN")
+endif()
+
+##########################################################################################
+#disable some warnings that won't be fixed
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    add_compile_options(/wd4244)#'conversion' conversion from 'type1' to 'type2', possible loss of data #Please note that I usually fixed these ones, but as it is in underlying library, I don't want to modify code too much
+    add_compile_options(/wd4267)#'var' : conversion from 'size_t' to 'type', possible loss of data #Please note that I usually fixed these ones, but as it is in underlying library, I don't want to modify code too much
+endif()
 
 ##########################################################################################
 # Process subdirectories
@@ -170,8 +185,23 @@ else()
     xmake_add_to_list_property(FREEIMAGE COMPILE_DEFINITIONS "_CRT_SECURE_NO_DEPRECATE")
 endif()
 
+if (DEFINED FREEIMAGE_CPP_FLAGS)
+    xmake_add_to_list_property(FREEIMAGE COMPILE_DEFINITIONS "${FREEIMAGE_CPP_FLAGS}")
+endif()
+
 xmake_project_link(FREEIMAGE JPEG MNG OPENEXR OPENJPEG PNG RAWLITE TIFF ZLIB)
 
 # Exportations
 xmake_export_include_paths(FREEIMAGE ${FREEIMAGE_SOURCE_DIR})
 xmake_export_compile_definitions(FREEIMAGE "FREEIMAGE_LIB" "OPJ_STATIC" "LIBRAW_NODLL")
+
+set_target_properties(freeimage PROPERTIES FOLDER "LibsExtern/freeimage")
+
+#Should use xmake?
+set(FREEIMAGE_CPP_FLAGS "${FREEIMAGE_CPP_FLAGS} -DFREEIMAGE_LIB -DOPJ_STATIC -DLIBRAW_NODLL")
+
+#make variable available for parent scope
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(hasParent)
+	set(GLOBAL_CPP_FLAGS "${GLOBAL_CPP_FLAGS} ${FREEIMAGE_CPP_FLAGS}" PARENT_SCOPE)
+endif()
