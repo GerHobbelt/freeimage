@@ -111,7 +111,7 @@ FreeImage_ZLibGZip(BYTE *target, DWORD target_size, BYTE *source, DWORD source_s
 	switch(zerr) {
 		case Z_MEM_ERROR:	// not enough memory
 		case Z_BUF_ERROR:	// not enough room in the output buffer
-			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zError(zerr));
+			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zngError(zerr));
 			return 0;
         case Z_OK: {
             // patch header, setup crc and length (stolen from mod_trace_output)
@@ -141,13 +141,13 @@ compression library.
 @see FreeImage_ZLibGZip
 */
 
-static int get_byte(z_stream *stream) {
+static int get_byte(zng_stream *stream) {
     if (stream->avail_in <= 0) return EOF;
     stream->avail_in--;
     return *(stream->next_in)++;
 }
 
-static int checkheader(z_stream *stream) {
+static int checkheader(zng_stream *stream) {
     int flags, c;
     DWORD len;
 
@@ -191,7 +191,7 @@ FreeImage_ZLibGUnzip(BYTE *target, DWORD target_size, BYTE *source, DWORD source
             stream.next_out  = target;
             stream.avail_out = target_size;
 
-            if ((zerr = zng_checkheader(&stream)) == Z_OK) {
+            if ((zerr = checkheader(&stream)) == Z_OK) {
                 zerr = zng_inflate (&stream, Z_NO_FLUSH);
                 dest_len = target_size - stream.avail_out;
 

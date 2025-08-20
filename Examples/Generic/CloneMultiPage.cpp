@@ -48,7 +48,7 @@ void MyMessageFunc(FREE_IMAGE_FORMAT fif, const char *message) {
 
 // ----------------------------------------------------------
 
-bool CloneMultiPage(FREE_IMAGE_FORMAT fif, char *input, char *output, int output_flag) {
+bool CloneMultiPage(FREE_IMAGE_FORMAT fif, const char *input, const char *output, int output_flag) {
 
 	BOOL bMemoryCache = TRUE;
 
@@ -89,8 +89,8 @@ bool CloneMultiPage(FREE_IMAGE_FORMAT fif, char *input, char *output, int output
 int 
 main(int argc, char *argv[]) {
 
-	char *input_filename = "images\\input.tif";
-	char *output_filename = "images\\clone.tif";
+	const char *input_filename = "images\\input.tif";
+	const char *output_filename = "images\\clone.tif";
 
 	// call this ONLY when linking with FreeImage as a static library
 #ifdef FREEIMAGE_LIB
