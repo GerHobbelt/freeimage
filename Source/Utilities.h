@@ -52,6 +52,11 @@
 #include <limits>
 #include <memory>
 
+#undef min
+#undef max
+#undef MIN
+#undef MAX
+
 // ==========================================================
 //   Bitmap palette and pixels alignment
 // ==========================================================

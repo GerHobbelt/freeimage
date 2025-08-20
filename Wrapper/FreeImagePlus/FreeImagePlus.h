@@ -30,7 +30,7 @@
 
 // Compiler options ---------------------------------------------------------
 
-#if defined(FREEIMAGE_LIB)
+#if defined(FREEIMAGE_LIB) || defined(BUILD_MONOLITHIC)
 	#define FIP_API
 	#define FIP_CALLCONV
 #else

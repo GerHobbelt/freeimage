@@ -38,13 +38,13 @@ which must be at least 0.1% larger than source_size plus 12 bytes.
 */
 DWORD DLL_CALLCONV 
 FreeImage_ZLibCompress(BYTE *target, DWORD target_size, BYTE *source, DWORD source_size) {
-	uLongf dest_len = (uLongf)target_size;
+	size_t dest_len = target_size;
 
-	int zerr = compress(target, &dest_len, source, source_size);
+	int zerr = zng_compress(target, &dest_len, source, source_size);
 	switch(zerr) {
 		case Z_MEM_ERROR:	// not enough memory
 		case Z_BUF_ERROR:	// not enough room in the output buffer
-			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zError(zerr));
+			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zng_zError(zerr));
 			return 0;
 		case Z_OK:
 			return dest_len;
@@ -70,14 +70,14 @@ compression library.
 */
 DWORD DLL_CALLCONV 
 FreeImage_ZLibUncompress(BYTE *target, DWORD target_size, BYTE *source, DWORD source_size) {
-	uLongf dest_len = (uLongf)target_size;
+	size_t dest_len = target_size;
 
 	int zerr = zng_uncompress(target, &dest_len, source, source_size);
 	switch(zerr) {
 		case Z_MEM_ERROR:	// not enough memory
 		case Z_BUF_ERROR:	// not enough room in the output buffer
 		case Z_DATA_ERROR:	// input data was corrupted
-			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zError(zerr));
+			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zng_zError(zerr));
 			return 0;
 		case Z_OK:
 			return dest_len;
@@ -101,7 +101,7 @@ which must be at least 0.1% larger than source_size plus 24 bytes.
 */
 DWORD DLL_CALLCONV 
 FreeImage_ZLibGZip(BYTE *target, DWORD target_size, BYTE *source, DWORD source_size) {
-	uLongf dest_len = (uLongf)target_size - 12;
+	size_t dest_len = target_size - 12;
 	DWORD crc = zng_crc32(0L, NULL, 0);
 
     // set up header (stolen from zlib/gzio.c)
@@ -111,7 +111,7 @@ FreeImage_ZLibGZip(BYTE *target, DWORD target_size, BYTE *source, DWORD source_s
 	switch(zerr) {
 		case Z_MEM_ERROR:	// not enough memory
 		case Z_BUF_ERROR:	// not enough room in the output buffer
-			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zngError(zerr));
+			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zng_zError(zerr));
 			return 0;
         case Z_OK: {
             // patch header, setup crc and length (stolen from mod_trace_output)
@@ -201,7 +201,7 @@ FreeImage_ZLibGUnzip(BYTE *target, DWORD target_size, BYTE *source, DWORD source
         }
     }
     if (zerr != Z_OK && zerr != Z_STREAM_END) {
-        FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zError(zerr));
+        FreeImage_OutputMessageProc(FIF_UNKNOWN, "Zlib error : %s", zng_zError(zerr));
         return 0;
     }
     return dest_len;

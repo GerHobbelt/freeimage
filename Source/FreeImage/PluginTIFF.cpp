@@ -47,7 +47,7 @@
 // --------------------------------------------------------------------------
 // GeoTIFF profile (see XTIFF.cpp)
 // --------------------------------------------------------------------------
-void XTIFFInitialize();
+void XTIFFInitialize(void);
 int tiff_read_geotiff_profile(TIFF *tif, FIBITMAP *dib);
 int tiff_write_geotiff_profile(TIFF *tif, FIBITMAP *dib);
 

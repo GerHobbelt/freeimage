@@ -365,7 +365,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		// allocate the output dib
 		dib = FreeImage_Allocate(xsize, rows, 1);
 		unsigned pitch = FreeImage_GetPitch(dib);
-		uint32 linesize = TIFFhowmany8(xsize);
+		uint32_t linesize = TIFFhowmany8(xsize);
 
 		// fill the bitmap structure ...
 		// ... palette
