@@ -19,7 +19,7 @@
 // Use at your own risk!
 // ==========================================================
 
-#include <zlib.h>
+#include <zlib-ng.h>
 #include "FreeImage.h"
 #include "Utilities.h"
 #include <zutil.h>	/* must be the last header because of error C3163 in VS2008 (_vsnprintf defined in stdio.h) */
@@ -72,7 +72,7 @@ DWORD DLL_CALLCONV
 FreeImage_ZLibUncompress(BYTE *target, DWORD target_size, BYTE *source, DWORD source_size) {
 	uLongf dest_len = (uLongf)target_size;
 
-	int zerr = uncompress(target, &dest_len, source, source_size);
+	int zerr = zng_uncompress(target, &dest_len, source, source_size);
 	switch(zerr) {
 		case Z_MEM_ERROR:	// not enough memory
 		case Z_BUF_ERROR:	// not enough room in the output buffer
@@ -102,12 +102,12 @@ which must be at least 0.1% larger than source_size plus 24 bytes.
 DWORD DLL_CALLCONV 
 FreeImage_ZLibGZip(BYTE *target, DWORD target_size, BYTE *source, DWORD source_size) {
 	uLongf dest_len = (uLongf)target_size - 12;
-	DWORD crc = crc32(0L, NULL, 0);
+	DWORD crc = zng_crc32(0L, NULL, 0);
 
     // set up header (stolen from zlib/gzio.c)
     sprintf((char *)target, "%c%c%c%c%c%c%c%c", 0x1f, 0x8b,
          Z_DEFLATED, 0 /*flags*/, 0,0,0,0 /*time*/);
-    int zerr = compress2(target + 8, &dest_len, source, source_size, Z_BEST_COMPRESSION);
+    int zerr = zng_compress2(target + 8, &dest_len, source, source_size, Z_BEST_COMPRESSION);
 	switch(zerr) {
 		case Z_MEM_ERROR:	// not enough memory
 		case Z_BUF_ERROR:	// not enough room in the output buffer
@@ -116,7 +116,7 @@ FreeImage_ZLibGZip(BYTE *target, DWORD target_size, BYTE *source, DWORD source_s
         case Z_OK: {
             // patch header, setup crc and length (stolen from mod_trace_output)
             BYTE *p = target + 8; *p++ = 2; *p = OS_CODE; // xflags, os_code
- 	        crc = crc32(crc, source, source_size);
+ 	        crc = zng_crc32(crc, source, source_size);
 	        memcpy(target + 4 + dest_len, &crc, 4);
 	        memcpy(target + 8 + dest_len, &source_size, 4);
             return dest_len + 12;
@@ -182,21 +182,21 @@ FreeImage_ZLibGUnzip(BYTE *target, DWORD target_size, BYTE *source, DWORD source
     int   zerr     = Z_DATA_ERROR;
 
     if (src_len > 0) {
-        z_stream stream;
+        zng_stream stream;
         memset(&stream, 0, sizeof (stream));
-        if ((zerr = inflateInit2(&stream, -MAX_WBITS)) == Z_OK) {
+        if ((zerr = zng_inflateInit2(&stream, -MAX_WBITS)) == Z_OK) {
             stream.next_in  = source;
             stream.avail_in = source_size;
 
             stream.next_out  = target;
             stream.avail_out = target_size;
 
-            if ((zerr = checkheader(&stream)) == Z_OK) {
-                zerr = inflate (&stream, Z_NO_FLUSH);
+            if ((zerr = zng_checkheader(&stream)) == Z_OK) {
+                zerr = zng_inflate (&stream, Z_NO_FLUSH);
                 dest_len = target_size - stream.avail_out;
 
                 if (zerr == Z_OK || zerr == Z_STREAM_END)
-                    inflateEnd(&stream);
+					zng_inflateEnd(&stream);
             } 
         }
     }
@@ -219,5 +219,5 @@ If source is NULL, this function returns the required initial value for the crc.
 DWORD DLL_CALLCONV 
 FreeImage_ZLibCRC32(DWORD crc, BYTE *source, DWORD source_size) {
 
-    return crc32(crc, source, source_size);
+    return zng_crc32(crc, source, source_size);
 }
