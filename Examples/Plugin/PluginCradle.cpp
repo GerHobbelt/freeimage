@@ -119,7 +119,7 @@ MimeType() {
 	was not made for the bitmap.
 */
 static BOOL DLL_CALLCONV
-Validate(FreeImageIO &io, fi_handle handle) {
+Validate(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 

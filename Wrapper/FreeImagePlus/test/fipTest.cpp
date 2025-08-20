@@ -2,7 +2,7 @@
 // FreeImagePlus Test Script
 //
 // Design and implementation by
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 //
 // This file is part of FreeImage 3
 //
@@ -43,8 +43,8 @@ void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message) {
 // ----------------------------------------------------------
 
 int main(int argc, char *argv[]) {
-	char *lpszTestFile = "test.jpg";
-	char *lpszMultiPage = "test.tif";
+	const char *lpszTestFile = "test.jpg";
+	const char *lpszMultiPage = "test.tif";
 
 #if defined(FREEIMAGE_LIB) || !defined(WIN32)
 	FreeImage_Initialise();

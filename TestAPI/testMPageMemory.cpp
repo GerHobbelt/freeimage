@@ -2,7 +2,7 @@
 // FreeImage 3 Test Script
 //
 // Design and implementation by
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 //
 // This file is part of FreeImage 3
 //
@@ -161,7 +161,7 @@ loadBuffer(const char *lpszPathName, BYTE **buffer, DWORD *length) {
 	return FALSE;
 }
 
-BOOL testMemoryStreamMultiPageOpenSave(const char *lpszPathName, char *output, int input_flag, int output_flag) {
+BOOL testMemoryStreamMultiPageOpenSave(const char *lpszPathName, const char *output, int input_flag, int output_flag) {
 	BOOL bSuccess = FALSE;
 
 	BYTE *buffer = NULL;

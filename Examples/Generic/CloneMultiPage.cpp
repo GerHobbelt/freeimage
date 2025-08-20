@@ -28,11 +28,13 @@
 //
 // ==========================================================
 
-#include <iostream.h>
-#include <stdio.h>
-#include <string.h>
+#include <iostream>
+#include <cstdio>
+#include <string>
 
 #include "FreeImage.h"
+
+using namespace std;
 
 // ----------------------------------------------------------
 

@@ -68,9 +68,9 @@ _SeekProc(fi_handle handle, long offset, int origin) {
 
 inline long _stdcall
 _TellProc(fi_handle handle) {
-	assert((int)handle > (int)g_load_address);
+	assert((intptr_t)handle > (intptr_t)g_load_address);
 
-	return ((int)g_load_address - (int)handle);
+	return ((intptr_t)g_load_address - (intptr_t)handle);
 }
 
 // ----------------------------------------------------------

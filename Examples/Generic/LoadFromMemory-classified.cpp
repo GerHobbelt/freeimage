@@ -19,6 +19,11 @@
 // Use at your own risk!
 // ==========================================================
 
+#include "FreeImage.h"
+#include "FreeImageIO.h"
+
+#include <cassert>
+
 class MemIO : public FreeImageIO {
 public :
     MemIO( BYTE *data ) : _start(data), _cp(data) {
@@ -62,13 +67,13 @@ MemIO::_ReadProc(void *buffer, unsigned size, unsigned count, fi_handle handle) 
 
 unsigned
 MemIO::_WriteProc(void *buffer, unsigned size, unsigned count, fi_handle handle) {
-    ASSERT( false );
+    assert( false );
     return size;
 }
 
 int
 MemIO::_SeekProc(fi_handle handle, long offset, int origin) {
-    ASSERT(origin != SEEK_END);
+    assert(origin != SEEK_END);
 
     MemIO *memIO = (MemIO*)handle;
 

@@ -2,7 +2,7 @@
 // Tag to string conversion functions
 //
 // Design and implementation by
-// - Hervé Drolon <drolon@infonie.fr>
+// - HervÃ© Drolon <drolon@infonie.fr>
 //
 // This file is part of FreeImage 3
 //
@@ -174,10 +174,10 @@ ConvertAnyTag(FITAG *tag) {
 		{
 			DWORD *pvalue = (DWORD *)FreeImage_GetTagValue(tag);
 
-			sprintf(format, "%X", pvalue[0]);
+			sprintf(format, "%X", (unsigned int)pvalue[0]);
 			buffer += format;
 			for(i = 1; i < tag_count; i++) {
-				sprintf(format, " %X",	pvalue[i]);
+				sprintf(format, " %X", (unsigned int)pvalue[i]);
 				buffer += format;
 			}
 			break;
