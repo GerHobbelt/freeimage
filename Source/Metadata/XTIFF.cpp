@@ -275,7 +275,7 @@ tiff_read_exif_tag(TIFF *tif, uint32_t tag_id, FIBITMAP *dib, TagLib::MDMODEL md
 			}
 			value_count = value_count16;
 		} else {
-			// a count is required, it will be of type uint32
+			// a count is required, it will be of type uint32_t
 			uint32_t value_count32 = 0;
 			if(TIFFGetField(tif, tag_id, &value_count32, &raw_data) != 1) {
 				// stop, ignore error
@@ -446,7 +446,7 @@ tiff_read_exif_tag(TIFF *tif, uint32_t tag_id, FIBITMAP *dib, TagLib::MDMODEL md
 		case TIFF_RATIONAL: {
 			// LibTIFF converts rational to floats : reconvert floats to rationals
 			DWORD *rvalue = (DWORD*)malloc(2 * value_count * sizeof(DWORD));
-			for(uint32 i = 0; i < value_count; i++) {
+			for(uint32_t i = 0; i < value_count; i++) {
 				float *fv = (float*)raw_data;
 				FIRational rational(fv[i]);
 				rvalue[2*i] = rational.getNumerator();
@@ -463,7 +463,7 @@ tiff_read_exif_tag(TIFF *tif, uint32_t tag_id, FIBITMAP *dib, TagLib::MDMODEL md
 		case TIFF_SRATIONAL: {
 			// LibTIFF converts rational to floats : reconvert floats to rationals
 			LONG *rvalue = (LONG*)malloc(2 * value_count * sizeof(LONG));
-			for(uint32 i = 0; i < value_count; i++) {
+			for(uint32_t i = 0; i < value_count; i++) {
 				float *fv = (float*)raw_data;
 				FIRational rational(fv[i]);
 				rvalue[2*i] = rational.getNumerator();

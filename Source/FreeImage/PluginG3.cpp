@@ -37,7 +37,7 @@ static int s_format_id;
 
 #define G3_DEFAULT_WIDTH	1728
 
-#define TIFFhowmany8(x) (((x)&0x07)?((uint32)(x)>>3)+1:(uint32)(x)>>3)
+#define TIFFhowmany8(x) (((x)&0x07)?((uint32_t)(x)>>3)+1:(uint32_t)(x)>>3)
 
 // ==========================================================
 //   libtiff interface 

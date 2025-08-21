@@ -2,7 +2,7 @@
 // Helper class for rational numbers
 //
 // Design and implementation by
-// - Hervé Drolon <drolon@infonie.fr>
+// - HervÃ© Drolon <drolon@infonie.fr>
 //
 // This file is part of FreeImage 3
 //
@@ -21,6 +21,8 @@
 
 #ifndef FREEIMAGE_FIRATIONAL_H
 #define FREEIMAGE_FIRATIONAL_H
+
+#include "FreeImage.h"
 
 /**
 Helper class to deal with rational numbers. 

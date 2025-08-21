@@ -77,7 +77,7 @@ _WriteProc(png_structp png_ptr, unsigned char *data, png_size_t size) {
 
 static void
 _FlushProc(png_structp png_ptr) {
-	(png_structp)png_ptr;
+	(void)png_ptr;
 	// empty flush implementation
 }
 
@@ -91,8 +91,8 @@ error_handler(png_structp png_ptr, const char *error) {
 
 static void
 warning_handler(png_structp png_ptr, const char *warning) {
-	(png_structp)png_ptr;
-	(char*)warning;
+	(void)png_ptr;
+	(void)warning;
 }
 
 // ==========================================================
@@ -807,7 +807,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
-	png_structp png_ptr;
+	png_structp png_ptr = nullptr;
 	png_infop info_ptr;
 	png_colorp palette = NULL;
 	png_uint_32 width, height;
