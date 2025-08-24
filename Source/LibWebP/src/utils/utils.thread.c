@@ -76,21 +76,21 @@ static int pthread_create(pthread_t* const thread, const void* attr,
                           unsigned int (__stdcall *start)(void*), void* arg) {
   (void)attr;
 #ifdef USE_CREATE_THREAD
-  *thread = CreateThread(NULL,   /* lpThreadAttributes */
+  *thread = CreateThread(nullptr,   /* lpThreadAttributes */
                          0,      /* dwStackSize */
                          start,
                          arg,
                          0,      /* dwStackSize */
-                         NULL);  /* lpThreadId */
+                         nullptr);  /* lpThreadId */
 #else
-  *thread = (pthread_t)_beginthreadex(NULL,   /* void *security */
+  *thread = (pthread_t)_beginthreadex(nullptr,   /* void *security */
                                       0,      /* unsigned stack_size */
                                       start,
                                       arg,
                                       0,      /* unsigned initflag */
-                                      NULL);  /* unsigned *thrdaddr */
+                                      nullptr);  /* unsigned *thrdaddr */
 #endif
-  if (*thread == NULL) return 1;
+  if (*thread == nullptr) return 1;
   SetThreadPriority(*thread, THREAD_PRIORITY_ABOVE_NORMAL);
   return 0;
 }
@@ -145,12 +145,12 @@ static int pthread_cond_init(pthread_cond_t* const condition, void* cond_attr) {
 #ifdef USE_WINDOWS_CONDITION_VARIABLE
   InitializeConditionVariable(condition);
 #else
-  condition->waiting_sem_ = CreateSemaphore(NULL, 0, 1, NULL);
-  condition->received_sem_ = CreateSemaphore(NULL, 0, 1, NULL);
-  condition->signal_event_ = CreateEvent(NULL, FALSE, FALSE, NULL);
-  if (condition->waiting_sem_ == NULL ||
-      condition->received_sem_ == NULL ||
-      condition->signal_event_ == NULL) {
+  condition->waiting_sem_ = CreateSemaphore(nullptr, 0, 1, nullptr);
+  condition->received_sem_ = CreateSemaphore(nullptr, 0, 1, nullptr);
+  condition->signal_event_ = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+  if (condition->waiting_sem_ == nullptr ||
+      condition->received_sem_ == nullptr ||
+      condition->signal_event_ == nullptr) {
     pthread_cond_destroy(condition);
     return 1;
   }
@@ -183,12 +183,12 @@ static int pthread_cond_wait(pthread_cond_t* const condition,
 #else
   // note that there is a consumer available so the signal isn't dropped in
   // pthread_cond_signal
-  if (!ReleaseSemaphore(condition->waiting_sem_, 1, NULL)) return 1;
+  if (!ReleaseSemaphore(condition->waiting_sem_, 1, nullptr)) return 1;
   // now unlock the mutex so pthread_cond_signal may be issued
   pthread_mutex_unlock(mutex);
   ok = (WaitForSingleObject(condition->signal_event_, INFINITE) ==
         WAIT_OBJECT_0);
-  ok &= ReleaseSemaphore(condition->received_sem_, 1, NULL);
+  ok &= ReleaseSemaphore(condition->received_sem_, 1, nullptr);
   pthread_mutex_lock(mutex);
 #endif
   return !ok;
@@ -221,7 +221,7 @@ static THREADFN ThreadLoop(void* ptr) {
     pthread_cond_signal(&worker->impl_->condition_);
     pthread_mutex_unlock(&worker->impl_->mutex_);
   }
-  return THREAD_RETURN(NULL);    // Thread is finished
+  return THREAD_RETURN(nullptr);    // Thread is finished
 }
 
 // main thread state control
@@ -229,7 +229,7 @@ static void ChangeState(WebPWorker* const worker, WebPWorkerStatus new_status) {
   // No-op when attempting to change state on a thread that didn't come up.
   // Checking status_ without acquiring the lock first would result in a data
   // race.
-  if (worker->impl_ == NULL) return;
+  if (worker->impl_ == nullptr) return;
 
   pthread_mutex_lock(&worker->impl_->mutex_);
   if (worker->status_ >= OK) {
@@ -269,18 +269,18 @@ static int Reset(WebPWorker* const worker) {
   if (worker->status_ < OK) {
 #ifdef WEBP_USE_THREAD
     worker->impl_ = (WebPWorkerImpl*)WebPSafeCalloc(1, sizeof(*worker->impl_));
-    if (worker->impl_ == NULL) {
+    if (worker->impl_ == nullptr) {
       return 0;
     }
-    if (pthread_mutex_init(&worker->impl_->mutex_, NULL)) {
+    if (pthread_mutex_init(&worker->impl_->mutex_, nullptr)) {
       goto Error;
     }
-    if (pthread_cond_init(&worker->impl_->condition_, NULL)) {
+    if (pthread_cond_init(&worker->impl_->condition_, nullptr)) {
       pthread_mutex_destroy(&worker->impl_->mutex_);
       goto Error;
     }
     pthread_mutex_lock(&worker->impl_->mutex_);
-    ok = !pthread_create(&worker->impl_->thread_, NULL, ThreadLoop, worker);
+    ok = !pthread_create(&worker->impl_->thread_, nullptr, ThreadLoop, worker);
     if (ok) worker->status_ = OK;
     pthread_mutex_unlock(&worker->impl_->mutex_);
     if (!ok) {
@@ -288,7 +288,7 @@ static int Reset(WebPWorker* const worker) {
       pthread_cond_destroy(&worker->impl_->condition_);
  Error:
       WebPSafeFree(worker->impl_);
-      worker->impl_ = NULL;
+      worker->impl_ = nullptr;
       return 0;
     }
 #else
@@ -302,7 +302,7 @@ static int Reset(WebPWorker* const worker) {
 }
 
 static void Execute(WebPWorker* const worker) {
-  if (worker->hook != NULL) {
+  if (worker->hook != nullptr) {
     worker->had_error |= !worker->hook(worker->data1, worker->data2);
   }
 }
@@ -317,17 +317,17 @@ static void Launch(WebPWorker* const worker) {
 
 static void End(WebPWorker* const worker) {
 #ifdef WEBP_USE_THREAD
-  if (worker->impl_ != NULL) {
+  if (worker->impl_ != nullptr) {
     ChangeState(worker, NOT_OK);
-    pthread_join(worker->impl_->thread_, NULL);
+    pthread_join(worker->impl_->thread_, nullptr);
     pthread_mutex_destroy(&worker->impl_->mutex_);
     pthread_cond_destroy(&worker->impl_->condition_);
     WebPSafeFree(worker->impl_);
-    worker->impl_ = NULL;
+    worker->impl_ = nullptr;
   }
 #else
   worker->status_ = NOT_OK;
-  assert(worker->impl_ == NULL);
+  assert(worker->impl_ == nullptr);
 #endif
   assert(worker->status_ == NOT_OK);
 }
@@ -339,10 +339,10 @@ static WebPWorkerInterface g_worker_interface = {
 };
 
 int WebPSetWorkerInterface(const WebPWorkerInterface* const winterface) {
-  if (winterface == NULL ||
-      winterface->Init == NULL || winterface->Reset == NULL ||
-      winterface->Sync == NULL || winterface->Launch == NULL ||
-      winterface->Execute == NULL || winterface->End == NULL) {
+  if (winterface == nullptr ||
+      winterface->Init == nullptr || winterface->Reset == nullptr ||
+      winterface->Sync == nullptr || winterface->Launch == nullptr ||
+      winterface->Execute == nullptr || winterface->End == nullptr) {
     return 0;
   }
   g_worker_interface = *winterface;

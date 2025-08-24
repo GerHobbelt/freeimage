@@ -474,7 +474,7 @@ else
   cat > $test.c <<EOF
 #include <stdio.h>
 int main(void) {
-  fseeko(NULL, 0, 0);
+  fseeko(nullptr, 0, 0);
   return 0;
 }
 EOF

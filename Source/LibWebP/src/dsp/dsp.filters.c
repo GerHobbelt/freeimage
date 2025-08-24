@@ -20,8 +20,8 @@
 // Helpful macro.
 
 # define SANITY_CHECK(in, out)                                                 \
-  assert(in != NULL);                                                          \
-  assert(out != NULL);                                                         \
+  assert(in != nullptr);                                                          \
+  assert(out != nullptr);                                                         \
   assert(width > 0);                                                           \
   assert(height > 0);                                                          \
   assert(stride >= width);                                                     \
@@ -186,7 +186,7 @@ static void GradientFilter(const uint8_t* data, int width, int height,
 
 static void HorizontalUnfilter(const uint8_t* prev, const uint8_t* in,
                                uint8_t* out, int width) {
-  uint8_t pred = (prev == NULL) ? 0 : prev[0];
+  uint8_t pred = (prev == nullptr) ? 0 : prev[0];
   int i;
   for (i = 0; i < width; ++i) {
     out[i] = pred + in[i];
@@ -196,8 +196,8 @@ static void HorizontalUnfilter(const uint8_t* prev, const uint8_t* in,
 
 static void VerticalUnfilter(const uint8_t* prev, const uint8_t* in,
                              uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter(nullptr, in, out, width);
   } else {
     int i;
     for (i = 0; i < width; ++i) out[i] = prev[i] + in[i];
@@ -206,8 +206,8 @@ static void VerticalUnfilter(const uint8_t* prev, const uint8_t* in,
 
 static void GradientUnfilter(const uint8_t* prev, const uint8_t* in,
                              uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter(nullptr, in, out, width);
   } else {
     uint8_t top = prev[0], top_left = top, left = top;
     int i;
@@ -236,17 +236,17 @@ static volatile VP8CPUInfo filters_last_cpuinfo_used =
 WEBP_TSAN_IGNORE_FUNCTION void VP8FiltersInit(void) {
   if (filters_last_cpuinfo_used == VP8GetCPUInfo) return;
 
-  WebPUnfilters[WEBP_FILTER_NONE] = NULL;
+  WebPUnfilters[WEBP_FILTER_NONE] = nullptr;
   WebPUnfilters[WEBP_FILTER_HORIZONTAL] = HorizontalUnfilter;
   WebPUnfilters[WEBP_FILTER_VERTICAL] = VerticalUnfilter;
   WebPUnfilters[WEBP_FILTER_GRADIENT] = GradientUnfilter;
 
-  WebPFilters[WEBP_FILTER_NONE] = NULL;
+  WebPFilters[WEBP_FILTER_NONE] = nullptr;
   WebPFilters[WEBP_FILTER_HORIZONTAL] = HorizontalFilter;
   WebPFilters[WEBP_FILTER_VERTICAL] = VerticalFilter;
   WebPFilters[WEBP_FILTER_GRADIENT] = GradientFilter;
 
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_USE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8FiltersInitSSE2();

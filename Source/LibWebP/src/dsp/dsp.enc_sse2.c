@@ -522,7 +522,7 @@ static WEBP_INLINE void VE16(uint8_t* dst, const uint8_t* top) {
 
 static WEBP_INLINE void VerticalPred(uint8_t* dst,
                                      const uint8_t* top, int size) {
-  if (top != NULL) {
+  if (top != nullptr) {
     if (size == 8) {
       VE8uv(dst, top);
     } else {
@@ -553,7 +553,7 @@ static WEBP_INLINE void HE16(uint8_t* dst, const uint8_t* left) {
 
 static WEBP_INLINE void HorizontalPred(uint8_t* dst,
                                        const uint8_t* left, int size) {
-  if (left != NULL) {
+  if (left != nullptr) {
     if (size == 8) {
       HE8uv(dst, left);
     } else {
@@ -594,8 +594,8 @@ static WEBP_INLINE void TM(uint8_t* dst, const uint8_t* left,
 
 static WEBP_INLINE void TrueMotion(uint8_t* dst, const uint8_t* left,
                                    const uint8_t* top, int size) {
-  if (left != NULL) {
-    if (top != NULL) {
+  if (left != nullptr) {
+    if (top != nullptr) {
       TM(dst, left, top, size);
     } else {
       HorizontalPred(dst, left, size);
@@ -605,7 +605,7 @@ static WEBP_INLINE void TrueMotion(uint8_t* dst, const uint8_t* left,
     // is equivalent to VE prediction where you just copy the top samples.
     // Note that if top samples are not available, the default value is
     // then 129, and not 127 as in the VerticalPred case.
-    if (top != NULL) {
+    if (top != nullptr) {
       VerticalPred(dst, top, size);
     } else {
       Fill(dst, 129, size);
@@ -641,13 +641,13 @@ static WEBP_INLINE void DC8uvNoTopLeft(uint8_t* dst) {
 
 static WEBP_INLINE void DC8uvMode(uint8_t* dst, const uint8_t* left,
                                   const uint8_t* top) {
-  if (top != NULL) {
-    if (left != NULL) {  // top and left present
+  if (top != nullptr) {
+    if (left != nullptr) {  // top and left present
       DC8uv(dst, left, top);
     } else {  // top, but no left
       DC8uvNoLeft(dst, top);
     }
-  } else if (left != NULL) {  // left but no top
+  } else if (left != nullptr) {  // left but no top
     DC8uvNoTop(dst, left);
   } else {  // no top, no left, nothing.
     DC8uvNoTopLeft(dst);
@@ -680,13 +680,13 @@ static WEBP_INLINE void DC16NoTopLeft(uint8_t* dst) {
 
 static WEBP_INLINE void DC16Mode(uint8_t* dst, const uint8_t* left,
                                  const uint8_t* top) {
-  if (top != NULL) {
-    if (left != NULL) {  // top and left present
+  if (top != nullptr) {
+    if (left != nullptr) {  // top and left present
       DC16(dst, left, top);
     } else {  // top, but no left
       DC16NoLeft(dst, top);
     }
-  } else if (left != NULL) {  // left but no top
+  } else if (left != nullptr) {  // left but no top
     DC16NoTop(dst, left);
   } else {  // no top, no left, nothing.
     DC16NoTopLeft(dst);
@@ -912,8 +912,8 @@ static void IntraChromaPreds(uint8_t* dst, const uint8_t* left,
   TrueMotion(C8TM8 + dst, left, top, 8);
   // V block
   dst += 8;
-  if (top != NULL) top += 8;
-  if (left != NULL) left += 16;
+  if (top != nullptr) top += 8;
+  if (left != nullptr) left += 16;
   DC8uvMode(C8DC8 + dst, left, top);
   VerticalPred(C8VE8 + dst, top, 8);
   HorizontalPred(C8HE8 + dst, left, 8);
@@ -1236,7 +1236,7 @@ static WEBP_INLINE int DoQuantizeBlock(int16_t in[16], int16_t out[16],
   coeff8 = _mm_sub_epi16(coeff8, sign8);
 
   // coeff = abs(in) + sharpen
-  if (sharpen != NULL) {
+  if (sharpen != nullptr) {
     const __m128i sharpen0 = _mm_loadu_si128((const __m128i*)&sharpen[0]);
     const __m128i sharpen8 = _mm_loadu_si128((const __m128i*)&sharpen[8]);
     coeff0 = _mm_add_epi16(coeff0, sharpen0);
@@ -1327,7 +1327,7 @@ static int QuantizeBlock(int16_t in[16], int16_t out[16],
 
 static int QuantizeBlockWHT(int16_t in[16], int16_t out[16],
                             const VP8Matrix* const mtx) {
-  return DoQuantizeBlock(in, out, NULL, mtx);
+  return DoQuantizeBlock(in, out, nullptr, mtx);
 }
 
 static int Quantize2Blocks(int16_t in[32], int16_t out[32],

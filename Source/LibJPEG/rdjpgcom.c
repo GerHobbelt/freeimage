@@ -463,7 +463,7 @@ main (int argc, char **argv)
 #endif
 
   progname = argv[0];
-  if (progname == NULL || progname[0] == 0)
+  if (progname == nullptr || progname[0] == 0)
     progname = "rdjpgcom";	/* in case C library doesn't provide it */
 
   /* Parse switches, if any */
@@ -487,7 +487,7 @@ main (int argc, char **argv)
     usage();
   }
   if (argn < argc) {
-    if ((infile = fopen(argv[argn], READ_BINARY)) == NULL) {
+    if ((infile = fopen(argv[argn], READ_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open %s\n", progname, argv[argn]);
       exit(EXIT_FAILURE);
     }
@@ -497,7 +497,7 @@ main (int argc, char **argv)
     setmode(fileno(stdin), O_BINARY);
 #endif
 #ifdef USE_FDOPEN		/* need to re-open in binary mode? */
-    if ((infile = fdopen(fileno(stdin), READ_BINARY)) == NULL) {
+    if ((infile = fdopen(fileno(stdin), READ_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open stdin\n", progname);
       exit(EXIT_FAILURE);
     }

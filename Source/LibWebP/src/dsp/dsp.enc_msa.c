@@ -448,7 +448,7 @@ static void Intra4Preds(uint8_t* dst, const uint8_t* top) {
 } while (0)
 
 static WEBP_INLINE void VerticalPred16x16(uint8_t* dst, const uint8_t* top) {
-  if (top != NULL) {
+  if (top != nullptr) {
     const v16u8 out = LD_UB(top);
     STORE16x16(out, dst);
   } else {
@@ -459,7 +459,7 @@ static WEBP_INLINE void VerticalPred16x16(uint8_t* dst, const uint8_t* top) {
 
 static WEBP_INLINE void HorizontalPred16x16(uint8_t* dst,
                                             const uint8_t* left) {
-  if (left != NULL) {
+  if (left != nullptr) {
     int j;
     for (j = 0; j < 16; j += 4) {
       const v16u8 L0 = (v16u8)__msa_fill_b(left[0]);
@@ -478,8 +478,8 @@ static WEBP_INLINE void HorizontalPred16x16(uint8_t* dst,
 
 static WEBP_INLINE void TrueMotion16x16(uint8_t* dst, const uint8_t* left,
                                         const uint8_t* top) {
-  if (left != NULL) {
-    if (top != NULL) {
+  if (left != nullptr) {
+    if (top != nullptr) {
       int j;
       v8i16 d1, d2;
       const v16i8 zero = { 0 };
@@ -506,7 +506,7 @@ static WEBP_INLINE void TrueMotion16x16(uint8_t* dst, const uint8_t* left,
       HorizontalPred16x16(dst, left);
     }
   } else {
-    if (top != NULL) {
+    if (top != nullptr) {
       VerticalPred16x16(dst, top);
     } else {
       const v16u8 out = (v16u8)__msa_fill_b(0x81);
@@ -519,7 +519,7 @@ static WEBP_INLINE void DCMode16x16(uint8_t* dst, const uint8_t* left,
                                     const uint8_t* top) {
   int DC;
   v16u8 out;
-  if (top != NULL && left != NULL) {
+  if (top != nullptr && left != nullptr) {
     const v16u8 rtop = LD_UB(top);
     const v8u16 dctop = __msa_hadd_u_h(rtop, rtop);
     const v16u8 rleft = LD_UB(left);
@@ -527,12 +527,12 @@ static WEBP_INLINE void DCMode16x16(uint8_t* dst, const uint8_t* left,
     const v8u16 dctemp = dctop + dcleft;
     DC = HADD_UH_U32(dctemp);
     DC = (DC + 16) >> 5;
-  } else if (left != NULL) {   // left but no top
+  } else if (left != nullptr) {   // left but no top
     const v16u8 rleft = LD_UB(left);
     const v8u16 dcleft = __msa_hadd_u_h(rleft, rleft);
     DC = HADD_UH_U32(dcleft);
     DC = (DC + DC + 16) >> 5;
-  } else if (top != NULL) {   // top but no left
+  } else if (top != nullptr) {   // top but no left
     const v16u8 rtop = LD_UB(top);
     const v8u16 dctop = __msa_hadd_u_h(rtop, rtop);
     DC = HADD_UH_U32(dctop);
@@ -571,7 +571,7 @@ static void Intra16Preds(uint8_t* dst,
 } while (0)
 
 static WEBP_INLINE void VerticalPred8x8(uint8_t* dst, const uint8_t* top) {
-  if (top != NULL) {
+  if (top != nullptr) {
     const uint64_t out = LD(top);
     STORE8x8(out, dst);
   } else {
@@ -581,7 +581,7 @@ static WEBP_INLINE void VerticalPred8x8(uint8_t* dst, const uint8_t* top) {
 }
 
 static WEBP_INLINE void HorizontalPred8x8(uint8_t* dst, const uint8_t* left) {
-  if (left != NULL) {
+  if (left != nullptr) {
     int j;
     for (j = 0; j < 8; j += 4) {
       const v16u8 L0 = (v16u8)__msa_fill_b(left[0]);
@@ -604,8 +604,8 @@ static WEBP_INLINE void HorizontalPred8x8(uint8_t* dst, const uint8_t* left) {
 
 static WEBP_INLINE void TrueMotion8x8(uint8_t* dst, const uint8_t* left,
                                       const uint8_t* top) {
-  if (left != NULL) {
-    if (top != NULL) {
+  if (left != nullptr) {
+    if (top != nullptr) {
       int j;
       const v8i16 TL = (v8i16)__msa_fill_h(left[-1]);
       const v16u8 T1 = LD_UB(top);
@@ -633,7 +633,7 @@ static WEBP_INLINE void TrueMotion8x8(uint8_t* dst, const uint8_t* left,
       HorizontalPred8x8(dst, left);
     }
   } else {
-    if (top != NULL) {
+    if (top != nullptr) {
       VerticalPred8x8(dst, top);
     } else {
       const uint64_t out = 0x8181818181818181ULL;
@@ -646,16 +646,16 @@ static WEBP_INLINE void DCMode8x8(uint8_t* dst, const uint8_t* left,
                                   const uint8_t* top) {
   uint64_t out;
   v16u8 src;
-  if (top != NULL && left != NULL) {
+  if (top != nullptr && left != nullptr) {
     const uint64_t left_m = LD(left);
     const uint64_t top_m = LD(top);
     INSERT_D2_UB(left_m, top_m, src);
     CALC_DC8(src, out);
-  } else if (left != NULL) {   // left but no top
+  } else if (left != nullptr) {   // left but no top
     const uint64_t left_m = LD(left);
     INSERT_D2_UB(left_m, left_m, src);
     CALC_DC8(src, out);
-  } else if (top != NULL) {   // top but no left
+  } else if (top != nullptr) {   // top but no left
     const uint64_t top_m = LD(top);
     INSERT_D2_UB(top_m, top_m, src);
     CALC_DC8(src, out);
@@ -675,8 +675,8 @@ static void IntraChromaPreds(uint8_t* dst, const uint8_t* left,
   TrueMotion8x8(C8TM8 + dst, left, top);
   // V block
   dst += 8;
-  if (top != NULL) top += 8;
-  if (left != NULL) left += 16;
+  if (top != nullptr) top += 8;
+  if (left != nullptr) left += 16;
   DCMode8x8(C8DC8 + dst, left, top);
   VerticalPred8x8(C8VE8 + dst, top);
   HorizontalPred8x8(C8HE8 + dst, left);

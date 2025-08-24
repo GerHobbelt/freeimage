@@ -160,7 +160,7 @@ static void make_crc_table() {
         FILE *out;
 
         out = fopen("crc32.h", "w");
-        if (out == NULL) return;
+        if (out == nullptr) return;
         fprintf(out, "/* crc32.h -- tables for rapid CRC calculation\n");
         fprintf(out, " * Generated automatically by crc32.c\n */\n\n");
         fprintf(out, "static const uint32_t ");

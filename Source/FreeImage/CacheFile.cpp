@@ -29,14 +29,14 @@
 // ----------------------------------------------------------
 
 CacheFile::CacheFile(const std::string filename, BOOL keep_in_memory) :
-m_file(NULL),
+m_file(nullptr),
 m_filename(filename),
 m_free_pages(),
 m_page_cache_mem(),
 m_page_cache_disk(),
 m_page_map(),
 m_page_count(0),
-m_current_block(NULL),
+m_current_block(nullptr),
 m_keep_in_memory(keep_in_memory) {
 }
 
@@ -47,7 +47,7 @@ BOOL
 CacheFile::open() {
 	if ((!m_filename.empty()) && (!m_keep_in_memory)) {
 		m_file = fopen(m_filename.c_str(), "w+b");
-		return (m_file != NULL);
+		return (m_file != nullptr);
 	}
 
 	return (m_keep_in_memory == TRUE);
@@ -94,7 +94,7 @@ CacheFile::cleanupMemCache() {
 			// remove the data
 
 			delete [] old_block->data;
-			old_block->data = NULL;
+			old_block->data = nullptr;
 
 			// move the block to another list
 
@@ -107,7 +107,7 @@ CacheFile::cleanupMemCache() {
 int
 CacheFile::allocateBlock() {
 	Block *block = new Block;
-	block->data = new BYTE[BLOCK_SIZE];
+	block->data = new uint8_t[BLOCK_SIZE];
 	block->next = 0;
 
 	if (!m_free_pages.empty()) {
@@ -127,7 +127,7 @@ CacheFile::allocateBlock() {
 
 Block *
 CacheFile::lockBlock(int nr) {
-	if (m_current_block == NULL) {
+	if (m_current_block == nullptr) {
 		PageMapIt it = m_page_map.find(nr);
 
 		if (it != m_page_map.end()) {
@@ -137,8 +137,8 @@ CacheFile::lockBlock(int nr) {
 			// and remove the block from the cache. it might get cached
 			// again as soon as the memory buffer fills up
 
-			if (m_current_block->data == NULL) {
-				m_current_block->data = new BYTE[BLOCK_SIZE];
+			if (m_current_block->data == nullptr) {
+				m_current_block->data = new uint8_t[BLOCK_SIZE];
 
 				fseek(m_file, m_current_block->nr * BLOCK_SIZE, SEEK_SET);
 				fread(m_current_block->data, BLOCK_SIZE, 1, m_file);
@@ -157,13 +157,13 @@ CacheFile::lockBlock(int nr) {
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 BOOL
 CacheFile::unlockBlock(int nr) {
 	if (m_current_block) {
-		m_current_block = NULL;
+		m_current_block = nullptr;
 
 		return TRUE;
 	}
@@ -192,7 +192,7 @@ CacheFile::deleteBlock(int nr) {
 }
 
 BOOL
-CacheFile::readFile(BYTE *data, int nr, int size) {
+CacheFile::readFile(uint8_t *data, int nr, int size) {
 	if ((data) && (size > 0)) {
 		int s = 0;
 		int block_nr = nr;
@@ -218,7 +218,7 @@ CacheFile::readFile(BYTE *data, int nr, int size) {
 }
 
 int
-CacheFile::writeFile(BYTE *data, int size) {
+CacheFile::writeFile(uint8_t *data, int size) {
 	if ((data) && (size > 0)) {
 		int nr_blocks_required = 1 + (size / BLOCK_SIZE);
 		int count = 0;
@@ -256,7 +256,7 @@ CacheFile::deleteFile(int nr) {
 	do {
 		Block *block = lockBlock(nr);
 
-		if (block == NULL)
+		if (block == nullptr)
 			break;
 
 		int next = block->next;

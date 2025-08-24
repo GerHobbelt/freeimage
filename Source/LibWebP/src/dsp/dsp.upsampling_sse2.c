@@ -111,7 +111,7 @@ static void Upsample32Pixels(const uint8_t r1[], const uint8_t r2[],
     FUNC(top_y[(cur_x) + n], r_u[n], r_v[n],                                   \
          top_dst + ((cur_x) + n) * XSTEP);                                     \
   }                                                                            \
-  if (bottom_y != NULL) {                                                      \
+  if (bottom_y != nullptr) {                                                      \
     for (n = 0; n < (num_pixels); ++n) {                                       \
       FUNC(bottom_y[(cur_x) + n], r_u[64 + n], r_v[64 + n],                    \
            bottom_dst + ((cur_x) + n) * XSTEP);                                \
@@ -122,7 +122,7 @@ static void Upsample32Pixels(const uint8_t r1[], const uint8_t r2[],
 #define CONVERT2RGB_32(FUNC, XSTEP, top_y, bottom_y,                           \
                        top_dst, bottom_dst, cur_x) do {                        \
   FUNC##32(top_y + (cur_x), r_u, r_v, top_dst + (cur_x) * XSTEP);              \
-  if (bottom_y != NULL) {                                                      \
+  if (bottom_y != nullptr) {                                                      \
     FUNC##32(bottom_y + (cur_x), r_u + 64, r_v + 64,                           \
              bottom_dst + (cur_x) * XSTEP);                                    \
   }                                                                            \
@@ -139,14 +139,14 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bottom_y,           \
   uint8_t* const r_u = (uint8_t*)((uintptr_t)(uv_buf + 15) & ~15);             \
   uint8_t* const r_v = r_u + 32;                                               \
                                                                                \
-  assert(top_y != NULL);                                                       \
+  assert(top_y != nullptr);                                                       \
   {   /* Treat the first pixel in regular way */                               \
     const int u_diag = ((top_u[0] + cur_u[0]) >> 1) + 1;                       \
     const int v_diag = ((top_v[0] + cur_v[0]) >> 1) + 1;                       \
     const int u0_t = (top_u[0] + u_diag) >> 1;                                 \
     const int v0_t = (top_v[0] + v_diag) >> 1;                                 \
     FUNC(top_y[0], u0_t, v0_t, top_dst);                                       \
-    if (bottom_y != NULL) {                                                    \
+    if (bottom_y != nullptr) {                                                    \
       const int u0_b = (cur_u[0] + u_diag) >> 1;                               \
       const int v0_b = (cur_v[0] + v_diag) >> 1;                               \
       FUNC(bottom_y[0], u0_b, v0_b, bottom_dst);                               \

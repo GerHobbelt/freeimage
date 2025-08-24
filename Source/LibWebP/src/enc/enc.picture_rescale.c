@@ -24,7 +24,7 @@
 // into 'dst'. Mark 'dst' as not owning any memory.
 static void PictureGrabSpecs(const WebPPicture* const src,
                              WebPPicture* const dst) {
-  assert(src != NULL && dst != NULL);
+  assert(src != nullptr && dst != nullptr);
   *dst = *src;
   WebPPictureResetBuffers(dst);
 }
@@ -53,7 +53,7 @@ static int AdjustAndCheckRectangle(const WebPPicture* const pic,
 }
 
 int WebPPictureCopy(const WebPPicture* src, WebPPicture* dst) {
-  if (src == NULL || dst == NULL) return 0;
+  if (src == nullptr || dst == nullptr) return 0;
   if (src == dst) return 1;
 
   PictureGrabSpecs(src, dst);
@@ -66,7 +66,7 @@ int WebPPictureCopy(const WebPPicture* src, WebPPicture* dst) {
                   HALVE(dst->width), HALVE(dst->height));
     WebPCopyPlane(src->v, src->uv_stride, dst->v, dst->uv_stride,
                   HALVE(dst->width), HALVE(dst->height));
-    if (dst->a != NULL)  {
+    if (dst->a != nullptr)  {
       WebPCopyPlane(src->a, src->a_stride,
                     dst->a, dst->a_stride, dst->width, dst->height);
     }
@@ -79,17 +79,17 @@ int WebPPictureCopy(const WebPPicture* src, WebPPicture* dst) {
 }
 
 int WebPPictureIsView(const WebPPicture* picture) {
-  if (picture == NULL) return 0;
+  if (picture == nullptr) return 0;
   if (picture->use_argb) {
-    return (picture->memory_argb_ == NULL);
+    return (picture->memory_argb_ == nullptr);
   }
-  return (picture->memory_ == NULL);
+  return (picture->memory_ == nullptr);
 }
 
 int WebPPictureView(const WebPPicture* src,
                     int left, int top, int width, int height,
                     WebPPicture* dst) {
-  if (src == NULL || dst == NULL) return 0;
+  if (src == nullptr || dst == nullptr) return 0;
 
   // verify rectangle position.
   if (!AdjustAndCheckRectangle(src, &left, &top, width, height)) return 0;
@@ -105,7 +105,7 @@ int WebPPictureView(const WebPPicture* src,
     dst->v = src->v + (top >> 1) * src->uv_stride + (left >> 1);
     dst->y_stride = src->y_stride;
     dst->uv_stride = src->uv_stride;
-    if (src->a != NULL) {
+    if (src->a != nullptr) {
       dst->a = src->a + top * src->a_stride + left;
       dst->a_stride = src->a_stride;
     }
@@ -123,7 +123,7 @@ int WebPPictureCrop(WebPPicture* pic,
                     int left, int top, int width, int height) {
   WebPPicture tmp;
 
-  if (pic == NULL) return 0;
+  if (pic == nullptr) return 0;
   if (!AdjustAndCheckRectangle(pic, &left, &top, width, height)) return 0;
 
   PictureGrabSpecs(pic, &tmp);
@@ -141,7 +141,7 @@ int WebPPictureCrop(WebPPicture* pic,
     WebPCopyPlane(pic->v + uv_offset, pic->uv_stride,
                   tmp.v, tmp.uv_stride, HALVE(width), HALVE(height));
 
-    if (tmp.a != NULL) {
+    if (tmp.a != nullptr) {
       const int a_offset = top * pic->a_stride + left;
       WebPCopyPlane(pic->a + a_offset, pic->a_stride,
                     tmp.a, tmp.a_stride, width, height);
@@ -179,13 +179,13 @@ static void RescalePlane(const uint8_t* src,
 }
 
 static void AlphaMultiplyARGB(WebPPicture* const pic, int inverse) {
-  assert(pic->argb != NULL);
+  assert(pic->argb != nullptr);
   WebPMultARGBRows((uint8_t*)pic->argb, pic->argb_stride * sizeof(*pic->argb),
                    pic->width, pic->height, inverse);
 }
 
 static void AlphaMultiplyY(WebPPicture* const pic, int inverse) {
-  if (pic->a != NULL) {
+  if (pic->a != nullptr) {
     WebPMultRows(pic->y, pic->y_stride, pic->a, pic->a_stride,
                  pic->width, pic->height, inverse);
   }
@@ -196,7 +196,7 @@ int WebPPictureRescale(WebPPicture* pic, int width, int height) {
   int prev_width, prev_height;
   rescaler_t* work;
 
-  if (pic == NULL) return 0;
+  if (pic == nullptr) return 0;
   prev_width = pic->width;
   prev_height = pic->height;
   if (!WebPRescalerGetScaledDimensions(
@@ -211,12 +211,12 @@ int WebPPictureRescale(WebPPicture* pic, int width, int height) {
 
   if (!pic->use_argb) {
     work = (rescaler_t*)WebPSafeMalloc(2ULL * width, sizeof(*work));
-    if (work == NULL) {
+    if (work == nullptr) {
       WebPPictureFree(&tmp);
       return 0;
     }
     // If present, we need to rescale alpha first (for AlphaMultiplyY).
-    if (pic->a != NULL) {
+    if (pic->a != nullptr) {
       WebPInitAlphaProcessing();
       RescalePlane(pic->a, prev_width, prev_height, pic->a_stride,
                    tmp.a, width, height, tmp.a_stride, work, 1);
@@ -239,7 +239,7 @@ int WebPPictureRescale(WebPPicture* pic, int width, int height) {
                  HALVE(width), HALVE(height), tmp.uv_stride, work, 1);
   } else {
     work = (rescaler_t*)WebPSafeMalloc(2ULL * width * 4, sizeof(*work));
-    if (work == NULL) {
+    if (work == nullptr) {
       WebPPictureFree(&tmp);
       return 0;
     }

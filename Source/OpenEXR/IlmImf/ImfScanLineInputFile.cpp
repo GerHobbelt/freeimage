@@ -1146,7 +1146,7 @@ void ScanLineInputFile::initialize(const Header& header)
     catch (...)
     {
         delete _data;
-        _data=NULL;
+        _data=nullptr;
         throw;
     }
 }

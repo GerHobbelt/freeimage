@@ -26,7 +26,7 @@
 Test thumbnail loading
 */
 static BOOL testLoadThumbnail(const char *lpszPathName, int flags) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	try {
 		FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(lpszPathName);
@@ -57,8 +57,8 @@ Test thumbnail saving
 */
 static BOOL testSaveThumbnail(const char *lpszPathName, int flags) {
 	BOOL bResult = FALSE;
-	FIBITMAP *dib = NULL;
-	FIBITMAP *t_clone = NULL;
+	FIBITMAP *dib = nullptr;
+	FIBITMAP *t_clone = nullptr;
 	const char *lpszImagePathName = "exif_new_thumb.jpg";
 
 	try {
@@ -81,13 +81,13 @@ static BOOL testSaveThumbnail(const char *lpszPathName, int flags) {
 		FreeImage_SetThumbnail(dib, t_clone);
 		// no longer needed
 		FreeImage_Unload(t_clone);
-		t_clone = NULL;
+		t_clone = nullptr;
 
 		// save as a new image
 		// be sure to delete the Exif segment as it can also contain a thumbnail
 		// this thumbnail will then be loaded instead of the one we store in the JFXX segment
 		fif = FIF_TIFF;
-		FreeImage_SetMetadata(FIMD_EXIF_RAW, dib, NULL, NULL);
+		FreeImage_SetMetadata(FIMD_EXIF_RAW, dib, nullptr, nullptr);
 		bResult = FreeImage_Save(fif, dib, lpszImagePathName, 0);
 		assert(bResult);
 

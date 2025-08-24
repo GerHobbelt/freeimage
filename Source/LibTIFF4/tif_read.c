@@ -31,16 +31,16 @@
 #include "tiffiop.h"
 #include <stdio.h>
 
-int TIFFFillStrip(TIFF* tif, uint32 strip);
-int TIFFFillTile(TIFF* tif, uint32 tile);
-static int TIFFStartStrip(TIFF* tif, uint32 strip);
-static int TIFFStartTile(TIFF* tif, uint32 tile);
+int TIFFFillStrip(TIFF* tif, uint32_t strip);
+int TIFFFillTile(TIFF* tif, uint32_t tile);
+static int TIFFStartStrip(TIFF* tif, uint32_t strip);
+static int TIFFStartTile(TIFF* tif, uint32_t tile);
 static int TIFFCheckRead(TIFF*, int);
 static tmsize_t
-TIFFReadRawStrip1(TIFF* tif, uint32 strip, void* buf, tmsize_t size,const char* module);
+TIFFReadRawStrip1(TIFF* tif, uint32_t strip, void* buf, tmsize_t size,const char* module);
 
-#define NOSTRIP ((uint32)(-1))       /* undefined state */
-#define NOTILE ((uint32)(-1))         /* undefined state */
+#define NOSTRIP ((uint32_t)(-1))       /* undefined state */
+#define NOTILE ((uint32_t)(-1))         /* undefined state */
 
 static int
 TIFFFillStripPartial( TIFF *tif, int strip, tmsize_t read_ahead, int restart )
@@ -171,10 +171,10 @@ TIFFFillStripPartial( TIFF *tif, int strip, tmsize_t read_ahead, int restart )
  * strips.
  */
 static int
-TIFFSeek(TIFF* tif, uint32 row, uint16 sample )
+TIFFSeek(TIFF* tif, uint32_t row, uint16_t sample )
 {
 	register TIFFDirectory *td = &tif->tif_dir;
-	uint32 strip;
+	uint32_t strip;
         int    whole_strip;
 	tmsize_t read_ahead = 0;
 
@@ -195,7 +195,7 @@ TIFFSeek(TIFF* tif, uint32 row, uint16 sample )
 			    (unsigned long) sample, (unsigned long) td->td_samplesperpixel);
 			return (0);
 		}
-		strip = (uint32)sample*td->td_stripsperimage + row/td->td_rowsperstrip;
+		strip = (uint32_t)sample*td->td_stripsperimage + row/td->td_rowsperstrip;
 	} else
 		strip = row / td->td_rowsperstrip;
 
@@ -286,7 +286,7 @@ TIFFSeek(TIFF* tif, uint32 row, uint16 sample )
 }
 
 int
-TIFFReadScanline(TIFF* tif, void* buf, uint32 row, uint16 sample)
+TIFFReadScanline(TIFF* tif, void* buf, uint32_t row, uint16_t sample)
 {
 	int e;
 
@@ -297,13 +297,13 @@ TIFFReadScanline(TIFF* tif, void* buf, uint32 row, uint16 sample)
 		 * Decompress desired row into user buffer.
 		 */
 		e = (*tif->tif_decoderow)
-		    (tif, (uint8*) buf, tif->tif_scanlinesize, sample);  
+		    (tif, (uint8_t*) buf, tif->tif_scanlinesize, sample);  
 
 		/* we are now poised at the beginning of the next row */
 		tif->tif_row = row + 1;
 
 		if (e)
-			(*tif->tif_postdecode)(tif, (uint8*) buf,
+			(*tif->tif_postdecode)(tif, (uint8_t*) buf,
 			    tif->tif_scanlinesize);  
 	}
 	return (e > 0 ? 1 : -1);
@@ -314,15 +314,15 @@ TIFFReadScanline(TIFF* tif, void* buf, uint32 row, uint16 sample)
  * amount into the user-supplied buffer.
  */
 tmsize_t
-TIFFReadEncodedStrip(TIFF* tif, uint32 strip, void* buf, tmsize_t size)
+TIFFReadEncodedStrip(TIFF* tif, uint32_t strip, void* buf, tmsize_t size)
 {
 	static const char module[] = "TIFFReadEncodedStrip";
 	TIFFDirectory *td = &tif->tif_dir;
-	uint32 rowsperstrip;
-	uint32 stripsperplane;
-	uint32 stripinplane;
-	uint16 plane;
-	uint32 rows;
+	uint32_t rowsperstrip;
+	uint32_t stripsperplane;
+	uint32_t stripinplane;
+	uint16_t plane;
+	uint32_t rows;
 	tmsize_t stripsize;
 	if (!TIFFCheckRead(tif,0))
 		return((tmsize_t)(-1));
@@ -361,7 +361,7 @@ TIFFReadEncodedStrip(TIFF* tif, uint32 strip, void* buf, tmsize_t size)
 }
 
 static tmsize_t
-TIFFReadRawStrip1(TIFF* tif, uint32 strip, void* buf, tmsize_t size,
+TIFFReadRawStrip1(TIFF* tif, uint32_t strip, void* buf, tmsize_t size,
     const char* module)
 {
 	TIFFDirectory *td = &tif->tif_dir;
@@ -435,7 +435,7 @@ TIFFReadRawStrip1(TIFF* tif, uint32 strip, void* buf, tmsize_t size,
  * Read a strip of data from the file.
  */
 tmsize_t
-TIFFReadRawStrip(TIFF* tif, uint32 strip, void* buf, tmsize_t size)
+TIFFReadRawStrip(TIFF* tif, uint32_t strip, void* buf, tmsize_t size)
 {
 	static const char module[] = "TIFFReadRawStrip";
 	TIFFDirectory *td = &tif->tif_dir;
@@ -487,7 +487,7 @@ TIFFReadRawStrip(TIFF* tif, uint32 strip, void* buf, tmsize_t size)
  * expanded, as necessary, to hold the strip's data.
  */
 int
-TIFFFillStrip(TIFF* tif, uint32 strip)
+TIFFFillStrip(TIFF* tif, uint32_t strip)
 {
 	static const char module[] = "TIFFFillStrip";
 	TIFFDirectory *td = &tif->tif_dir;
@@ -528,7 +528,7 @@ TIFFFillStrip(TIFF* tif, uint32 strip)
 			 */
 			if ((tif->tif_flags & TIFF_MYBUFFER) && tif->tif_rawdata) {
 				_TIFFfree(tif->tif_rawdata);
-				tif->tif_rawdata = NULL;
+				tif->tif_rawdata = nullptr;
 				tif->tif_rawdatasize = 0;
 			}
 			tif->tif_flags &= ~TIFF_MYBUFFER;
@@ -634,7 +634,7 @@ TIFFFillStrip(TIFF* tif, uint32 strip)
  * tile is selected by the (x,y,z,s) coordinates.
  */
 tmsize_t
-TIFFReadTile(TIFF* tif, void* buf, uint32 x, uint32 y, uint32 z, uint16 s)
+TIFFReadTile(TIFF* tif, void* buf, uint32_t x, uint32_t y, uint32_t z, uint16_t s)
 {
 	if (!TIFFCheckRead(tif, 1) || !TIFFCheckTile(tif, x, y, z, s))
 		return ((tmsize_t)(-1));
@@ -647,7 +647,7 @@ TIFFReadTile(TIFF* tif, void* buf, uint32 x, uint32 y, uint32 z, uint16 s)
  * amount into the user-supplied buffer.
  */
 tmsize_t
-TIFFReadEncodedTile(TIFF* tif, uint32 tile, void* buf, tmsize_t size)
+TIFFReadEncodedTile(TIFF* tif, uint32_t tile, void* buf, tmsize_t size)
 {
 	static const char module[] = "TIFFReadEncodedTile";
 	TIFFDirectory *td = &tif->tif_dir;
@@ -666,15 +666,15 @@ TIFFReadEncodedTile(TIFF* tif, uint32 tile, void* buf, tmsize_t size)
 	else if (size > tilesize)
 		size = tilesize;
 	if (TIFFFillTile(tif, tile) && (*tif->tif_decodetile)(tif,
-	    (uint8*) buf, size, (uint16)(tile/td->td_stripsperimage))) {
-		(*tif->tif_postdecode)(tif, (uint8*) buf, size);
+	    (uint8_t*) buf, size, (uint16_t)(tile/td->td_stripsperimage))) {
+		(*tif->tif_postdecode)(tif, (uint8_t*) buf, size);
 		return (size);
 	} else
 		return ((tmsize_t)(-1));
 }
 
 static tmsize_t
-TIFFReadRawTile1(TIFF* tif, uint32 tile, void* buf, tmsize_t size, const char* module)
+TIFFReadRawTile1(TIFF* tif, uint32_t tile, void* buf, tmsize_t size, const char* module)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 
@@ -752,7 +752,7 @@ TIFFReadRawTile1(TIFF* tif, uint32 tile, void* buf, tmsize_t size, const char* m
  * Read a tile of data from the file.
  */
 tmsize_t
-TIFFReadRawTile(TIFF* tif, uint32 tile, void* buf, tmsize_t size)
+TIFFReadRawTile(TIFF* tif, uint32_t tile, void* buf, tmsize_t size)
 {
 	static const char module[] = "TIFFReadRawTile";
 	TIFFDirectory *td = &tif->tif_dir;
@@ -790,7 +790,7 @@ TIFFReadRawTile(TIFF* tif, uint32 tile, void* buf, tmsize_t size)
  * expanded, as necessary, to hold the tile's data.
  */
 int
-TIFFFillTile(TIFF* tif, uint32 tile)
+TIFFFillTile(TIFF* tif, uint32_t tile)
 {
 	static const char module[] = "TIFFFillTile";
 	TIFFDirectory *td = &tif->tif_dir;
@@ -831,7 +831,7 @@ TIFFFillTile(TIFF* tif, uint32 tile)
 			 */
 			if ((tif->tif_flags & TIFF_MYBUFFER) && tif->tif_rawdata) {
 				_TIFFfree(tif->tif_rawdata);
-				tif->tif_rawdata = NULL;
+				tif->tif_rawdata = nullptr;
 				tif->tif_rawdatasize = 0;
 			}
 			tif->tif_flags &= ~TIFF_MYBUFFER;
@@ -921,12 +921,12 @@ TIFFReadBufferSetup(TIFF* tif, void* bp, tmsize_t size)
 	if (tif->tif_rawdata) {
 		if (tif->tif_flags & TIFF_MYBUFFER)
 			_TIFFfree(tif->tif_rawdata);
-		tif->tif_rawdata = NULL;
+		tif->tif_rawdata = nullptr;
 		tif->tif_rawdatasize = 0;
 	}
 	if (bp) {
 		tif->tif_rawdatasize = size;
-		tif->tif_rawdata = (uint8*) bp;
+		tif->tif_rawdata = (uint8_t*) bp;
 		tif->tif_flags &= ~TIFF_MYBUFFER;
 	} else {
 		tif->tif_rawdatasize = (tmsize_t)TIFFroundup_64((uint64)size, 1024);
@@ -935,10 +935,10 @@ TIFFReadBufferSetup(TIFF* tif, void* bp, tmsize_t size)
 				 "Invalid buffer size");
 		    return (0);
 		}
-		tif->tif_rawdata = (uint8*) _TIFFmalloc(tif->tif_rawdatasize);
+		tif->tif_rawdata = (uint8_t*) _TIFFmalloc(tif->tif_rawdatasize);
 		tif->tif_flags |= TIFF_MYBUFFER;
 	}
-	if (tif->tif_rawdata == NULL) {
+	if (tif->tif_rawdata == nullptr) {
 		TIFFErrorExt(tif->tif_clientdata, module,
 		    "No space for data buffer at scanline %lu",
 		    (unsigned long) tif->tif_row);
@@ -953,7 +953,7 @@ TIFFReadBufferSetup(TIFF* tif, void* bp, tmsize_t size)
  * strip has just been read in.
  */
 static int
-TIFFStartStrip(TIFF* tif, uint32 strip)
+TIFFStartStrip(TIFF* tif, uint32_t strip)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 
@@ -971,7 +971,7 @@ TIFFStartStrip(TIFF* tif, uint32 strip)
 
 	if (tif->tif_flags&TIFF_NOREADRAW)
 	{
-		tif->tif_rawcp = NULL;
+		tif->tif_rawcp = nullptr;
 		tif->tif_rawcc = 0;  
 	}
 	else
@@ -980,7 +980,7 @@ TIFFStartStrip(TIFF* tif, uint32 strip)
 		tif->tif_rawcc = (tmsize_t)td->td_stripbytecount[strip];
 	}
 	return ((*tif->tif_predecode)(tif,
-			(uint16)(strip / td->td_stripsperimage)));
+			(uint16_t)(strip / td->td_stripsperimage)));
 }
 
 /*
@@ -988,7 +988,7 @@ TIFFStartStrip(TIFF* tif, uint32 strip)
  * tile has just been read in.
  */
 static int
-TIFFStartTile(TIFF* tif, uint32 tile)
+TIFFStartTile(TIFF* tif, uint32_t tile)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 
@@ -1010,7 +1010,7 @@ TIFFStartTile(TIFF* tif, uint32 tile)
         tif->tif_flags &= ~TIFF_BUF4WRITE;
 	if (tif->tif_flags&TIFF_NOREADRAW)
 	{
-		tif->tif_rawcp = NULL;
+		tif->tif_rawcp = nullptr;
 		tif->tif_rawcc = 0;
 	}
 	else
@@ -1019,7 +1019,7 @@ TIFFStartTile(TIFF* tif, uint32 tile)
 		tif->tif_rawcc = (tmsize_t)td->td_stripbytecount[tile];
 	}
 	return ((*tif->tif_predecode)(tif,
-			(uint16)(tile/td->td_stripsperimage)));
+			(uint16_t)(tile/td->td_stripsperimage)));
 }
 
 static int
@@ -1039,37 +1039,37 @@ TIFFCheckRead(TIFF* tif, int tiles)
 }
 
 void
-_TIFFNoPostDecode(TIFF* tif, uint8* buf, tmsize_t cc)
+_TIFFNoPostDecode(TIFF* tif, uint8_t* buf, tmsize_t cc)
 {
     (void) tif; (void) buf; (void) cc;
 }
 
 void
-_TIFFSwab16BitData(TIFF* tif, uint8* buf, tmsize_t cc)
+_TIFFSwab16BitData(TIFF* tif, uint8_t* buf, tmsize_t cc)
 {
     (void) tif;
     assert((cc & 1) == 0);
-    TIFFSwabArrayOfShort((uint16*) buf, cc/2);
+    TIFFSwabArrayOfShort((uint16_t*) buf, cc/2);
 }
 
 void
-_TIFFSwab24BitData(TIFF* tif, uint8* buf, tmsize_t cc)
+_TIFFSwab24BitData(TIFF* tif, uint8_t* buf, tmsize_t cc)
 {
     (void) tif;
     assert((cc % 3) == 0);
-    TIFFSwabArrayOfTriples((uint8*) buf, cc/3);
+    TIFFSwabArrayOfTriples((uint8_t*) buf, cc/3);
 }
 
 void
-_TIFFSwab32BitData(TIFF* tif, uint8* buf, tmsize_t cc)
+_TIFFSwab32BitData(TIFF* tif, uint8_t* buf, tmsize_t cc)
 {
     (void) tif;
     assert((cc & 3) == 0);
-    TIFFSwabArrayOfLong((uint32*) buf, cc/4);
+    TIFFSwabArrayOfLong((uint32_t*) buf, cc/4);
 }
 
 void
-_TIFFSwab64BitData(TIFF* tif, uint8* buf, tmsize_t cc)
+_TIFFSwab64BitData(TIFF* tif, uint8_t* buf, tmsize_t cc)
 {
     (void) tif;
     assert((cc & 7) == 0);

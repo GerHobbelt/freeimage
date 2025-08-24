@@ -841,7 +841,7 @@ static void CopyImageWithPrediction(int width, int height,
   uint8_t* lower_max_diffs = current_max_diffs + width;
   int y;
   int mode = 0;
-  VP8LPredictorFunc pred_func = NULL;
+  VP8LPredictorFunc pred_func = nullptr;
 
   for (y = 0; y < height; ++y) {
     int x;
@@ -1407,7 +1407,7 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8LEncDspInit(void) {
   VP8LVectorMismatch = VectorMismatch;
 
   // If defined, use CPUInfo() to overwrite some pointers with faster versions.
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_USE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8LEncDspInitSSE2();

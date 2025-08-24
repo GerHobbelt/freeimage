@@ -21,7 +21,7 @@
 
 class MemIO : public FreeImageIO {
 public :
-    MemIO( BYTE *data ) : _start(data), _cp(data) {
+    MemIO( uint8_t *data ) : _start(data), _cp(data) {
         read_proc  = _ReadProc;
         write_proc = _WriteProc;
         tell_proc  = _TellProc;
@@ -38,8 +38,8 @@ public :
 	static long _TellProc(fi_handle handle);
 
 private:
-    BYTE * const _start;
-    BYTE *_cp;
+    uint8_t * const _start;
+    uint8_t *_cp;
 };
 
 
@@ -47,7 +47,7 @@ unsigned
 MemIO::_ReadProc(void *buffer, unsigned size, unsigned count, fi_handle handle) {
     MemIO *memIO = (MemIO*)handle;
     
-    BYTE *tmp = (BYTE *)buffer;
+    uint8_t *tmp = (uint8_t *)buffer;
 
     for (unsigned c = 0; c < count; c++) {
         memcpy(tmp, memIO->_cp, size);
@@ -93,7 +93,7 @@ MemIO::_TellProc(fi_handle handle) {
 
 int
 main(int argc, char *argv[]) {
-	BYTE *data = loadimagesomehow();
+	uint8_t *data = loadimagesomehow();
 
 	MemIO memIO(data);
 

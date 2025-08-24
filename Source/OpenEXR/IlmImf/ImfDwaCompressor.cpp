@@ -461,7 +461,7 @@ class DwaCompressor::LossyDctDecoder: public LossyDctDecoderBase
     //
     // toLinear is a half-float LUT to convert the encoded values 
     // back to linear light. If you want to skip this step, pass
-    // in NULL here.
+    // in nullptr here.
     //
 
     LossyDctDecoder
@@ -495,7 +495,7 @@ class DwaCompressor::LossyDctDecoderCsc: public LossyDctDecoderBase
     //
     // toLinear is a half-float LUT to convert the encoded values 
     // back to linear light. If you want to skip this step, pass
-    // in NULL here.
+    // in nullptr here.
     //
 
     LossyDctDecoderCsc

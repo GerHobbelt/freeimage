@@ -25,15 +25,15 @@
 HTreeGroup* VP8LHtreeGroupsNew(int num_htree_groups) {
   HTreeGroup* const htree_groups =
       (HTreeGroup*)WebPSafeMalloc(num_htree_groups, sizeof(*htree_groups));
-  if (htree_groups == NULL) {
-    return NULL;
+  if (htree_groups == nullptr) {
+    return nullptr;
   }
   assert(num_htree_groups <= MAX_HTREE_GROUPS);
   return htree_groups;
 }
 
 void VP8LHtreeGroupsFree(HTreeGroup* const htree_groups) {
-  if (htree_groups != NULL) {
+  if (htree_groups != nullptr) {
     WebPSafeFree(htree_groups);
   }
 }
@@ -90,8 +90,8 @@ static int BuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
   int offset[MAX_ALLOWED_CODE_LENGTH + 1];
 
   assert(code_lengths_size != 0);
-  assert(code_lengths != NULL);
-  assert(root_table != NULL);
+  assert(code_lengths != nullptr);
+  assert(root_table != nullptr);
   assert(root_bits > 0);
 
   // Build histogram of code lengths.
@@ -214,7 +214,7 @@ int VP8LBuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
   } else {   // rare case. Use heap allocation.
     uint16_t* const sorted =
         (uint16_t*)WebPSafeMalloc(code_lengths_size, sizeof(*sorted));
-    if (sorted == NULL) return 0;
+    if (sorted == nullptr) return 0;
     total_size = BuildHuffmanTable(root_table, root_bits,
                                    code_lengths, code_lengths_size, sorted);
     WebPSafeFree(sorted);

@@ -27,29 +27,29 @@
 #include <sys/stat.h>
 #include <stdio.h>
 
-fipMemoryIO::fipMemoryIO(BYTE *data, DWORD size_in_bytes) {
+fipMemoryIO::fipMemoryIO(uint8_t *data, uint32_t size_in_bytes) {
 	_hmem = FreeImage_OpenMemory(data, size_in_bytes);
 }
 
 fipMemoryIO::~fipMemoryIO() { 
-	if(_hmem != NULL) {
+	if(_hmem != nullptr) {
 		FreeImage_CloseMemory(_hmem);
 	}
 }
 
 void fipMemoryIO::close() { 
-	if(_hmem != NULL) {
+	if(_hmem != nullptr) {
 		FreeImage_CloseMemory(_hmem);
-		_hmem = NULL;
+		_hmem = nullptr;
 	}
 }
 
 BOOL fipMemoryIO::isValid() const {
-	return (_hmem != NULL);
+	return (_hmem != nullptr);
 }
 
 FREE_IMAGE_FORMAT fipMemoryIO::getFileType() const {
-	if(_hmem != NULL) {
+	if(_hmem != nullptr) {
 		return FreeImage_GetFileTypeFromMemory(_hmem, 0);
 	}
 
@@ -88,7 +88,7 @@ BOOL fipMemoryIO::seek(long offset, int origin) {
 	return FreeImage_SeekMemory(_hmem, offset, origin);
 }
 
-BOOL fipMemoryIO::acquire(BYTE **data, DWORD *size_in_bytes) {
+BOOL fipMemoryIO::acquire(uint8_t **data, uint32_t *size_in_bytes) {
 	return FreeImage_AcquireMemory(_hmem, data, size_in_bytes);
 }
 

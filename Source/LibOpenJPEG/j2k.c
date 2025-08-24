@@ -1822,7 +1822,7 @@ OPJ_BOOL opj_j2k_write_siz(     opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_size_len);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory for the SIZ marker\n");
                         return OPJ_FALSE;
@@ -2258,7 +2258,7 @@ OPJ_BOOL opj_j2k_write_com(     opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_total_com_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write the COM marker\n");
                         return OPJ_FALSE;
@@ -2332,7 +2332,7 @@ OPJ_BOOL opj_j2k_write_cod(     opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_code_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write COD marker\n");
                         return OPJ_FALSE;
@@ -2500,7 +2500,7 @@ OPJ_BOOL opj_j2k_write_coc( opj_j2k_t *p_j2k,
                 new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_coc_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write COC marker\n");
                         return OPJ_FALSE;
@@ -2600,9 +2600,9 @@ static OPJ_BOOL opj_j2k_read_coc (  opj_j2k_t *p_j2k,
                                     opj_event_mgr_t * p_manager
                                     )
 {
-        opj_cp_t *l_cp = NULL;
-        opj_tcp_t *l_tcp = NULL;
-        opj_image_t *l_image = NULL;
+        opj_cp_t *l_cp = nullptr;
+        opj_tcp_t *l_tcp = nullptr;
+        opj_image_t *l_image = nullptr;
         OPJ_UINT32 l_comp_room;
         OPJ_UINT32 l_comp_no;
 
@@ -2668,7 +2668,7 @@ OPJ_BOOL opj_j2k_write_qcd(     opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_qcd_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write QCD marker\n");
                         return OPJ_FALSE;
@@ -2760,7 +2760,7 @@ OPJ_BOOL opj_j2k_write_qcc(     opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_qcc_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write QCC marker\n");
                         return OPJ_FALSE;
@@ -2955,7 +2955,7 @@ OPJ_BOOL opj_j2k_write_poc(     opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_poc_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write POC marker\n");
                         return OPJ_FALSE;
@@ -3483,9 +3483,9 @@ OPJ_BOOL j2k_read_ppm_v2 (
                                 OPJ_BYTE *new_ppm_buffer = (OPJ_BYTE *) opj_realloc(l_cp->ppm_buffer, l_cp->ppm_len);
                                 if (! new_ppm_buffer) {
                                         opj_free(l_cp->ppm_buffer);
-                                        l_cp->ppm_buffer = NULL;
+                                        l_cp->ppm_buffer = nullptr;
                                         l_cp->ppm_len = 0;
-                                        l_cp->ppm_data = NULL;
+                                        l_cp->ppm_data = nullptr;
                                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory reading ppm marker\n");
                                         return OPJ_FALSE;
                                 }
@@ -3565,8 +3565,8 @@ OPJ_BOOL j2k_read_ppm_v3 (
                   {
                   opj_event_msg(p_manager, EVT_ERROR, "Not enough bytes (%u) to hold Ippm series (%u), Index (%d)\n", p_header_size, l_N_ppm, l_Z_ppm );
                   opj_free(l_cp->ppm_data);
-                  l_cp->ppm_data = NULL;
-                  l_cp->ppm_buffer = NULL;
+                  l_cp->ppm_data = nullptr;
+                  l_cp->ppm_buffer = nullptr;
                   l_cp->ppm = 0; /* do not use PPM */
                   return OPJ_TRUE;
                   }
@@ -3610,8 +3610,8 @@ OPJ_BOOL j2k_read_ppm_v3 (
                                   {
                                   opj_event_msg(p_manager, EVT_ERROR, "Not enough bytes (%u) to hold Ippm series (%u), Index (%d)\n", p_header_size, l_N_ppm, l_Z_ppm );
                                   opj_free(l_cp->ppm_data);
-                                  l_cp->ppm_data = NULL;
-                                  l_cp->ppm_buffer = NULL;
+                                  l_cp->ppm_data = nullptr;
+                                  l_cp->ppm_buffer = nullptr;
                                   l_cp->ppm = 0; /* do not use PPM */
                                   return OPJ_TRUE;
                                   }
@@ -3620,8 +3620,8 @@ OPJ_BOOL j2k_read_ppm_v3 (
                                 new_ppm_data = (OPJ_BYTE *) opj_realloc(l_cp->ppm_data, l_cp->ppm_len + l_N_ppm);
                                 if (! new_ppm_data) {
                                         opj_free(l_cp->ppm_data);
-                                        l_cp->ppm_data = NULL;
-                                        l_cp->ppm_buffer = NULL;  /* TODO: no need for a new local variable: ppm_buffer and ppm_data are enough */
+                                        l_cp->ppm_data = nullptr;
+                                        l_cp->ppm_buffer = nullptr;  /* TODO: no need for a new local variable: ppm_buffer and ppm_data are enough */
                                         l_cp->ppm_len = 0;
                                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to increase the size of ppm_data to add the new Ippm series\n");
                                         return OPJ_FALSE;
@@ -3667,8 +3667,8 @@ OPJ_BOOL j2k_read_ppm_v3 (
                         new_ppm_data = (OPJ_BYTE *) opj_realloc(l_cp->ppm_data, l_cp->ppm_len + l_N_ppm);
                         if (! new_ppm_data) {
                                 opj_free(l_cp->ppm_data);
-                                l_cp->ppm_data = NULL;
-                                l_cp->ppm_buffer = NULL;  /* TODO: no need for a new local variable: ppm_buffer and ppm_data are enough */
+                                l_cp->ppm_data = nullptr;
+                                l_cp->ppm_buffer = nullptr;  /* TODO: no need for a new local variable: ppm_buffer and ppm_data are enough */
                                 l_cp->ppm_len = 0;
                                 opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to increase the size of ppm_data to add the new (complete) Ippm series\n");
                                 return OPJ_FALSE;
@@ -3690,8 +3690,8 @@ OPJ_BOOL j2k_read_ppm_v3 (
                 new_ppm_data = (OPJ_BYTE *) opj_realloc(l_cp->ppm_data, l_cp->ppm_len + l_N_ppm);
                 if (! new_ppm_data) {
                         opj_free(l_cp->ppm_data);
-                        l_cp->ppm_data = NULL;
-                        l_cp->ppm_buffer = NULL;  /* TODO: no need for a new local variable: ppm_buffer and ppm_data are enough */
+                        l_cp->ppm_data = nullptr;
+                        l_cp->ppm_buffer = nullptr;  /* TODO: no need for a new local variable: ppm_buffer and ppm_data are enough */
                         l_cp->ppm_len = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to increase the size of ppm_data to add the new (incomplete) Ippm series\n");
                         return OPJ_FALSE;
@@ -3724,7 +3724,7 @@ OPJ_BOOL j2k_read_ppm_v3 (
                                 OPJ_BYTE *new_ppm_buffer = (OPJ_BYTE *) opj_realloc(l_cp->ppm_buffer, l_cp->ppm_len);
                                 if (! new_ppm_buffer) {
                                         opj_free(l_cp->ppm_buffer);
-                                        l_cp->ppm_buffer = NULL;
+                                        l_cp->ppm_buffer = nullptr;
                                         l_cp->ppm_len = 0;
                                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to read ppm marker\n");
                                         return OPJ_FALSE;
@@ -3825,7 +3825,7 @@ static OPJ_BOOL opj_j2k_read_ppt (  opj_j2k_t *p_j2k,
                 new_ppt_buffer = (OPJ_BYTE *) opj_realloc(l_tcp->ppt_buffer, l_tcp->ppt_len);
                 if (! new_ppt_buffer) {
                         opj_free(l_tcp->ppt_buffer);
-                        l_tcp->ppt_buffer = NULL;
+                        l_tcp->ppt_buffer = nullptr;
                         l_tcp->ppt_len = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to read PPT marker\n");
                         return OPJ_FALSE;
@@ -3863,7 +3863,7 @@ OPJ_BOOL opj_j2k_write_tlm(     opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_tlm_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write TLM marker\n");
                         return OPJ_FALSE;
@@ -4133,7 +4133,7 @@ OPJ_BOOL opj_j2k_read_sot ( opj_j2k_t *p_j2k,
                                                         p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].tp_index, l_num_parts* sizeof(opj_tp_index_t));
                                         if (! new_tp_index) {
                                                 opj_free(p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].tp_index);
-                                                p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].tp_index = NULL;
+                                                p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].tp_index = nullptr;
                                                 opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to read PPT marker\n");
                                                 return OPJ_FALSE;
                                         }
@@ -4158,7 +4158,7 @@ OPJ_BOOL opj_j2k_read_sot ( opj_j2k_t *p_j2k,
                                                                 p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].current_nb_tps * sizeof(opj_tp_index_t));
                                                 if (! new_tp_index) {
                                                         opj_free(p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].tp_index);
-                                                        p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].tp_index = NULL;
+                                                        p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].tp_index = nullptr;
                                                         p_j2k->cstr_index->tile_index[p_j2k->m_current_tile_number].current_nb_tps = 0;
                                                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to read PPT marker\n");
                                                         return OPJ_FALSE;
@@ -5038,7 +5038,7 @@ OPJ_BOOL opj_j2k_write_mct_record(      opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_mct_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write MCT marker\n");
                         return OPJ_FALSE;
@@ -5145,7 +5145,7 @@ static OPJ_BOOL opj_j2k_read_mct (      opj_j2k_t *p_j2k,
                         new_mct_records = (opj_mct_data_t *) opj_realloc(l_tcp->m_mct_records, l_tcp->m_nb_max_mct_records * sizeof(opj_mct_data_t));
                         if (! new_mct_records) {
                                 opj_free(l_tcp->m_mct_records);
-                                l_tcp->m_mct_records = NULL;
+                                l_tcp->m_mct_records = nullptr;
                                 l_tcp->m_nb_max_mct_records = 0;
                                 l_tcp->m_nb_mct_records = 0;
                                 opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to read MCT marker\n");
@@ -5222,7 +5222,7 @@ OPJ_BOOL opj_j2k_write_mcc_record(      opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_mcc_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write MCC marker\n");
                         return OPJ_FALSE;
@@ -5357,7 +5357,7 @@ OPJ_BOOL opj_j2k_read_mcc (     opj_j2k_t *p_j2k,
                                         l_tcp->m_mcc_records, l_tcp->m_nb_max_mcc_records * sizeof(opj_simple_mcc_decorrelation_data_t));
                         if (! new_mcc_records) {
                                 opj_free(l_tcp->m_mcc_records);
-                                l_tcp->m_mcc_records = NULL;
+                                l_tcp->m_mcc_records = nullptr;
                                 l_tcp->m_nb_max_mcc_records = 0;
                                 l_tcp->m_nb_mcc_records = 0;
                                 opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to read MCC marker\n");
@@ -5533,7 +5533,7 @@ OPJ_BOOL opj_j2k_write_mco(     opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_mco_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write MCO marker\n");
                         return OPJ_FALSE;
@@ -5742,7 +5742,7 @@ OPJ_BOOL opj_j2k_write_cbd( opj_j2k_t *p_j2k,
                 OPJ_BYTE *new_header_tile_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_encoder.m_header_tile_data, l_cbd_size);
                 if (! new_header_tile_data) {
                         opj_free(p_j2k->m_specific_param.m_encoder.m_header_tile_data);
-                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = NULL;
+                        p_j2k->m_specific_param.m_encoder.m_header_tile_data = nullptr;
                         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = 0;
                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to write CBD marker\n");
                         return OPJ_FALSE;
@@ -5854,7 +5854,7 @@ opj_j2k_t* opj_j2k_create_compress(void)
 {
         opj_j2k_t *l_j2k = (opj_j2k_t*) opj_malloc(sizeof(opj_j2k_t));
         if (!l_j2k) {
-                return NULL;
+                return nullptr;
         }
 
         memset(l_j2k,0,sizeof(opj_j2k_t));
@@ -5865,7 +5865,7 @@ opj_j2k_t* opj_j2k_create_compress(void)
         l_j2k->m_specific_param.m_encoder.m_header_tile_data = (OPJ_BYTE *) opj_malloc(OPJ_J2K_DEFAULT_HEADER_SIZE);
         if (! l_j2k->m_specific_param.m_encoder.m_header_tile_data) {
                 opj_j2k_destroy(l_j2k);
-                return NULL;
+                return nullptr;
         }
 
         l_j2k->m_specific_param.m_encoder.m_header_tile_data_size = OPJ_J2K_DEFAULT_HEADER_SIZE;
@@ -5874,14 +5874,14 @@ opj_j2k_t* opj_j2k_create_compress(void)
         l_j2k->m_validation_list = opj_procedure_list_create();
         if (! l_j2k->m_validation_list) {
                 opj_j2k_destroy(l_j2k);
-                return NULL;
+                return nullptr;
         }
 
         /* execution list creation*/
         l_j2k->m_procedure_list = opj_procedure_list_create();
         if (! l_j2k->m_procedure_list) {
                 opj_j2k_destroy(l_j2k);
-                return NULL;
+                return nullptr;
         }
 
         return l_j2k;
@@ -6461,7 +6461,7 @@ static OPJ_BOOL opj_j2k_add_mhmarker(opj_codestream_index_t *cstr_index, OPJ_UIN
                 new_marker = (opj_marker_info_t *) opj_realloc(cstr_index->marker, cstr_index->maxmarknum *sizeof(opj_marker_info_t));
                 if (! new_marker) {
                         opj_free(cstr_index->marker);
-                        cstr_index->marker = NULL;
+                        cstr_index->marker = nullptr;
                         cstr_index->maxmarknum = 0;
                         cstr_index->marknum = 0;
                         /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to add mh marker\n"); */
@@ -6492,7 +6492,7 @@ static OPJ_BOOL opj_j2k_add_tlmarker(OPJ_UINT32 tileno, opj_codestream_index_t *
                                 cstr_index->tile_index[tileno].maxmarknum *sizeof(opj_marker_info_t));
                 if (! new_marker) {
                         opj_free(cstr_index->tile_index[tileno].marker);
-                        cstr_index->tile_index[tileno].marker = NULL;
+                        cstr_index->tile_index[tileno].marker = nullptr;
                         cstr_index->tile_index[tileno].maxmarknum = 0;
                         cstr_index->tile_index[tileno].marknum = 0;
                         /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to add tl marker\n"); */
@@ -6556,7 +6556,7 @@ OPJ_BOOL opj_j2k_read_header(   opj_stream_private_t *p_stream,
         /* validation of the parameters codec */
         if (! opj_j2k_exec(p_j2k, p_j2k->m_validation_list, p_stream,p_manager)) {
                 opj_image_destroy(p_j2k->m_private_image);
-                p_j2k->m_private_image = NULL;
+                p_j2k->m_private_image = nullptr;
                 return OPJ_FALSE;
         }
 
@@ -6566,7 +6566,7 @@ OPJ_BOOL opj_j2k_read_header(   opj_stream_private_t *p_stream,
         /* read header */
         if (! opj_j2k_exec (p_j2k,p_j2k->m_procedure_list,p_stream,p_manager)) {
                 opj_image_destroy(p_j2k->m_private_image);
-                p_j2k->m_private_image = NULL;
+                p_j2k->m_private_image = nullptr;
                 return OPJ_FALSE;
         }
 
@@ -6667,7 +6667,7 @@ OPJ_BOOL opj_j2k_setup_mct_encoding(opj_tcp_t * p_tcp, opj_image_t * p_image)
                         new_mct_records = (opj_mct_data_t *) opj_realloc(p_tcp->m_mct_records, p_tcp->m_nb_max_mct_records * sizeof(opj_mct_data_t));
                         if (! new_mct_records) {
                                 opj_free(p_tcp->m_mct_records);
-                                p_tcp->m_mct_records = NULL;
+                                p_tcp->m_mct_records = nullptr;
                                 p_tcp->m_nb_max_mct_records = 0;
                                 p_tcp->m_nb_mct_records = 0;
                                 /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to setup mct encoding\n"); */
@@ -6708,7 +6708,7 @@ OPJ_BOOL opj_j2k_setup_mct_encoding(opj_tcp_t * p_tcp, opj_image_t * p_image)
                 new_mct_records = (opj_mct_data_t *) opj_realloc(p_tcp->m_mct_records, p_tcp->m_nb_max_mct_records * sizeof(opj_mct_data_t));
                 if (! new_mct_records) {
                         opj_free(p_tcp->m_mct_records);
-                        p_tcp->m_mct_records = NULL;
+                        p_tcp->m_mct_records = nullptr;
                         p_tcp->m_nb_max_mct_records = 0;
                         p_tcp->m_nb_mct_records = 0;
                         /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to setup mct encoding\n"); */
@@ -6772,7 +6772,7 @@ OPJ_BOOL opj_j2k_setup_mct_encoding(opj_tcp_t * p_tcp, opj_image_t * p_image)
                                 p_tcp->m_mcc_records, p_tcp->m_nb_max_mcc_records * sizeof(opj_simple_mcc_decorrelation_data_t));
                 if (! new_mcc_records) {
                         opj_free(p_tcp->m_mcc_records);
-                        p_tcp->m_mcc_records = NULL;
+                        p_tcp->m_mcc_records = nullptr;
                         p_tcp->m_nb_max_mcc_records = 0;
                         p_tcp->m_nb_mcc_records = 0;
                         /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to setup mct encoding\n"); */
@@ -6961,7 +6961,7 @@ OPJ_BOOL opj_j2k_read_header_procedure( opj_j2k_t *p_j2k,
                         OPJ_BYTE *new_header_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_decoder.m_header_data, l_marker_size);
                         if (! new_header_data) {
                                 opj_free(p_j2k->m_specific_param.m_decoder.m_header_data);
-                                p_j2k->m_specific_param.m_decoder.m_header_data = NULL;
+                                p_j2k->m_specific_param.m_decoder.m_header_data = nullptr;
                                 p_j2k->m_specific_param.m_decoder.m_header_data_size = 0;
                                 opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to read header\n");
                                 return OPJ_FALSE;
@@ -7234,13 +7234,13 @@ void opj_j2k_destroy (opj_j2k_t *p_j2k)
         p_j2k->m_procedure_list = 00;
 
         j2k_destroy_cstr_index(p_j2k->cstr_index);
-        p_j2k->cstr_index = NULL;
+        p_j2k->cstr_index = nullptr;
 
         opj_image_destroy(p_j2k->m_private_image);
-        p_j2k->m_private_image = NULL;
+        p_j2k->m_private_image = nullptr;
 
         opj_image_destroy(p_j2k->m_output_image);
-        p_j2k->m_output_image = NULL;
+        p_j2k->m_output_image = nullptr;
 
         opj_free(p_j2k);
 }
@@ -7251,7 +7251,7 @@ void j2k_destroy_cstr_index (opj_codestream_index_t *p_cstr_ind)
 
                 if (p_cstr_ind->marker) {
                         opj_free(p_cstr_ind->marker);
-                        p_cstr_ind->marker = NULL;
+                        p_cstr_ind->marker = nullptr;
                 }
 
                 if (p_cstr_ind->tile_index) {
@@ -7261,23 +7261,23 @@ void j2k_destroy_cstr_index (opj_codestream_index_t *p_cstr_ind)
 
                                 if(p_cstr_ind->tile_index[it_tile].packet_index) {
                                         opj_free(p_cstr_ind->tile_index[it_tile].packet_index);
-                                        p_cstr_ind->tile_index[it_tile].packet_index = NULL;
+                                        p_cstr_ind->tile_index[it_tile].packet_index = nullptr;
                                 }
 
                                 if(p_cstr_ind->tile_index[it_tile].tp_index){
                                         opj_free(p_cstr_ind->tile_index[it_tile].tp_index);
-                                        p_cstr_ind->tile_index[it_tile].tp_index = NULL;
+                                        p_cstr_ind->tile_index[it_tile].tp_index = nullptr;
                                 }
 
                                 if(p_cstr_ind->tile_index[it_tile].marker){
                                         opj_free(p_cstr_ind->tile_index[it_tile].marker);
-                                        p_cstr_ind->tile_index[it_tile].marker = NULL;
+                                        p_cstr_ind->tile_index[it_tile].marker = nullptr;
 
                                 }
                         }
 
                         opj_free( p_cstr_ind->tile_index);
-                        p_cstr_ind->tile_index = NULL;
+                        p_cstr_ind->tile_index = nullptr;
                 }
 
                 opj_free(p_cstr_ind);
@@ -7347,7 +7347,7 @@ void opj_j2k_tcp_data_destroy (opj_tcp_t *p_tcp)
 {
         if (p_tcp->m_data) {
                 opj_free(p_tcp->m_data);
-                p_tcp->m_data = NULL;
+                p_tcp->m_data = nullptr;
                 p_tcp->m_data_size = 0;
         }
 }
@@ -7377,7 +7377,7 @@ void opj_j2k_cp_destroy (opj_cp_t *p_cp)
         }
         opj_free(p_cp->ppm_buffer);
         p_cp->ppm_buffer = 00;
-        p_cp->ppm_data = NULL; /* ppm_data belongs to the allocated buffer pointed by ppm_buffer */
+        p_cp->ppm_data = nullptr; /* ppm_data belongs to the allocated buffer pointed by ppm_buffer */
         opj_free(p_cp->comment);
         p_cp->comment = 00;
         if (! p_cp->m_is_decoder)
@@ -7400,7 +7400,7 @@ OPJ_BOOL opj_j2k_read_tile_header(      opj_j2k_t * p_j2k,
         OPJ_UINT32 l_current_marker = J2K_MS_SOT;
         OPJ_UINT32 l_marker_size;
         const opj_dec_memory_marker_handler_t * l_marker_handler = 00;
-        opj_tcp_t * l_tcp = NULL;
+        opj_tcp_t * l_tcp = nullptr;
         OPJ_UINT32 l_nb_tiles;
 
         /* preconditions */
@@ -7465,7 +7465,7 @@ OPJ_BOOL opj_j2k_read_tile_header(      opj_j2k_t * p_j2k,
                                 OPJ_BYTE *new_header_data = (OPJ_BYTE *) opj_realloc(p_j2k->m_specific_param.m_decoder.m_header_data, l_marker_size);
                                 if (! new_header_data) {
                                         opj_free(p_j2k->m_specific_param.m_decoder.m_header_data);
-                                        p_j2k->m_specific_param.m_decoder.m_header_data = NULL;
+                                        p_j2k->m_specific_param.m_decoder.m_header_data = nullptr;
                                         p_j2k->m_specific_param.m_decoder.m_header_data_size = 0;
                                         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to read header\n");
                                         return OPJ_FALSE;
@@ -7970,7 +7970,7 @@ OPJ_BOOL opj_j2k_set_decode_area(       opj_j2k_t *p_j2k,
 
         OPJ_UINT32 it_comp;
         OPJ_INT32 l_comp_x1, l_comp_y1;
-        opj_image_comp_t* l_img_comp = NULL;
+        opj_image_comp_t* l_img_comp = nullptr;
 
         /* Check if we are read the main header */
         if (p_j2k->m_specific_param.m_decoder.m_state != J2K_STATE_TPHSOT) { /* FIXME J2K_DEC_STATE_TPHSOT)*/
@@ -8151,7 +8151,7 @@ opj_j2k_t* opj_j2k_create_decompress(void)
                         /*(opj_codestream_index_t*) opj_malloc(sizeof(opj_codestream_index_t));
         if (!l_j2k->cstr_index){
                 opj_j2k_destroy(l_j2k);
-                return NULL;
+                return nullptr;
         }
 
         l_j2k->cstr_index->marker = (opj_marker_info_t*) opj_malloc(100 * sizeof(opj_marker_info_t));
@@ -8179,16 +8179,16 @@ opj_codestream_index_t* opj_j2k_create_cstr_index(void)
         opj_codestream_index_t* cstr_index = (opj_codestream_index_t*)
                         opj_calloc(1,sizeof(opj_codestream_index_t));
         if (!cstr_index)
-                return NULL;
+                return nullptr;
 
         cstr_index->maxmarknum = 100;
         cstr_index->marknum = 0;
         cstr_index->marker = (opj_marker_info_t*)
                         opj_calloc(cstr_index->maxmarknum, sizeof(opj_marker_info_t));
         if (!cstr_index-> marker)
-                return NULL;
+                return nullptr;
 
-        cstr_index->tile_index = NULL;
+        cstr_index->tile_index = nullptr;
 
         return cstr_index;
 }
@@ -8293,10 +8293,10 @@ OPJ_BOOL opj_j2k_read_SPCod_SPCoc(  opj_j2k_t *p_j2k,
                                                                 opj_event_mgr_t * p_manager)
 {
         OPJ_UINT32 i, l_tmp;
-        opj_cp_t *l_cp = NULL;
-        opj_tcp_t *l_tcp = NULL;
-        opj_tccp_t *l_tccp = NULL;
-        OPJ_BYTE * l_current_ptr = NULL;
+        opj_cp_t *l_cp = nullptr;
+        opj_tcp_t *l_tcp = nullptr;
+        opj_tccp_t *l_tccp = nullptr;
+        OPJ_BYTE * l_current_ptr = nullptr;
 
         /* preconditions */
         assert(p_j2k != 00);
@@ -8402,9 +8402,9 @@ void opj_j2k_copy_tile_component_parameters( opj_j2k_t *p_j2k )
 {
         /* loop */
         OPJ_UINT32 i;
-        opj_cp_t *l_cp = NULL;
-        opj_tcp_t *l_tcp = NULL;
-        opj_tccp_t *l_ref_tccp = NULL, *l_copied_tccp = NULL;
+        opj_cp_t *l_cp = nullptr;
+        opj_tcp_t *l_tcp = nullptr;
+        opj_tccp_t *l_ref_tccp = nullptr, *l_copied_tccp = nullptr;
         OPJ_UINT32 l_prc_size;
 
         /* preconditions */
@@ -8655,10 +8655,10 @@ OPJ_BOOL opj_j2k_read_SQcd_SQcc(opj_j2k_t *p_j2k,
 void opj_j2k_copy_tile_quantization_parameters( opj_j2k_t *p_j2k )
 {
         OPJ_UINT32 i;
-        opj_cp_t *l_cp = NULL;
-        opj_tcp_t *l_tcp = NULL;
-        opj_tccp_t *l_ref_tccp = NULL;
-        opj_tccp_t *l_copied_tccp = NULL;
+        opj_cp_t *l_cp = nullptr;
+        opj_tcp_t *l_tcp = nullptr;
+        opj_tccp_t *l_ref_tccp = nullptr;
+        opj_tccp_t *l_copied_tccp = nullptr;
         OPJ_UINT32 l_size;
 
         /* preconditions */
@@ -8915,7 +8915,7 @@ opj_codestream_info_v2_t* j2k_get_cstr_info(opj_j2k_t* p_j2k)
         opj_tcp_t *l_default_tile;
         opj_codestream_info_v2_t* cstr_info = (opj_codestream_info_v2_t*) opj_calloc(1,sizeof(opj_codestream_info_v2_t));
 		if (!cstr_info)
-			return NULL;
+			return nullptr;
 
         cstr_info->nbcomps = p_j2k->m_private_image->numcomps;
 
@@ -8926,7 +8926,7 @@ opj_codestream_info_v2_t* j2k_get_cstr_info(opj_j2k_t* p_j2k)
         cstr_info->tw = p_j2k->m_cp.tw;
         cstr_info->th = p_j2k->m_cp.th;
 
-        cstr_info->tile_info = NULL; /* Not fill from the main header*/
+        cstr_info->tile_info = nullptr; /* Not fill from the main header*/
 
         l_default_tile = p_j2k->m_specific_param.m_decoder.m_default_tcp;
 
@@ -8939,7 +8939,7 @@ opj_codestream_info_v2_t* j2k_get_cstr_info(opj_j2k_t* p_j2k)
 		if (!cstr_info->m_default_tile_info.tccp_info)
 		{
 			opj_destroy_cstr_info(&cstr_info);
-			return NULL;
+			return nullptr;
 		}
 
         for (compno = 0; compno < numcomps; compno++) {
@@ -8984,7 +8984,7 @@ opj_codestream_index_t* j2k_get_cstr_index(opj_j2k_t* p_j2k)
         opj_codestream_index_t* l_cstr_index = (opj_codestream_index_t*)
                         opj_calloc(1,sizeof(opj_codestream_index_t));
         if (!l_cstr_index)
-                return NULL;
+                return nullptr;
 
         l_cstr_index->main_head_start = p_j2k->cstr_index->main_head_start;
         l_cstr_index->main_head_end = p_j2k->cstr_index->main_head_end;
@@ -8994,14 +8994,14 @@ opj_codestream_index_t* j2k_get_cstr_index(opj_j2k_t* p_j2k)
         l_cstr_index->marker = (opj_marker_info_t*)opj_malloc(l_cstr_index->marknum*sizeof(opj_marker_info_t));
         if (!l_cstr_index->marker){
                 opj_free( l_cstr_index);
-                return NULL;
+                return nullptr;
         }
 
         if (p_j2k->cstr_index->marker)
                 memcpy(l_cstr_index->marker, p_j2k->cstr_index->marker, l_cstr_index->marknum * sizeof(opj_marker_info_t) );
         else{
                 opj_free(l_cstr_index->marker);
-                l_cstr_index->marker = NULL;
+                l_cstr_index->marker = nullptr;
         }
 
         l_cstr_index->nb_of_tiles = p_j2k->cstr_index->nb_of_tiles;
@@ -9009,12 +9009,12 @@ opj_codestream_index_t* j2k_get_cstr_index(opj_j2k_t* p_j2k)
         if (!l_cstr_index->tile_index){
                 opj_free( l_cstr_index->marker);
                 opj_free( l_cstr_index);
-                return NULL;
+                return nullptr;
         }
 
         if (!p_j2k->cstr_index->tile_index){
                 opj_free(l_cstr_index->tile_index);
-                l_cstr_index->tile_index = NULL;
+                l_cstr_index->tile_index = nullptr;
         }
         else {
                 OPJ_UINT32 it_tile = 0;
@@ -9036,7 +9036,7 @@ opj_codestream_index_t* j2k_get_cstr_index(opj_j2k_t* p_j2k)
                                 opj_free( l_cstr_index->tile_index);
                                 opj_free( l_cstr_index->marker);
                                 opj_free( l_cstr_index);
-                                return NULL;
+                                return nullptr;
                         }
 
                         if (p_j2k->cstr_index->tile_index[it_tile].marker)
@@ -9045,7 +9045,7 @@ opj_codestream_index_t* j2k_get_cstr_index(opj_j2k_t* p_j2k)
                                                 l_cstr_index->tile_index[it_tile].marknum * sizeof(opj_marker_info_t) );
                         else{
                                 opj_free(l_cstr_index->tile_index[it_tile].marker);
-                                l_cstr_index->tile_index[it_tile].marker = NULL;
+                                l_cstr_index->tile_index[it_tile].marker = nullptr;
                         }
 
                         /* Tile part index*/
@@ -9065,7 +9065,7 @@ opj_codestream_index_t* j2k_get_cstr_index(opj_j2k_t* p_j2k)
                                 opj_free( l_cstr_index->tile_index);
                                 opj_free( l_cstr_index->marker);
                                 opj_free( l_cstr_index);
-                                return NULL;
+                                return nullptr;
                         }
 
                         if (p_j2k->cstr_index->tile_index[it_tile].tp_index){
@@ -9075,12 +9075,12 @@ opj_codestream_index_t* j2k_get_cstr_index(opj_j2k_t* p_j2k)
                         }
                         else{
                                 opj_free(l_cstr_index->tile_index[it_tile].tp_index);
-                                l_cstr_index->tile_index[it_tile].tp_index = NULL;
+                                l_cstr_index->tile_index[it_tile].tp_index = nullptr;
                         }
 
                         /* Packet index (NOT USED)*/
                         l_cstr_index->tile_index[it_tile].nb_packet = 0;
-                        l_cstr_index->tile_index[it_tile].packet_index = NULL;
+                        l_cstr_index->tile_index[it_tile].packet_index = nullptr;
 
                 }
         }
@@ -9273,7 +9273,7 @@ static OPJ_BOOL opj_j2k_decode_one_tile (       opj_j2k_t *p_j2k,
                         OPJ_BYTE *l_new_current_data = (OPJ_BYTE *) opj_realloc(l_current_data, l_data_size);
                         if (! l_new_current_data) {
                                 opj_free(l_current_data);
-                                l_current_data = NULL;
+                                l_current_data = nullptr;
                                 /* TODO: LH: why tile numbering policy used in messages differs from
                                    the one used in opj_j2k_decode_tiles() ? */
                                 opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to decode tile %d/%d\n", l_current_tile_no, (p_j2k->m_cp.th * p_j2k->m_cp.tw) - 1);
@@ -9350,7 +9350,7 @@ OPJ_BOOL opj_j2k_decode(opj_j2k_t * p_j2k,
         /* Decode the codestream */
         if (! opj_j2k_exec (p_j2k,p_j2k->m_procedure_list,p_stream,p_manager)) {
                 opj_image_destroy(p_j2k->m_private_image);
-                p_j2k->m_private_image = NULL;
+                p_j2k->m_private_image = nullptr;
                 return OPJ_FALSE;
         }
 
@@ -9365,7 +9365,7 @@ OPJ_BOOL opj_j2k_decode(opj_j2k_t * p_j2k,
                 fwrite( p_image->comps[compno].data, sizeof(OPJ_INT32), p_image->comps[compno].w * p_image->comps[compno].h, debug );
                 fclose( debug );
 #endif
-                p_j2k->m_output_image->comps[compno].data = NULL;
+                p_j2k->m_output_image->comps[compno].data = nullptr;
         }
 
         return OPJ_TRUE;
@@ -9446,7 +9446,7 @@ OPJ_BOOL opj_j2k_get_tile(      opj_j2k_t *p_j2k,
         /* Decode the codestream */
         if (! opj_j2k_exec (p_j2k,p_j2k->m_procedure_list,p_stream,p_manager)) {
                 opj_image_destroy(p_j2k->m_private_image);
-                p_j2k->m_private_image = NULL;
+                p_j2k->m_private_image = nullptr;
                 return OPJ_FALSE;
         }
 
@@ -9459,7 +9459,7 @@ OPJ_BOOL opj_j2k_get_tile(      opj_j2k_t *p_j2k,
 
                 p_image->comps[compno].data = p_j2k->m_output_image->comps[compno].data;
 
-                p_j2k->m_output_image->comps[compno].data = NULL;
+                p_j2k->m_output_image->comps[compno].data = nullptr;
         }
 
         return OPJ_TRUE;
@@ -9579,7 +9579,7 @@ OPJ_BOOL opj_j2k_start_compress(opj_j2k_t *p_j2k,
                 for (it_comp = 0 ; it_comp < p_image->numcomps; it_comp++) {
                         if (p_image->comps[it_comp].data) {
                                 p_j2k->m_private_image->comps[it_comp].data =p_image->comps[it_comp].data;
-                                p_image->comps[it_comp].data = NULL;
+                                p_image->comps[it_comp].data = nullptr;
 
                         }
                 }

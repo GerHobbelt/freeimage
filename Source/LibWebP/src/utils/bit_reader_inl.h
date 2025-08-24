@@ -57,7 +57,7 @@ void VP8LoadFinalBytes(VP8BitReader* const br);
 // makes sure br->value_ has at least BITS bits worth of data
 static WEBP_UBSAN_IGNORE_UNDEF WEBP_INLINE
 void VP8LoadNewBytes(VP8BitReader* const br) {
-  assert(br != NULL && br->buf_ != NULL);
+  assert(br != nullptr && br->buf_ != nullptr);
   // Read 'BITS' bits at a time if possible.
   if (br->buf_ < br->buf_max_) {
     // convert memory type to register type (with some zero'ing!)

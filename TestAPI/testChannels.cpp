@@ -30,13 +30,13 @@ void test24BitsChannels(unsigned width, unsigned height) {
 
 	// create a test 8-bit image
 	FIBITMAP *src = createZonePlateImage(width, height, 128);
-	if(src != NULL) {
+	if(src != nullptr) {
 		// convert to 24-bit
 		FIBITMAP *tmp = FreeImage_ConvertTo24Bits(src);
 		FreeImage_Unload(src);
 		src = tmp;
 	}
-	assert(src != NULL);
+	assert(src != nullptr);
 
 	// save for further examination
 	bResult = FreeImage_Save(FIF_PNG, src, "zoneplate.png", PNG_DEFAULT);
@@ -45,7 +45,7 @@ void test24BitsChannels(unsigned width, unsigned height) {
 	// test get/set channel
 	// -------------------------	
 	FIBITMAP *channel = FreeImage_GetChannel(src, FICC_GREEN);
-	assert(channel != NULL);
+	assert(channel != nullptr);
 	bResult = FreeImage_SetChannel(src, channel, FICC_GREEN);
 	assert(bResult);	
 	FreeImage_Unload(channel);
@@ -58,13 +58,13 @@ void test32BitsChannels(unsigned width, unsigned height) {
 
 	// create a test 8-bit image
 	FIBITMAP *src = createZonePlateImage(width, height, 128);
-	if(src != NULL) {
+	if(src != nullptr) {
 		// convert to 32-bit
 		FIBITMAP *tmp = FreeImage_ConvertTo32Bits(src);
 		FreeImage_Unload(src);
 		src = tmp;
 	}
-	assert(src != NULL);
+	assert(src != nullptr);
 
 	// save for further examination
 	bResult = FreeImage_Save(FIF_PNG, src, "zoneplate.png", PNG_DEFAULT);
@@ -73,7 +73,7 @@ void test32BitsChannels(unsigned width, unsigned height) {
 	// test get/set channel
 	// -------------------------	
 	FIBITMAP *channel = FreeImage_GetChannel(src, FICC_ALPHA);
-	assert(channel != NULL);
+	assert(channel != nullptr);
 	bResult = FreeImage_SetChannel(src, channel, FICC_ALPHA);
 	assert(bResult);	
 	FreeImage_Unload(channel);
@@ -86,13 +86,13 @@ void testRGBAChannels(FREE_IMAGE_TYPE image_type, unsigned width, unsigned heigh
 
 	// create a test image
 	FIBITMAP *src = FreeImage_AllocateT(image_type, width, height);
-	assert(src != NULL);
+	assert(src != nullptr);
 
 	// test get/set channel
 	// -------------------------	
 	{
 		FIBITMAP *channel = FreeImage_GetChannel(src, FICC_GREEN);
-		assert(channel != NULL);
+		assert(channel != nullptr);
 		bResult = FreeImage_SetChannel(src, channel, FICC_GREEN);
 		assert(bResult);	
 		FreeImage_Unload(channel);
@@ -100,7 +100,7 @@ void testRGBAChannels(FREE_IMAGE_TYPE image_type, unsigned width, unsigned heigh
 	
 	if(bUseAlpha) {
 		FIBITMAP *alpha = FreeImage_GetChannel(src, FICC_ALPHA);
-		assert(alpha != NULL);
+		assert(alpha != nullptr);
 		bResult = FreeImage_SetChannel(src, alpha, FICC_ALPHA);
 		assert(bResult);	
 		FreeImage_Unload(alpha);

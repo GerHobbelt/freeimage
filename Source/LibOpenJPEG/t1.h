@@ -139,7 +139,7 @@ OPJ_BOOL opj_t1_decode_cblks(   opj_t1_t* t1,
 /**
  * Creates a new Tier 1 handle
  * and initializes the look-up tables of the Tier-1 coder/decoder
- * @return a new T1 handle if successful, returns NULL otherwise
+ * @return a new T1 handle if successful, returns nullptr otherwise
 */
 opj_t1_t* opj_t1_create(void);
 

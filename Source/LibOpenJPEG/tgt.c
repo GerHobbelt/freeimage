@@ -124,7 +124,7 @@ opj_tgt_tree_t *opj_tgt_create(OPJ_UINT32 numleafsh, OPJ_UINT32 numleafsv) {
  * @param       p_tree                          the tree to reinitialize.
  * @param       p_num_leafs_h           the width of the array of leafs of the tree
  * @param       p_num_leafs_v           the height of the array of leafs of the tree
- * @return      a new tag-tree if successful, NULL otherwise
+ * @return      a new tag-tree if successful, nullptr otherwise
 */
 opj_tgt_tree_t *opj_tgt_init(opj_tgt_tree_t * p_tree,OPJ_UINT32 p_num_leafs_h, OPJ_UINT32 p_num_leafs_v)
 {

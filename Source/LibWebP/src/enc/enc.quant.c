@@ -466,14 +466,14 @@ const int VP8I4ModeOffsets[NUM_BMODES] = {
 };
 
 void VP8MakeLuma16Preds(const VP8EncIterator* const it) {
-  const uint8_t* const left = it->x_ ? it->y_left_ : NULL;
-  const uint8_t* const top = it->y_ ? it->y_top_ : NULL;
+  const uint8_t* const left = it->x_ ? it->y_left_ : nullptr;
+  const uint8_t* const top = it->y_ ? it->y_top_ : nullptr;
   VP8EncPredLuma16(it->yuv_p_, left, top);
 }
 
 void VP8MakeChroma8Preds(const VP8EncIterator* const it) {
-  const uint8_t* const left = it->x_ ? it->u_left_ : NULL;
-  const uint8_t* const top = it->y_ ? it->uv_top_ : NULL;
+  const uint8_t* const left = it->x_ ? it->u_left_ : nullptr;
+  const uint8_t* const top = it->y_ ? it->uv_top_ : nullptr;
   VP8EncPredChroma8(it->yuv_p_, left, top);
 }
 

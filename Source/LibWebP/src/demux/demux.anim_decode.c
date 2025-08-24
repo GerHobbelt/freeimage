@@ -52,7 +52,7 @@ static void DefaultDecoderOptions(WebPAnimDecoderOptions* const dec_options) {
 
 int WebPAnimDecoderOptionsInitInternal(WebPAnimDecoderOptions* dec_options,
                                        int abi_version) {
-  if (dec_options == NULL ||
+  if (dec_options == nullptr ||
       WEBP_ABI_IS_INCOMPATIBLE(abi_version, WEBP_DEMUX_ABI_VERSION)) {
     return 0;
   }
@@ -64,7 +64,7 @@ static int ApplyDecoderOptions(const WebPAnimDecoderOptions* const dec_options,
                                WebPAnimDecoder* const dec) {
   WEBP_CSP_MODE mode;
   WebPDecoderConfig* config = &dec->config_;
-  assert(dec_options != NULL);
+  assert(dec_options != nullptr);
 
   mode = dec_options->color_mode;
   if (mode != MODE_RGBA && mode != MODE_BGRA &&
@@ -86,17 +86,17 @@ WebPAnimDecoder* WebPAnimDecoderNewInternal(
     const WebPData* webp_data, const WebPAnimDecoderOptions* dec_options,
     int abi_version) {
   WebPAnimDecoderOptions options;
-  WebPAnimDecoder* dec = NULL;
-  if (webp_data == NULL ||
+  WebPAnimDecoder* dec = nullptr;
+  if (webp_data == nullptr ||
       WEBP_ABI_IS_INCOMPATIBLE(abi_version, WEBP_DEMUX_ABI_VERSION)) {
-    return NULL;
+    return nullptr;
   }
 
-  // Note: calloc() so that the pointer members are initialized to NULL.
+  // Note: calloc() so that the pointer members are initialized to nullptr.
   dec = (WebPAnimDecoder*)WebPSafeCalloc(1ULL, sizeof(*dec));
-  if (dec == NULL) goto Error;
+  if (dec == nullptr) goto Error;
 
-  if (dec_options != NULL) {
+  if (dec_options != nullptr) {
     options = *dec_options;
   } else {
     DefaultDecoderOptions(&options);
@@ -104,7 +104,7 @@ WebPAnimDecoder* WebPAnimDecoderNewInternal(
   if (!ApplyDecoderOptions(&options, dec)) goto Error;
 
   dec->demux_ = WebPDemux(webp_data);
-  if (dec->demux_ == NULL) goto Error;
+  if (dec->demux_ == nullptr) goto Error;
 
   dec->info_.canvas_width = WebPDemuxGetI(dec->demux_, WEBP_FF_CANVAS_WIDTH);
   dec->info_.canvas_height = WebPDemuxGetI(dec->demux_, WEBP_FF_CANVAS_HEIGHT);
@@ -117,9 +117,9 @@ WebPAnimDecoder* WebPAnimDecoderNewInternal(
         dec->info_.canvas_width * NUM_CHANNELS * dec->info_.canvas_height;
     // Note: calloc() because we fill frame with zeroes as well.
     dec->curr_frame_ = WebPSafeCalloc(1ULL, canvas_bytes);
-    if (dec->curr_frame_ == NULL) goto Error;
+    if (dec->curr_frame_ == nullptr) goto Error;
     dec->prev_frame_disposed_ = WebPSafeCalloc(1ULL, canvas_bytes);
-    if (dec->prev_frame_disposed_ == NULL) goto Error;
+    if (dec->prev_frame_disposed_ == nullptr) goto Error;
   }
 
   WebPAnimDecoderReset(dec);
@@ -128,11 +128,11 @@ WebPAnimDecoder* WebPAnimDecoderNewInternal(
 
  Error:
   WebPAnimDecoderDelete(dec);
-  return NULL;
+  return nullptr;
 }
 
 int WebPAnimDecoderGetInfo(const WebPAnimDecoder* dec, WebPAnimInfo* info) {
-  if (dec == NULL || info == NULL) return 0;
+  if (dec == nullptr || info == nullptr) return 0;
   *info = dec->info_;
   return 1;
 }
@@ -164,7 +164,7 @@ static void ZeroFillFrameRect(uint8_t* buf, int buf_stride, int x_offset,
 // Copy width * height pixels from 'src' to 'dst'.
 static void CopyCanvas(const uint8_t* src, uint8_t* dst,
                        uint32_t width, uint32_t height) {
-  assert(src != NULL && dst != NULL);
+  assert(src != nullptr && dst != nullptr);
   memcpy(dst, src, width * NUM_CHANNELS * height);
 }
 
@@ -311,7 +311,7 @@ int WebPAnimDecoderGetNext(WebPAnimDecoder* dec,
   int timestamp;
   BlendRowFunc blend_row;
 
-  if (dec == NULL || buf_ptr == NULL || timestamp_ptr == NULL) return 0;
+  if (dec == nullptr || buf_ptr == nullptr || timestamp_ptr == nullptr) return 0;
   if (!WebPAnimDecoderHasMoreFrames(dec)) return 0;
 
   width = dec->info_.canvas_width;
@@ -414,12 +414,12 @@ int WebPAnimDecoderGetNext(WebPAnimDecoder* dec,
 }
 
 int WebPAnimDecoderHasMoreFrames(const WebPAnimDecoder* dec) {
-  if (dec == NULL) return 0;
+  if (dec == nullptr) return 0;
   return (dec->next_frame_ <= (int)dec->info_.frame_count);
 }
 
 void WebPAnimDecoderReset(WebPAnimDecoder* dec) {
-  if (dec != NULL) {
+  if (dec != nullptr) {
     dec->prev_frame_timestamp_ = 0;
     memset(&dec->prev_iter_, 0, sizeof(dec->prev_iter_));
     dec->prev_frame_was_keyframe_ = 0;
@@ -428,12 +428,12 @@ void WebPAnimDecoderReset(WebPAnimDecoder* dec) {
 }
 
 const WebPDemuxer* WebPAnimDecoderGetDemuxer(const WebPAnimDecoder* dec) {
-  if (dec == NULL) return NULL;
+  if (dec == nullptr) return nullptr;
   return dec->demux_;
 }
 
 void WebPAnimDecoderDelete(WebPAnimDecoder* dec) {
-  if (dec != NULL) {
+  if (dec != nullptr) {
     WebPDemuxDelete(dec->demux_);
     WebPSafeFree(dec->curr_frame_);
     WebPSafeFree(dec->prev_frame_disposed_);

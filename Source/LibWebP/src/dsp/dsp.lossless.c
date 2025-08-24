@@ -179,10 +179,10 @@ static void PredictorInverseTransform(const VP8LTransform* const transform,
   const int width = transform->xsize_;
   if (y_start == 0) {  // First Row follows the L (mode=1) mode.
     int x;
-    const uint32_t pred0 = Predictor0(data[-1], NULL);
+    const uint32_t pred0 = Predictor0(data[-1], nullptr);
     AddPixelsEq(data, pred0);
     for (x = 1; x < width; ++x) {
-      const uint32_t pred1 = Predictor1(data[x - 1], NULL);
+      const uint32_t pred1 = Predictor1(data[x - 1], nullptr);
       AddPixelsEq(data + x, pred1);
     }
     data += width;
@@ -611,7 +611,7 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8LDspInit(void) {
   VP8LMapColor8b = MapAlpha;
 
   // If defined, use CPUInfo() to overwrite some pointers with faster versions.
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_USE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8LDspInitSSE2();

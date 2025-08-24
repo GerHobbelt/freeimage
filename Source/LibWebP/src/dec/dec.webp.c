@@ -54,9 +54,9 @@
 static VP8StatusCode ParseRIFF(const uint8_t** const data,
                                size_t* const data_size, int have_all_data,
                                size_t* const riff_size) {
-  assert(data != NULL);
-  assert(data_size != NULL);
-  assert(riff_size != NULL);
+  assert(data != nullptr);
+  assert(data_size != nullptr);
+  assert(riff_size != nullptr);
 
   *riff_size = 0;  // Default: no RIFF present.
   if (*data_size >= RIFF_HEADER_SIZE && !memcmp(*data, "RIFF", TAG_SIZE)) {
@@ -96,9 +96,9 @@ static VP8StatusCode ParseVP8X(const uint8_t** const data,
                                int* const width_ptr, int* const height_ptr,
                                uint32_t* const flags_ptr) {
   const uint32_t vp8x_size = CHUNK_HEADER_SIZE + VP8X_CHUNK_SIZE;
-  assert(data != NULL);
-  assert(data_size != NULL);
-  assert(found_vp8x != NULL);
+  assert(data != nullptr);
+  assert(data_size != nullptr);
+  assert(found_vp8x != nullptr);
 
   *found_vp8x = 0;
 
@@ -125,9 +125,9 @@ static VP8StatusCode ParseVP8X(const uint8_t** const data,
       return VP8_STATUS_BITSTREAM_ERROR;  // image is too large
     }
 
-    if (flags_ptr != NULL) *flags_ptr = flags;
-    if (width_ptr != NULL) *width_ptr = width;
-    if (height_ptr != NULL) *height_ptr = height;
+    if (flags_ptr != nullptr) *flags_ptr = flags;
+    if (width_ptr != nullptr) *width_ptr = width;
+    if (height_ptr != nullptr) *height_ptr = height;
     // Skip over VP8X header bytes.
     *data += vp8x_size;
     *data_size -= vp8x_size;
@@ -153,14 +153,14 @@ static VP8StatusCode ParseOptionalChunks(const uint8_t** const data,
   uint32_t total_size = TAG_SIZE +           // "WEBP".
                         CHUNK_HEADER_SIZE +  // "VP8Xnnnn".
                         VP8X_CHUNK_SIZE;     // data.
-  assert(data != NULL);
-  assert(data_size != NULL);
+  assert(data != nullptr);
+  assert(data_size != nullptr);
   buf = *data;
   buf_size = *data_size;
 
-  assert(alpha_data != NULL);
-  assert(alpha_size != NULL);
-  *alpha_data = NULL;
+  assert(alpha_data != nullptr);
+  assert(alpha_size != nullptr);
+  *alpha_data = nullptr;
   *alpha_size = 0;
 
   while (1) {
@@ -229,10 +229,10 @@ static VP8StatusCode ParseVP8Header(const uint8_t** const data_ptr,
   const uint32_t minimal_size =
       TAG_SIZE + CHUNK_HEADER_SIZE;  // "WEBP" + "VP8 nnnn" OR
                                      // "WEBP" + "VP8Lnnnn"
-  assert(data != NULL);
-  assert(data_size != NULL);
-  assert(chunk_size != NULL);
-  assert(is_lossless != NULL);
+  assert(data != nullptr);
+  assert(data_size != nullptr);
+  assert(chunk_size != nullptr);
+  assert(is_lossless != nullptr);
 
   if (*data_size < CHUNK_HEADER_SIZE) {
     return VP8_STATUS_NOT_ENOUGH_DATA;  // Insufficient data.
@@ -264,9 +264,9 @@ static VP8StatusCode ParseVP8Header(const uint8_t** const data_ptr,
 //------------------------------------------------------------------------------
 
 // Fetch '*width', '*height', '*has_alpha' and fill out 'headers' based on
-// 'data'. All the output parameters may be NULL. If 'headers' is NULL only the
+// 'data'. All the output parameters may be nullptr. If 'headers' is nullptr only the
 // minimal amount will be read to fetch the remaining parameters.
-// If 'headers' is non-NULL this function will attempt to locate both alpha
+// If 'headers' is non-nullptr this function will attempt to locate both alpha
 // data (with or without a VP8X chunk) and the bitstream chunk (VP8/VP8L).
 // Note: The following chunk sequences (before the raw VP8/VP8L data) are
 // considered valid by this function:
@@ -290,12 +290,12 @@ static VP8StatusCode ParseHeadersInternal(const uint8_t* data,
   int found_vp8x = 0;
   int animation_present = 0;
   int fragments_present = 0;
-  const int have_all_data = (headers != NULL) ? headers->have_all_data : 0;
+  const int have_all_data = (headers != nullptr) ? headers->have_all_data : 0;
 
   VP8StatusCode status;
   WebPHeaderStructure hdrs;
 
-  if (data == NULL || data_size < RIFF_HEADER_SIZE) {
+  if (data == nullptr || data_size < RIFF_HEADER_SIZE) {
     return VP8_STATUS_NOT_ENOUGH_DATA;
   }
   memset(&hdrs, 0, sizeof(hdrs));
@@ -324,14 +324,14 @@ static VP8StatusCode ParseHeadersInternal(const uint8_t* data,
       // necessary to send VP8X chunk to the decoder.
       return VP8_STATUS_BITSTREAM_ERROR;
     }
-    if (has_alpha != NULL) *has_alpha = !!(flags & ALPHA_FLAG);
-    if (has_animation != NULL) *has_animation = animation_present;
-    if (format != NULL) *format = 0;   // default = undefined
+    if (has_alpha != nullptr) *has_alpha = !!(flags & ALPHA_FLAG);
+    if (has_animation != nullptr) *has_animation = animation_present;
+    if (format != nullptr) *format = 0;   // default = undefined
 
     image_width = canvas_width;
     image_height = canvas_height;
     if (found_vp8x && (animation_present || fragments_present) &&
-        headers == NULL) {
+        headers == nullptr) {
       status = VP8_STATUS_OK;
       goto ReturnWidthHeight;  // Just return features from VP8X header.
     }
@@ -362,7 +362,7 @@ static VP8StatusCode ParseHeadersInternal(const uint8_t* data,
     return VP8_STATUS_BITSTREAM_ERROR;
   }
 
-  if (format != NULL && !(animation_present || fragments_present)) {
+  if (format != nullptr && !(animation_present || fragments_present)) {
     *format = hdrs.is_lossless ? 2 : 1;
   }
 
@@ -392,7 +392,7 @@ static VP8StatusCode ParseHeadersInternal(const uint8_t* data,
       return VP8_STATUS_BITSTREAM_ERROR;
     }
   }
-  if (headers != NULL) {
+  if (headers != nullptr) {
     *headers = hdrs;
     headers->offset = data - headers->data;
     assert((uint64_t)(data - headers->data) < MAX_CHUNK_PAYLOAD);
@@ -400,14 +400,14 @@ static VP8StatusCode ParseHeadersInternal(const uint8_t* data,
   }
  ReturnWidthHeight:
   if (status == VP8_STATUS_OK ||
-      (status == VP8_STATUS_NOT_ENOUGH_DATA && found_vp8x && headers == NULL)) {
-    if (has_alpha != NULL) {
+      (status == VP8_STATUS_NOT_ENOUGH_DATA && found_vp8x && headers == nullptr)) {
+    if (has_alpha != nullptr) {
       // If the data did not contain a VP8X/VP8L chunk the only definitive way
       // to set this is by looking for alpha data (from an ALPH chunk).
-      *has_alpha |= (hdrs.alpha_data != NULL);
+      *has_alpha |= (hdrs.alpha_data != nullptr);
     }
-    if (width != NULL) *width = image_width;
-    if (height != NULL) *height = image_height;
+    if (width != nullptr) *width = image_width;
+    if (height != nullptr) *height = image_height;
     return VP8_STATUS_OK;
   } else {
     return status;
@@ -418,11 +418,11 @@ VP8StatusCode WebPParseHeaders(WebPHeaderStructure* const headers) {
   // status is marked volatile as a workaround for a clang-3.8 (aarch64) bug
   volatile VP8StatusCode status;
   int has_animation = 0;
-  assert(headers != NULL);
+  assert(headers != nullptr);
   // fill out headers, ignore width/height/has_alpha.
   status = ParseHeadersInternal(headers->data, headers->data_size,
-                                NULL, NULL, NULL, &has_animation,
-                                NULL, headers);
+                                nullptr, nullptr, nullptr, &has_animation,
+                                nullptr, headers);
   if (status == VP8_STATUS_OK || status == VP8_STATUS_NOT_ENOUGH_DATA) {
     // TODO(jzern): full support of animation frames will require API additions.
     if (has_animation) {
@@ -436,7 +436,7 @@ VP8StatusCode WebPParseHeaders(WebPHeaderStructure* const headers) {
 // WebPDecParams
 
 void WebPResetDecParams(WebPDecParams* const params) {
-  if (params != NULL) {
+  if (params != nullptr) {
     memset(params, 0, sizeof(*params));
   }
 }
@@ -459,7 +459,7 @@ static VP8StatusCode DecodeInto(const uint8_t* const data, size_t data_size,
     return status;
   }
 
-  assert(params != NULL);
+  assert(params != nullptr);
   VP8InitIo(&io);
   io.data = headers.data + headers.offset;
   io.data_size = headers.data_size - headers.offset;
@@ -467,7 +467,7 @@ static VP8StatusCode DecodeInto(const uint8_t* const data, size_t data_size,
 
   if (!headers.is_lossless) {
     VP8Decoder* const dec = VP8New();
-    if (dec == NULL) {
+    if (dec == nullptr) {
       return VP8_STATUS_OUT_OF_MEMORY;
     }
     dec->alpha_data_ = headers.alpha_data;
@@ -493,7 +493,7 @@ static VP8StatusCode DecodeInto(const uint8_t* const data, size_t data_size,
     VP8Delete(dec);
   } else {
     VP8LDecoder* const dec = VP8LNew();
-    if (dec == NULL) {
+    if (dec == nullptr) {
       return VP8_STATUS_OUT_OF_MEMORY;
     }
     if (!VP8LDecodeHeader(dec, &io)) {
@@ -514,7 +514,7 @@ static VP8StatusCode DecodeInto(const uint8_t* const data, size_t data_size,
   if (status != VP8_STATUS_OK) {
     WebPFreeDecBuffer(params->output);
   } else {
-    if (params->options != NULL && params->options->flip) {
+    if (params->options != nullptr && params->options->flip) {
       // This restores the original stride values if options->flip was used
       // during the call to WebPAllocateDecBuffer above.
       status = WebPFlipBuffer(params->output);
@@ -531,8 +531,8 @@ static uint8_t* DecodeIntoRGBABuffer(WEBP_CSP_MODE colorspace,
                                      int stride, size_t size) {
   WebPDecParams params;
   WebPDecBuffer buf;
-  if (rgba == NULL) {
-    return NULL;
+  if (rgba == nullptr) {
+    return nullptr;
   }
   WebPInitDecBuffer(&buf);
   WebPResetDecParams(&params);
@@ -543,7 +543,7 @@ static uint8_t* DecodeIntoRGBABuffer(WEBP_CSP_MODE colorspace,
   buf.u.RGBA.size   = size;
   buf.is_external_memory = 1;
   if (DecodeInto(data, data_size, &params) != VP8_STATUS_OK) {
-    return NULL;
+    return nullptr;
   }
   return rgba;
 }
@@ -579,7 +579,7 @@ uint8_t* WebPDecodeYUVInto(const uint8_t* data, size_t data_size,
                            uint8_t* v, size_t v_size, int v_stride) {
   WebPDecParams params;
   WebPDecBuffer output;
-  if (luma == NULL) return NULL;
+  if (luma == nullptr) return nullptr;
   WebPInitDecBuffer(&output);
   WebPResetDecParams(&params);
   params.output = &output;
@@ -595,7 +595,7 @@ uint8_t* WebPDecodeYUVInto(const uint8_t* data, size_t data_size,
   output.u.YUVA.v_size   = v_size;
   output.is_external_memory = 1;
   if (DecodeInto(data, data_size, &params) != VP8_STATUS_OK) {
-    return NULL;
+    return nullptr;
   }
   return luma;
 }
@@ -615,16 +615,16 @@ static uint8_t* Decode(WEBP_CSP_MODE mode, const uint8_t* const data,
 
   // Retrieve (and report back) the required dimensions from bitstream.
   if (!WebPGetInfo(data, data_size, &output.width, &output.height)) {
-    return NULL;
+    return nullptr;
   }
-  if (width != NULL) *width = output.width;
-  if (height != NULL) *height = output.height;
+  if (width != nullptr) *width = output.width;
+  if (height != nullptr) *height = output.height;
 
   // Decode
   if (DecodeInto(data, data_size, &params) != VP8_STATUS_OK) {
-    return NULL;
+    return nullptr;
   }
-  if (keep_info != NULL) {    // keep track of the side-info
+  if (keep_info != nullptr) {    // keep track of the side-info
     WebPCopyDecBuffer(&output, keep_info);
   }
   // return decoded samples (don't clear 'output'!)
@@ -633,27 +633,27 @@ static uint8_t* Decode(WEBP_CSP_MODE mode, const uint8_t* const data,
 
 uint8_t* WebPDecodeRGB(const uint8_t* data, size_t data_size,
                        int* width, int* height) {
-  return Decode(MODE_RGB, data, data_size, width, height, NULL);
+  return Decode(MODE_RGB, data, data_size, width, height, nullptr);
 }
 
 uint8_t* WebPDecodeRGBA(const uint8_t* data, size_t data_size,
                         int* width, int* height) {
-  return Decode(MODE_RGBA, data, data_size, width, height, NULL);
+  return Decode(MODE_RGBA, data, data_size, width, height, nullptr);
 }
 
 uint8_t* WebPDecodeARGB(const uint8_t* data, size_t data_size,
                         int* width, int* height) {
-  return Decode(MODE_ARGB, data, data_size, width, height, NULL);
+  return Decode(MODE_ARGB, data, data_size, width, height, nullptr);
 }
 
 uint8_t* WebPDecodeBGR(const uint8_t* data, size_t data_size,
                        int* width, int* height) {
-  return Decode(MODE_BGR, data, data_size, width, height, NULL);
+  return Decode(MODE_BGR, data, data_size, width, height, nullptr);
 }
 
 uint8_t* WebPDecodeBGRA(const uint8_t* data, size_t data_size,
                         int* width, int* height) {
-  return Decode(MODE_BGRA, data, data_size, width, height, NULL);
+  return Decode(MODE_BGRA, data, data_size, width, height, nullptr);
 }
 
 uint8_t* WebPDecodeYUV(const uint8_t* data, size_t data_size,
@@ -663,7 +663,7 @@ uint8_t* WebPDecodeYUV(const uint8_t* data, size_t data_size,
   uint8_t* const out = Decode(MODE_YUV, data, data_size,
                               width, height, &output);
 
-  if (out != NULL) {
+  if (out != nullptr) {
     const WebPYUVABuffer* const buf = &output.u.YUVA;
     *u = buf->u;
     *v = buf->v;
@@ -675,13 +675,13 @@ uint8_t* WebPDecodeYUV(const uint8_t* data, size_t data_size,
 }
 
 static void DefaultFeatures(WebPBitstreamFeatures* const features) {
-  assert(features != NULL);
+  assert(features != nullptr);
   memset(features, 0, sizeof(*features));
 }
 
 static VP8StatusCode GetFeatures(const uint8_t* const data, size_t data_size,
                                  WebPBitstreamFeatures* const features) {
-  if (features == NULL || data == NULL) {
+  if (features == nullptr || data == nullptr) {
     return VP8_STATUS_INVALID_PARAM;
   }
   DefaultFeatures(features);
@@ -690,7 +690,7 @@ static VP8StatusCode GetFeatures(const uint8_t* const data, size_t data_size,
   return ParseHeadersInternal(data, data_size,
                               &features->width, &features->height,
                               &features->has_alpha, &features->has_animation,
-                              &features->format, NULL);
+                              &features->format, nullptr);
 }
 
 //------------------------------------------------------------------------------
@@ -704,10 +704,10 @@ int WebPGetInfo(const uint8_t* data, size_t data_size,
     return 0;
   }
 
-  if (width != NULL) {
+  if (width != nullptr) {
     *width  = features.width;
   }
-  if (height != NULL) {
+  if (height != nullptr) {
     *height = features.height;
   }
 
@@ -722,7 +722,7 @@ int WebPInitDecoderConfigInternal(WebPDecoderConfig* config,
   if (WEBP_ABI_IS_INCOMPATIBLE(version, WEBP_DECODER_ABI_VERSION)) {
     return 0;   // version mismatch
   }
-  if (config == NULL) {
+  if (config == nullptr) {
     return 0;
   }
   memset(config, 0, sizeof(*config));
@@ -737,7 +737,7 @@ VP8StatusCode WebPGetFeaturesInternal(const uint8_t* data, size_t data_size,
   if (WEBP_ABI_IS_INCOMPATIBLE(version, WEBP_DECODER_ABI_VERSION)) {
     return VP8_STATUS_INVALID_PARAM;   // version mismatch
   }
-  if (features == NULL) {
+  if (features == nullptr) {
     return VP8_STATUS_INVALID_PARAM;
   }
   return GetFeatures(data, data_size, features);
@@ -748,7 +748,7 @@ VP8StatusCode WebPDecode(const uint8_t* data, size_t data_size,
   WebPDecParams params;
   VP8StatusCode status;
 
-  if (config == NULL) {
+  if (config == nullptr) {
     return VP8_STATUS_INVALID_PARAM;
   }
 
@@ -793,7 +793,7 @@ int WebPIoInitFromOptions(const WebPDecoderOptions* const options,
   int x = 0, y = 0, w = W, h = H;
 
   // Cropping
-  io->use_cropping = (options != NULL) && (options->use_cropping > 0);
+  io->use_cropping = (options != nullptr) && (options->use_cropping > 0);
   if (io->use_cropping) {
     w = options->crop_width;
     h = options->crop_height;
@@ -815,7 +815,7 @@ int WebPIoInitFromOptions(const WebPDecoderOptions* const options,
   io->mb_h = h;
 
   // Scaling
-  io->use_scaling = (options != NULL) && (options->use_scaling > 0);
+  io->use_scaling = (options != nullptr) && (options->use_scaling > 0);
   if (io->use_scaling) {
     int scaled_width = options->scaled_width;
     int scaled_height = options->scaled_height;
@@ -827,11 +827,11 @@ int WebPIoInitFromOptions(const WebPDecoderOptions* const options,
   }
 
   // Filter
-  io->bypass_filtering = (options != NULL) && options->bypass_filtering;
+  io->bypass_filtering = (options != nullptr) && options->bypass_filtering;
 
   // Fancy upsampler
 #ifdef FANCY_UPSAMPLING
-  io->fancy_upsampling = (options == NULL) || (!options->no_fancy_upsampling);
+  io->fancy_upsampling = (options == nullptr) || (!options->no_fancy_upsampling);
 #endif
 
   if (io->use_scaling) {

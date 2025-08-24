@@ -213,7 +213,7 @@ WEBP_TSAN_IGNORE_FUNCTION void WebPRescalerDspInit(void) {
   WebPRescalerExportRowExpand = WebPRescalerExportRowExpandC;
   WebPRescalerExportRowShrink = WebPRescalerExportRowShrinkC;
 
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_USE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       WebPRescalerDspInitSSE2();

@@ -78,23 +78,23 @@ int WebPPictureDistortion(const WebPPicture* src, const WebPPicture* ref,
 
   VP8SSIMDspInit();
 
-  if (src == NULL || ref == NULL ||
+  if (src == nullptr || ref == nullptr ||
       src->width != ref->width || src->height != ref->height ||
-      src->use_argb != ref->use_argb || result == NULL) {
+      src->use_argb != ref->use_argb || result == nullptr) {
     return 0;
   }
   w = src->width;
   h = src->height;
 
   if (src->use_argb == 1) {
-    if (src->argb == NULL || ref->argb == NULL) {
+    if (src->argb == nullptr || ref->argb == nullptr) {
       return 0;
     } else {
       int i, j, c;
       uint8_t* tmp1, *tmp2;
       uint8_t* const tmp_plane =
           (uint8_t*)WebPSafeMalloc(2ULL * w * h, sizeof(*tmp_plane));
-      if (tmp_plane == NULL) return 0;
+      if (tmp_plane == nullptr) return 0;
       tmp1 = tmp_plane;
       tmp2 = tmp_plane + w * h;
       for (c = 0; c < 4; ++c) {
@@ -114,14 +114,14 @@ int WebPPictureDistortion(const WebPPicture* src, const WebPPicture* ref,
     }
   } else {
     int has_alpha, uv_w, uv_h;
-    if (src->y == NULL || ref->y == NULL ||
-        src->u == NULL || ref->u == NULL ||
-        src->v == NULL || ref->v == NULL) {
+    if (src->y == nullptr || ref->y == nullptr ||
+        src->u == nullptr || ref->u == nullptr ||
+        src->v == nullptr || ref->v == nullptr) {
       return 0;
     }
     has_alpha = !!(src->colorspace & WEBP_CSP_ALPHA_BIT);
     if (has_alpha != !!(ref->colorspace & WEBP_CSP_ALPHA_BIT) ||
-        (has_alpha && (src->a == NULL || ref->a == NULL))) {
+        (has_alpha && (src->a == nullptr || ref->a == nullptr))) {
       return 0;
     }
 

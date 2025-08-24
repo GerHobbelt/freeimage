@@ -70,12 +70,12 @@ extern "C" {
 #include "libraw_version.h"
 
 #ifdef WIN32
-typedef __int64 INT64;
-typedef unsigned __int64 UINT64;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
 #else
 #include <stdint.h>
-typedef int64_t INT64;
-typedef uint64_t UINT64;
+typedef int64_t int64_t;
+typedef uint64_t uint64_t;
 #endif
 
 typedef unsigned char uchar;

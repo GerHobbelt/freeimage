@@ -68,8 +68,8 @@ it under the terms of the one of three licenses as you choose:
 #include <utime.h>
 #include <netinet/in.h>
 #include <stdint.h>
-typedef int64_t INT64;
-typedef uint64_t UINT64;
+typedef int64_t int64_t;
+typedef uint64_t uint64_t;
 #endif
 
 #ifdef NODEPS

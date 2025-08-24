@@ -84,26 +84,26 @@ static WEBP_INLINE int FindMatchLength(const uint32_t* const array1,
 //  VP8LBackwardRefs
 
 struct PixOrCopyBlock {
-  PixOrCopyBlock* next_;   // next block (or NULL)
+  PixOrCopyBlock* next_;   // next block (or nullptr)
   PixOrCopy* start_;       // data start
   int size_;               // currently used size
 };
 
 static void ClearBackwardRefs(VP8LBackwardRefs* const refs) {
-  assert(refs != NULL);
-  if (refs->tail_ != NULL) {
+  assert(refs != nullptr);
+  if (refs->tail_ != nullptr) {
     *refs->tail_ = refs->free_blocks_;  // recycle all blocks at once
   }
   refs->free_blocks_ = refs->refs_;
   refs->tail_ = &refs->refs_;
-  refs->last_block_ = NULL;
-  refs->refs_ = NULL;
+  refs->last_block_ = nullptr;
+  refs->refs_ = nullptr;
 }
 
 void VP8LBackwardRefsClear(VP8LBackwardRefs* const refs) {
-  assert(refs != NULL);
+  assert(refs != nullptr);
   ClearBackwardRefs(refs);
-  while (refs->free_blocks_ != NULL) {
+  while (refs->free_blocks_ != nullptr) {
     PixOrCopyBlock* const next = refs->free_blocks_->next_;
     WebPSafeFree(refs->free_blocks_);
     refs->free_blocks_ = next;
@@ -111,7 +111,7 @@ void VP8LBackwardRefsClear(VP8LBackwardRefs* const refs) {
 }
 
 void VP8LBackwardRefsInit(VP8LBackwardRefs* const refs, int block_size) {
-  assert(refs != NULL);
+  assert(refs != nullptr);
   memset(refs, 0, sizeof(*refs));
   refs->tail_ = &refs->refs_;
   refs->block_size_ =
@@ -121,33 +121,33 @@ void VP8LBackwardRefsInit(VP8LBackwardRefs* const refs, int block_size) {
 VP8LRefsCursor VP8LRefsCursorInit(const VP8LBackwardRefs* const refs) {
   VP8LRefsCursor c;
   c.cur_block_ = refs->refs_;
-  if (refs->refs_ != NULL) {
+  if (refs->refs_ != nullptr) {
     c.cur_pos = c.cur_block_->start_;
     c.last_pos_ = c.cur_pos + c.cur_block_->size_;
   } else {
-    c.cur_pos = NULL;
-    c.last_pos_ = NULL;
+    c.cur_pos = nullptr;
+    c.last_pos_ = nullptr;
   }
   return c;
 }
 
 void VP8LRefsCursorNextBlock(VP8LRefsCursor* const c) {
   PixOrCopyBlock* const b = c->cur_block_->next_;
-  c->cur_pos = (b == NULL) ? NULL : b->start_;
-  c->last_pos_ = (b == NULL) ? NULL : b->start_ + b->size_;
+  c->cur_pos = (b == nullptr) ? nullptr : b->start_;
+  c->last_pos_ = (b == nullptr) ? nullptr : b->start_ + b->size_;
   c->cur_block_ = b;
 }
 
 // Create a new block, either from the free list or allocated
 static PixOrCopyBlock* BackwardRefsNewBlock(VP8LBackwardRefs* const refs) {
   PixOrCopyBlock* b = refs->free_blocks_;
-  if (b == NULL) {   // allocate new memory chunk
+  if (b == nullptr) {   // allocate new memory chunk
     const size_t total_size =
         sizeof(*b) + refs->block_size_ * sizeof(*b->start_);
     b = (PixOrCopyBlock*)WebPSafeMalloc(1ULL, total_size);
-    if (b == NULL) {
+    if (b == nullptr) {
       refs->error_ |= 1;
-      return NULL;
+      return nullptr;
     }
     b->start_ = (PixOrCopy*)((uint8_t*)b + sizeof(*b));  // not always aligned
   } else {  // recycle from free-list
@@ -156,7 +156,7 @@ static PixOrCopyBlock* BackwardRefsNewBlock(VP8LBackwardRefs* const refs) {
   *refs->tail_ = b;
   refs->tail_ = &b->next_;
   refs->last_block_ = b;
-  b->next_ = NULL;
+  b->next_ = nullptr;
   b->size_ = 0;
   return b;
 }
@@ -164,9 +164,9 @@ static PixOrCopyBlock* BackwardRefsNewBlock(VP8LBackwardRefs* const refs) {
 static WEBP_INLINE void BackwardRefsCursorAdd(VP8LBackwardRefs* const refs,
                                               const PixOrCopy v) {
   PixOrCopyBlock* b = refs->last_block_;
-  if (b == NULL || b->size_ == refs->block_size_) {
+  if (b == nullptr || b->size_ == refs->block_size_) {
     b = BackwardRefsNewBlock(refs);
-    if (b == NULL) return;   // refs->error_ is set
+    if (b == nullptr) return;   // refs->error_ is set
   }
   b->start_[b->size_++] = v;
 }
@@ -176,9 +176,9 @@ int VP8LBackwardRefsCopy(const VP8LBackwardRefs* const src,
   const PixOrCopyBlock* b = src->refs_;
   ClearBackwardRefs(dst);
   assert(src->block_size_ == dst->block_size_);
-  while (b != NULL) {
+  while (b != nullptr) {
     PixOrCopyBlock* const new_b = BackwardRefsNewBlock(dst);
-    if (new_b == NULL) return 0;   // dst->error_ is set
+    if (new_b == nullptr) return 0;   // dst->error_ is set
     memcpy(new_b->start_, b->start_, b->size_ * sizeof(*b->start_));
     new_b->size_ = b->size_;
     b = b->next_;
@@ -191,22 +191,22 @@ int VP8LBackwardRefsCopy(const VP8LBackwardRefs* const src,
 
 int VP8LHashChainInit(VP8LHashChain* const p, int size) {
   assert(p->size_ == 0);
-  assert(p->offset_length_ == NULL);
+  assert(p->offset_length_ == nullptr);
   assert(size > 0);
   p->offset_length_ =
       (uint32_t*)WebPSafeMalloc(size, sizeof(*p->offset_length_));
-  if (p->offset_length_ == NULL) return 0;
+  if (p->offset_length_ == nullptr) return 0;
   p->size_ = size;
 
   return 1;
 }
 
 void VP8LHashChainClear(VP8LHashChain* const p) {
-  assert(p != NULL);
+  assert(p != nullptr);
   WebPSafeFree(p->offset_length_);
 
   p->size_ = 0;
-  p->offset_length_ = NULL;
+  p->offset_length_ = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -254,11 +254,11 @@ int VP8LHashChainFill(VP8LHashChain* const p, int quality,
   // Temporarily use the p->offset_length_ as a hash chain.
   int32_t* chain = (int32_t*)p->offset_length_;
   assert(p->size_ != 0);
-  assert(p->offset_length_ != NULL);
+  assert(p->offset_length_ != nullptr);
 
   hash_to_first_index =
       (int32_t*)WebPSafeMalloc(HASH_SIZE, sizeof(*hash_to_first_index));
-  if (hash_to_first_index == NULL) return 0;
+  if (hash_to_first_index == nullptr) return 0;
 
   // Set the int32_t array to -1.
   memset(hash_to_first_index, 0xff, HASH_SIZE * sizeof(*hash_to_first_index));
@@ -542,7 +542,7 @@ static int CostModelBuild(CostModel* const m, int cache_bits,
                           VP8LBackwardRefs* const refs) {
   int ok = 0;
   VP8LHistogram* const histo = VP8LAllocateHistogram(cache_bits);
-  if (histo == NULL) goto Error;
+  if (histo == nullptr) goto Error;
 
   VP8LHistogramCreate(histo, refs, cache_bits);
 
@@ -710,7 +710,7 @@ static int CostIntervalIsInFreeList(const CostManager* const manager,
 
 static void CostManagerInitFreeList(CostManager* const manager) {
   int i;
-  manager->free_intervals_ = NULL;
+  manager->free_intervals_ = nullptr;
   for (i = 0; i < COST_MANAGER_MAX_FREE_LIST; ++i) {
     CostIntervalAddToFreeList(manager, &manager->intervals_[i]);
   }
@@ -718,7 +718,7 @@ static void CostManagerInitFreeList(CostManager* const manager) {
 
 static void DeleteIntervalList(CostManager* const manager,
                                const CostInterval* interval) {
-  while (interval != NULL) {
+  while (interval != nullptr) {
     const CostInterval* const next = interval->next_;
     if (!CostIntervalIsInFreeList(manager, interval)) {
       WebPSafeFree((void*)interval);
@@ -728,7 +728,7 @@ static void DeleteIntervalList(CostManager* const manager,
 }
 
 static void CostManagerClear(CostManager* const manager) {
-  if (manager == NULL) return;
+  if (manager == nullptr) return;
 
   WebPSafeFree(manager->costs_);
   WebPSafeFree(manager->cache_intervals_);
@@ -736,9 +736,9 @@ static void CostManagerClear(CostManager* const manager) {
 
   // Clear the interval lists.
   DeleteIntervalList(manager, manager->head_);
-  manager->head_ = NULL;
+  manager->head_ = nullptr;
   DeleteIntervalList(manager, manager->recycled_intervals_);
-  manager->recycled_intervals_ = NULL;
+  manager->recycled_intervals_ = nullptr;
 
   // Reset pointers, count_ and cache_intervals_size_.
   memset(manager, 0, sizeof(*manager));
@@ -754,11 +754,11 @@ static int CostManagerInit(CostManager* const manager,
   // Empirically, differences between intervals is usually of more than 1.
   const double min_cost_diff = 0.1;
 
-  manager->costs_ = NULL;
-  manager->cache_intervals_ = NULL;
-  manager->interval_ends_ = NULL;
-  manager->head_ = NULL;
-  manager->recycled_intervals_ = NULL;
+  manager->costs_ = nullptr;
+  manager->cache_intervals_ = nullptr;
+  manager->interval_ends_ = nullptr;
+  manager->head_ = nullptr;
+  manager->recycled_intervals_ = nullptr;
   manager->count_ = 0;
   manager->dist_array_ = dist_array;
   CostManagerInitFreeList(manager);
@@ -791,7 +791,7 @@ static int CostManagerInit(CostManager* const manager,
   }
   manager->cache_intervals_ = (CostCacheInterval*)WebPSafeMalloc(
       manager->cache_intervals_size_, sizeof(*manager->cache_intervals_));
-  if (manager->cache_intervals_ == NULL) {
+  if (manager->cache_intervals_ == nullptr) {
     CostManagerClear(manager);
     return 0;
   }
@@ -799,7 +799,7 @@ static int CostManagerInit(CostManager* const manager,
   // Fill in the cache_intervals_.
   {
     double cost_prev = -1e38f;  // unprobably low initial value
-    CostCacheInterval* prev = NULL;
+    CostCacheInterval* prev = nullptr;
     CostCacheInterval* cur = manager->cache_intervals_;
     const CostCacheInterval* const end =
         manager->cache_intervals_ + manager->cache_intervals_size_;
@@ -849,7 +849,7 @@ static int CostManagerInit(CostManager* const manager,
   }
 
   manager->costs_ = (float*)WebPSafeMalloc(pix_count, sizeof(*manager->costs_));
-  if (manager->costs_ == NULL) {
+  if (manager->costs_ == nullptr) {
     CostManagerClear(manager);
     return 0;
   }
@@ -897,7 +897,7 @@ static int CostManagerInit(CostManager* const manager,
 
     manager->interval_ends_ =
         (int*)WebPSafeMalloc(size, sizeof(*manager->interval_ends_));
-    if (manager->interval_ends_ == NULL) {
+    if (manager->interval_ends_ == nullptr) {
       CostManagerClear(manager);
       return 0;
     }
@@ -935,13 +935,13 @@ static WEBP_INLINE void UpdateCostPerInterval(CostManager* const manager,
 static WEBP_INLINE void ConnectIntervals(CostManager* const manager,
                                          CostInterval* const prev,
                                          CostInterval* const next) {
-  if (prev != NULL) {
+  if (prev != nullptr) {
     prev->next_ = next;
   } else {
     manager->head_ = next;
   }
 
-  if (next != NULL) next->previous_ = prev;
+  if (next != nullptr) next->previous_ = prev;
 }
 
 // Pop an interval in the manager.
@@ -949,7 +949,7 @@ static WEBP_INLINE void PopInterval(CostManager* const manager,
                                     CostInterval* const interval) {
   CostInterval* const next = interval->next_;
 
-  if (interval == NULL) return;
+  if (interval == nullptr) return;
 
   ConnectIntervals(manager, interval->previous_, next);
   if (CostIntervalIsInFreeList(manager, interval)) {
@@ -967,7 +967,7 @@ static WEBP_INLINE void PopInterval(CostManager* const manager,
 static WEBP_INLINE void UpdateCostPerIndex(CostManager* const manager, int i) {
   CostInterval* current = manager->head_;
 
-  while (current != NULL && current->start_ <= i) {
+  while (current != nullptr && current->start_ <= i) {
     if (current->end_ <= i) {
       // We have an outdated interval, remove it.
       CostInterval* next = current->next_;
@@ -981,23 +981,23 @@ static WEBP_INLINE void UpdateCostPerIndex(CostManager* const manager, int i) {
 }
 
 // Given a current orphan interval and its previous interval, before
-// it was orphaned (which can be NULL), set it at the right place in the list
+// it was orphaned (which can be nullptr), set it at the right place in the list
 // of intervals using the start_ ordering and the previous interval as a hint.
 static WEBP_INLINE void PositionOrphanInterval(CostManager* const manager,
                                                CostInterval* const current,
                                                CostInterval* previous) {
-  assert(current != NULL);
+  assert(current != nullptr);
 
-  if (previous == NULL) previous = manager->head_;
-  while (previous != NULL && current->start_ < previous->start_) {
+  if (previous == nullptr) previous = manager->head_;
+  while (previous != nullptr && current->start_ < previous->start_) {
     previous = previous->previous_;
   }
-  while (previous != NULL && previous->next_ != NULL &&
+  while (previous != nullptr && previous->next_ != nullptr &&
          previous->next_->start_ < current->start_) {
     previous = previous->next_;
   }
 
-  if (previous != NULL) {
+  if (previous != nullptr) {
     ConnectIntervals(manager, current, previous->next_);
   } else {
     ConnectIntervals(manager, current, manager->head_);
@@ -1020,15 +1020,15 @@ static WEBP_INLINE void InsertInterval(CostManager* const manager,
     UpdateCostPerInterval(manager, start, end, index, distance_cost);
     return;
   }
-  if (manager->free_intervals_ != NULL) {
+  if (manager->free_intervals_ != nullptr) {
     interval_new = manager->free_intervals_;
     manager->free_intervals_ = interval_new->next_;
-  } else if (manager->recycled_intervals_ != NULL) {
+  } else if (manager->recycled_intervals_ != nullptr) {
     interval_new = manager->recycled_intervals_;
     manager->recycled_intervals_ = interval_new->next_;
   } else {   // malloc for good
     interval_new = (CostInterval*)WebPSafeMalloc(1, sizeof(*interval_new));
-    if (interval_new == NULL) {
+    if (interval_new == nullptr) {
       // Write down the interval if we cannot create it.
       UpdateCostPerInterval(manager, start, end, index, distance_cost);
       return;
@@ -1059,9 +1059,9 @@ static WEBP_INLINE void RepositionInterval(CostManager* const manager,
   }
 
   // Early exit if interval is at the right spot.
-  if ((interval->previous_ == NULL ||
+  if ((interval->previous_ == nullptr ||
        interval->previous_->start_ <= interval->start_) &&
-      (interval->next_ == NULL ||
+      (interval->next_ == nullptr ||
        interval->start_ <= interval->next_->start_)) {
     return;
   }
@@ -1101,7 +1101,7 @@ static WEBP_INLINE void PushInterval(CostManager* const manager,
       continue;
     }
 
-    for (; interval != NULL && interval->start_ < end && start < end;
+    for (; interval != nullptr && interval->start_ < end && start < end;
          interval = interval_next) {
       const double lower_full_interval =
           interval->distance_cost_ + interval->lower_;
@@ -1204,7 +1204,7 @@ static int BackwardReferencesHashChainDistanceOnly(
   CostManager* cost_manager =
       (CostManager*)WebPSafeMalloc(1ULL, sizeof(*cost_manager));
 
-  if (cost_model == NULL || cost_manager == NULL) goto Error;
+  if (cost_model == nullptr || cost_manager == nullptr) goto Error;
 
   cost_model->literal_ = (double*)(cost_model + 1);
   if (use_color_cache) {
@@ -1435,12 +1435,12 @@ static int BackwardReferencesTraceBackwards(
     VP8LBackwardRefs* const refs) {
   int ok = 0;
   const int dist_array_size = xsize * ysize;
-  uint16_t* chosen_path = NULL;
+  uint16_t* chosen_path = nullptr;
   int chosen_path_size = 0;
   uint16_t* dist_array =
       (uint16_t*)WebPSafeMalloc(dist_array_size, sizeof(*dist_array));
 
-  if (dist_array == NULL) goto Error;
+  if (dist_array == nullptr) goto Error;
 
   if (!BackwardReferencesHashChainDistanceOnly(
       xsize, ysize, argb, quality, cache_bits, hash_chain,
@@ -1482,7 +1482,7 @@ static double ComputeCacheEntropy(const uint32_t* argb,
   VP8LColorCache hashers;
   VP8LRefsCursor c = VP8LRefsCursorInit(refs);
   VP8LHistogram* histo = VP8LAllocateHistogram(cache_bits);
-  if (histo == NULL) goto Error;
+  if (histo == nullptr) goto Error;
 
   if (use_color_cache) {
     cc_init = VP8LColorCacheInit(&hashers, cache_bits);
@@ -1629,7 +1629,7 @@ static VP8LBackwardRefs* GetBackwardReferencesLowEffort(
   VP8LBackwardRefs* refs_lz77 = &refs_array[0];
   *cache_bits = 0;
   if (!BackwardReferencesLz77(width, height, argb, 0, hash_chain, refs_lz77)) {
-    return NULL;
+    return nullptr;
   }
   BackwardReferences2DLocality(width, refs_lz77);
   return refs_lz77;
@@ -1642,10 +1642,10 @@ static VP8LBackwardRefs* GetBackwardReferences(
   int lz77_is_useful;
   int lz77_computed;
   double bit_cost_lz77, bit_cost_rle;
-  VP8LBackwardRefs* best = NULL;
+  VP8LBackwardRefs* best = nullptr;
   VP8LBackwardRefs* refs_lz77 = &refs_array[0];
   VP8LBackwardRefs* refs_rle = &refs_array[1];
-  VP8LHistogram* histo = NULL;
+  VP8LHistogram* histo = nullptr;
 
   if (!CalculateBestCacheSize(argb, width, height, quality, hash_chain,
                               refs_lz77, &lz77_computed, cache_bits)) {
@@ -1671,7 +1671,7 @@ static VP8LBackwardRefs* GetBackwardReferences(
   }
 
   histo = VP8LAllocateHistogram(*cache_bits);
-  if (histo == NULL) goto Error;
+  if (histo == nullptr) goto Error;
 
   {
     // Evaluate LZ77 coding.
@@ -1692,7 +1692,7 @@ static VP8LBackwardRefs* GetBackwardReferences(
     if (try_lz77_trace_backwards) {
       VP8LBackwardRefs* const refs_trace = refs_rle;
       if (!VP8LBackwardRefsCopy(refs_lz77, refs_trace)) {
-        best = NULL;
+        best = nullptr;
         goto Error;
       }
       if (BackwardReferencesTraceBackwards(width, height, argb, quality,

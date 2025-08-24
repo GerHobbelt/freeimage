@@ -143,7 +143,7 @@ WEBP_TSAN_IGNORE_FUNCTION void WebPInitSamplers(void) {
   WebPSamplers[MODE_rgbA_4444] = YuvToRgba4444Row;
 
   // If defined, use CPUInfo() to overwrite some pointers with faster versions.
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_USE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       WebPInitSamplersSSE2();
@@ -269,7 +269,7 @@ WEBP_TSAN_IGNORE_FUNCTION void WebPInitConvertARGBToYUV(void) {
 
   WebPConvertRGBA32ToUV = WebPConvertRGBA32ToUV_C;
 
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_USE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       WebPInitConvertARGBToYUVSSE2();

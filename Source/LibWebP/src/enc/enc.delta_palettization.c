@@ -394,7 +394,7 @@ static WebPEncodingError ApplyDeltaPalette(uint32_t* src, uint32_t* dst,
   WebPEncodingError err = VP8_ENC_OK;
   uint32_t* new_image = (uint32_t*)WebPSafeMalloc(width, sizeof(*new_image));
   uint8_t* const tmp_row = (uint8_t*)WebPSafeMalloc(width, sizeof(*tmp_row));
-  if (new_image == NULL || tmp_row == NULL) {
+  if (new_image == nullptr || tmp_row == nullptr) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }

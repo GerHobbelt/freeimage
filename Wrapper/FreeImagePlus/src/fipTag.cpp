@@ -33,14 +33,14 @@ fipTag::~fipTag() {
 BOOL fipTag::setKeyValue(const char *key, const char *value) {
 	if(_tag) {
 		FreeImage_DeleteTag(_tag);
-		_tag = NULL;
+		_tag = nullptr;
 	}
 	// create a tag
 	_tag = FreeImage_CreateTag();
 	if(_tag) {
 		BOOL bSuccess = TRUE;
 		// fill the tag
-		DWORD tag_length = (DWORD)(strlen(value) + 1);
+		uint32_t tag_length = (uint32_t)(strlen(value) + 1);
 		bSuccess &= FreeImage_SetTagKey(_tag, key);
 		bSuccess &= FreeImage_SetTagLength(_tag, tag_length);
 		bSuccess &= FreeImage_SetTagCount(_tag, tag_length);
@@ -70,7 +70,7 @@ fipTag& fipTag::operator=(FITAG *tag) {
 }
 
 BOOL fipTag::isValid() const {
-	return (_tag != NULL) ? TRUE : FALSE;
+	return (_tag != nullptr) ? TRUE : FALSE;
 }
 
 const char* fipTag::getKey() const {
@@ -81,7 +81,7 @@ const char* fipTag::getDescription() const {
 	return FreeImage_GetTagDescription(_tag);
 }
 
-WORD fipTag::getID() const {
+uint16_t fipTag::getID() const {
 	return FreeImage_GetTagID(_tag);
 }
 
@@ -89,11 +89,11 @@ FREE_IMAGE_MDTYPE fipTag::getType() const {
 	return FreeImage_GetTagType(_tag);
 }
 
-DWORD fipTag::getCount() const {
+uint32_t fipTag::getCount() const {
 	return FreeImage_GetTagCount(_tag);
 }
 
-DWORD fipTag::getLength() const {
+uint32_t fipTag::getLength() const {
 	return FreeImage_GetTagLength(_tag);
 }
 
@@ -109,7 +109,7 @@ BOOL fipTag::setDescription(const char *description) {
 	return FreeImage_SetTagDescription(_tag, description);
 }
 
-BOOL fipTag::setID(WORD id) {
+BOOL fipTag::setID(uint16_t id) {
 	return FreeImage_SetTagID(_tag, id);
 }
 
@@ -117,11 +117,11 @@ BOOL fipTag::setType(FREE_IMAGE_MDTYPE type) {
 	return FreeImage_SetTagType(_tag, type);
 }
 
-BOOL fipTag::setCount(DWORD count) {
+BOOL fipTag::setCount(uint32_t count) {
 	return FreeImage_SetTagCount(_tag, count);
 }
 
-BOOL fipTag::setLength(DWORD length) {
+BOOL fipTag::setLength(uint32_t length) {
 	return FreeImage_SetTagLength(_tag, length);
 }
 

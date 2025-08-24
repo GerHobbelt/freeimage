@@ -185,7 +185,7 @@ static int AnalyzeEntropy(const uint32_t* argb,
   // Allocate histogram set with cache_bits = 0.
   uint32_t* const histo =
       (uint32_t*)WebPSafeCalloc(kHistoTotal, sizeof(*histo) * 256);
-  if (histo != NULL) {
+  if (histo != nullptr) {
     int i, x, y;
     const uint32_t* prev_row = argb;
     const uint32_t* curr_row = argb + argb_stride;
@@ -239,7 +239,7 @@ static int AnalyzeEntropy(const uint32_t* argb,
       ++histo[kHistoAlphaPred * 256];
 
       for (j = 0; j < kHistoTotal; ++j) {
-        entropy_comp[j] = VP8LBitsEntropy(&histo[j * 256], 256, NULL);
+        entropy_comp[j] = VP8LBitsEntropy(&histo[j * 256], 256, nullptr);
       }
       entropy[kDirect] = entropy_comp[kHistoAlpha] +
           entropy_comp[kHistoRed] +
@@ -326,7 +326,7 @@ static int AnalyzeAndInit(VP8LEncoder* const enc) {
   // we round the block size up, so we're guaranteed to have
   // at max MAX_REFS_BLOCK_PER_IMAGE blocks used:
   int refs_block_size = (pix_cnt - 1) / MAX_REFS_BLOCK_PER_IMAGE + 1;
-  assert(pic != NULL && pic->argb != NULL);
+  assert(pic != nullptr && pic->argb != nullptr);
 
   enc->use_cross_color_ = 0;
   enc->use_predict_ = 0;
@@ -380,11 +380,11 @@ static int GetHuffBitLengthsAndCodes(
   int i, k;
   int ok = 0;
   uint64_t total_length_size = 0;
-  uint8_t* mem_buf = NULL;
+  uint8_t* mem_buf = nullptr;
   const int histogram_image_size = histogram_image->size;
   int max_num_symbols = 0;
-  uint8_t* buf_rle = NULL;
-  HuffmanTree* huff_tree = NULL;
+  uint8_t* buf_rle = nullptr;
+  HuffmanTree* huff_tree = nullptr;
 
   // Iterate over all histograms and get the aggregate number of codes used.
   for (i = 0; i < histogram_image_size; ++i) {
@@ -405,7 +405,7 @@ static int GetHuffBitLengthsAndCodes(
     uint8_t* lengths;
     mem_buf = (uint8_t*)WebPSafeCalloc(total_length_size,
                                        sizeof(*lengths) + sizeof(*codes));
-    if (mem_buf == NULL) goto End;
+    if (mem_buf == nullptr) goto End;
 
     codes = (uint16_t*)mem_buf;
     lengths = (uint8_t*)&codes[total_length_size];
@@ -424,7 +424,7 @@ static int GetHuffBitLengthsAndCodes(
   buf_rle = (uint8_t*)WebPSafeMalloc(1ULL, max_num_symbols);
   huff_tree = (HuffmanTree*)WebPSafeMalloc(3ULL * max_num_symbols,
                                            sizeof(*huff_tree));
-  if (buf_rle == NULL || huff_tree == NULL) goto End;
+  if (buf_rle == nullptr || huff_tree == nullptr) goto End;
 
   // Create Huffman trees.
   for (i = 0; i < histogram_image_size; ++i) {
@@ -702,14 +702,14 @@ static WebPEncodingError EncodeImageNoHuffman(VP8LBitWriter* const bw,
   int max_tokens = 0;
   WebPEncodingError err = VP8_ENC_OK;
   VP8LBackwardRefs* refs;
-  HuffmanTreeToken* tokens = NULL;
-  HuffmanTreeCode huffman_codes[5] = { { 0, NULL, NULL } };
+  HuffmanTreeToken* tokens = nullptr;
+  HuffmanTreeCode huffman_codes[5] = { { 0, nullptr, nullptr } };
   const uint16_t histogram_symbols[1] = { 0 };    // only one tree, one symbol
   int cache_bits = 0;
-  VP8LHistogramSet* histogram_image = NULL;
+  VP8LHistogramSet* histogram_image = nullptr;
   HuffmanTree* const huff_tree = (HuffmanTree*)WebPSafeMalloc(
         3ULL * CODE_LENGTH_CODES, sizeof(*huff_tree));
-  if (huff_tree == NULL) {
+  if (huff_tree == nullptr) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
@@ -722,12 +722,12 @@ static WebPEncodingError EncodeImageNoHuffman(VP8LBitWriter* const bw,
   }
   refs = VP8LGetBackwardReferences(width, height, argb, quality, 0, &cache_bits,
                                    hash_chain, refs_array);
-  if (refs == NULL) {
+  if (refs == nullptr) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
   histogram_image = VP8LAllocateHistogramSet(1, cache_bits);
-  if (histogram_image == NULL) {
+  if (histogram_image == nullptr) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
@@ -754,7 +754,7 @@ static WebPEncodingError EncodeImageNoHuffman(VP8LBitWriter* const bw,
   }
 
   tokens = (HuffmanTreeToken*)WebPSafeMalloc(max_tokens, sizeof(*tokens));
-  if (tokens == NULL) {
+  if (tokens == nullptr) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
@@ -793,13 +793,13 @@ static WebPEncodingError EncodeImageInternal(VP8LBitWriter* const bw,
   const uint32_t histogram_image_xysize =
       VP8LSubSampleSize(width, histogram_bits) *
       VP8LSubSampleSize(height, histogram_bits);
-  VP8LHistogramSet* histogram_image = NULL;
-  VP8LHistogramSet* tmp_histos = NULL;
+  VP8LHistogramSet* histogram_image = nullptr;
+  VP8LHistogramSet* tmp_histos = nullptr;
   int histogram_image_size = 0;
   size_t bit_array_size = 0;
-  HuffmanTree* huff_tree = NULL;
-  HuffmanTreeToken* tokens = NULL;
-  HuffmanTreeCode* huffman_codes = NULL;
+  HuffmanTree* huff_tree = nullptr;
+  HuffmanTreeToken* tokens = nullptr;
+  HuffmanTreeCode* huffman_codes = nullptr;
   VP8LBackwardRefs refs;
   VP8LBackwardRefs* best_refs;
   uint16_t* const histogram_symbols =
@@ -807,11 +807,11 @@ static WebPEncodingError EncodeImageInternal(VP8LBitWriter* const bw,
                                 sizeof(*histogram_symbols));
   assert(histogram_bits >= MIN_HUFFMAN_BITS);
   assert(histogram_bits <= MAX_HUFFMAN_BITS);
-  assert(hdr_size != NULL);
-  assert(data_size != NULL);
+  assert(hdr_size != nullptr);
+  assert(data_size != nullptr);
 
   VP8LBackwardRefsInit(&refs, refs_array[0].block_size_);
-  if (histogram_symbols == NULL) {
+  if (histogram_symbols == nullptr) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
@@ -828,14 +828,14 @@ static WebPEncodingError EncodeImageInternal(VP8LBitWriter* const bw,
   best_refs = VP8LGetBackwardReferences(width, height, argb, quality,
                                         low_effort, cache_bits, hash_chain,
                                         refs_array);
-  if (best_refs == NULL || !VP8LBackwardRefsCopy(best_refs, &refs)) {
+  if (best_refs == nullptr || !VP8LBackwardRefsCopy(best_refs, &refs)) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
   histogram_image =
       VP8LAllocateHistogramSet(histogram_image_xysize, *cache_bits);
   tmp_histos = VP8LAllocateHistogramSet(2, *cache_bits);
-  if (histogram_image == NULL || tmp_histos == NULL) {
+  if (histogram_image == nullptr || tmp_histos == nullptr) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
@@ -854,18 +854,18 @@ static WebPEncodingError EncodeImageInternal(VP8LBitWriter* const bw,
                                                    sizeof(*huffman_codes));
   // Note: some histogram_image entries may point to tmp_histos[], so the latter
   // need to outlive the following call to GetHuffBitLengthsAndCodes().
-  if (huffman_codes == NULL ||
+  if (huffman_codes == nullptr ||
       !GetHuffBitLengthsAndCodes(histogram_image, huffman_codes)) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
   // Free combined histograms.
   VP8LFreeHistogramSet(histogram_image);
-  histogram_image = NULL;
+  histogram_image = nullptr;
 
   // Free scratch histograms.
   VP8LFreeHistogramSet(tmp_histos);
-  tmp_histos = NULL;
+  tmp_histos = nullptr;
 
   // Color Cache parameters.
   if (*cache_bits > 0) {
@@ -885,7 +885,7 @@ static WebPEncodingError EncodeImageInternal(VP8LBitWriter* const bw,
                                     sizeof(*histogram_argb));
       int max_index = 0;
       uint32_t i;
-      if (histogram_argb == NULL) {
+      if (histogram_argb == nullptr) {
         err = VP8_ENC_ERROR_OUT_OF_MEMORY;
         goto Error;
       }
@@ -914,7 +914,7 @@ static WebPEncodingError EncodeImageInternal(VP8LBitWriter* const bw,
     int max_tokens = 0;
     huff_tree = (HuffmanTree*)WebPSafeMalloc(3ULL * CODE_LENGTH_CODES,
                                              sizeof(*huff_tree));
-    if (huff_tree == NULL) {
+    if (huff_tree == nullptr) {
       err = VP8_ENC_ERROR_OUT_OF_MEMORY;
       goto Error;
     }
@@ -927,7 +927,7 @@ static WebPEncodingError EncodeImageInternal(VP8LBitWriter* const bw,
     }
     tokens = (HuffmanTreeToken*)WebPSafeMalloc(max_tokens,
                                                sizeof(*tokens));
-    if (tokens == NULL) {
+    if (tokens == nullptr) {
       err = VP8_ENC_ERROR_OUT_OF_MEMORY;
       goto Error;
     }
@@ -951,7 +951,7 @@ static WebPEncodingError EncodeImageInternal(VP8LBitWriter* const bw,
   VP8LFreeHistogramSet(histogram_image);
   VP8LFreeHistogramSet(tmp_histos);
   VP8LBackwardRefsClear(&refs);
-  if (huffman_codes != NULL) {
+  if (huffman_codes != nullptr) {
     WebPSafeFree(huffman_codes->codes);
     WebPSafeFree(huffman_codes);
   }
@@ -1086,7 +1086,7 @@ static WebPEncodingError WriteImage(const WebPPicture* const pic,
 
 static void ClearTransformBuffer(VP8LEncoder* const enc) {
   WebPSafeFree(enc->transform_mem_);
-  enc->transform_mem_ = NULL;
+  enc->transform_mem_ = nullptr;
   enc->transform_mem_size_ = 0;
 }
 
@@ -1099,7 +1099,7 @@ static WebPEncodingError AllocateTransformBuffer(VP8LEncoder* const enc,
                                                  int width, int height) {
   WebPEncodingError err = VP8_ENC_OK;
   const uint64_t image_size = width * height;
-  // VP8LResidualImage needs room for 2 scanlines of uint32 pixels with an extra
+  // VP8LResidualImage needs room for 2 scanlines of uint32_t pixels with an extra
   // pixel in each, plus 2 regular scanlines of bytes.
   // TODO(skal): Clean up by using arithmetic in bytes instead of words.
   const uint64_t argb_scratch_size =
@@ -1119,10 +1119,10 @@ static WebPEncodingError AllocateTransformBuffer(VP8LEncoder* const enc,
       argb_scratch_size + max_alignment_in_words +
       transform_data_size;
   uint32_t* mem = enc->transform_mem_;
-  if (mem == NULL || mem_size > enc->transform_mem_size_) {
+  if (mem == nullptr || mem_size > enc->transform_mem_size_) {
     ClearTransformBuffer(enc);
     mem = (uint32_t*)WebPSafeMalloc(mem_size, sizeof(*mem));
-    if (mem == NULL) {
+    if (mem == nullptr) {
       err = VP8_ENC_ERROR_OUT_OF_MEMORY;
       goto Error;
     }
@@ -1218,7 +1218,7 @@ static WebPEncodingError ApplyPalette(const uint32_t* src, uint32_t src_stride,
   int i, x, y;
   int use_LUT = 1;
 
-  if (tmp_row == NULL) return VP8_ENC_ERROR_OUT_OF_MEMORY;
+  if (tmp_row == nullptr) return VP8_ENC_ERROR_OUT_OF_MEMORY;
   for (i = 0; i < palette_size; ++i) {
     if ((palette[i] & 0xffff00ffu) != 0) {
       use_LUT = 0;
@@ -1332,7 +1332,7 @@ static WebPEncodingError EncodeDeltaPalettePredictorImage(
 
   predictors = (uint32_t*)WebPSafeMalloc(tiles_per_col * tiles_per_row,
                                          sizeof(*predictors));
-  if (predictors == NULL) return VP8_ENC_ERROR_OUT_OF_MEMORY;
+  if (predictors == nullptr) return VP8_ENC_ERROR_OUT_OF_MEMORY;
 
   for (tile_y = 0; tile_y < tiles_per_col; ++tile_y) {
     for (tile_x = 0; tile_x < tiles_per_row; ++tile_x) {
@@ -1359,9 +1359,9 @@ static WebPEncodingError EncodeDeltaPalettePredictorImage(
 static VP8LEncoder* VP8LEncoderNew(const WebPConfig* const config,
                                    const WebPPicture* const picture) {
   VP8LEncoder* const enc = (VP8LEncoder*)WebPSafeCalloc(1ULL, sizeof(*enc));
-  if (enc == NULL) {
+  if (enc == nullptr) {
     WebPEncodingSetError(picture, VP8_ENC_ERROR_OUT_OF_MEMORY);
-    return NULL;
+    return nullptr;
   }
   enc->config_ = config;
   enc->pic_ = picture;
@@ -1372,7 +1372,7 @@ static VP8LEncoder* VP8LEncoderNew(const WebPConfig* const config,
 }
 
 static void VP8LEncoderDelete(VP8LEncoder* enc) {
-  if (enc != NULL) {
+  if (enc != nullptr) {
     VP8LHashChainClear(&enc->hash_chain_);
     VP8LBackwardRefsClear(&enc->refs_[0]);
     VP8LBackwardRefsClear(&enc->refs_[1]);
@@ -1399,7 +1399,7 @@ WebPEncodingError VP8LEncodeStream(const WebPConfig* const config,
   int data_size = 0;
   int use_delta_palettization = 0;
 
-  if (enc == NULL) {
+  if (enc == nullptr) {
     err = VP8_ENC_ERROR_OUT_OF_MEMORY;
     goto Error;
   }
@@ -1452,7 +1452,7 @@ WebPEncodingError VP8LEncodeStream(const WebPConfig* const config,
   }
   if (!use_delta_palettization) {
     // In case image is not packed.
-    if (enc->argb_ == NULL) {
+    if (enc->argb_ == nullptr) {
       err = MakeInputImageCopy(enc);
       if (err != VP8_ENC_OK) goto Error;
     }
@@ -1487,7 +1487,7 @@ WebPEncodingError VP8LEncodeStream(const WebPConfig* const config,
                             byte_position, &hdr_size, &data_size);
   if (err != VP8_ENC_OK) goto Error;
 
-  if (picture->stats != NULL) {
+  if (picture->stats != nullptr) {
     WebPAuxStats* const stats = picture->stats;
     stats->lossless_features = 0;
     if (enc->use_predict_) stats->lossless_features |= 1;
@@ -1518,9 +1518,9 @@ int VP8LEncodeImage(const WebPConfig* const config,
   WebPEncodingError err = VP8_ENC_OK;
   VP8LBitWriter bw;
 
-  if (picture == NULL) return 0;
+  if (picture == nullptr) return 0;
 
-  if (config == NULL || picture->argb == NULL) {
+  if (config == nullptr || picture->argb == nullptr) {
     err = VP8_ENC_ERROR_NULL_PARAMETER;
     WebPEncodingSetError(picture, err);
     return 0;
@@ -1543,7 +1543,7 @@ int VP8LEncodeImage(const WebPConfig* const config,
     goto Error;
   }
   // Reset stats (for pure lossless coding)
-  if (picture->stats != NULL) {
+  if (picture->stats != nullptr) {
     WebPAuxStats* const stats = picture->stats;
     memset(stats, 0, sizeof(*stats));
     stats->PSNR[0] = 99.f;
@@ -1582,12 +1582,12 @@ int VP8LEncodeImage(const WebPConfig* const config,
   if (!WebPReportProgress(picture, 100, &percent)) goto UserAbort;
 
   // Save size.
-  if (picture->stats != NULL) {
+  if (picture->stats != nullptr) {
     picture->stats->coded_size += (int)coded_size;
     picture->stats->lossless_size = (int)coded_size;
   }
 
-  if (picture->extra_info != NULL) {
+  if (picture->extra_info != nullptr) {
     const int mb_w = (width + 15) >> 4;
     const int mb_h = (height + 15) >> 4;
     memset(picture->extra_info, 0, mb_w * mb_h * sizeof(*picture->extra_info));

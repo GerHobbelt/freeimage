@@ -54,7 +54,7 @@ typedef struct {
   struct djpeg_dest_struct pub; /* public fields */
 
   jvirt_sarray_ptr image;	/* virtual array to store the output image */
-  rle_map *colormap;	 	/* RLE-style color map, or NULL if none */
+  rle_map *colormap;	 	/* RLE-style color map, or nullptr if none */
   rle_pixel **rle_row;		/* To pass rows to rle_putrow() */
 
 } rle_dest_struct;
@@ -109,7 +109,7 @@ start_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
 
   /* Convert colormap, if any, to RLE format. */
 
-  dest->colormap = NULL;
+  dest->colormap = nullptr;
 
   if (cinfo->quantize_colors) {
     /* Allocate storage for RLE-style cmap, zero any extra entries */
@@ -136,7 +136,7 @@ start_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   dest->pub.put_pixel_rows = rle_put_pixel_rows;
 
 #ifdef PROGRESS_REPORT
-  if (progress != NULL) {
+  if (progress != nullptr) {
     progress->total_extra_passes++;  /* count file writing as separate pass */
   }
 #endif
@@ -183,7 +183,7 @@ finish_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
 #endif
 
   /* Initialize the header info */
-  header = *rle_hdr_init(NULL);
+  header = *rle_hdr_init(nullptr);
   header.rle_file = dest->pub.output_file;
   header.xmin     = 0;
   header.xmax     = cinfo->output_width  - 1;
@@ -212,7 +212,7 @@ finish_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
    */
 
 #ifdef PROGRESS_REPORT
-  if (progress != NULL) {
+  if (progress != nullptr) {
     progress->pub.pass_limit = cinfo->output_height;
     progress->pub.pass_counter = 0;
     (*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
@@ -226,7 +226,7 @@ finish_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
 	 (JDIMENSION) row, (JDIMENSION) 1, FALSE);
       rle_putrow(rle_row, (int) cinfo->output_width, &header);
 #ifdef PROGRESS_REPORT
-      if (progress != NULL) {
+      if (progress != nullptr) {
         progress->pub.pass_counter++;
         (*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
       }
@@ -248,7 +248,7 @@ finish_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
       }
       rle_putrow(rle_row, (int) cinfo->output_width, &header);
 #ifdef PROGRESS_REPORT
-      if (progress != NULL) {
+      if (progress != nullptr) {
         progress->pub.pass_counter++;
         (*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
       }
@@ -257,7 +257,7 @@ finish_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   }
 
 #ifdef PROGRESS_REPORT
-  if (progress != NULL)
+  if (progress != nullptr)
     progress->completed_extra_passes++;
 #endif
 

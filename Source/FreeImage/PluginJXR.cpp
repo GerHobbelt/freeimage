@@ -93,7 +93,7 @@ _jxr_io_Close(WMPStream** ppWS) {
 	// see _jxr_io_Create
 	if(pWS && pWS->fMem) {
 		free(pWS);
-		*ppWS = NULL;
+		*ppWS = nullptr;
 	}
 	return WMP_errSuccess;
 }
@@ -281,7 +281,7 @@ GetInputPixelFormat(PKImageDecode *pDecoder, PKPixelFormatGUID *guid_format, FRE
 
 		if(error_code != WMP_errSuccess) {
 			// try to find a suitable conversion function ...
-			const PKPixelFormatGUID *ppguidTargetPF = NULL;	// target pixel format
+			const PKPixelFormatGUID *ppguidTargetPF = nullptr;	// target pixel format
 			unsigned iIndex = 0;	// first available conversion function
 			do {
 				error_code = PKFormatConverter_EnumConversions(&pguidSourcePF, iIndex, &ppguidTargetPF);
@@ -416,10 +416,10 @@ Read a JPEG-XR IFD as a buffer
 @see ReadMetadata
 */
 static ERR
-ReadProfile(WMPStream* pStream, unsigned cbByteCount, unsigned uOffset, BYTE **ppbProfile) {
+ReadProfile(WMPStream* pStream, unsigned cbByteCount, unsigned uOffset, uint8_t **ppbProfile) {
 	// (re-)allocate profile buffer
-	BYTE *pbProfile = *ppbProfile;
-	pbProfile = (BYTE*)realloc(pbProfile, cbByteCount);
+	uint8_t *pbProfile = *ppbProfile;
+	pbProfile = (uint8_t*)realloc(pbProfile, cbByteCount);
 	if(!pbProfile) {
 		return WMP_errOutOfMemory;
 	}
@@ -438,8 +438,8 @@ Convert a DPKPROPVARIANT to a FITAG, then store the tag as FIMD_EXIF_MAIN
 @see ReadDescriptiveMetadata
 */
 static BOOL
-ReadPropVariant(WORD tag_id, const DPKPROPVARIANT & varSrc, FIBITMAP *dib) {
-	DWORD dwSize;
+ReadPropVariant(uint16_t tag_id, const DPKPROPVARIANT & varSrc, FIBITMAP *dib) {
+	uint32_t dwSize;
 
 	if(varSrc.vt == DPKVT_EMPTY) {
 		return FALSE;
@@ -447,7 +447,7 @@ ReadPropVariant(WORD tag_id, const DPKPROPVARIANT & varSrc, FIBITMAP *dib) {
 
 	// get the tag key
 	TagLib& s = TagLib::instance();
-	const char *key = s.getTagFieldName(TagLib::EXIF_MAIN, tag_id, NULL);
+	const char *key = s.getTagFieldName(TagLib::EXIF_MAIN, tag_id, nullptr);
 	if(!key) {
 		return FALSE;
 	}
@@ -461,7 +461,7 @@ ReadPropVariant(WORD tag_id, const DPKPROPVARIANT & varSrc, FIBITMAP *dib) {
 		switch (varSrc.vt) {
 			case DPKVT_LPSTR:
 				FreeImage_SetTagType(tag, FIDT_ASCII);
-				dwSize = (DWORD)strlen(varSrc.VT.pszVal) + 1;
+				dwSize = (uint32_t)strlen(varSrc.VT.pszVal) + 1;
 				FreeImage_SetTagCount(tag, dwSize);
 				FreeImage_SetTagLength(tag, dwSize);
 				FreeImage_SetTagValue(tag, varSrc.VT.pszVal);
@@ -469,7 +469,7 @@ ReadPropVariant(WORD tag_id, const DPKPROPVARIANT & varSrc, FIBITMAP *dib) {
 			
 			case DPKVT_LPWSTR:
 				FreeImage_SetTagType(tag, FIDT_UNDEFINED);
-				dwSize = (DWORD)(sizeof(U16) * (wcslen((wchar_t *) varSrc.VT.pwszVal) + 1)); // +1 for NULL term
+				dwSize = (uint32_t)(sizeof(U16) * (wcslen((wchar_t *) varSrc.VT.pwszVal) + 1)); // +1 for nullptr term
 				FreeImage_SetTagCount(tag, dwSize);
 				FreeImage_SetTagLength(tag, dwSize);
 				FreeImage_SetTagValue(tag, varSrc.VT.pwszVal);
@@ -542,7 +542,7 @@ ReadMetadata(PKImageDecode *pID, FIBITMAP *dib) {
 	
 	WMPStream *pStream = pID->pStream;
 	WmpDEMisc *wmiDEMisc = &pID->WMP.wmiDEMisc;
-	BYTE *pbProfile = NULL;
+	uint8_t *pbProfile = nullptr;
 
 	try {
 		// save current position
@@ -640,8 +640,8 @@ No allocation is needed here, the function just copy pointers when needed.
 @see WriteDescriptiveMetadata
 */
 static BOOL
-WritePropVariant(FIBITMAP *dib, WORD tag_id, DPKPROPVARIANT & varDst) {
-	FITAG *tag = NULL;
+WritePropVariant(FIBITMAP *dib, uint16_t tag_id, DPKPROPVARIANT & varDst) {
+	FITAG *tag = nullptr;
 
 	TagLib& s = TagLib::instance();
 	
@@ -649,7 +649,7 @@ WritePropVariant(FIBITMAP *dib, WORD tag_id, DPKPROPVARIANT & varDst) {
 	varDst.vt = DPKVT_EMPTY;
 
 	// given the tag id, get the tag key
-	const char *key = s.getTagFieldName(TagLib::EXIF_MAIN, tag_id, NULL);
+	const char *key = s.getTagFieldName(TagLib::EXIF_MAIN, tag_id, nullptr);
 	// then, get the tag info
 	if(!FreeImage_GetMetadata(FIMD_EXIF_MAIN, dib, key, &tag)) {
 		return FALSE;
@@ -719,7 +719,7 @@ Write ICC, XMP, Exif, Exif-GPS, IPTC, descriptive (i.e. Exif-TIFF) metadata
 static ERR
 WriteMetadata(PKImageEncode *pIE, FIBITMAP *dib) {
 	ERR error_code = 0;		// error code as returned by the interface
-	BYTE *profile = NULL;
+	uint8_t *profile = nullptr;
 	unsigned profile_size = 0;
 	
 	try {
@@ -747,15 +747,15 @@ WriteMetadata(PKImageEncode *pIE, FIBITMAP *dib) {
 				JXR_CHECK(error_code);
 				// release profile
 				free(profile);
-				profile = NULL;
+				profile = nullptr;
 			}
 		}
 
 		// write XMP metadata
 		{
-			FITAG *tag_xmp = NULL;
+			FITAG *tag_xmp = nullptr;
 			if(FreeImage_GetMetadata(FIMD_XMP, dib, g_TagLib_XMPFieldName, &tag_xmp)) {
-				error_code = PKImageEncode_SetXMPMetadata_WMP(pIE, (BYTE*)FreeImage_GetTagValue(tag_xmp), FreeImage_GetTagLength(tag_xmp));
+				error_code = PKImageEncode_SetXMPMetadata_WMP(pIE, (uint8_t*)FreeImage_GetTagValue(tag_xmp), FreeImage_GetTagLength(tag_xmp));
 				JXR_CHECK(error_code);
 			}
 		}
@@ -767,7 +767,7 @@ WriteMetadata(PKImageEncode *pIE, FIBITMAP *dib) {
 				JXR_CHECK(error_code);
 				// release profile
 				free(profile);
-				profile = NULL;
+				profile = nullptr;
 			}
 		}
 
@@ -778,7 +778,7 @@ WriteMetadata(PKImageEncode *pIE, FIBITMAP *dib) {
 				JXR_CHECK(error_code);
 				// release profile
 				free(profile);
-				profile = NULL;
+				profile = nullptr;
 			}
 		}
 
@@ -889,7 +889,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -899,8 +899,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE jxr_signature[3] = { 0x49, 0x49, 0xBC };
-	BYTE signature[3] = { 0, 0, 0 };
+	uint8_t jxr_signature[3] = { 0x49, 0x49, 0xBC };
+	uint8_t signature[3] = { 0, 0, 0 };
 
 	io->read_proc(&signature, 1, 3, handle);
 
@@ -947,7 +947,7 @@ SupportsNoPixels() {
 
 static void * DLL_CALLCONV
 Open(FreeImageIO *io, fi_handle handle, BOOL read) {
-	WMPStream *pStream = NULL;	// stream interface
+	WMPStream *pStream = nullptr;	// stream interface
 	if(io && handle) {
 		// allocate the FreeImageIO stream wrapper
 		FreeImageJXRIO *jxr_io = (FreeImageJXRIO*)malloc(sizeof(FreeImageJXRIO));
@@ -957,7 +957,7 @@ Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 			// create a JXR stream wrapper
 			if(_jxr_io_Create(&pStream, jxr_io) != WMP_errSuccess) {
 				free(jxr_io);
-				return NULL;
+				return nullptr;
 			}
 		}
 	}
@@ -1004,9 +1004,9 @@ Copy or convert & copy decoded pixels into the dib
 */
 static ERR
 CopyPixels(PKImageDecode *pDecoder, PKPixelFormatGUID out_guid_format, FIBITMAP *dib, int width, int height) {
-	PKFormatConverter *pConverter = NULL;	// pixel format converter
+	PKFormatConverter *pConverter = nullptr;	// pixel format converter
 	ERR error_code = 0;	// error code as returned by the interface
-	BYTE *pb = NULL;	// local buffer used for pixel format conversion
+	uint8_t *pb = nullptr;	// local buffer used for pixel format conversion
 	
 	// image dimensions
 	const PKRect rect = {0, 0, width, height};
@@ -1023,9 +1023,9 @@ CopyPixels(PKImageDecode *pDecoder, PKPixelFormatGUID out_guid_format, FIBITMAP 
 			// no conversion, load bytes "as is" ...
 
 			// get a pointer to dst pixel data
-			BYTE *dib_bits = FreeImage_GetBits(dib);
+			uint8_t *dib_bits = FreeImage_GetBits(dib);
 
-			// get dst pitch (count of BYTE for stride)
+			// get dst pitch (count of uint8_t for stride)
 			const unsigned cbStride = FreeImage_GetPitch(dib);			
 
 			// decode and copy bits to dst array
@@ -1040,7 +1040,7 @@ CopyPixels(PKImageDecode *pDecoder, PKPixelFormatGUID out_guid_format, FIBITMAP 
 			JXR_CHECK(error_code);
 			
 			// set the conversion function
-			error_code = pConverter->Initialize(pConverter, pDecoder, NULL, out_guid_format);
+			error_code = pConverter->Initialize(pConverter, pDecoder, nullptr, out_guid_format);
 			JXR_CHECK(error_code);
 			
 			// get the maximum stride
@@ -1073,8 +1073,8 @@ CopyPixels(PKImageDecode *pDecoder, PKPixelFormatGUID out_guid_format, FIBITMAP 
 			// now copy pixels into the dib
 			const size_t line_size = FreeImage_GetLine(dib);
 			for(int y = 0; y < height; y++) {
-				BYTE *src_bits = (BYTE*)(pb + y * cbStride);
-				BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, y);
+				uint8_t *src_bits = (uint8_t*)(pb + y * cbStride);
+				uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, y);
 				memcpy(dst_bits, src_bits, line_size);
 			}
 			
@@ -1119,19 +1119,19 @@ CopyPixels(PKImageDecode *pDecoder, PKPixelFormatGUID out_guid_format, FIBITMAP 
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	PKImageDecode *pDecoder = NULL;	// decoder interface
+	PKImageDecode *pDecoder = nullptr;	// decoder interface
 	ERR error_code = 0;				// error code as returned by the interface
 	PKPixelFormatGUID guid_format;	// loaded pixel format (== input file pixel format if no conversion needed)
 	
 	FREE_IMAGE_TYPE image_type = FIT_UNKNOWN;	// input image type
 	unsigned bpp = 0;							// input image bit depth
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 	
 	// get the I/O stream wrapper
 	WMPStream *pDecodeStream = (WMPStream*)data;
 
 	if(!handle || !pDecodeStream) {
-		return NULL;
+		return nullptr;
 	}
 
 	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
@@ -1191,7 +1191,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			
 			// free the decoder
 			pDecoder->Release(&pDecoder);
-			assert(pDecoder == NULL);
+			assert(pDecoder == nullptr);
 
 			return dib;
 		}
@@ -1202,7 +1202,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		// free the decoder
 		pDecoder->Release(&pDecoder);
-		assert(pDecoder == NULL);
+		assert(pDecoder == nullptr);
 
 		return dib;
 
@@ -1212,12 +1212,12 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		// free the decoder
 		pDecoder->Release(&pDecoder);
 
-		if(NULL != message) {
+		if(nullptr != message) {
 			FreeImage_OutputMessageProc(s_format_id, message);
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ==========================================================
@@ -1351,7 +1351,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 	PKPixelInfo pixelInfo;			// image specifications
 	BOOL bHasAlpha = FALSE;			// is alpha layer present ?
 
-	PKImageEncode *pEncoder = NULL;		// encoder interface
+	PKImageEncode *pEncoder = nullptr;		// encoder interface
 	ERR error_code = 0;					// error code as returned by the interface
 
 	// get the I/O stream wrapper
@@ -1369,7 +1369,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		// check JPEG-XR limits
 		if((width < MB_WIDTH_PIXEL) || (height < MB_HEIGHT_PIXEL)) {
 			FreeImage_OutputMessageProc(s_format_id, "Unsupported image size: width x height = %d x %d", width, height);
-			throw (const char*)NULL;
+			throw (const char*)nullptr;
 		}
 
 		// get output pixel format
@@ -1411,9 +1411,9 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		bIsFlipped = FreeImage_FlipVertical(dib);
 
 		// get a pointer to dst pixel data
-		BYTE *dib_bits = FreeImage_GetBits(dib);
+		uint8_t *dib_bits = FreeImage_GetBits(dib);
 
-		// get dst pitch (count of BYTE for stride)
+		// get dst pitch (count of uint8_t for stride)
 		const unsigned cbStride = FreeImage_GetPitch(dib);
 
 		// write metadata + pixels on output
@@ -1425,7 +1425,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 		// free the encoder
 		pEncoder->Release(&pEncoder);
-		assert(pEncoder == NULL);
+		assert(pEncoder == nullptr);
 		
 		return TRUE;
 
@@ -1437,9 +1437,9 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		if(pEncoder) {
 			// free the encoder
 			pEncoder->Release(&pEncoder);
-			assert(pEncoder == NULL);
+			assert(pEncoder == nullptr);
 		}
-		if(NULL != message) {
+		if(nullptr != message) {
 			FreeImage_OutputMessageProc(s_format_id, message);
 		}
 	}
@@ -1461,8 +1461,8 @@ InitJXR(Plugin *plugin, int format_id) {
 	plugin->regexpr_proc = RegExpr;
 	plugin->open_proc = Open;
 	plugin->close_proc = Close;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;

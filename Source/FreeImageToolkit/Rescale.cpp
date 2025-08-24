@@ -24,13 +24,13 @@
 
 FIBITMAP * DLL_CALLCONV
 FreeImage_RescaleRect(FIBITMAP *src, int dst_width, int dst_height, int src_left, int src_top, int src_right, int src_bottom, FREE_IMAGE_FILTER filter, unsigned flags) {
-	FIBITMAP *dst = NULL;
+	FIBITMAP *dst = nullptr;
 
 	const int src_width = FreeImage_GetWidth(src);
 	const int src_height = FreeImage_GetHeight(src);
 
 	if (!FreeImage_HasPixels(src) || (dst_width <= 0) || (dst_height <= 0) || (src_width <= 0) || (src_height <= 0)) {
-		return NULL;
+		return nullptr;
 	}
 
 	// normalize the rectangle
@@ -43,11 +43,11 @@ FreeImage_RescaleRect(FIBITMAP *src, int dst_width, int dst_height, int src_left
 
 	// check the size of the sub image
 	if((src_left < 0) || (src_right > src_width) || (src_top < 0) || (src_bottom > src_height)) {
-		return NULL;
+		return nullptr;
 	}
 
 	// select the filter
-	CGenericFilter *pFilter = NULL;
+	CGenericFilter *pFilter = nullptr;
 	switch (filter) {
 		case FILTER_BOX:
 			pFilter = new(std::nothrow) CBoxFilter();
@@ -70,7 +70,7 @@ FreeImage_RescaleRect(FIBITMAP *src, int dst_width, int dst_height, int src_left
 	}
 
 	if (!pFilter) {
-		return NULL;
+		return nullptr;
 	}
 
 	CResizeEngine Engine(pFilter);
@@ -95,10 +95,10 @@ FreeImage_Rescale(FIBITMAP *src, int dst_width, int dst_height, FREE_IMAGE_FILTE
 
 FIBITMAP * DLL_CALLCONV
 FreeImage_MakeThumbnail(FIBITMAP *dib, int max_pixel_size, BOOL convert) {
-	FIBITMAP *thumbnail = NULL;
+	FIBITMAP *thumbnail = nullptr;
 	int new_width, new_height;
 
-	if(!FreeImage_HasPixels(dib) || (max_pixel_size <= 0)) return NULL;
+	if(!FreeImage_HasPixels(dib) || (max_pixel_size <= 0)) return nullptr;
 
 	int width	= FreeImage_GetWidth(dib);
 	int height = FreeImage_GetHeight(dib);
@@ -149,13 +149,13 @@ FreeImage_MakeThumbnail(FIBITMAP *dib, int max_pixel_size, BOOL convert) {
 		case FIT_COMPLEX:
 		default:
 			// cannot rescale this kind of image
-			thumbnail = NULL;
+			thumbnail = nullptr;
 			break;
 	}
 
-	if((thumbnail != NULL) && (image_type != FIT_BITMAP) && convert) {
+	if((thumbnail != nullptr) && (image_type != FIT_BITMAP) && convert) {
 		// convert to a standard bitmap
-		FIBITMAP *bitmap = NULL;
+		FIBITMAP *bitmap = nullptr;
 		switch(image_type) {
 			case FIT_UINT16:
 				bitmap = FreeImage_ConvertTo8Bits(thumbnail);
@@ -179,7 +179,7 @@ FreeImage_MakeThumbnail(FIBITMAP *dib, int max_pixel_size, BOOL convert) {
 				FreeImage_Unload(rgbf);
 				break;
 		}
-		if(bitmap != NULL) {
+		if(bitmap != nullptr) {
 			FreeImage_Unload(thumbnail);
 			thumbnail = bitmap;
 		}

@@ -61,7 +61,7 @@
 #error "Antiquated ZLIB software; you must use version 1.0 or later"
 #endif
 
-#define SAFE_MSG(sp)   ((sp)->stream.msg == NULL ? "" : (sp)->stream.msg)
+#define SAFE_MSG(sp)   ((sp)->stream.msg == nullptr ? "" : (sp)->stream.msg)
 
 /*
  * State block for each open TIFF
@@ -83,8 +83,8 @@ typedef struct {
 #define DecoderState(tif)       ZState(tif)
 #define EncoderState(tif)       ZState(tif)
 
-static int ZIPEncode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s);
-static int ZIPDecode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s);
+static int ZIPEncode(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s);
+static int ZIPDecode(TIFF* tif, uint8_t* op, tmsize_t occ, uint16_t s);
 
 static int
 ZIPFixupTags(TIFF* tif)
@@ -99,7 +99,7 @@ ZIPSetupDecode(TIFF* tif)
 	static const char module[] = "ZIPSetupDecode";
 	ZIPState* sp = DecoderState(tif);
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
         
         /* if we were last encoding, terminate this mode */
 	if (sp->state & ZSTATE_INIT_ENCODE) {
@@ -120,13 +120,13 @@ ZIPSetupDecode(TIFF* tif)
  * Setup state for decoding a strip.
  */
 static int
-ZIPPreDecode(TIFF* tif, uint16 s)
+ZIPPreDecode(TIFF* tif, uint16_t s)
 {
 	static const char module[] = "ZIPPreDecode";
 	ZIPState* sp = DecoderState(tif);
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
 
 	if( (sp->state & ZSTATE_INIT_DECODE) == 0 )
             tif->tif_setupdecode( tif );
@@ -146,13 +146,13 @@ ZIPPreDecode(TIFF* tif, uint16 s)
 }
 
 static int
-ZIPDecode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
+ZIPDecode(TIFF* tif, uint8_t* op, tmsize_t occ, uint16_t s)
 {
 	static const char module[] = "ZIPDecode";
 	ZIPState* sp = DecoderState(tif);
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	assert(sp->state == ZSTATE_INIT_DECODE);
 
         sp->stream.next_in = tif->tif_rawcp;
@@ -206,7 +206,7 @@ ZIPSetupEncode(TIFF* tif)
 	static const char module[] = "ZIPSetupEncode";
 	ZIPState* sp = EncoderState(tif);
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	if (sp->state & ZSTATE_INIT_DECODE) {
 		inflateEnd(&sp->stream);
 		sp->state = 0;
@@ -225,13 +225,13 @@ ZIPSetupEncode(TIFF* tif)
  * Reset encoding state at the start of a strip.
  */
 static int
-ZIPPreEncode(TIFF* tif, uint16 s)
+ZIPPreEncode(TIFF* tif, uint16_t s)
 {
 	static const char module[] = "ZIPPreEncode";
 	ZIPState *sp = EncoderState(tif);
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	if( sp->state != ZSTATE_INIT_ENCODE )
             tif->tif_setupencode( tif );
 
@@ -253,12 +253,12 @@ ZIPPreEncode(TIFF* tif, uint16 s)
  * Encode a chunk of pixels.
  */
 static int
-ZIPEncode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+ZIPEncode(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	static const char module[] = "ZIPEncode";
 	ZIPState *sp = EncoderState(tif);
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	assert(sp->state == ZSTATE_INIT_ENCODE);
 
 	(void) s;
@@ -344,13 +344,13 @@ ZIPCleanup(TIFF* tif)
 		sp->state = 0;
 	}
 	_TIFFfree(sp);
-	tif->tif_data = NULL;
+	tif->tif_data = nullptr;
 
 	_TIFFSetDefaultCompressionState(tif);
 }
 
 static int
-ZIPVSetField(TIFF* tif, uint32 tag, va_list ap)
+ZIPVSetField(TIFF* tif, uint32_t tag, va_list ap)
 {
 	static const char module[] = "ZIPVSetField";
 	ZIPState* sp = ZState(tif);
@@ -374,7 +374,7 @@ ZIPVSetField(TIFF* tif, uint32 tag, va_list ap)
 }
 
 static int
-ZIPVGetField(TIFF* tif, uint32 tag, va_list ap)
+ZIPVGetField(TIFF* tif, uint32_t tag, va_list ap)
 {
 	ZIPState* sp = ZState(tif);
 
@@ -389,7 +389,7 @@ ZIPVGetField(TIFF* tif, uint32 tag, va_list ap)
 }
 
 static const TIFFField zipFields[] = {
-    { TIFFTAG_ZIPQUALITY, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT, TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "", NULL },
+    { TIFFTAG_ZIPQUALITY, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT, TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "", nullptr },
 };
 
 int
@@ -413,13 +413,13 @@ TIFFInitZIP(TIFF* tif, int scheme)
 	/*
 	 * Allocate state block so tag methods have storage to record values.
 	 */
-	tif->tif_data = (uint8*) _TIFFmalloc(sizeof (ZIPState));
-	if (tif->tif_data == NULL)
+	tif->tif_data = (uint8_t*) _TIFFmalloc(sizeof (ZIPState));
+	if (tif->tif_data == nullptr)
 		goto bad;
 	sp = ZState(tif);
-	sp->stream.zalloc = NULL;
-	sp->stream.zfree = NULL;
-	sp->stream.opaque = NULL;
+	sp->stream.zalloc = nullptr;
+	sp->stream.zfree = nullptr;
+	sp->stream.opaque = nullptr;
 	sp->stream.data_type = Z_BINARY;
 
 	/*

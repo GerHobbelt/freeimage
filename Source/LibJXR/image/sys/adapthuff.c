@@ -127,7 +127,7 @@ static const short g12HuffLookupTable[5][56] = {{
 **********************************************************************/
 Void Clean (CAdaptiveHuffman *pAdHuff)
 {
-    if (pAdHuff == NULL)
+    if (pAdHuff == nullptr)
         return;
     free (pAdHuff);
 }
@@ -138,22 +138,22 @@ CAdaptiveHuffman *Allocate (Int iNSymbols, CODINGMODE cm)
 
     UNREFERENCED_PARAMETER(cm);
 
-    if (pAdHuff == NULL)
-        return NULL;
+    if (pAdHuff == nullptr)
+        return nullptr;
     if (iNSymbols > 255 || iNSymbols <= 0)
         goto ErrorExit;
 
     memset (pAdHuff, 0, sizeof (CAdaptiveHuffman));
     pAdHuff->m_iNSymbols = iNSymbols;
 
-    pAdHuff->m_pDelta = NULL;
+    pAdHuff->m_pDelta = nullptr;
     pAdHuff->m_iDiscriminant = pAdHuff->m_iUpperBound = pAdHuff->m_iLowerBound = 0;
 
     return pAdHuff;
 
 ErrorExit:
     Clean (pAdHuff);
-    return NULL;
+    return nullptr;
 }
 
 /**********************************************************************
@@ -413,7 +413,7 @@ static const Int MEMORY = 8;
 Void AdaptDiscriminant (CAdaptiveHuffman *pAdHuff)
 {
     Int iSym = pAdHuff->m_iNSymbols, t, dL, dH;
-    const Int *pCodes, *pDelta = NULL;
+    const Int *pCodes, *pDelta = nullptr;
     Bool bChange = FALSE;
     static const Int gMaxTables[] = { 0,0,0,0, 1,2, 4,2, 2,2, 0,0,5 };
     static const Int gSecondDisc[]= { 0,0,0,0, 0,0, 1,0, 0,0, 0,0,1 };

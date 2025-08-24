@@ -330,7 +330,7 @@ int VP8LCreateCompressedHuffmanTree(const HuffmanTreeCode* const tree,
   const int depth_size = tree->num_symbols;
   int prev_value = 8;  // 8 is the initial value for rle.
   int i = 0;
-  assert(tokens != NULL);
+  assert(tokens != nullptr);
   while (i < depth_size) {
     const int value = tree->code_lengths[i];
     int k = i + 1;
@@ -378,7 +378,7 @@ static void ConvertBitDepthsToSymbols(HuffmanTreeCode* const tree) {
   uint32_t next_code[MAX_ALLOWED_CODE_LENGTH + 1];
   int depth_count[MAX_ALLOWED_CODE_LENGTH + 1] = { 0 };
 
-  assert(tree != NULL);
+  assert(tree != nullptr);
   len = tree->num_symbols;
   for (i = 0; i < len; ++i) {
     const int code_length = tree->code_lengths[i];

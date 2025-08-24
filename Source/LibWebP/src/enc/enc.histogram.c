@@ -96,10 +96,10 @@ void VP8LHistogramInit(VP8LHistogram* const p, int palette_code_bits) {
 }
 
 VP8LHistogram* VP8LAllocateHistogram(int cache_bits) {
-  VP8LHistogram* histo = NULL;
+  VP8LHistogram* histo = nullptr;
   const int total_size = VP8LGetHistogramSize(cache_bits);
   uint8_t* const memory = (uint8_t*)WebPSafeMalloc(total_size, sizeof(*memory));
-  if (memory == NULL) return NULL;
+  if (memory == nullptr) return nullptr;
   histo = (VP8LHistogram*)memory;
   // literal_ won't necessary be aligned.
   histo->literal_ = (uint32_t*)(memory + sizeof(VP8LHistogram));
@@ -115,7 +115,7 @@ VP8LHistogramSet* VP8LAllocateHistogramSet(int size, int cache_bits) {
       sizeof(*set) + size * (sizeof(*set->histograms) +
       histo_size + WEBP_ALIGN_CST);
   uint8_t* memory = (uint8_t*)WebPSafeMalloc(total_size, sizeof(*memory));
-  if (memory == NULL) return NULL;
+  if (memory == nullptr) return nullptr;
 
   set = (VP8LHistogramSet*)memory;
   memory += sizeof(*set);
@@ -195,7 +195,7 @@ double VP8LBitsEntropy(const uint32_t* const array, int n,
                        uint32_t* const trivial_symbol) {
   VP8LBitEntropy entropy;
   VP8LBitsEntropyUnrefined(array, n, &entropy);
-  if (trivial_symbol != NULL) {
+  if (trivial_symbol != nullptr) {
     *trivial_symbol =
         (entropy.nonzeros == 1) ? entropy.nonzero_code : VP8L_NON_TRIVIAL_SYM;
   }
@@ -228,7 +228,7 @@ static double PopulationCost(const uint32_t* const population, int length,
   VP8LBitEntropy bit_entropy;
   VP8LStreaks stats;
   VP8LGetEntropyUnrefined(population, length, &bit_entropy, &stats);
-  if (trivial_sym != NULL) {
+  if (trivial_sym != nullptr) {
     *trivial_sym = (bit_entropy.nonzeros == 1) ? bit_entropy.nonzero_code
                                                : VP8L_NON_TRIVIAL_SYM;
   }
@@ -250,11 +250,11 @@ static WEBP_INLINE double GetCombinedEntropy(const uint32_t* const X,
 double VP8LHistogramEstimateBits(const VP8LHistogram* const p) {
   return
       PopulationCost(
-          p->literal_, VP8LHistogramNumCodes(p->palette_code_bits_), NULL)
-      + PopulationCost(p->red_, NUM_LITERAL_CODES, NULL)
-      + PopulationCost(p->blue_, NUM_LITERAL_CODES, NULL)
-      + PopulationCost(p->alpha_, NUM_LITERAL_CODES, NULL)
-      + PopulationCost(p->distance_, NUM_DISTANCE_CODES, NULL)
+          p->literal_, VP8LHistogramNumCodes(p->palette_code_bits_), nullptr)
+      + PopulationCost(p->red_, NUM_LITERAL_CODES, nullptr)
+      + PopulationCost(p->blue_, NUM_LITERAL_CODES, nullptr)
+      + PopulationCost(p->alpha_, NUM_LITERAL_CODES, nullptr)
+      + PopulationCost(p->distance_, NUM_DISTANCE_CODES, nullptr)
       + VP8LExtraCost(p->literal_ + NUM_LITERAL_CODES, NUM_LENGTH_CODES)
       + VP8LExtraCost(p->distance_, NUM_DISTANCE_CODES);
 }
@@ -367,10 +367,10 @@ static void UpdateHistogramCost(VP8LHistogram* const h) {
   const double alpha_cost =
       PopulationCost(h->alpha_, NUM_LITERAL_CODES, &alpha_sym);
   const double distance_cost =
-      PopulationCost(h->distance_, NUM_DISTANCE_CODES, NULL) +
+      PopulationCost(h->distance_, NUM_DISTANCE_CODES, nullptr) +
       VP8LExtraCost(h->distance_, NUM_DISTANCE_CODES);
   const int num_codes = VP8LHistogramNumCodes(h->palette_code_bits_);
-  h->literal_cost_ = PopulationCost(h->literal_, num_codes, NULL) +
+  h->literal_cost_ = PopulationCost(h->literal_, num_codes, nullptr) +
                      VP8LExtraCost(h->literal_ + NUM_LITERAL_CODES,
                                    NUM_LENGTH_CODES);
   h->red_cost_ = PopulationCost(h->red_, NUM_LITERAL_CODES, &red_sym);
@@ -584,11 +584,11 @@ static int HistoQueueInit(HistoQueue* const histo_queue, const int max_index) {
   // used as temporary data (and it could be up to max_size).
   histo_queue->queue = WebPSafeMalloc(histo_queue->max_size + 1,
                                       sizeof(*histo_queue->queue));
-  return histo_queue->queue != NULL;
+  return histo_queue->queue != nullptr;
 }
 
 static void HistoQueueClear(HistoQueue* const histo_queue) {
-  assert(histo_queue != NULL);
+  assert(histo_queue != nullptr);
   WebPSafeFree(histo_queue->queue);
 }
 
@@ -653,7 +653,7 @@ static int HistogramCombineGreedy(VP8LHistogramSet* const image_histo) {
   // Priority queue of histogram pairs.
   HistoQueue histo_queue;
 
-  if (!HistoQueueInit(&histo_queue, image_histo_size) || clusters == NULL) {
+  if (!HistoQueueInit(&histo_queue, image_histo_size) || clusters == nullptr) {
     goto End;
   }
 
@@ -779,7 +779,7 @@ static void HistogramCombineStochastic(VP8LHistogramSet* const image_histo,
       --image_histo_size;
       if (best_idx2 != image_histo_size) {
         HistogramSwap(&histograms[image_histo_size], &histograms[best_idx2]);
-        histograms[image_histo_size] = NULL;
+        histograms[image_histo_size] = nullptr;
       }
       tries_with_no_success = 0;
     }
@@ -868,7 +868,7 @@ int VP8LGetHistoImageSymbols(int xsize, int ysize,
   const int entropy_combine =
       (orig_histo->size > entropy_combine_num_bins * 2) && (quality < 100);
 
-  if (orig_histo == NULL) goto Error;
+  if (orig_histo == nullptr) goto Error;
 
   // Construct the histograms from backward references.
   HistogramBuild(xsize, histo_bits, refs, orig_histo);

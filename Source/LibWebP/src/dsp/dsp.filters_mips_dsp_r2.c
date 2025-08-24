@@ -25,8 +25,8 @@
 // Helpful macro.
 
 # define SANITY_CHECK(in, out)                                                 \
-  assert(in != NULL);                                                          \
-  assert(out != NULL);                                                         \
+  assert(in != nullptr);                                                          \
+  assert(out != nullptr);                                                         \
   assert(width > 0);                                                           \
   assert(height > 0);                                                          \
   assert(stride >= width);                                                     \
@@ -339,14 +339,14 @@ static void GradientFilter(const uint8_t* data, int width, int height,
 
 static void HorizontalUnfilter(const uint8_t* prev, const uint8_t* in,
                                uint8_t* out, int width) {
- out[0] = in[0] + (prev == NULL ? 0 : prev[0]);
+ out[0] = in[0] + (prev == nullptr ? 0 : prev[0]);
  DO_PREDICT_LINE(in + 1, out + 1, width - 1, 1);
 }
 
 static void VerticalUnfilter(const uint8_t* prev, const uint8_t* in,
                              uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter(nullptr, in, out, width);
   } else {
     DO_PREDICT_LINE_VERTICAL(in, prev, out, width, 1);
   }
@@ -354,8 +354,8 @@ static void VerticalUnfilter(const uint8_t* prev, const uint8_t* in,
 
 static void GradientUnfilter(const uint8_t* prev, const uint8_t* in,
                              uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter(nullptr, in, out, width);
   } else {
     uint8_t top = prev[0], top_left = top, left = top;
     int i;

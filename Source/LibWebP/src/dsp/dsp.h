@@ -169,7 +169,7 @@ extern VP8Fdct VP8FTransform;
 extern VP8Fdct VP8FTransform2;   // performs two transforms at a time
 extern VP8WHT VP8FTransformWHT;
 // Predictions
-// *dst is the destination block. *top and *left can be NULL.
+// *dst is the destination block. *top and *left can be nullptr.
 typedef void (*VP8IntraPreds)(uint8_t *dst, const uint8_t* left,
                               const uint8_t* top);
 typedef void (*VP8Intra4Preds)(uint8_t *dst, const uint8_t* top);
@@ -349,7 +349,7 @@ void VP8DspInit(void);
 #define FANCY_UPSAMPLING   // undefined to remove fancy upsampling support
 
 // Convert a pair of y/u/v lines together to the output rgb/a colorspace.
-// bottom_y can be NULL if only one line of output is needed (at top/bottom).
+// bottom_y can be nullptr if only one line of output is needed (at top/bottom).
 typedef void (*WebPUpsampleLinePairFunc)(
     const uint8_t* top_y, const uint8_t* bottom_y,
     const uint8_t* top_u, const uint8_t* top_v,

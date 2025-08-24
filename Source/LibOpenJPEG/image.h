@@ -41,7 +41,7 @@ struct opj_cp;
 /**
  * Create an empty image
  *
- * @return returns an empty image if successful, returns NULL otherwise
+ * @return returns an empty image if successful, returns nullptr otherwise
  */
 opj_image_t* opj_image_create0(void);
 

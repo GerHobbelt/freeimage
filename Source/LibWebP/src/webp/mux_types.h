@@ -62,7 +62,7 @@ struct WebPData {
 
 // Initializes the contents of the 'webp_data' object with default values.
 static WEBP_INLINE void WebPDataInit(WebPData* webp_data) {
-  if (webp_data != NULL) {
+  if (webp_data != nullptr) {
     memset(webp_data, 0, sizeof(*webp_data));
   }
 }
@@ -70,7 +70,7 @@ static WEBP_INLINE void WebPDataInit(WebPData* webp_data) {
 // Clears the contents of the 'webp_data' object by calling free(). Does not
 // deallocate the object itself.
 static WEBP_INLINE void WebPDataClear(WebPData* webp_data) {
-  if (webp_data != NULL) {
+  if (webp_data != nullptr) {
     free((void*)webp_data->bytes);
     WebPDataInit(webp_data);
   }
@@ -79,11 +79,11 @@ static WEBP_INLINE void WebPDataClear(WebPData* webp_data) {
 // Allocates necessary storage for 'dst' and copies the contents of 'src'.
 // Returns true on success.
 static WEBP_INLINE int WebPDataCopy(const WebPData* src, WebPData* dst) {
-  if (src == NULL || dst == NULL) return 0;
+  if (src == nullptr || dst == nullptr) return 0;
   WebPDataInit(dst);
-  if (src->bytes != NULL && src->size != 0) {
+  if (src->bytes != nullptr && src->size != 0) {
     dst->bytes = (uint8_t*)malloc(src->size);
-    if (dst->bytes == NULL) return 0;
+    if (dst->bytes == nullptr) return 0;
     memcpy((void*)dst->bytes, src->bytes, src->size);
     dst->size = src->size;
   }

@@ -91,7 +91,7 @@
 
 - 3/20/13: version 0.3.0
   This is a binary compatible release.
-  * WebPINewRGB/WebPINewYUVA accept being passed a NULL output buffer
+  * WebPINewRGB/WebPINewYUVA accept being passed a nullptr output buffer
     and will perform auto-allocation.
   * default filter option is now '-strong -f 60'
   * encoding speed-up for lossy methods 3 to 6
