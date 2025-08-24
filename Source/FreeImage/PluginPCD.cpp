@@ -87,7 +87,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -114,14 +114,14 @@ SupportsNoPixels() {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 	unsigned width;
 	unsigned height;
 	const unsigned bpp = 24;
 	int scan_line_add   = 1;
 	int start_scan_line = 0;
 	
-	BYTE *y1 = NULL, *y2 = NULL, *cbcr = NULL;
+	uint8_t *y1 = nullptr, *y2 = nullptr, *cbcr = nullptr;
 
 	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
@@ -170,12 +170,12 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		// temporary stuff to load PCD
 
-		BYTE *y1 = (BYTE*)malloc(width * sizeof(BYTE));
-		BYTE *y2 = (BYTE*)malloc(width * sizeof(BYTE));
-		BYTE *cbcr = (BYTE*)malloc(width * sizeof(BYTE));
+		uint8_t *y1 = (uint8_t*)malloc(width * sizeof(uint8_t));
+		uint8_t *y2 = (uint8_t*)malloc(width * sizeof(uint8_t));
+		uint8_t *cbcr = (uint8_t*)malloc(width * sizeof(uint8_t));
 		if(!y1 || !y2 || !cbcr) throw FI_MSG_ERROR_MEMORY;
 
-		BYTE *yl[] = { y1, y2 };
+		uint8_t *yl[] = { y1, y2 };
 
 		// seek to the part where the bitmap data begins
 
@@ -190,15 +190,15 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			io->read_proc(cbcr, width, 1, handle);
 
 			for (int i = 0; i < 2; i++) {
-				BYTE *bits = FreeImage_GetScanLine(dib, start_scan_line);
+				uint8_t *bits = FreeImage_GetScanLine(dib, start_scan_line);
 				for (unsigned x = 0; x < width; x++) {
 					int r, g, b;
 
 					YUV2RGB(yl[i][x], cbcr[x / 2], cbcr[(width / 2) + (x / 2)], r, g, b);
 
-					bits[FI_RGBA_BLUE]  = (BYTE)b;
-					bits[FI_RGBA_GREEN] = (BYTE)g;
-					bits[FI_RGBA_RED]   = (BYTE)r;
+					bits[FI_RGBA_BLUE]  = (uint8_t)b;
+					bits[FI_RGBA_GREEN] = (uint8_t)g;
+					bits[FI_RGBA_RED]   = (uint8_t)r;
 					bits += 3;
 				}
 
@@ -220,7 +220,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		FreeImage_OutputMessageProc(s_format_id, text);
 
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -236,16 +236,16 @@ InitPCD(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
-	plugin->validate_proc = NULL;
+	plugin->save_proc = nullptr;
+	plugin->validate_proc = nullptr;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }

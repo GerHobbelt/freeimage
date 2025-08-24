@@ -60,7 +60,7 @@ BOOL testStreamMultiPageOpen(const char *input, int flags) {
 
 	// Open src stream in read-only mode
 	FILE *file = fopen(input, "r+b");	
-	if (file != NULL) {
+	if (file != nullptr) {
 		fipMultiPage src;
 
 		// Open the multi-page file
@@ -109,7 +109,7 @@ BOOL testStreamMultiPageSave(const char *input, const char *output, int input_fl
 	if(src.isValid()) {
 		// Open dst stream in read/write mode
 		FILE *file = fopen(output, "w+b");	
-		if (file != NULL) {
+		if (file != nullptr) {
 			// Save the multi-page file to the stream
 			FREE_IMAGE_FORMAT fif = fipImage::identifyFIF(output);
 			BOOL bSuccess = src.saveToHandle(fif, &io, (fi_handle)file, output_flag);
@@ -146,7 +146,7 @@ BOOL testStreamMultiPageOpenSave(const char *input, const char *output, int inpu
 	// Open src stream in read-only mode
 	FILE *src_file = fopen(input, "r+b");
 	assert(src_file);
-	if (src_file != NULL) {
+	if (src_file != nullptr) {
 		fipMultiPage src;
 		// Open the multi-page file
 		src.open(&io, (fi_handle)src_file, input_flag);
@@ -176,7 +176,7 @@ BOOL testStreamMultiPageOpenSave(const char *input, const char *output, int inpu
 			// Open dst stream in read/write mode
 			FILE *dst_file = fopen(output, "w+b");	
 			assert(dst_file);
-			if (dst_file != NULL) {
+			if (dst_file != nullptr) {
 				// Save the multi-page file to the stream (modifications are applied)
 				FREE_IMAGE_FORMAT fif = fipImage::identifyFIF(output);
 				BOOL bSuccess = src.saveToHandle(fif, &io, (fi_handle)dst_file, output_flag);

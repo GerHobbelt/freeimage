@@ -431,7 +431,7 @@ Int StrIOEncInit(CWMImageStrCodec* pSC)
         size_t i;
 #if defined(_WINDOWS_) || defined(UNDER_CE)  // tmpnam does not exist in VS2005 WinCE CRT
         TCHAR szPath[MAX_PATH];
-        DWORD cSize, j, k;
+        uint32_t cSize, j, k;
 #endif
         char * pFilename;
 

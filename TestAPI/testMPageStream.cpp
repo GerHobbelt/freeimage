@@ -58,7 +58,7 @@ BOOL testStreamMultiPageOpen(const char *input, int flags) {
 
 	// Open src stream in read-only mode
 	FILE *file = fopen(input, "r+b");	
-	if (file != NULL) {
+	if (file != nullptr) {
 		// Open the multi-page file
 		FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromHandle(&io, (fi_handle)file);
 		FIMULTIBITMAP *src = FreeImage_OpenMultiBitmapFromHandle(fif, &io, (fi_handle)file, flags);
@@ -106,7 +106,7 @@ BOOL testStreamMultiPageSave(const char *input, const char *output, int input_fl
 	if(src) {
 		// Open dst stream in read/write mode
 		FILE *file = fopen(output, "w+b");	
-		if (file != NULL) {
+		if (file != nullptr) {
 			// Save the multi-page file to the stream
 			BOOL bSuccess = FreeImage_SaveMultiBitmapToHandle(fif, src, &io, (fi_handle)file, output_flag);
 			assert(bSuccess);
@@ -142,7 +142,7 @@ BOOL testStreamMultiPageOpenSave(const char *input, const char *output, int inpu
 	// Open src stream in read-only mode
 	FILE *src_file = fopen(input, "r+b");
 	assert(src_file);
-	if (src_file != NULL) {
+	if (src_file != nullptr) {
 		// Open the multi-page file
 		FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromHandle(&io, (fi_handle)src_file);
 		FIMULTIBITMAP *src = FreeImage_OpenMultiBitmapFromHandle(fif, &io, (fi_handle)src_file, input_flag);
@@ -171,7 +171,7 @@ BOOL testStreamMultiPageOpenSave(const char *input, const char *output, int inpu
 			// Open dst stream in read/write mode
 			FILE *dst_file = fopen(output, "w+b");	
 			assert(dst_file);
-			if (dst_file != NULL) {
+			if (dst_file != nullptr) {
 				// Save the multi-page file to the stream (modifications are applied)
 				BOOL bSuccess = FreeImage_SaveMultiBitmapToHandle(fif, src, &io, (fi_handle)dst_file, output_flag);
 				assert(bSuccess);

@@ -25,7 +25,7 @@
 // Protected functions
 
 BOOL fipImage::replace(FIBITMAP *new_dib) {
-	if (new_dib == NULL) {
+	if (new_dib == nullptr) {
 		return FALSE;
 	}
 	if (_dib) {
@@ -40,7 +40,7 @@ BOOL fipImage::replace(FIBITMAP *new_dib) {
 // Creation & Destruction
 
 fipImage::fipImage(FREE_IMAGE_TYPE image_type, unsigned width, unsigned height, unsigned bpp) {
-	_dib = NULL;
+	_dib = nullptr;
 	_fif = FIF_UNKNOWN;
 	_bHasChanged = FALSE;
 	if(width && height && bpp) {
@@ -51,7 +51,7 @@ fipImage::fipImage(FREE_IMAGE_TYPE image_type, unsigned width, unsigned height, 
 fipImage::~fipImage() {
 	if(_dib) {
 		FreeImage_Unload(_dib);
-		_dib = NULL;
+		_dib = nullptr;
 	}
 }
 
@@ -59,7 +59,7 @@ BOOL fipImage::setSize(FREE_IMAGE_TYPE image_type, unsigned width, unsigned heig
 	if(_dib) {
 		FreeImage_Unload(_dib);
 	}
-	if((_dib = FreeImage_AllocateT(image_type, width, height, bpp, red_mask, green_mask, blue_mask)) == NULL) {
+	if((_dib = FreeImage_AllocateT(image_type, width, height, bpp, red_mask, green_mask, blue_mask)) == nullptr) {
 		return FALSE;
 	}
 
@@ -87,7 +87,7 @@ BOOL fipImage::setSize(FREE_IMAGE_TYPE image_type, unsigned width, unsigned heig
 void fipImage::clear() {
 	if(_dib) {
 		FreeImage_Unload(_dib);
-		_dib = NULL;
+		_dib = nullptr;
 	}
 	_bHasChanged = TRUE;
 }
@@ -96,7 +96,7 @@ void fipImage::clear() {
 // Copying
 
 fipImage::fipImage(const fipImage& Image) {
-	_dib = NULL;
+	_dib = nullptr;
 	FIBITMAP *clone = FreeImage_Clone((FIBITMAP*)Image._dib);
 	replace(clone);
 	_fif = Image._fif;
@@ -173,7 +173,7 @@ unsigned fipImage::getScanWidth() const {
 }
 
 BOOL fipImage::isValid() const {
-	return (_dib != NULL) ? TRUE:FALSE;
+	return (_dib != nullptr) ? TRUE:FALSE;
 }
 
 const BITMAPINFO* fipImage::getInfo() const {
@@ -253,29 +253,29 @@ BOOL fipImage::setThumbnail(const fipImage& image) {
 }
 
 BOOL fipImage::hasThumbnail() const {
-	return (FreeImage_GetThumbnail(_dib) != NULL);
+	return (FreeImage_GetThumbnail(_dib) != nullptr);
 }
 
 BOOL fipImage::clearThumbnail() {
-	return FreeImage_SetThumbnail(_dib, NULL);
+	return FreeImage_SetThumbnail(_dib, nullptr);
 }
 
 
 ///////////////////////////////////////////////////////////////////
 // Pixel access
 
-BYTE* fipImage::accessPixels() const {
+uint8_t* fipImage::accessPixels() const {
 	return FreeImage_GetBits(_dib); 
 }
 
-BYTE* fipImage::getScanLine(unsigned scanline) const {
+uint8_t* fipImage::getScanLine(unsigned scanline) const {
 	if(scanline < FreeImage_GetHeight(_dib)) {
 		return FreeImage_GetScanLine(_dib, scanline);
 	}
-	return NULL;
+	return nullptr;
 }
 
-BOOL fipImage::getPixelIndex(unsigned x, unsigned y, BYTE *value) const {
+BOOL fipImage::getPixelIndex(unsigned x, unsigned y, uint8_t *value) const {
 	return FreeImage_GetPixelIndex(_dib, x, y, value);
 }
 
@@ -283,7 +283,7 @@ BOOL fipImage::getPixelColor(unsigned x, unsigned y, RGBQUAD *value) const {
 	return FreeImage_GetPixelColor(_dib, x, y, value);
 }
 
-BOOL fipImage::setPixelIndex(unsigned x, unsigned y, BYTE *value) {
+BOOL fipImage::setPixelIndex(unsigned x, unsigned y, uint8_t *value) {
 	_bHasChanged = TRUE;
 	return FreeImage_SetPixelIndex(_dib, x, y, value);
 }
@@ -335,7 +335,7 @@ FREE_IMAGE_FORMAT fipImage::identifyFIFFromHandle(FreeImageIO *io, fi_handle han
 }
 
 FREE_IMAGE_FORMAT fipImage::identifyFIFFromMemory(FIMEMORY *hmem) {
-	if(hmem != NULL) {
+	if(hmem != nullptr) {
 		return FreeImage_GetFileTypeFromMemory(hmem, 0);
 	}
 	return FIF_UNKNOWN;
@@ -355,7 +355,7 @@ BOOL fipImage::load(FREE_IMAGE_FORMAT fif, const char* lpszPathName, int flag) {
 	_fif = fif;
 	_bHasChanged = TRUE;
 
-	return (_dib == NULL) ? FALSE : TRUE;
+	return (_dib == nullptr) ? FALSE : TRUE;
 }
 
 BOOL fipImage::load(const char* lpszPathName, int flag) {
@@ -387,7 +387,7 @@ BOOL fipImage::loadU(FREE_IMAGE_FORMAT fif, const wchar_t* lpszPathName, int fla
 	_fif = fif;
 	_bHasChanged = TRUE;
 
-	return (_dib == NULL) ? FALSE : TRUE;
+	return (_dib == nullptr) ? FALSE : TRUE;
 }
 
 BOOL fipImage::loadU(const wchar_t* lpszPathName, int flag) {
@@ -424,7 +424,7 @@ BOOL fipImage::loadFromHandle(FreeImageIO *io, fi_handle handle, int flag) {
 		_fif = fif;
 		_bHasChanged = TRUE;
 
-		return (_dib == NULL) ? FALSE : TRUE;
+		return (_dib == nullptr) ? FALSE : TRUE;
 	}
 	return FALSE;
 }
@@ -444,7 +444,7 @@ BOOL fipImage::loadFromMemory(fipMemoryIO& memIO, int flag) {
 		_fif = fif;
 		_bHasChanged = TRUE;
 
-		return (_dib == NULL) ? FALSE : TRUE;
+		return (_dib == nullptr) ? FALSE : TRUE;
 	}
 	return FALSE;
 }
@@ -460,7 +460,7 @@ BOOL fipImage::loadFromMemory(FREE_IMAGE_FORMAT fif, fipMemoryIO& memIO, int fla
 		_fif = fif;
 		_bHasChanged = TRUE;
 
-		return (_dib == NULL) ? FALSE : TRUE;
+		return (_dib == nullptr) ? FALSE : TRUE;
 	}
 	return FALSE;
 }
@@ -484,7 +484,7 @@ BOOL fipImage::save(const char* lpszPathName, int flag) {
 		FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(_dib);
 		if(image_type == FIT_BITMAP) {
 			// standard bitmap type
-			WORD bpp = FreeImage_GetBPP(_dib);
+			uint16_t bpp = FreeImage_GetBPP(_dib);
 			bCanSave = (FreeImage_FIFSupportsWriting(fif) && FreeImage_FIFSupportsExportBPP(fif, bpp));
 		} else {
 			// special bitmap type
@@ -519,7 +519,7 @@ BOOL fipImage::saveU(const wchar_t* lpszPathName, int flag) {
 		FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(_dib);
 		if(image_type == FIT_BITMAP) {
 			// standard bitmap type
-			WORD bpp = FreeImage_GetBPP(_dib);
+			uint16_t bpp = FreeImage_GetBPP(_dib);
 			bCanSave = (FreeImage_FIFSupportsWriting(fif) && FreeImage_FIFSupportsExportBPP(fif, bpp));
 		} else {
 			// special bitmap type
@@ -545,7 +545,7 @@ BOOL fipImage::saveToHandle(FREE_IMAGE_FORMAT fif, FreeImageIO *io, fi_handle ha
 		FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(_dib);
 		if(image_type == FIT_BITMAP) {
 			// standard bitmap type
-			WORD bpp = FreeImage_GetBPP(_dib);
+			uint16_t bpp = FreeImage_GetBPP(_dib);
 			bCanSave = (FreeImage_FIFSupportsWriting(fif) && FreeImage_FIFSupportsExportBPP(fif, bpp));
 		} else {
 			// special bitmap type
@@ -571,7 +571,7 @@ BOOL fipImage::saveToMemory(FREE_IMAGE_FORMAT fif, fipMemoryIO& memIO, int flag)
 		FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(_dib);
 		if(image_type == FIT_BITMAP) {
 			// standard bitmap type
-			WORD bpp = FreeImage_GetBPP(_dib);
+			uint16_t bpp = FreeImage_GetBPP(_dib);
 			bCanSave = (FreeImage_FIFSupportsWriting(fif) && FreeImage_FIFSupportsExportBPP(fif, bpp));
 		} else {
 			// special bitmap type
@@ -598,7 +598,7 @@ BOOL fipImage::convertToType(FREE_IMAGE_TYPE image_type, BOOL scale_linear) {
 	return FALSE;
 }
 
-BOOL fipImage::threshold(BYTE T) {
+BOOL fipImage::threshold(uint8_t T) {
 	if(_dib) {
 		FIBITMAP *dib1 = FreeImage_Threshold(_dib, T);
 		return replace(dib1);
@@ -728,7 +728,7 @@ BOOL fipImage::convertToRGBA16() {
 
 BOOL fipImage::toneMapping(FREE_IMAGE_TMO tmo, double first_param, double second_param, double third_param, double fourth_param) {
 	if(_dib) {
-		FIBITMAP *dst = NULL;
+		FIBITMAP *dst = nullptr;
 		// Apply a tone mapping algorithm and convert to 24-bit 
 		switch(tmo) {
 			case FITMO_REINHARD05:
@@ -755,11 +755,11 @@ unsigned fipImage::getTransparencyCount() const {
 	return FreeImage_GetTransparencyCount(_dib);
 }
 
-BYTE* fipImage::getTransparencyTable() const {
+uint8_t* fipImage::getTransparencyTable() const {
 	return FreeImage_GetTransparencyTable(_dib);
 }
 
-void fipImage::setTransparencyTable(BYTE *table, int count) {
+void fipImage::setTransparencyTable(uint8_t *table, int count) {
 	FreeImage_SetTransparencyTable(_dib, table, count);
 	_bHasChanged = TRUE;
 }
@@ -904,7 +904,7 @@ BOOL fipImage::invert() {
 	return FALSE;
 }
 
-BOOL fipImage::adjustCurve(BYTE *LUT, FREE_IMAGE_COLOR_CHANNEL channel) {
+BOOL fipImage::adjustCurve(uint8_t *LUT, FREE_IMAGE_COLOR_CHANNEL channel) {
 	if(_dib) {
 		_bHasChanged = TRUE;
 
@@ -949,7 +949,7 @@ BOOL fipImage::adjustBrightnessContrastGamma(double brightness, double contrast,
 	return FALSE;
 }
 
-BOOL fipImage::getHistogram(DWORD *histo, FREE_IMAGE_COLOR_CHANNEL channel) const {
+BOOL fipImage::getHistogram(uint32_t *histo, FREE_IMAGE_COLOR_CHANNEL channel) const {
 	if(_dib) {
 		return FreeImage_GetHistogram(_dib, histo, channel);
 	}
@@ -1013,14 +1013,14 @@ unsigned fipImage::getMetadataCount(FREE_IMAGE_MDMODEL model) const {
 }
 
 BOOL fipImage::getMetadata(FREE_IMAGE_MDMODEL model, const char *key, fipTag& tag) const {
-	FITAG *searchedTag = NULL;
+	FITAG *searchedTag = nullptr;
 	FreeImage_GetMetadata(model, _dib, key, &searchedTag);
-	if(searchedTag != NULL) {
+	if(searchedTag != nullptr) {
 		tag = FreeImage_CloneTag(searchedTag);
 		return TRUE;
 	} else {
 		// clear the tag
-		tag = (FITAG*)NULL;
+		tag = (FITAG*)nullptr;
 	}
 	return FALSE;
 }
@@ -1031,17 +1031,17 @@ BOOL fipImage::setMetadata(FREE_IMAGE_MDMODEL model, const char *key, fipTag& ta
 
 void fipImage::clearMetadata() {
 	// clear all metadata attached to the dib
-	FreeImage_SetMetadata(FIMD_COMMENTS, _dib, NULL, NULL);			// single comment or keywords
-	FreeImage_SetMetadata(FIMD_EXIF_MAIN, _dib, NULL, NULL);		// Exif-TIFF metadata
-	FreeImage_SetMetadata(FIMD_EXIF_EXIF, _dib, NULL, NULL);		// Exif-specific metadata
-	FreeImage_SetMetadata(FIMD_EXIF_GPS, _dib, NULL, NULL);			// Exif GPS metadata
-	FreeImage_SetMetadata(FIMD_EXIF_MAKERNOTE, _dib, NULL, NULL);	// Exif maker note metadata
-	FreeImage_SetMetadata(FIMD_EXIF_INTEROP, _dib, NULL, NULL);		// Exif interoperability metadata
-	FreeImage_SetMetadata(FIMD_IPTC, _dib, NULL, NULL);				// IPTC/NAA metadata
-	FreeImage_SetMetadata(FIMD_XMP, _dib, NULL, NULL);				// Abobe XMP metadata
-	FreeImage_SetMetadata(FIMD_GEOTIFF, _dib, NULL, NULL);			// GeoTIFF metadata
-	FreeImage_SetMetadata(FIMD_ANIMATION, _dib, NULL, NULL);		// Animation metadata
-	FreeImage_SetMetadata(FIMD_CUSTOM, _dib, NULL, NULL);			// Used to attach other metadata types to a dib
-	FreeImage_SetMetadata(FIMD_EXIF_RAW, _dib, NULL, NULL);			// Exif metadata as a raw buffer
+	FreeImage_SetMetadata(FIMD_COMMENTS, _dib, nullptr, nullptr);			// single comment or keywords
+	FreeImage_SetMetadata(FIMD_EXIF_MAIN, _dib, nullptr, nullptr);		// Exif-TIFF metadata
+	FreeImage_SetMetadata(FIMD_EXIF_EXIF, _dib, nullptr, nullptr);		// Exif-specific metadata
+	FreeImage_SetMetadata(FIMD_EXIF_GPS, _dib, nullptr, nullptr);			// Exif GPS metadata
+	FreeImage_SetMetadata(FIMD_EXIF_MAKERNOTE, _dib, nullptr, nullptr);	// Exif maker note metadata
+	FreeImage_SetMetadata(FIMD_EXIF_INTEROP, _dib, nullptr, nullptr);		// Exif interoperability metadata
+	FreeImage_SetMetadata(FIMD_IPTC, _dib, nullptr, nullptr);				// IPTC/NAA metadata
+	FreeImage_SetMetadata(FIMD_XMP, _dib, nullptr, nullptr);				// Abobe XMP metadata
+	FreeImage_SetMetadata(FIMD_GEOTIFF, _dib, nullptr, nullptr);			// GeoTIFF metadata
+	FreeImage_SetMetadata(FIMD_ANIMATION, _dib, nullptr, nullptr);		// Animation metadata
+	FreeImage_SetMetadata(FIMD_CUSTOM, _dib, nullptr, nullptr);			// Used to attach other metadata types to a dib
+	FreeImage_SetMetadata(FIMD_EXIF_RAW, _dib, nullptr, nullptr);			// Exif metadata as a raw buffer
 }
 

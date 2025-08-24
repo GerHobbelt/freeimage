@@ -59,7 +59,7 @@ void testSaveMemIO(const char *lpszPathName) {
 	
 	// load an image from the memory handle 	
 	FIBITMAP *check = memIO.load(mem_fif, 0);
-	assert(check != NULL);
+	assert(check != nullptr);
 
 	// save as a regular file
 	bSuccess = FreeImage_Save(FIF_PNG, check, "dump.png", PNG_DEFAULT);
@@ -83,11 +83,11 @@ void testLoadMemIO(const char *lpszPathName) {
 	result = stat(lpszPathName, &buf);
 	if(result == 0) {
 		// allocate a memory buffer and load temporary data
-		BYTE *mem_buffer = (BYTE*)malloc(buf.st_size * sizeof(BYTE));
+		uint8_t *mem_buffer = (uint8_t*)malloc(buf.st_size * sizeof(uint8_t));
 		if(mem_buffer) {
 			FILE *stream = fopen(lpszPathName, "rb");
 			if(stream) {
-				fread(mem_buffer, sizeof(BYTE), buf.st_size, stream);
+				fread(mem_buffer, sizeof(uint8_t), buf.st_size, stream);
 				fclose(stream);
 
 				// attach the binary data to a memory stream
@@ -98,7 +98,7 @@ void testLoadMemIO(const char *lpszPathName) {
 
 				// load an image from the memory stream
 				FIBITMAP *check = memIO.load(fif, PNG_DEFAULT);
-				assert(check != NULL);
+				assert(check != nullptr);
 
 				// save as a regular file
 				bSuccess = FreeImage_Save(FIF_PNG, check, "blob.png", PNG_DEFAULT);
@@ -131,8 +131,8 @@ void testAcquireMemIO(const char *lpszPathName) {
 	assert(bSuccess == TRUE);
 
 	// get the buffer from the memory stream
-	BYTE *mem_buffer = NULL;
-	DWORD size_in_bytes = 0;
+	uint8_t *mem_buffer = nullptr;
+	uint32_t size_in_bytes = 0;
 
 	bSuccess = memIO.acquire(&mem_buffer, &size_in_bytes);
 	assert(bSuccess == TRUE);
@@ -140,7 +140,7 @@ void testAcquireMemIO(const char *lpszPathName) {
 	// save the buffer in a file stream
 	FILE *stream = fopen("buffer.png", "wb");
 	if(stream) {
-		fwrite(mem_buffer, sizeof(BYTE), size_in_bytes, stream);
+		fwrite(mem_buffer, sizeof(uint8_t), size_in_bytes, stream);
 		fclose(stream);
 	}
 

@@ -33,12 +33,12 @@ fi_handle g_load_address;
 
 inline unsigned _stdcall
 _ReadProc(void *buffer, unsigned size, unsigned count, fi_handle handle) {
-	BYTE *tmp = (BYTE *)buffer;
+	uint8_t *tmp = (uint8_t *)buffer;
 
 	for (unsigned c = 0; c < count; c++) {
 		memcpy(tmp, g_load_address, size);
 
-		g_load_address = (BYTE *)g_load_address + size;
+		g_load_address = (uint8_t *)g_load_address + size;
 
 		tmp += size;
 	}
@@ -58,9 +58,9 @@ _SeekProc(fi_handle handle, long offset, int origin) {
 	assert(origin != SEEK_END);
 
 	if (origin == SEEK_SET) {
-		g_load_address = (BYTE *)handle + offset;
+		g_load_address = (uint8_t *)handle + offset;
 	} else {
-		g_load_address = (BYTE *)g_load_address + offset;
+		g_load_address = (uint8_t *)g_load_address + offset;
 	}
 
 	return 0;
@@ -86,9 +86,9 @@ main(int argc, char *argv[]) {
 
 	// allocate some memory for the bitmap
 
-	BYTE *test = new BYTE[159744];
+	uint8_t *test = new uint8_t[159744];
 
-	if (test != NULL) {
+	if (test != nullptr) {
 		// load the bitmap into memory. ofcourse you can do this any way you want
 
 		FILE *file = fopen("e:\\projects\\images\\money-256.tif", "rb");

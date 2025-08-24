@@ -59,8 +59,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE psd_id[] = { 0x38, 0x42, 0x50, 0x53 };
-	BYTE signature[4] = { 0, 0, 0, 0 };
+	uint8_t psd_id[] = { 0x38, 0x42, 0x50, 0x53 };
+	uint8_t signature[4] = { 0, 0, 0, 0 };
 
 	io->read_proc(signature, 1, 4, handle);
 
@@ -109,7 +109,7 @@ SupportsNoPixels() {
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	if(!handle) {
-		return NULL;
+		return nullptr;
 	}
 	try {
 		psdParser parser;
@@ -120,14 +120,14 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 	} catch(const char *text) {
 		FreeImage_OutputMessageProc(s_format_id, text);
-		return NULL;
+		return nullptr;
 	}
 }
 
 static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	if(!handle) {
-		return NULL;
+		return FALSE;
 	}
 	try {
 		psdParser parser;
@@ -153,11 +153,11 @@ InitPSD(Plugin *plugin, int format_id) {
 	plugin->format_proc = Format;
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
-	plugin->regexpr_proc = NULL;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->regexpr_proc = nullptr;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;

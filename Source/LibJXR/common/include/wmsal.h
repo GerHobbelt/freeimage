@@ -80,8 +80,8 @@
           return value 'p'.
 
  <>         : p is the buffer pointer.
- _deref     : *p is the buffer pointer. p must not be NULL.
- _deref_opt : *p may be the buffer pointer. p may be NULL, in which case the rest of
+ _deref     : *p is the buffer pointer. p must not be nullptr.
+ _deref_opt : *p may be the buffer pointer. p may be nullptr, in which case the rest of
                 the annotation is ignored.
 
  Usage: Describes how the function uses the buffer.
@@ -114,7 +114,7 @@
            category for _in buffers; they must be fully initialized by the caller.
 
  <>    : The type specifies how much is initialized. For instance, a function initializing
-           an LPWSTR must NULL-terminate the string.
+           an LPWSTR must nullptr-terminate the string.
  _full : The function initializes the entire buffer.
  _part : The function initializes part of the buffer, and explicitly indicates how much.
 
@@ -124,8 +124,8 @@
           buffer.
  Optional: Describes if the buffer itself is optional.
 
- <>   : The pointer to the buffer must not be NULL.
- _opt : The pointer to the buffer might be NULL. It will be checked before being dereferenced.
+ <>   : The pointer to the buffer must not be nullptr.
+ _opt : The pointer to the buffer might be nullptr. It will be checked before being dereferenced.
 
  Parameters: Gives explicit counts for the size and length of the buffer.
 
@@ -139,23 +139,23 @@
 
  LWSTDAPI_(BOOL) StrToIntExA(
      LPCSTR pszString,                    -- No annotation required, const implies __in.
-     DWORD dwFlags,
+     uint32_t dwFlags,
      __out int *piRet                     -- A pointer whose dereference will be filled in.
  );
 
  void MyPaintingFunction(
      __in HWND hwndControl,               -- An initialized read-only parameter.
-     __in_opt HDC hdcOptional,            -- An initialized read-only parameter that might be NULL.
+     __in_opt HDC hdcOptional,            -- An initialized read-only parameter that might be nullptr.
      __inout IPropertyStore *ppsStore     -- An initialized parameter that may be freely used
                                           --   and modified.
  );
 
  LWSTDAPI_(BOOL) PathCompactPathExA(
      __out_ecount(cchMax) LPSTR pszOut,   -- A string buffer with cch elements that will
-                                          --   be NULL terminated on exit.
+                                          --   be nullptr terminated on exit.
      LPCSTR pszSrc,                       -- No annotation required, const implies __in.
      UINT cchMax,
-     DWORD dwFlags
+     uint32_t dwFlags
  );
 
  HRESULT SHLocalAllocBytes(
@@ -189,16 +189,16 @@
 
  __nullterminated p :
      Pointer p is a buffer that may be read or written up to and including the first
-     NULL character or pointer. May be used on typedefs, which marks valid (properly
-     initialized) instances of that type as being NULL-terminated.
+     nullptr character or pointer. May be used on typedefs, which marks valid (properly
+     initialized) instances of that type as being nullptr-terminated.
 
  __nullnullterminated p :
      Pointer p is a buffer that may be read or written up to and including the first
-     sequence of two NULL characters or pointers. May be used on typedefs, which marks
-     valid instances of that type as being double-NULL terminated.
+     sequence of two nullptr characters or pointers. May be used on typedefs, which marks
+     valid instances of that type as being double-nullptr terminated.
 
  __reserved v :
-     Value v must be 0/NULL, reserved for future use.
+     Value v must be 0/nullptr, reserved for future use.
 
  __checkReturn v :
      Return value v must not be ignored by callers of this function.
@@ -227,12 +227,12 @@
 
  __success(return == TRUE) LWSTDAPI_(BOOL) 
  PathCanonicalizeA(__out_ecount(MAX_PATH) LPSTR pszBuf, LPCSTR pszPath) :
-     pszBuf is only guaranteed to be NULL-terminated when TRUE is returned.
+     pszBuf is only guaranteed to be nullptr-terminated when TRUE is returned.
 
- typedef __nullterminated WCHAR* LPWSTR : Initialized LPWSTRs are NULL-terminated strings.
+ typedef __nullterminated WCHAR* LPWSTR : Initialized LPWSTRs are nullptr-terminated strings.
 
  __out_ecount(cch) __typefix(LPWSTR) void *psz : psz is a buffer parameter which will be
-     a NULL-terminated WCHAR string at exit, and which initially contains cch WCHARs.
+     a nullptr-terminated WCHAR string at exit, and which initially contains cch WCHARs.
 
  -------------------------------------------------------------------------------
 */
@@ -315,7 +315,7 @@ nothing, and do not affect the compiled code.
     
      Annotates any value v. States that the value satisfies all properties of
      valid values of its type. For example, for a string buffer, valid means
-     that the buffer pointer is either NULL or points to a NULL-terminated string.
+     that the buffer pointer is either nullptr or points to a nullptr-terminated string.
     */
 
     #define __valid                 __declspec("SAL_valid")

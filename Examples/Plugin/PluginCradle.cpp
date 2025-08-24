@@ -28,7 +28,7 @@
 // ==========================================================
 
 BOOL APIENTRY
-DllMain(HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
+DllMain(HANDLE hModule, uint32_t  ul_reason_for_call, LPVOID lpReserved) {
 	switch (ul_reason_for_call) {
 		case DLL_PROCESS_ATTACH :
 		case DLL_PROCESS_DETACH :
@@ -95,7 +95,7 @@ Extension() {
 */
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -189,14 +189,14 @@ SupportsICCProfiles() {
 
 	The last parameter (void *data) can contain a special data block used when
 	the file is read multi-paged. Because not every plugin supports multi-paging
-	not every plugin will use the data parameter and it will be set to NULL.However,
+	not every plugin will use the data parameter and it will be set to nullptr.However,
 	when the plugin does support multi-paging the parameter contains a pointer to a
 	block of data allocated by the Open function.
 */
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	return NULL;
+	return nullptr;
 }
 
 static BOOL DLL_CALLCONV
@@ -238,10 +238,10 @@ Init(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;

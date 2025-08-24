@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 //makes it upside down :(
 //	memcpy(image->mem, FreeImage_GetBits(dib), image->bpl * image->height);
 
-	BYTE *ptr = FreeImage_GetBits(dib);
+	uint8_t *ptr = FreeImage_GetBits(dib);
 
 	for (y = 0; y < image->height; y++) {
 		memcpy(image->mem + (y * image->bpl),

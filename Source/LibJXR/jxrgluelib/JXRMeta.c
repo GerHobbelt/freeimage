@@ -424,7 +424,7 @@ ERR BufferCopyIFD(const U8* pbsrc, U32 cbsrc, U32 ofssrc, U8 endian, U8* pbdst, 
                         break;
                     }
                     count *= 2;
-                    // RATIONAL's fall through to be handled as LONG's
+                    // RATIONAL's fall through to be handled as int32_t's
                 case 4:
                     for ( j = 0; j < count; j++ )
                     {

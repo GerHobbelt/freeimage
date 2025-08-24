@@ -101,8 +101,8 @@
 *  parameter or return value 'p'.
 * 
 *  <>         : p is the buffer pointer.
-*  _deref     : *p is the buffer pointer. p must not be NULL.
-*  _deref_opt : *p may be the buffer pointer. p may be NULL, in which case the 
+*  _deref     : *p is the buffer pointer. p must not be nullptr.
+*  _deref_opt : *p may be the buffer pointer. p may be nullptr, in which case the 
 *               rest of the annotation is ignored.
 * 
 *  Usage: Describes how the function uses the buffer.
@@ -142,7 +142,7 @@
 *  initialized by the caller.
 * 
 *  <> : The type specifies how much is initialized. For instance, a function
-*  initializing an LPWSTR must NULL-terminate the string.
+*  initializing an LPWSTR must nullptr-terminate the string.
 *
 *  _full : The function initializes the entire buffer.
 *
@@ -151,9 +151,9 @@
 * 
 *  Optional: Describes if the buffer itself is optional.
 * 
-*  <>   : The pointer to the buffer must not be NULL.
+*  <>   : The pointer to the buffer must not be nullptr.
 *
-*  _opt : The pointer to the buffer might be NULL. It will be checked before
+*  _opt : The pointer to the buffer might be nullptr. It will be checked before
 *  being dereferenced.
 * 
 *  Parameters: Gives explicit counts for the size and length of the buffer.
@@ -172,14 +172,14 @@
 * 
 *  LWSTDAPI_(BOOL) StrToIntExA(
 *      LPCSTR pszString,  //  No annotation required, const implies __in.
-*      DWORD dwFlags,
+*      uint32_t dwFlags,
 *      __out int *piRet   // A pointer whose dereference will be filled in.
 *  );
 * 
 *  void MyPaintingFunction(
 *      __in HWND hwndControl,     //  An initialized read-only parameter.
 *      __in_opt HDC hdcOptional,  //  An initialized read-only parameter that 
-*                                 //  might be NULL.
+*                                 //  might be nullptr.
 *      __inout IPropertyStore *ppsStore // An initialized parameter that 
 *                                       // may be freely used and modified.
 *  );
@@ -191,7 +191,7 @@
 *      LPCSTR pszSrc,                     //  No annotation required, 
 *                                         //  const implies __in.
 *      UINT cchMax,                              
-*      DWORD dwFlags
+*      uint32_t dwFlags
 *  );
 * 
 *  HRESULT SHLocalAllocBytes(
@@ -449,7 +449,7 @@
 *  pointers. May be used on typedefs, which marks valid instances of that
 *  type as being double-null terminated.
 * 
-*  __reserved T v : Value v must be 0/NULL, reserved for future use.
+*  __reserved T v : Value v must be 0/nullptr, reserved for future use.
 * 
 *  __checkReturn T f(); : Return value of f must not be ignored by callers
 *  of this function.
@@ -665,11 +665,11 @@
 *
 *                empty
 *                        The pointer to the block of memory is never
-*                        NULL
+*                        nullptr
 *
 *                _opt
 *                        The pointer to the block of memory is may be
-*                        NULL
+*                        nullptr
 *
 *     
 *   // Basic Usage of Struct Annotations                         
@@ -837,7 +837,7 @@
 * assert.
 * Please do not put function calls in the expression because this is not
 * supported by all tools:
-*  __analysis_assume(GetObject () != NULL); // DO NOT DO THIS
+*  __analysis_assume(GetObject () != nullptr); // DO NOT DO THIS
 *
 *************************************************************************/
 #define __analysis_assume(expr) __allowed(as_statement_with_arg(expr))

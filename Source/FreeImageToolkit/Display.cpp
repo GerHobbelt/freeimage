@@ -33,36 +33,36 @@ For colour images, the computation is done separately for R, G, and B samples.
 
 @param fg Foreground image
 @param useFileBkg If TRUE and a file background is present, use it as the background color
-@param appBkColor If not equal to NULL, and useFileBkg is FALSE, use this color as the background color
-@param bg If not equal to NULL and useFileBkg is FALSE and appBkColor is NULL, use this as the background image
-@return Returns the composite image if successful, returns NULL otherwise
+@param appBkColor If not equal to nullptr, and useFileBkg is FALSE, use this color as the background color
+@param bg If not equal to nullptr and useFileBkg is FALSE and appBkColor is nullptr, use this as the background image
+@return Returns the composite image if successful, returns nullptr otherwise
 @see FreeImage_IsTransparent, FreeImage_HasBackgroundColor
 */
 FIBITMAP * DLL_CALLCONV
 FreeImage_Composite(FIBITMAP *fg, BOOL useFileBkg, RGBQUAD *appBkColor, FIBITMAP *bg) {
-	if(!FreeImage_HasPixels(fg)) return NULL;
+	if(!FreeImage_HasPixels(fg)) return nullptr;
 
 	int width  = FreeImage_GetWidth(fg);
 	int height = FreeImage_GetHeight(fg);
 	int bpp    = FreeImage_GetBPP(fg);
 
 	if((bpp != 8) && (bpp != 32))
-		return NULL;
+		return nullptr;
 
 	if(bg) {
 		int bg_width  = FreeImage_GetWidth(bg);
 		int bg_height = FreeImage_GetHeight(bg);
 		int bg_bpp    = FreeImage_GetBPP(bg);
 		if((bg_width != width) || (bg_height != height) || (bg_bpp != 24))
-			return NULL;
+			return nullptr;
 	}
 
 	int bytespp = (bpp == 8) ? 1 : 4;
 
 	
 	int x, y, c;
-	BYTE alpha = 0, not_alpha;
-	BYTE index;
+	uint8_t alpha = 0, not_alpha;
+	uint8_t index;
 	RGBQUAD fgc;	// foreground color
 	RGBQUAD bkc;	// background color
 
@@ -71,14 +71,14 @@ FreeImage_Composite(FIBITMAP *fg, BOOL useFileBkg, RGBQUAD *appBkColor, FIBITMAP
 
 	// allocate the composite image
 	FIBITMAP *composite = FreeImage_Allocate(width, height, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
-	if(!composite) return NULL;
+	if(!composite) return nullptr;
 
 	// get the palette
 	RGBQUAD *pal = FreeImage_GetPalette(fg);
 
 	// retrieve the alpha table from the foreground image
 	BOOL bIsTransparent = FreeImage_IsTransparent(fg);
-	BYTE *trns = FreeImage_GetTransparencyTable(fg);
+	uint8_t *trns = FreeImage_GetTransparencyTable(fg);
 
 	// retrieve the background color from the foreground image
 	BOOL bHasBkColor = FALSE;
@@ -101,11 +101,11 @@ FreeImage_Composite(FIBITMAP *fg, BOOL useFileBkg, RGBQUAD *appBkColor, FIBITMAP
 
 	for(y = 0; y < height; y++) {
 		// foreground
-		BYTE *fg_bits = FreeImage_GetScanLine(fg, y);
+		uint8_t *fg_bits = FreeImage_GetScanLine(fg, y);
 		// background
-		BYTE *bg_bits = FreeImage_GetScanLine(bg, y);
+		uint8_t *bg_bits = FreeImage_GetScanLine(bg, y);
 		// composite image
-		BYTE *cp_bits = FreeImage_GetScanLine(composite, y);
+		uint8_t *cp_bits = FreeImage_GetScanLine(composite, y);
 
 		for(x = 0; x < width; x++) {
 
@@ -144,9 +144,9 @@ FreeImage_Composite(FIBITMAP *fg, BOOL useFileBkg, RGBQUAD *appBkColor, FIBITMAP
 					// use a checkerboard pattern
 					c = (((y & 0x8) == 0) ^ ((x & 0x8) == 0)) * 192;
 					c = c ? c : 255;
-					bkc.rgbBlue  = (BYTE)c;
-					bkc.rgbGreen = (BYTE)c;
-					bkc.rgbRed   = (BYTE)c;
+					bkc.rgbBlue  = (uint8_t)c;
+					bkc.rgbGreen = (uint8_t)c;
+					bkc.rgbRed   = (uint8_t)c;
 				}
 			}
 
@@ -166,10 +166,10 @@ FreeImage_Composite(FIBITMAP *fg, BOOL useFileBkg, RGBQUAD *appBkColor, FIBITMAP
 			}
 			else {
 				// output = alpha * foreground + (1-alpha) * background
-				not_alpha = (BYTE)~alpha;
-				cp_bits[FI_RGBA_BLUE] = (BYTE)((alpha * (WORD)fgc.rgbBlue  + not_alpha * (WORD)bkc.rgbBlue) >> 8);
-				cp_bits[FI_RGBA_GREEN] = (BYTE)((alpha * (WORD)fgc.rgbGreen + not_alpha * (WORD)bkc.rgbGreen) >> 8);
-				cp_bits[FI_RGBA_RED] = (BYTE)((alpha * (WORD)fgc.rgbRed   + not_alpha * (WORD)bkc.rgbRed) >> 8);
+				not_alpha = (uint8_t)~alpha;
+				cp_bits[FI_RGBA_BLUE] = (uint8_t)((alpha * (uint16_t)fgc.rgbBlue  + not_alpha * (uint16_t)bkc.rgbBlue) >> 8);
+				cp_bits[FI_RGBA_GREEN] = (uint8_t)((alpha * (uint16_t)fgc.rgbGreen + not_alpha * (uint16_t)bkc.rgbGreen) >> 8);
+				cp_bits[FI_RGBA_RED] = (uint8_t)((alpha * (uint16_t)fgc.rgbRed   + not_alpha * (uint16_t)bkc.rgbRed) >> 8);
 			}
 
 			fg_bits += bytespp;
@@ -204,9 +204,9 @@ FreeImage_PreMultiplyWithAlpha(FIBITMAP *dib) {
 	int height = FreeImage_GetHeight(dib);
 
 	for(int y = 0; y < height; y++) {
-		BYTE *bits = FreeImage_GetScanLine(dib, y);
+		uint8_t *bits = FreeImage_GetScanLine(dib, y);
 		for (int x = 0; x < width; x++, bits += 4) {
-			const BYTE alpha = bits[FI_RGBA_ALPHA];
+			const uint8_t alpha = bits[FI_RGBA_ALPHA];
 			// slightly faster: care for two special cases
 			if(alpha == 0x00) {
 				// special case for alpha == 0x00
@@ -219,9 +219,9 @@ FreeImage_PreMultiplyWithAlpha(FIBITMAP *dib) {
 				// color * 0xFF / 0xFF = color
 				continue;
 			} else {
-				bits[FI_RGBA_BLUE] = (BYTE)( (alpha * (WORD)bits[FI_RGBA_BLUE] + 127) / 255 );
-				bits[FI_RGBA_GREEN] = (BYTE)( (alpha * (WORD)bits[FI_RGBA_GREEN] + 127) / 255 );
-				bits[FI_RGBA_RED] = (BYTE)( (alpha * (WORD)bits[FI_RGBA_RED] + 127) / 255 );
+				bits[FI_RGBA_BLUE] = (uint8_t)( (alpha * (uint16_t)bits[FI_RGBA_BLUE] + 127) / 255 );
+				bits[FI_RGBA_GREEN] = (uint8_t)( (alpha * (uint16_t)bits[FI_RGBA_GREEN] + 127) / 255 );
+				bits[FI_RGBA_RED] = (uint8_t)( (alpha * (uint16_t)bits[FI_RGBA_RED] + 127) / 255 );
 			}
 		}
 	}

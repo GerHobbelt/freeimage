@@ -35,7 +35,7 @@ static const char *s_copyright = "This program uses FreeImage, a free, open sour
 #ifndef FREEIMAGE_LIB
 
 BOOL APIENTRY
-DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+DllMain(HANDLE hModule, uint32_t ul_reason_for_call, LPVOID lpReserved) {
 	switch (ul_reason_for_call) {
 		case DLL_PROCESS_ATTACH :
 			FreeImage_Initialise(FALSE);
@@ -91,8 +91,8 @@ FreeImage_GetCopyrightMessage() {
 BOOL DLL_CALLCONV
 FreeImage_IsLittleEndian() {
 	union {
-		DWORD i;
-		BYTE c[4];
+		uint32_t i;
+		uint8_t c[4];
 	} u;
 	u.i = 1;
 	return (u.c[0] != 0);
@@ -100,8 +100,8 @@ FreeImage_IsLittleEndian() {
 
 //----------------------------------------------------------------------
 
-static FreeImage_OutputMessageFunction freeimage_outputmessage_proc = NULL;
-static FreeImage_OutputMessageFunctionStdCall freeimage_outputmessagestdcall_proc = NULL; 
+static FreeImage_OutputMessageFunction freeimage_outputmessage_proc = nullptr;
+static FreeImage_OutputMessageFunctionStdCall freeimage_outputmessagestdcall_proc = nullptr; 
 
 void DLL_CALLCONV
 FreeImage_SetOutputMessage(FreeImage_OutputMessageFunction omf) {
@@ -117,7 +117,7 @@ void DLL_CALLCONV
 FreeImage_OutputMessageProc(int fif, const char *fmt, ...) {
 	const int MSG_SIZE = 512; // 512 bytes should be more than enough for a short message
 
-	if ((fmt != NULL) && ((freeimage_outputmessage_proc != NULL) || (freeimage_outputmessagestdcall_proc != NULL))) {
+	if ((fmt != nullptr) && ((freeimage_outputmessage_proc != nullptr) || (freeimage_outputmessagestdcall_proc != nullptr))) {
 		char message[MSG_SIZE];
 		memset(message, 0, MSG_SIZE);
 
@@ -213,10 +213,10 @@ FreeImage_OutputMessageProc(int fif, const char *fmt, ...) {
 
 		// output the message to the user program
 
-		if (freeimage_outputmessage_proc != NULL)
+		if (freeimage_outputmessage_proc != nullptr)
 			freeimage_outputmessage_proc((FREE_IMAGE_FORMAT)fif, message);
 
-		if (freeimage_outputmessagestdcall_proc != NULL)
+		if (freeimage_outputmessagestdcall_proc != nullptr)
 			freeimage_outputmessagestdcall_proc((FREE_IMAGE_FORMAT)fif, message); 
 	}
 }

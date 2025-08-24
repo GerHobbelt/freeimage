@@ -22,9 +22,6 @@
 #ifndef FREEIMAGEPLUS_H
 #define FREEIMAGEPLUS_H
 
-#ifdef _WIN32
-#include <windows.h>
-#endif // _WIN32
 #include "FreeImage.h"
 
 
@@ -402,7 +399,7 @@ public:
 	unsigned getHeight() const;
 	
 	/**
-	Returns the width of the bitmap in bytes rounded to the nearest DWORD.
+	Returns the width of the bitmap in bytes rounded to the nearest uint32_t.
 	@see FreeImage_GetPitch
 	*/
 	unsigned getScanWidth() const;
@@ -494,7 +491,7 @@ public:
 	/**@name Palette operations */
 	//@{
 	/**
-	Returns a pointer to the bitmap's palette. If the bitmap doesn't have a palette, getPalette returns NULL. 
+	Returns a pointer to the bitmap's palette. If the bitmap doesn't have a palette, getPalette returns nullptr. 
 	@see FreeImage_GetPalette
 	*/
 	RGBQUAD* getPalette() const;
@@ -568,14 +565,14 @@ public:
 	Use this function with getScanWidth to iterates through the pixels. 
 	@see FreeImage_GetBits
 	*/
-	BYTE* accessPixels() const;
+	uint8_t* accessPixels() const;
 
 	/** @brief Returns a pointer to the start of the given scanline in the bitmap’s data-bits.
 		This pointer can be cast according to the result returned by getImageType.<br>
 		Use this function with getScanWidth to iterates through the pixels. 
 		@see FreeImage_GetScanLine, FreeImage documentation
 	*/
-	BYTE* getScanLine(unsigned scanline) const;
+	uint8_t* getScanLine(unsigned scanline) const;
 
 	/** 
 	Get the pixel index of a 1-, 4- or 8-bit palettized image at position (x, y), including range check (slow access). 
@@ -585,7 +582,7 @@ public:
 	@return Returns TRUE if successful, FALSE otherwise. 
 	@see FreeImage_GetPixelIndex
 	*/
-	BOOL getPixelIndex(unsigned x, unsigned y, BYTE *value) const;
+	BOOL getPixelIndex(unsigned x, unsigned y, uint8_t *value) const;
 
 	/** 
 	Get the pixel color of a 16-, 24- or 32-bit image at position (x, y), including range check (slow access). 
@@ -605,7 +602,7 @@ public:
 	@return Returns TRUE if successful, FALSE otherwise. 
 	@see FreeImage_SetPixelIndex
 	*/
-	BOOL setPixelIndex(unsigned x, unsigned y, BYTE *value);
+	BOOL setPixelIndex(unsigned x, unsigned y, uint8_t *value);
 
 	/** 
 	Set the pixel color of a 16-, 24- or 32-bit image at position (x, y), including range check (slow access). 
@@ -638,7 +635,7 @@ public:
 	@return Returns TRUE if successful, FALSE otherwise. 
 	@see FreeImage_Threshold
 	*/
-	BOOL threshold(BYTE T);
+	BOOL threshold(uint8_t T);
 	
 	/** 
 	Converts a 8-bit image to a monochrome 1-bit image using a dithering algorithm.
@@ -784,13 +781,13 @@ public:
 	@return Returns a pointer to the bitmap’s transparency table.
 	@see FreeImage_GetTransparencyTable
 	*/
-	BYTE* getTransparencyTable() const;
+	uint8_t* getTransparencyTable() const;
 
 	/** 
 	8-bit transparency : set the bitmap’s transparency table.
 	@see FreeImage_SetTransparencyTable
 	*/
-	void setTransparencyTable(BYTE *table, int count);
+	void setTransparencyTable(uint8_t *table, int count);
 
 	/**
 	Returns TRUE when the image has a file background color, FALSE otherwise.
@@ -812,7 +809,7 @@ public:
 	@brief Set the file background color of an image. 
 	
 	When saving an image to PNG, this background color is transparently saved to the PNG file. 
-	When the bkcolor parameter is NULL, the background color is removed from the image.
+	When the bkcolor parameter is nullptr, the background color is removed from the image.
 	@return Returns TRUE if successful, FALSE otherwise. 
 	@see FreeImage_SetBackgroundColor
 	*/
@@ -868,7 +865,7 @@ public:
 	@param x_origin Origin of the x-axis
 	@param y_origin Origin of the y-axis
 	@param use_mask Whether or not to mask the image. Image mirroring is applied when use_mask is set to FALSE
-	@return Returns the translated & rotated dib if successful, returns NULL otherwise
+	@return Returns the translated & rotated dib if successful, returns nullptr otherwise
 	@see FreeImage_RotateEx
 	*/
 	BOOL rotateEx(double angle, double x_shift, double y_shift, double x_origin, double y_origin, BOOL use_mask);
@@ -877,10 +874,10 @@ public:
 	Image rotation by means of three shears.
 	@param angle Image rotation angle, in degree
 	@param bkcolor Background color (image type dependent), default to black background
-	@return Returns rotated dib if successful, returns NULL otherwise
+	@return Returns rotated dib if successful, returns nullptr otherwise
 	@see FreeImage_Rotate
 	*/
-	BOOL rotate(double angle, const void *bkcolor = NULL);
+	BOOL rotate(double angle, const void *bkcolor = nullptr);
 
 	/**
 	Flip the image horizontally along the vertical axis
@@ -917,7 +914,7 @@ public:
 	@return Returns TRUE if the operation was successful, FALSE otherwise
 	@see FreeImage_AdjustCurve, FREE_IMAGE_COLOR_CHANNEL
 	*/
-	BOOL adjustCurve(BYTE *LUT, FREE_IMAGE_COLOR_CHANNEL channel);
+	BOOL adjustCurve(uint8_t *LUT, FREE_IMAGE_COLOR_CHANNEL channel);
 
 	/** @brief Performs gamma correction on a 8, 24 or 32-bit image.
 	@param gamma Gamma value to use. A value of 1.0 leaves the image alone, 
@@ -967,7 +964,7 @@ public:
 	@return Returns TRUE if the operation was succesfull, FALSE otherwise
 	@see FreeImage_GetHistogram
 	*/
-	BOOL getHistogram(DWORD *histo, FREE_IMAGE_COLOR_CHANNEL channel = FICC_BLACK) const;
+	BOOL getHistogram(uint32_t *histo, FREE_IMAGE_COLOR_CHANNEL channel = FICC_BLACK) const;
 	//@}
 
 	/**@name Upsampling / downsampling */
@@ -1183,7 +1180,7 @@ public:
 	@see FreeImage_Composite
 	*/
 	void draw(HDC hDC, RECT& rcDest) const {
-		drawEx(hDC, rcDest, FALSE, NULL, NULL);
+		drawEx(hDC, rcDest, FALSE, nullptr, nullptr);
 	}
 
 	/** @brief Draw (stretch) the image on a HDC, using StretchDIBits.
@@ -1203,7 +1200,7 @@ public:
 	@see FreeImage_Composite
 	@see setToneMappingOperator
 	*/
-	void drawEx(HDC hDC, RECT& rcDest, BOOL useFileBkg = FALSE, RGBQUAD *appBkColor = NULL, FIBITMAP *bg = NULL) const;
+	void drawEx(HDC hDC, RECT& rcDest, BOOL useFileBkg = FALSE, RGBQUAD *appBkColor = nullptr, FIBITMAP *bg = nullptr) const;
 
 	/**
 	Select a tone mapping algorithm used for drawing and set the image as modified 
@@ -1273,7 +1270,7 @@ public :
 	@param size_in_bytes Buffer size in bytes
 	@see FreeImage_OpenMemory
 	*/
-    fipMemoryIO(BYTE *data = NULL, DWORD size_in_bytes = 0);
+    fipMemoryIO(uint8_t *data = nullptr, uint32_t size_in_bytes = 0);
 
 	/** Destructor.
 	Free any allocated memory
@@ -1310,7 +1307,7 @@ public :
 	Loads a dib from a memory stream
 	@param fif Format identifier (FreeImage format)
 	@param flags The signification of this flag depends on the image to be loaded.
-	@return Returns the loaded dib if successful, returns NULL otherwise
+	@return Returns the loaded dib if successful, returns nullptr otherwise
 	@see FreeImage_LoadFromMemory
 	*/
 	FIBITMAP* load(FREE_IMAGE_FORMAT fif, int flags = 0) const;
@@ -1318,7 +1315,7 @@ public :
 	Loads a multi-page bitmap from a memory stream
 	@param fif Format identifier (FreeImage format)
 	@param flags The signification of this flag depends on the multi-page to be loaded.
-	@return Returns the loaded multi-page if successful, returns NULL otherwise
+	@return Returns the loaded multi-page if successful, returns nullptr otherwise
 	@see FreeImage_LoadMultiBitmapFromMemory
 	*/
 	FIMULTIBITMAP* loadMultiPage(FREE_IMAGE_FORMAT fif, int flags = 0) const;
@@ -1374,7 +1371,7 @@ public :
 	@param size_in_bytes Buffer size in bytes (returned value)
 	@see FreeImage_AcquireMemory
 	*/
-	BOOL acquire(BYTE **data, DWORD *size_in_bytes);
+	BOOL acquire(uint8_t **data, uint32_t *size_in_bytes);
 	//@}
 
 private:
@@ -1534,7 +1531,7 @@ public:
 	}
 	</pre>
 	@param page Page number
-	@return Returns the page if successful, returns NULL otherwise
+	@return Returns the page if successful, returns nullptr otherwise
 	@see FreeImage_LockPage
 	*/
 	FIBITMAP* lockPage(int page);
@@ -1549,7 +1546,7 @@ public:
 
 	/**
 	Returns an array of page-numbers that are currently locked in memory. 
-	When the pages parameter is NULL, the size of the array is returned in the count variable. 
+	When the pages parameter is nullptr, the size of the array is returned in the count variable. 
 	You can then allocate the array of the desired size and call 
 	getLockedPageNumbers again to populate the array.
 	@return Returns TRUE if successful, returns FALSE otherwise
@@ -1636,7 +1633,7 @@ public:
 	*/
 	const char *getKey() const;
 	/**
-	Returns the tag description if available, returns NULL otherwise
+	Returns the tag description if available, returns nullptr otherwise
 	@see FreeImage_GetTagDescription
 	*/
 	const char *getDescription() const;
@@ -1644,7 +1641,7 @@ public:
 	Returns the tag ID if available, returns 0 otherwise
 	@see FreeImage_GetTagID
 	*/
-	WORD getID() const;
+	uint16_t getID() const;
 	/**
 	Returns the tag data type 
 	@see FreeImage_GetTagType
@@ -1654,12 +1651,12 @@ public:
 	Returns the number of components in the tag (in tag type units)
 	@see FreeImage_GetTagCount
 	*/
-	DWORD getCount() const;
+	uint32_t getCount() const;
 	/**
 	Returns the length of the tag value in bytes
 	@see FreeImage_GetTagLength
 	*/
-	DWORD getLength() const;
+	uint32_t getLength() const;
 	/**
 	Returns the tag value
 	@see FreeImage_GetTagValue
@@ -1682,7 +1679,7 @@ public:
 	@return Returns TRUE if successful, returns FALSE otherwise
 	@see FreeImage_SetTagID
 	*/
-	BOOL setID(WORD id);
+	BOOL setID(uint16_t id);
 	/**
 	Set the tag data type 
 	@return Returns TRUE if successful, returns FALSE otherwise
@@ -1694,13 +1691,13 @@ public:
 	@return Returns TRUE if successful, returns FALSE otherwise
 	@see FreeImage_SetTagCount
 	*/
-	BOOL setCount(DWORD count);
+	BOOL setCount(uint32_t count);
 	/**
 	Set the length of the tag value, in bytes 
 	@return Returns TRUE if successful, returns FALSE otherwise
 	@see FreeImage_SetTagLength
 	*/
-	BOOL setLength(DWORD length);
+	BOOL setLength(uint32_t length);
 	/**
 	Set the tag value 
 	@return Returns TRUE if successful, returns FALSE otherwise
@@ -1715,7 +1712,7 @@ public:
 	@param model Metadata model specification (metadata model from which the tag was extracted)
 	@param Make Camera model (not used yet)
 	*/
-	const char* toString(FREE_IMAGE_MDMODEL model, char *Make = NULL) const;
+	const char* toString(FREE_IMAGE_MDMODEL model, char *Make = nullptr) const;
 
 };
 

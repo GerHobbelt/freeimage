@@ -111,7 +111,7 @@ main(int argc, char *argv[]) {
 
 	FILE *file = fopen(argv[1], "rb");
 
-	if (file != NULL) {
+	if (file != nullptr) {
 		// find the buffer format
 		FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromHandle(&io, (fi_handle)file, 0);
 

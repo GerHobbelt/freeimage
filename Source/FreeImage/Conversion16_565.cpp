@@ -29,8 +29,8 @@
 // ----------------------------------------------------------
 
 void DLL_CALLCONV
-FreeImage_ConvertLine1To16_565(BYTE *target, BYTE *source, int width_in_pixels, RGBQUAD *palette) {
-	WORD *new_bits = (WORD *)target;
+FreeImage_ConvertLine1To16_565(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette) {
+	uint16_t *new_bits = (uint16_t *)target;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
 		int index = (source[cols >> 3] & (0x80 >> (cols & 0x07))) != 0 ? 1 : 0;
@@ -40,8 +40,8 @@ FreeImage_ConvertLine1To16_565(BYTE *target, BYTE *source, int width_in_pixels, 
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine4To16_565(BYTE *target, BYTE *source, int width_in_pixels, RGBQUAD *palette) {
-	WORD *new_bits = (WORD *)target;
+FreeImage_ConvertLine4To16_565(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette) {
+	uint16_t *new_bits = (uint16_t *)target;
 	BOOL lonibble = FALSE;
 	int x = 0;
 
@@ -61,8 +61,8 @@ FreeImage_ConvertLine4To16_565(BYTE *target, BYTE *source, int width_in_pixels, 
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine8To16_565(BYTE *target, BYTE *source, int width_in_pixels, RGBQUAD *palette) {
-	WORD *new_bits = (WORD *)target;
+FreeImage_ConvertLine8To16_565(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette) {
+	uint16_t *new_bits = (uint16_t *)target;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
 		RGBQUAD *grab_palette = palette + source[cols];
@@ -72,9 +72,9 @@ FreeImage_ConvertLine8To16_565(BYTE *target, BYTE *source, int width_in_pixels, 
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine16_555_To16_565(BYTE *target, BYTE *source, int width_in_pixels) {
-	WORD *src_bits = (WORD *)source;
-	WORD *new_bits = (WORD *)target;
+FreeImage_ConvertLine16_555_To16_565(uint8_t *target, uint8_t *source, int width_in_pixels) {
+	uint16_t *src_bits = (uint16_t *)source;
+	uint16_t *new_bits = (uint16_t *)target;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
 		new_bits[cols] = RGB565((((src_bits[cols] & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F,
@@ -84,8 +84,8 @@ FreeImage_ConvertLine16_555_To16_565(BYTE *target, BYTE *source, int width_in_pi
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine24To16_565(BYTE *target, BYTE *source, int width_in_pixels) {
-	WORD *new_bits = (WORD *)target;
+FreeImage_ConvertLine24To16_565(uint8_t *target, uint8_t *source, int width_in_pixels) {
+	uint16_t *new_bits = (uint16_t *)target;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
 		new_bits[cols] = RGB565(source[FI_RGBA_BLUE], source[FI_RGBA_GREEN], source[FI_RGBA_RED]);
@@ -95,8 +95,8 @@ FreeImage_ConvertLine24To16_565(BYTE *target, BYTE *source, int width_in_pixels)
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine32To16_565(BYTE *target, BYTE *source, int width_in_pixels) {
-	WORD *new_bits = (WORD *)target;
+FreeImage_ConvertLine32To16_565(uint8_t *target, uint8_t *source, int width_in_pixels) {
+	uint16_t *new_bits = (uint16_t *)target;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
 		new_bits[cols] = RGB565(source[FI_RGBA_BLUE], source[FI_RGBA_GREEN], source[FI_RGBA_RED]);
@@ -111,7 +111,7 @@ FreeImage_ConvertLine32To16_565(BYTE *target, BYTE *source, int width_in_pixels)
 
 FIBITMAP * DLL_CALLCONV
 FreeImage_ConvertTo16Bits565(FIBITMAP *dib) {
-	if(!FreeImage_HasPixels(dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) return NULL;
+	if(!FreeImage_HasPixels(dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) return nullptr;
 
 	const int width = FreeImage_GetWidth(dib);
 	const int height = FreeImage_GetHeight(dib);
@@ -121,8 +121,8 @@ FreeImage_ConvertTo16Bits565(FIBITMAP *dib) {
 		if ((FreeImage_GetRedMask(dib) == FI16_555_RED_MASK) && (FreeImage_GetGreenMask(dib) == FI16_555_GREEN_MASK) && (FreeImage_GetBlueMask(dib) == FI16_555_BLUE_MASK)) {
 			// RGB 555
 			FIBITMAP *new_dib = FreeImage_Allocate(width, height, 16, FI16_565_RED_MASK, FI16_565_GREEN_MASK, FI16_565_BLUE_MASK);
-			if(new_dib == NULL) {
-				return NULL;
+			if(new_dib == nullptr) {
+				return nullptr;
 			}
 			for (int rows = 0; rows < height; rows++) {
 				FreeImage_ConvertLine16_555_To16_565(FreeImage_GetScanLine(new_dib, rows), FreeImage_GetScanLine(dib, rows), width);
@@ -140,8 +140,8 @@ FreeImage_ConvertTo16Bits565(FIBITMAP *dib) {
 	else {
 		// other bpp cases => convert to RGB 565
 		FIBITMAP *new_dib = FreeImage_Allocate(width, height, 16, FI16_565_RED_MASK, FI16_565_GREEN_MASK, FI16_565_BLUE_MASK);
-		if(new_dib == NULL) {
-			return NULL;
+		if(new_dib == nullptr) {
+			return nullptr;
 		}
 
 		// copy metadata from src to dst
@@ -200,5 +200,5 @@ FreeImage_ConvertTo16Bits565(FIBITMAP *dib) {
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }

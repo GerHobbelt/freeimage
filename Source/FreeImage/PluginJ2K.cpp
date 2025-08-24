@@ -70,7 +70,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -80,8 +80,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE jpc_signature[] = { 0xFF, 0x4F };
-	BYTE signature[2] = { 0, 0 };
+	uint8_t jpc_signature[] = { 0xFF, 0x4F };
+	uint8_t signature[2] = { 0, 0 };
 
 	long tell = io->tell_proc(handle);
 	io->read_proc(signature, 1, sizeof(jpc_signature), handle);
@@ -131,15 +131,15 @@ static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	J2KFIO_t *fio = (J2KFIO_t*)data;
 	if (handle && fio) {
-		opj_codec_t *d_codec = NULL;	// handle to a decompressor
+		opj_codec_t *d_codec = nullptr;	// handle to a decompressor
 		opj_dparameters_t parameters;	// decompression parameters
-		opj_image_t *image = NULL;		// decoded image 
+		opj_image_t *image = nullptr;		// decoded image 
 
-		FIBITMAP *dib = NULL;
+		FIBITMAP *dib = nullptr;
 
 		// check the file format
 		if(!Validate(io, handle)) {
-			return NULL;
+			return nullptr;
 		}
 
 		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
@@ -158,9 +158,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			
 			// configure the event callbacks
 			// catch events using our callbacks (no local context needed here)
-			opj_set_info_handler(d_codec, NULL, NULL);
-			opj_set_warning_handler(d_codec, j2k_warning_callback, NULL);
-			opj_set_error_handler(d_codec, j2k_error_callback, NULL);
+			opj_set_info_handler(d_codec, nullptr, nullptr);
+			opj_set_warning_handler(d_codec, j2k_warning_callback, nullptr);
+			opj_set_error_handler(d_codec, j2k_error_callback, nullptr);
 
 			// setup the decoder decoding parameters using user parameters
 			if( !opj_setup_decoder(d_codec, &parameters) ) {
@@ -193,7 +193,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			// free the codec context
 			opj_destroy_codec(d_codec);
-			d_codec = NULL;
+			d_codec = nullptr;
 
 			// create output image 
 			dib = J2KImageToFIBITMAP(s_format_id, image, header_only);
@@ -216,11 +216,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			FreeImage_OutputMessageProc(s_format_id, text);
 
-			return NULL;
+			return nullptr;
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 static BOOL DLL_CALLCONV
@@ -228,9 +228,9 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 	J2KFIO_t *fio = (J2KFIO_t*)data;
 	if (dib && handle && fio) {
 		BOOL bSuccess;
-		opj_codec_t *c_codec = NULL;	// handle to a compressor
+		opj_codec_t *c_codec = nullptr;	// handle to a compressor
 		opj_cparameters_t parameters;	// compression parameters
-		opj_image_t *image = NULL;		// image to encode
+		opj_image_t *image = nullptr;		// image to encode
 
 		// get the OpenJPEG stream
 		opj_stream_t *c_stream = fio->stream;
@@ -266,9 +266,9 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 			// configure the event callbacks
 			// catch events using our callbacks (no local context needed here)
-			opj_set_info_handler(c_codec, NULL, NULL);
-			opj_set_warning_handler(c_codec, j2k_warning_callback, NULL);
-			opj_set_error_handler(c_codec, j2k_error_callback, NULL);
+			opj_set_info_handler(c_codec, nullptr, nullptr);
+			opj_set_warning_handler(c_codec, j2k_warning_callback, nullptr);
+			opj_set_error_handler(c_codec, j2k_error_callback, nullptr);
 
 			// setup the encoder parameters using the current image and using user parameters
 			opj_setup_encoder(c_codec, &parameters, image);
@@ -318,13 +318,13 @@ InitJ2K(Plugin *plugin, int format_id) {
 	plugin->regexpr_proc = RegExpr;
 	plugin->open_proc = Open;
 	plugin->close_proc = Close;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

@@ -34,7 +34,7 @@
 /** Generic image loader
 	@param lpszPathName Pointer to the full file name
 	@param flag Optional load flag constant
-	@return Returns the loaded dib if successful, returns NULL otherwise
+	@return Returns the loaded dib if successful, returns nullptr otherwise
 */
 FIBITMAP* GenericLoader(const char* lpszPathName, int flag) {
 	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
@@ -54,7 +54,7 @@ FIBITMAP* GenericLoader(const char* lpszPathName, int flag) {
 		// unless a bad file format, we are done !
 		return dib;
 	}
-	return NULL;
+	return nullptr;
 }
 
 /** Generic image writer
@@ -72,7 +72,7 @@ bool GenericWriter(FIBITMAP* dib, const char* lpszPathName, int flag) {
 		fif = FreeImage_GetFIFFromFilename(lpszPathName);
 		if(fif != FIF_UNKNOWN ) {
 			// check that the plugin has sufficient writing and export capabilities ...
-			WORD bpp = FreeImage_GetBPP(dib);
+			uint16_t bpp = FreeImage_GetBPP(dib);
 			if(FreeImage_FIFSupportsWriting(fif) && FreeImage_FIFSupportsExportBPP(fif, bpp)) {
 				// ok, we can save the file
 				bSuccess = FreeImage_Save(fif, dib, lpszPathName, flag);

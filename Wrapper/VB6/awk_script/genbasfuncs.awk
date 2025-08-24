@@ -34,7 +34,7 @@ function splittypenamedefault(s,tnd,   i,t,n,d,a)
 	if(n=="type") {
 		n = n "_";
 	}
-	if(d=="FALSE"||d=="NULL") {
+	if(d=="FALSE"||d=="nullptr") {
 		d = "0";
 	}
 	if(d=="TRUE") {
@@ -52,7 +52,7 @@ function vbpasstypesize(t,pts,   a)
 		t = "ByVal,Byte,4";
 	} else if(t=="char *"||t=="unsigned char *"||t=="const char *"||t=="const char*") {
 		t = "ByVal,String,4";
-	} else if(t=="WORD") {
+	} else if(t=="uint16_t") {
 		t = "ByVal,Integer,4";
 	} else if(t=="int"||t=="unsigned"||t=="unsigned int"||t=="long"||t=="unsigned long") {
 		t = "ByVal,Long,4";
@@ -68,17 +68,17 @@ function vbpasstypesize(t,pts,   a)
 		t = "ByRef,Double,4";
 	} else if(t=="wchar_t *") {
 		t = "ByVal,Long,4";
-	} else if(t=="BYTE") {
+	} else if(t=="uint8_t") {
 		t = "ByVal,Byte,4";
-	} else if(t=="BOOL"||t=="DWORD") {
+	} else if(t=="BOOL"||t=="uint32_t") {
 		t = "ByVal,Long,4";
-	} else if(t=="BYTE *"||t=="DWORD *") {
+	} else if(t=="uint8_t *"||t=="uint32_t *") {
 		t = "ByRef,Long,4";
 	} else if(t=="FREE_IMAGE_FORMAT"||t=="FREE_IMAGE_TYPE"||t=="FREE_IMAGE_COLOR_TYPE"||t=="FREE_IMAGE_QUANTIZE"||t=="FREE_IMAGE_DITHER"||t=="FREE_IMAGE_FILTER"||t=="FREE_IMAGE_COLOR_CHANNEL"||t=="FREE_IMAGE_MDMODEL"||t=="FREE_IMAGE_MDTYPE") {
 		t = "ByVal," t ",4";
 	} else if(t=="FIBITMAP *"||t=="FIMULTIBITMAP *"||t=="RGBQUAD *"||t=="BITMAPINFO *"||t=="BITMAPINFOHEADER *"||t=="FIICCPROFILE *"||t=="FreeImageIO *"||t=="fi_handle"||t=="FITAG *"||t=="FIMEMORY *"||t=="FIMETADATA *") {
 		t = "ByVal,Long,4";
-	} else if(t=="BYTE **"||t=="FITAG **") {
+	} else if(t=="uint8_t **"||t=="FITAG **") {
 		t = "ByRef,Long,4";
 	} else if(t=="FI_InitProc"||t=="FreeImage_OutputMessageFunction") {
 		t = "ByVal,Long,4";
