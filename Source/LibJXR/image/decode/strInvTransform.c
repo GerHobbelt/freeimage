@@ -696,7 +696,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
     const Bool topORbottom = (top || bottom), leftORright = (left || right);
     const Bool topORleft = (top || left), bottomORright = (bottom || right);
     const size_t mbWidth = pSC->cmbWidth, mbX = pSC->cColumn;
-    PixelI * p = NULL;// * pt = NULL;
+    PixelI * p = nullptr;// * pt = nullptr;
     size_t i;
     const size_t iChannels = (cfColorFormat == YUV_420 || cfColorFormat == YUV_422) ? 1 : pSC->m_param.cNumChannels;
     const size_t tScale = pSC->m_Dparam->cThumbnailScale;
@@ -760,7 +760,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                     p = top ? p1 : p0 + 32;
                     strPost4(p - 128, p - 64, p +  0, p + 64);
                     strPost4(p - 112, p - 48, p + 16, p + 80);
-                    p = NULL;
+                    p = nullptr;
                 }
                 else
                 {
@@ -809,14 +809,14 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                     strPost4(p +  1, p -  1, p +  7, p +  9);
                     strPost4(p + 16, p + 14, p + 22, p + 24);
                     strPost4(p + 17, p + 15, p + 23, p + 25);
-                    p = NULL;
+                    p = nullptr;
                 }
                 if (!bottom)
                 {
                     p = p1 + j;
                     strPost4(p + 0, p - 2, p + 6, p + 8);
                     strPost4(p + 1, p - 1, p + 7, p + 9);
-                    p = NULL;
+                    p = nullptr;
                 }
                 if (!topORbottom)
                 {
@@ -832,7 +832,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                     p = p1 + j;
                     strPost4(p + 5, p + 4, p + 64, p + 65);
                     strPost4(p + 7, p + 6, p + 66, p + 67);
-                    p = NULL;
+                    p = nullptr;
 
                     strPost4x4Stage1(p1 + j, 0, iHPQP, bHPAbsent);
                 }
@@ -847,7 +847,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                     p = p0 + 48 + j;
                     strPost4(p + 15, p + 14, p + 74, p + 75);
                     strPost4(p + 13, p + 12, p + 72, p + 73);
-                    p = NULL;
+                    p = nullptr;
                 }
             }
             else
@@ -905,7 +905,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                 {
                     p = (top ? p1 : p0 + 16);
                     strPost2(p - 32, p);
-                    p = NULL;
+                    p = nullptr;
                 }
                 else{
                     strPost2x2(p0 - 16, p0 + 16, p1 - 32, p1);
@@ -947,7 +947,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                         p = p0 + j;
                         strPost4(p + 15, p + 14, p + 42, p + 43);
                         strPost4(p + 13, p + 12, p + 40, p + 41);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 else
@@ -983,7 +983,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                     p = p1 + j + 4;
                     strPost4(p + 1, p + 0, p + 28, p + 29);
                     strPost4(p + 3, p + 2, p + 30, p + 31);
-                    p = NULL;
+                    p = nullptr;
                 }
             }
             else if (left)
@@ -1103,7 +1103,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                     strPost4(p + 0, p - 2, p + 6, p + 8);
                     strPost4(p + 1, p - 1, p + 7, p + 9);
 
-                    p = NULL;
+                    p = nullptr;
                 }
 
                 for (j = (left ? 0 : -128); j < (right ? -64 : 0); j += 64)
@@ -1126,7 +1126,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                     strPost4(p + 0, p - 2, p + 6, p + 8);
                     strPost4(p + 1, p - 1, p + 7, p + 9);
 
-                    p = NULL;
+                    p = nullptr;
                 }
 
                 for (j = (left ? 0 : -128); j < (right ? -64 : 0); j += 64)
@@ -1144,7 +1144,7 @@ Int  invTransformMacroblock(CWMImageStrCodec * pSC)
                     strPost4(p + j + 0, p + j - 1, p + j + 59, p + j + 60);
                     strPost4(p + j + 2, p + j + 1, p + j + 61, p + j + 62);
                 }
-                p = NULL;
+                p = nullptr;
             }
             else
             {
@@ -1178,7 +1178,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
     Bool leftAdjacentColumn = (pSC->cColumn == 1), rightAdjacentColumn = (pSC->cColumn == pSC->cmbWidth - 1);
     // Bool topAdjacentRow =  (pSC->cRow == 1), bottomAdjacentRow = (pSC->cRow == pSC->cmbHeight - 1);
     const size_t mbWidth = pSC->cmbWidth;
-    PixelI * p = NULL;// * pt = NULL;
+    PixelI * p = nullptr;// * pt = nullptr;
     size_t i;
     const size_t iChannels = (cfColorFormat == YUV_420 || cfColorFormat == YUV_422) ? 1 : pSC->m_param.cNumChannels;
     const size_t tScale = pSC->m_Dparam->cThumbnailScale;
@@ -1301,13 +1301,13 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                         p = p1;
                         strPost4_alternate(p - 128, p - 64, p +  0, p + 64);
                         strPost4_alternate(p - 112, p - 48, p + 16, p + 80);
-                        p = NULL;
+                        p = nullptr;
                     }
                     if (bottom || bHoriTileBoundary) {
                         p = p0 + 32;
                         strPost4_alternate(p - 128, p - 64, p +  0, p + 64);
                         strPost4_alternate(p - 112, p - 48, p + 16, p + 80);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 
@@ -1370,14 +1370,14 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                         strPost4_alternate(p +  1, p -  1, p +  7, p +  9);
                         strPost4_alternate(p + 16, p + 14, p + 22, p + 24);
                         strPost4_alternate(p + 17, p + 15, p + 23, p + 25);
-                        p = NULL;
+                        p = nullptr;
                     }
                     if (!bottom)
                     {
                         p = p1 + j;
                         strPost4_alternate(p + 0, p - 2, p + 6, p + 8);
                         strPost4_alternate(p + 1, p - 1, p + 7, p + 9);
-                        p = NULL;
+                        p = nullptr;
                     }
                     if (!topORbottom && !bHoriTileBoundary)
                     {
@@ -1394,14 +1394,14 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                         strPost4_alternate(p +  1, p -  1, p +  7, p +  9);
                         strPost4_alternate(p + 16, p + 14, p + 22, p + 24);
                         strPost4_alternate(p + 17, p + 15, p + 23, p + 25);
-                        p = NULL;
+                        p = nullptr;
                     }
                     if (!bottom)
                     {
                         p = p1 + j;
                         strPost4_alternate(p + 0, p - 2, p + 6, p + 8);
                         strPost4_alternate(p + 1, p - 1, p + 7, p + 9);
-                        p = NULL;
+                        p = nullptr;
                     }
                     if (!topORbottom && !bHoriTileBoundary)
                     {
@@ -1419,7 +1419,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                         p = p1 + j;
                         strPost4_alternate(p + 5, p + 4, p + 64, p + 65);
                         strPost4_alternate(p + 7, p + 6, p + 66, p + 67);
-                        p = NULL;
+                        p = nullptr;
 
                         strPost4x4Stage1_alternate(p1 + j, 0);
                     }
@@ -1437,7 +1437,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                         p = p0 + 48 + j;
                         strPost4_alternate(p + 15, p + 14, p + 74, p + 75);
                         strPost4_alternate(p + 13, p + 12, p + 72, p + 73);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
             }
@@ -1592,14 +1592,14 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                     p = p0 + -48;
                     strPost4_alternate(p + 15, p + 14, p + 42, p + 43);
                     strPost4_alternate(p + 13, p + 12, p + 40, p + 41);
-                    p = NULL;
+                    p = nullptr;
 
                     if (!right && !bVertTileBoundary)
                     {
                         p = p0 + -16;
                         strPost4_alternate(p + 15, p + 14, p + 42, p + 43);
                         strPost4_alternate(p + 13, p + 12, p + 40, p + 41);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 else
@@ -1636,7 +1636,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                     p = p1 + -64 + 4;
                     strPost4_alternate(p + 1, p + 0, p + 28, p + 29);
                     strPost4_alternate(p + 3, p + 2, p + 30, p + 31);
-                    p = NULL;
+                    p = nullptr;
                 }
 
                 if (!left && !right && !bVertTileBoundary)
@@ -1644,7 +1644,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                     p = p1 + -32 + 4;
                     strPost4_alternate(p + 1, p + 0, p + 28, p + 29);
                     strPost4_alternate(p + 3, p + 2, p + 30, p + 31);
-                    p = NULL;
+                    p = nullptr;
                 }
             }
         }
@@ -1793,14 +1793,14 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                     p = p0 + 32 + 10 - 128;
                     strPost4_alternate(p + 0, p - 2, p + 6, p + 8);
                     strPost4_alternate(p + 1, p - 1, p + 7, p + 9);
-                    p = NULL;
+                    p = nullptr;
                 }
 
                 if (right || bVertTileBoundary) {
                     p = p0 + -32 + 14;
                     strPost4_alternate(p + 0, p - 2, p + 6, p + 8);
                     strPost4_alternate(p + 1, p - 1, p + 7, p + 9);
-                    p = NULL;
+                    p = nullptr;
                 }
 
                 for (j = (left ? 0 : -128); j < ((right || bVertTileBoundary) ? -64 : 0); j += 64)
@@ -1818,7 +1818,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                     p += 16;
                     strPost4_alternate(p + 0, p - 2, p + 6, p + 8);
                     strPost4_alternate(p + 1, p - 1, p + 7, p + 9);
-                    p = NULL;
+                    p = nullptr;
                 }
 
                 if (right || bVertTileBoundary)
@@ -1829,7 +1829,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                     p += 16;
                     strPost4_alternate(p + 0, p - 2, p + 6, p + 8);
                     strPost4_alternate(p + 1, p - 1, p + 7, p + 9);
-                    p = NULL;
+                    p = nullptr;
                 }
 
                 for (j = (left ? 0 : -128); j < ((right || bVertTileBoundary) ? -64 : 0); j += 64)
@@ -1848,7 +1848,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                         strPost4_alternate(p + j + 0, p + j - 1, p + j + 59, p + j + 60);
                         strPost4_alternate(p + j + 2, p + j + 1, p + j + 61, p + j + 62);
                     }
-                    p = NULL;
+                    p = nullptr;
                 }
 
                 if (bottom || bHoriTileBoundary) {
@@ -1858,7 +1858,7 @@ Int  invTransformMacroblock_alteredOperators_hard(CWMImageStrCodec * pSC)
                         strPost4_alternate(p + j + 0, p + j - 1, p + j + 59, p + j + 60);
                         strPost4_alternate(p + j + 2, p + j + 1, p + j + 61, p + j + 62);
                     }
-                    p = NULL;
+                    p = nullptr;
                 }
             }
             else

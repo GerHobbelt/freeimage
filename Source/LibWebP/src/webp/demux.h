@@ -86,14 +86,14 @@ WEBP_EXTERN(WebPDemuxer*) WebPDemuxInternal(
     const WebPData*, int, WebPDemuxState*, int);
 
 // Parses the full WebP file given by 'data'.
-// Returns a WebPDemuxer object on successful parse, NULL otherwise.
+// Returns a WebPDemuxer object on successful parse, nullptr otherwise.
 static WEBP_INLINE WebPDemuxer* WebPDemux(const WebPData* data) {
-  return WebPDemuxInternal(data, 0, NULL, WEBP_DEMUX_ABI_VERSION);
+  return WebPDemuxInternal(data, 0, nullptr, WEBP_DEMUX_ABI_VERSION);
 }
 
 // Parses the possibly incomplete WebP file given by 'data'.
-// If 'state' is non-NULL it will be set to indicate the status of the demuxer.
-// Returns NULL in case of error or if there isn't enough data to start parsing;
+// If 'state' is non-nullptr it will be set to indicate the status of the demuxer.
+// Returns nullptr in case of error or if there isn't enough data to start parsing;
 // and a WebPDemuxer object on successful parse.
 // Note that WebPDemuxer keeps internal pointers to 'data' memory segment.
 // If this data is volatile, the demuxer object should be deleted (by calling
@@ -155,7 +155,7 @@ struct WebPIterator {
 // 'iter->fragment' points to the first fragment on return from this function.
 // Individual fragments may be extracted using WebPDemuxSelectFragment().
 // Setting 'frame_number' equal to 0 will return the last frame of the image.
-// Returns false if 'dmux' is NULL or frame 'frame_number' is not present.
+// Returns false if 'dmux' is nullptr or frame 'frame_number' is not present.
 // Call WebPDemuxReleaseIterator() when use of the iterator is complete.
 // NOTE: 'dmux' must persist for the lifetime of 'iter'.
 WEBP_EXTERN(int) WebPDemuxGetFrame(

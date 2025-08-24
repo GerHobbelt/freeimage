@@ -41,7 +41,7 @@ GET_FREEIMAGE_MARKER(BITMAPINFOHEADER *bmih) {
 // Construction / Destruction
 
 fipWinImage::fipWinImage(FREE_IMAGE_TYPE image_type, unsigned width, unsigned height, unsigned bpp) : fipImage(image_type, width, height, bpp) {
-	_display_dib = NULL;
+	_display_dib = nullptr;
 	_bDeleteMe = FALSE;
 	// default tone mapping operator
 	_tmo = FITMO_DRAGO03;
@@ -62,7 +62,7 @@ void fipWinImage::clear() {
 	if(_bDeleteMe) {
 		FreeImage_Unload(_display_dib);
 	}
-	_display_dib = NULL;
+	_display_dib = nullptr;
 	_bDeleteMe = FALSE;
 	// delete base class data
 	fipImage::clear();
@@ -80,7 +80,7 @@ fipWinImage& fipWinImage::operator=(const fipImage& Image) {
 	if(_bDeleteMe) {
 		FreeImage_Unload(_display_dib);
 	}
-	_display_dib = NULL;
+	_display_dib = nullptr;
 	_bDeleteMe = FALSE;
 	// clone the base class
 	fipImage::operator=(Image);
@@ -94,7 +94,7 @@ fipWinImage& fipWinImage::operator=(const fipWinImage& Image) {
 		if(_bDeleteMe) {
 			FreeImage_Unload(_display_dib);
 		}
-		_display_dib = NULL;
+		_display_dib = nullptr;
 		_bDeleteMe = FALSE;
 		// copy tmo data
 		_tmo = Image._tmo;
@@ -110,7 +110,7 @@ fipWinImage& fipWinImage::operator=(const fipWinImage& Image) {
 }
 
 HANDLE fipWinImage::copyToHandle() const {
-	HANDLE hMem = NULL;
+	HANDLE hMem = nullptr;
 
 	if(_dib) {
 
@@ -121,11 +121,11 @@ HANDLE fipWinImage::copyToHandle() const {
 
 		// Allocate a DIB
 		hMem = GlobalAlloc(GHND, dib_size);
-		BYTE *dib = (BYTE*)GlobalLock(hMem);
+		uint8_t *dib = (uint8_t*)GlobalLock(hMem);
 
 		memset(dib, 0, dib_size);
 
-		BYTE *p_dib = (BYTE*)dib;
+		uint8_t *p_dib = (uint8_t*)dib;
 
 		// Copy the BITMAPINFOHEADER
 
@@ -145,7 +145,7 @@ HANDLE fipWinImage::copyToHandle() const {
 
 		// Copy the bitmap
 
-		BYTE *bits = FreeImage_GetBits(_dib);
+		uint8_t *bits = FreeImage_GetBits(_dib);
 		memcpy(p_dib, bits, FreeImage_GetPitch(_dib) * FreeImage_GetHeight(_dib));
 
 		GlobalUnlock(hMem);
@@ -155,28 +155,28 @@ HANDLE fipWinImage::copyToHandle() const {
 }
 
 BOOL fipWinImage::copyFromHandle(HANDLE hMem) {
-	BYTE *lpVoid = NULL;
-	BITMAPINFOHEADER *pHead = NULL;
-	RGBQUAD *pPalette = NULL;
-	BYTE *bits = NULL;
-	DWORD bitfields[3] = {0, 0, 0};
+	uint8_t *lpVoid = nullptr;
+	BITMAPINFOHEADER *pHead = nullptr;
+	RGBQUAD *pPalette = nullptr;
+	uint8_t *bits = nullptr;
+	uint32_t bitfields[3] = {0, 0, 0};
 
 	// Get a pointer to the bitmap
-	lpVoid = (BYTE *)GlobalLock(hMem);
+	lpVoid = (uint8_t *)GlobalLock(hMem);
 
 	// Get a pointer to the bitmap header
 	pHead = (BITMAPINFOHEADER *)lpVoid;
 
 	// Get a pointer to the palette
 	if(pHead->biBitCount < 16)
-		pPalette = (RGBQUAD *)(((BYTE *)pHead) + sizeof(BITMAPINFOHEADER));
+		pPalette = (RGBQUAD *)(((uint8_t *)pHead) + sizeof(BITMAPINFOHEADER));
 
 	// Get a pointer to the pixels
-	bits = ((BYTE*)pHead + sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * pHead->biClrUsed);
+	bits = ((uint8_t*)pHead + sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * pHead->biClrUsed);
 
 	if(pHead->biCompression == BI_BITFIELDS) {
 		// Take into account the color masks that specify the red, green, and blue components (16- and 32-bit)
-		unsigned mask_size = 3 * sizeof(DWORD);
+		unsigned mask_size = 3 * sizeof(uint32_t);
 		memcpy(&bitfields[0], bits, mask_size);
 		bits += mask_size;
 	} 
@@ -202,7 +202,7 @@ BOOL fipWinImage::copyFromHandle(HANDLE hMem) {
 				image_type = GET_FREEIMAGE_MARKER(pHead);
 				break;
 		}
-		if(!setSize(image_type, (WORD)pHead->biWidth, (WORD)pHead->biHeight, pHead->biBitCount, bitfields[2], bitfields[1], bitfields[0])) {
+		if(!setSize(image_type, (uint16_t)pHead->biWidth, (uint16_t)pHead->biHeight, pHead->biBitCount, bitfields[2], bitfields[1], bitfields[0])) {
 			GlobalUnlock(lpVoid);
 			return FALSE;
 		}
@@ -232,14 +232,14 @@ BOOL fipWinImage::copyFromBitmap(HBITMAP hbmp) {
 		// Get informations about the bitmap
         GetObject(hbmp, sizeof(BITMAP), (LPSTR) &bm);
 		// Create the image
-        setSize(FIT_BITMAP, (WORD)bm.bmWidth, (WORD)bm.bmHeight, (WORD)bm.bmBitsPixel);
+        setSize(FIT_BITMAP, (uint16_t)bm.bmWidth, (uint16_t)bm.bmHeight, (uint16_t)bm.bmBitsPixel);
 
 		// The GetDIBits function clears the biClrUsed and biClrImportant BITMAPINFO members (dont't know why) 
 		// So we save these infos below. This is needed for palettized images only. 
 		int nColors = FreeImage_GetColorsUsed(_dib);
 
 		// Create a device context for the bitmap
-        HDC dc = GetDC(NULL);
+        HDC dc = GetDC(nullptr);
 		// Copy the pixels
 		Success = GetDIBits(dc,								// handle to DC
 								hbmp,						// handle to bitmap
@@ -251,10 +251,10 @@ BOOL fipWinImage::copyFromBitmap(HBITMAP hbmp) {
 								);
 		if(Success == 0) {
 			FreeImage_OutputMessageProc(FIF_UNKNOWN, "Error : GetDIBits failed");
-			ReleaseDC(NULL, dc);
+			ReleaseDC(nullptr, dc);
 			return FALSE;
         }
-        ReleaseDC(NULL, dc);
+        ReleaseDC(nullptr, dc);
 
 		// restore BITMAPINFO members
 		
@@ -272,7 +272,7 @@ BOOL fipWinImage::copyToClipboard(HWND hWndNewOwner) const {
 
 	if(OpenClipboard(hWndNewOwner)) {
 		if(EmptyClipboard()) {
-			if(SetClipboardData(CF_DIB, hDIB) == NULL) {
+			if(SetClipboardData(CF_DIB, hDIB) == nullptr) {
 				MessageBoxA(hWndNewOwner, "Unable to set Clipboard data", "FreeImage", MB_ICONERROR);
 				CloseClipboard();
 				return FALSE;
@@ -288,7 +288,7 @@ BOOL fipWinImage::pasteFromClipboard() {
 	if(!IsClipboardFormatAvailable(CF_DIB))
 		return FALSE;
 
-	if(OpenClipboard(NULL)) {
+	if(OpenClipboard(nullptr)) {
 		HANDLE hDIB = GetClipboardData(CF_DIB);
 		copyFromHandle(hDIB);
 		CloseClipboard();
@@ -341,7 +341,7 @@ BOOL fipWinImage::captureWindow(HWND hWndApplicationWindow, HWND hWndSelectedWin
 	Sleep(500);
 
 	// Prepare the DCs
-	HDC dstDC = GetDC(NULL);
+	HDC dstDC = GetDC(nullptr);
     HDC srcDC = GetWindowDC(hWndSelectedWindow); // full window (GetDC(hWndSelectedWindow) = clientarea)
 	HDC memDC = CreateCompatibleDC(dstDC);
 	
@@ -381,7 +381,7 @@ void fipWinImage::drawEx(HDC hDC, RECT& rcDest, BOOL useFileBkg, RGBQUAD *appBkC
 	if(_bHasChanged) {
 		if(_bDeleteMe) {
 			FreeImage_Unload(_display_dib);
-			_display_dib = NULL;
+			_display_dib = nullptr;
 			_bDeleteMe = FALSE;
 		}
 

@@ -96,10 +96,10 @@ void VP8LHistogramInit(VP8LHistogram* const p, int palette_code_bits) {
 }
 
 VP8LHistogram* VP8LAllocateHistogram(int cache_bits) {
-  VP8LHistogram* histo = NULL;
+  VP8LHistogram* histo = nullptr;
   const int total_size = VP8LGetHistogramSize(cache_bits);
   uint8_t* const memory = (uint8_t*)WebPSafeMalloc(total_size, sizeof(*memory));
-  if (memory == NULL) return NULL;
+  if (memory == nullptr) return nullptr;
   histo = (VP8LHistogram*)memory;
   // literal_ won't necessary be aligned.
   histo->literal_ = (uint32_t*)(memory + sizeof(VP8LHistogram));
@@ -114,7 +114,7 @@ VP8LHistogramSet* VP8LAllocateHistogramSet(int size, int cache_bits) {
                             + sizeof(*set->histograms) * size
                             + (size_t)VP8LGetHistogramSize(cache_bits) * size;
   uint8_t* memory = (uint8_t*)WebPSafeMalloc(total_size, sizeof(*memory));
-  if (memory == NULL) return NULL;
+  if (memory == nullptr) return nullptr;
 
   set = (VP8LHistogramSet*)memory;
   memory += sizeof(*set);
@@ -264,10 +264,10 @@ static void UpdateHistogramCost(VP8LHistogram* const h) {
   const double alpha_cost = VP8LPopulationCost(h->alpha_, NUM_LITERAL_CODES,
                                                &alpha_sym);
   const double distance_cost =
-      VP8LPopulationCost(h->distance_, NUM_DISTANCE_CODES, NULL) +
+      VP8LPopulationCost(h->distance_, NUM_DISTANCE_CODES, nullptr) +
       VP8LExtraCost(h->distance_, NUM_DISTANCE_CODES);
   const int num_codes = VP8LHistogramNumCodes(h->palette_code_bits_);
-  h->literal_cost_ = VP8LPopulationCost(h->literal_, num_codes, NULL) +
+  h->literal_cost_ = VP8LPopulationCost(h->literal_, num_codes, nullptr) +
                      VP8LExtraCost(h->literal_ + NUM_LITERAL_CODES,
                                    NUM_LENGTH_CODES);
   h->red_cost_ = VP8LPopulationCost(h->red_, NUM_LITERAL_CODES, &red_sym);
@@ -388,10 +388,10 @@ static void HistogramCompactBins(VP8LHistogramSet* const image_histo) {
   int i, j;
 
   for (i = 0, j = 0; i < image_histo->size; ++i) {
-    if (histograms[i] != NULL && histograms[i]->bit_cost_ != 0.) {
+    if (histograms[i] != nullptr && histograms[i]->bit_cost_ != 0.) {
       if (j < i) {
         histograms[j] = histograms[i];
-        histograms[i] = NULL;
+        histograms[i] = nullptr;
       }
       ++j;
     }
@@ -490,11 +490,11 @@ static int HistoHeapInit(HistoHeap* const histo_heap, const int max_index) {
                                     sizeof(*histo_heap->heap));
   histo_heap->positions = WebPSafeMalloc(max_index * max_index,
                                          sizeof(*histo_heap->positions));
-  return histo_heap->heap != NULL && histo_heap->positions != NULL;
+  return histo_heap->heap != nullptr && histo_heap->positions != nullptr;
 }
 
 static void HistoHeapClear(HistoHeap* const histo_heap) {
-  assert(histo_heap != NULL);
+  assert(histo_heap != nullptr);
   WebPSafeFree(histo_heap->heap);
   WebPSafeFree(histo_heap->positions);
 }
@@ -626,7 +626,7 @@ static int HistogramCombineGreedy(VP8LHistogramSet* const image_histo,
   // Heap of histogram pairs.
   HistoHeap histo_heap;
 
-  if (!HistoHeapInit(&histo_heap, image_histo_size) || clusters == NULL) {
+  if (!HistoHeapInit(&histo_heap, image_histo_size) || clusters == nullptr) {
     goto End;
   }
 
@@ -746,7 +746,7 @@ static VP8LHistogram* HistogramCombineStochastic(
       --image_histo_size;
       if (best_idx2 != image_histo_size) {
         HistogramSwap(&histograms[image_histo_size], &histograms[best_idx2]);
-        histograms[image_histo_size] = NULL;
+        histograms[image_histo_size] = nullptr;
       }
       tries_with_no_success = 0;
     }
@@ -835,14 +835,14 @@ int VP8LGetHistoImageSymbols(int xsize, int ysize,
   // bin_map[n][num_histo] = index of last histogram in that bin;
   // bin_map[n][num_histo + 1] ... bin_map[n][bin_depth - 1] = unused indices.
   const int bin_depth = image_histo_raw_size + 1;
-  int16_t* bin_map = NULL;
+  int16_t* bin_map = nullptr;
   VP8LHistogramSet* const orig_histo =
       VP8LAllocateHistogramSet(image_histo_raw_size, cache_bits);
   VP8LHistogram* cur_combo;
   const int entropy_combine =
       (orig_histo->size > entropy_combine_num_bins * 2) && (quality < 100);
 
-  if (orig_histo == NULL) goto Error;
+  if (orig_histo == nullptr) goto Error;
 
   // Don't attempt linear bin-partition heuristic for:
   // histograms of small sizes, as bin_map will be very sparse and;
@@ -850,7 +850,7 @@ int VP8LGetHistoImageSymbols(int xsize, int ysize,
   if (entropy_combine) {
     const int bin_map_size = bin_depth * entropy_combine_num_bins;
     bin_map = (int16_t*)WebPSafeCalloc(bin_map_size, sizeof(*bin_map));
-    if (bin_map == NULL) goto Error;
+    if (bin_map == nullptr) goto Error;
   }
 
   // Construct the histograms from backward references.

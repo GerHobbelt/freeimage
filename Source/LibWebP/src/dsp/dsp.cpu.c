@@ -116,7 +116,7 @@ static int AndroidCPUInfo(CPUFeature feature) {
 VP8CPUInfo VP8GetCPUInfo = AndroidCPUInfo;
 #elif defined(WEBP_USE_NEON)
 // define a dummy function to enable turning off NEON at runtime by setting
-// VP8DecGetCPUInfo = NULL
+// VP8DecGetCPUInfo = nullptr
 static int armCPUInfo(CPUFeature feature) {
   (void)feature;
   return 1;
@@ -133,6 +133,6 @@ static int mipsCPUInfo(CPUFeature feature) {
 }
 VP8CPUInfo VP8GetCPUInfo = mipsCPUInfo;
 #else
-VP8CPUInfo VP8GetCPUInfo = NULL;
+VP8CPUInfo VP8GetCPUInfo = nullptr;
 #endif
 

@@ -225,8 +225,8 @@ OPJ_BOOL opj_pi_check_next_level(	OPJ_INT32 pos,
 */
 
 OPJ_BOOL opj_pi_next_lrcp(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	OPJ_UINT32 index = 0;
 	
 	if (!pi->first) {
@@ -265,8 +265,8 @@ LABEL_SKIP:;
 }
 
 OPJ_BOOL opj_pi_next_rlcp(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	OPJ_UINT32 index = 0;
 
 	if (!pi->first) {
@@ -304,8 +304,8 @@ LABEL_SKIP:;
 }
 
 OPJ_BOOL opj_pi_next_rpcl(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	OPJ_UINT32 index = 0;
 
 	if (!pi->first) {
@@ -387,8 +387,8 @@ LABEL_SKIP:;
 }
 
 OPJ_BOOL opj_pi_next_pcrl(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	OPJ_UINT32 index = 0;
 
 	if (!pi->first) {
@@ -468,8 +468,8 @@ LABEL_SKIP:;
 }
 
 OPJ_BOOL opj_pi_next_cprl(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	OPJ_UINT32 index = 0;
 
 	if (!pi->first) {
@@ -807,7 +807,7 @@ opj_pi_iterator_t * opj_pi_create(	const opj_image_t *image,
 	/* memory allocations*/
 	l_pi = (opj_pi_iterator_t*) opj_calloc((l_poc_bound), sizeof(opj_pi_iterator_t));
 	if (!l_pi) {
-		return NULL;
+		return nullptr;
 	}
 	memset(l_pi,0,l_poc_bound * sizeof(opj_pi_iterator_t));
 
@@ -817,7 +817,7 @@ opj_pi_iterator_t * opj_pi_create(	const opj_image_t *image,
 		l_current_pi->comps = (opj_pi_comp_t*) opj_calloc(image->numcomps, sizeof(opj_pi_comp_t));
 		if (! l_current_pi->comps) {
 			opj_pi_destroy(l_pi, l_poc_bound);
-			return NULL;
+			return nullptr;
 		}
 
 		l_current_pi->numcomps = image->numcomps;

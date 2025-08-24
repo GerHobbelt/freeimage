@@ -93,8 +93,8 @@ bbe32df add alpha dithering for lossy
 77bf441 make error-code reporting consistent upon malloc failure
 7a93c00 **/Makefile.am: remove unused AM_CPPFLAGS
 24e3080 Add an interface abstraction to the WebP worker thread implementation
-d6cd635 Merge "fix orig_rect==NULL case"
-2bfd1ff fix orig_rect==NULL case
+d6cd635 Merge "fix orig_rect==nullptr case"
+2bfd1ff fix orig_rect==nullptr case
 059e21c Merge "configure: move config.h to src/webp/config.h"
 f05fe00 properly report back encoding error code in WebPFrameCacheAddFrame()
 32b3137 configure: move config.h to src/webp/config.h
@@ -201,12 +201,12 @@ ad900ab Merge "fix warning about size_t -> int conversion"
 f937e01 move LOCAL_GCC_VERSION def to dsp.h
 5e1a17e enc_neon: move Transpose4x4 to dsp/neon.h
 c7b92a5 dec_neon: (WORK_AROUND_GCC) delete unused Load4x8
-8e5f90b Merge "make ExUtilLoadWebP() accept NULL bitstream param."
+8e5f90b Merge "make ExUtilLoadWebP() accept nullptr bitstream param."
 05d4c1b Merge "cwebp: add webpdec"
 ddeb6ac cwebp: add webpdec
 35d7d09 Merge "Reduce memory footprint for encoding WebP lossless."
 0b89610 Reduce memory footprint for encoding WebP lossless.
-f0b65c9 make ExUtilLoadWebP() accept NULL bitstream param.
+f0b65c9 make ExUtilLoadWebP() accept nullptr bitstream param.
 9c0a60c Merge "dwebp: move webp decoding to example_util"
 1d62acf MIPS: MIPS32r1: Added optimization for HuffmanCost functions.
 4a0e739 dwebp: move webp decoding to example_util
@@ -349,8 +349,8 @@ acbedac MIPS: MIPS32r1: clang macro warning resolved
 228e487 dec_neon.c: add TransformAC3
 393f89b Android.mk: avoid gcc-specific flags with clang
 32aeaf1 revamp VP8LColorSpaceTransform() a bit
-0c7cc4c Merge "Don't dereference NULL, ensure HashChain fully initialized"
-391316f Don't dereference NULL, ensure HashChain fully initialized
+0c7cc4c Merge "Don't dereference nullptr, ensure HashChain fully initialized"
+391316f Don't dereference nullptr, ensure HashChain fully initialized
 926ff40 WEBP_SWAP_16BIT_CSP: remove code dup
 1d1cd3b Fix decode bug for rgbA_4444/RGBA_4444 color-modes.
 939e70e update AUTHORS file
@@ -551,12 +551,12 @@ f691f0e simplify VP8IteratorSaveBoundary() arg passing
 93402f0 multi-threaded segment analysis
 7e2d659 Merge "remove the PACK() bit-packing tricks"
 c13fecf remove the PACK() bit-packing tricks
-2fd091c Merge "use NULL for lf_stats_ testing, not bool"
+2fd091c Merge "use nullptr for lf_stats_ testing, not bool"
 b11c9d6 dwebp: use default dct_method
 4bb8465 Merge "(de)mux.h: wrap pseudo-code in /* */"
 cfb56b1 make -pass option work with token buffers
 5416aab (de)mux.h: wrap pseudo-code in /* */
-35dba33 use NULL for lf_stats_ testing, not bool
+35dba33 use nullptr for lf_stats_ testing, not bool
 733a7fa enc->Iterator memory cleanup
 e81fac8 Add support for "no blend" in webpmux binary
 3b80bc4 gif2webp: Separate out each step into a method
@@ -574,9 +574,9 @@ ede3602 Merge "cosmetics: fix indent"
 388a724 cosmetics: fix indent
 4c7322c Merge "dsp: msvc compatibility"
 d50c7e3 Merge "5-7% faster SSE2 versions of YUV->RGB conversion functions"
-b8ab784 Merge "simplify upsampler calls: only allow 'bottom' to be NULL"
+b8ab784 Merge "simplify upsampler calls: only allow 'bottom' to be nullptr"
 df6cebf 5-7% faster SSE2 versions of YUV->RGB conversion functions
-ad6ac32 simplify upsampler calls: only allow 'bottom' to be NULL
+ad6ac32 simplify upsampler calls: only allow 'bottom' to be nullptr
 a5e8afa output to stdout if file name is "-"
 f358450 dsp: msvc compatibility
 43a7c8e Merge "cosmetics"
@@ -804,8 +804,8 @@ b26e5ad gif2webp: Fix ICC and XMP support
 96e948d don't forward declare enums
 f4f9088 prevent signed int overflow in left shift ops
 0261545 cosmetics: remove unnecessary ';'s
-7ebdf11 Merge "Fix few missing comparisons to NULL"
-1579989 Fix few missing comparisons to NULL
+7ebdf11 Merge "Fix few missing comparisons to nullptr"
+1579989 Fix few missing comparisons to nullptr
 ea1b21c Cleaned up VP8GetHeaders() so that it parses only frame header
 b66caee dwebp: add support for BMP output
 ff885bf add precision about dynamic output reallocation with IDecoder
@@ -1013,8 +1013,8 @@ b01681a Fix for demuxer frame iteration:
 841a3ba Merge "Remove -Wshadow warnings."
 8fd0252 Merge "upsampling_neon.c: fix build"
 6efed26 Remove -Wshadow warnings.
-60904aa Merge "allow WebPINewRGB/YUVA to be passed a NULL output buffer."
-b7adf37 allow WebPINewRGB/YUVA to be passed a NULL output buffer.
+60904aa Merge "allow WebPINewRGB/YUVA to be passed a nullptr output buffer."
+b7adf37 allow WebPINewRGB/YUVA to be passed a nullptr output buffer.
 27f8f74 upsampling_neon.c: fix build
 06b9cdf gitignore: add IOS related directories
 f112221 Merge "Fix more comments for iobuild.sh"
@@ -1150,10 +1150,10 @@ d573577 Metadata specification in container spec
 0ca584c Merge "Color profile specification in container spec"
 e8b41ad add NEON asm version for WHT inverse transform
 af6f0db Color profile specification in container spec
-a61a824 Merge "Add NULL check in chunk APIs"
+a61a824 Merge "Add nullptr check in chunk APIs"
 0e8b7ee fix WebPPictureView() unassigned strides
 75e5f17 ARM/NEON: 30% encoding speed-up
-02b4356 Add NULL check in chunk APIs
+02b4356 Add nullptr check in chunk APIs
 a077072 mux struct naming
 6c66dde Merge "Tune Lossless encoder"
 ab5ea21 Tune Lossless encoder
@@ -1215,7 +1215,7 @@ d7a5ac8 vwebp: use demux interface
 5725cab new segmentation algorithm
 2cf1f81 Merge "fix the BITS=8 case"
 12f78ae fix the BITS=8 case
-6920c71 fix MSVC warnings regarding implicit uint64 to uint32 conversions
+6920c71 fix MSVC warnings regarding implicit uint64 to uint32_t conversions
 f6c096a webpmux binary: Rename 'xmp' option to 'meta'
 ddfe871 webpmux help correction
 b7c5544 Merge "Make *InitSSE2() functions be empty on non-SSE2 platform"
@@ -1655,9 +1655,9 @@ aea7923 muxi.h: remove some unused defines
 0142249 update NEWS file for next release
 29e3f7e Merge "dec: remove deprecated WebPINew()"
 4718e44 Merge "muxedit: a few more size_t changes"
-82654f9 Merge "muxedit: remove a few redundant NULL checks"
+82654f9 Merge "muxedit: remove a few redundant nullptr checks"
 02f27fb dec: remove deprecated WebPINew()
-ccddb3f muxedit: remove a few redundant NULL checks
+ccddb3f muxedit: remove a few redundant nullptr checks
 a6cdf71 muxedit: a few more size_t changes
 a384689 Merge "mux: remove unused LIST_ID"
 11ae46a alpha.c: quiet some size_t -> int conversion warnings
@@ -1733,9 +1733,9 @@ cd8c3ba fix some warnings: down-cast and possibly-uninitialized variable
 0a7102b ~1% improvement of alpha compression
 3bc1b14 Merge "Reformat container doc"
 dc17abd mux: cosmetics
-cb5810d Merge "WebPMuxGetImage: allow image param to be NULL"
+cb5810d Merge "WebPMuxGetImage: allow image param to be nullptr"
 506a4af mux: cosmetics
-135e8b1 WebPMuxGetImage: allow image param to be NULL
+135e8b1 WebPMuxGetImage: allow image param to be nullptr
 de556b6 Merge "README.mux: reword some descriptions"
 0ee2aeb Makefile.vc: use batch mode rules
 d9acddc msvc: move {i,p}db creation to object directory

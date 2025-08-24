@@ -127,7 +127,7 @@ static OPJ_BOOL opj_seek_from_file (OPJ_OFF_T p_nb_bytes, FILE * p_user_data)
 #ifdef _WIN32
 #ifndef OPJ_STATIC
 BOOL APIENTRY
-DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+DllMain(HANDLE hModule, uint32_t ul_reason_for_call, LPVOID lpReserved) {
 
 	OPJ_ARG_NOT_USED(lpReserved);
 	OPJ_ARG_NOT_USED(hModule);
@@ -239,7 +239,7 @@ opj_codec_t* OPJ_CALLCONV opj_create_decompress(OPJ_CODEC_FORMAT p_format)
 
 			if (! l_codec->m_codec) {
 				opj_free(l_codec);
-				return NULL;
+				return nullptr;
 			}
 
 			break;
@@ -874,7 +874,7 @@ opj_codestream_info_v2_t* OPJ_CALLCONV opj_get_cstr_info(opj_codec_t *p_codec)
 		return l_codec->opj_get_codec_info(l_codec->m_codec);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void OPJ_CALLCONV opj_destroy_cstr_info(opj_codestream_info_v2_t **cstr_info) {
@@ -889,7 +889,7 @@ void OPJ_CALLCONV opj_destroy_cstr_info(opj_codestream_info_v2_t **cstr_info) {
 		}
 
 		opj_free((*cstr_info));
-		(*cstr_info) = NULL;
+		(*cstr_info) = nullptr;
 	}
 }
 
@@ -901,14 +901,14 @@ opj_codestream_index_t * OPJ_CALLCONV opj_get_cstr_index(opj_codec_t *p_codec)
 		return l_codec->opj_get_codec_index(l_codec->m_codec);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void OPJ_CALLCONV opj_destroy_cstr_index(opj_codestream_index_t **p_cstr_index)
 {
 	if (*p_cstr_index){
 		j2k_destroy_cstr_index(*p_cstr_index);
-		(*p_cstr_index) = NULL;
+		(*p_cstr_index) = nullptr;
 	}
 }
 
@@ -927,7 +927,7 @@ opj_stream_t* OPJ_CALLCONV opj_stream_create_file_stream_v3 (
     const char *mode;
 
     if (! fname) {
-        return NULL;
+        return nullptr;
     }
     
     if(p_is_read_stream) mode = "rb"; else mode = "wb";
@@ -935,13 +935,13 @@ opj_stream_t* OPJ_CALLCONV opj_stream_create_file_stream_v3 (
     p_file = fopen(fname, mode);
 
     if (! p_file) {
-	    return NULL;
+	    return nullptr;
     }
 
     l_stream = opj_stream_create(p_size,p_is_read_stream);
     if (! l_stream) {
         fclose(p_file);
-        return NULL;
+        return nullptr;
     }
 
     opj_stream_set_user_data(l_stream, p_file, (opj_stream_free_user_data_fn) fclose);

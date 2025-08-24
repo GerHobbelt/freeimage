@@ -37,7 +37,7 @@ extern "C"
         }
         catch (std::bad_alloc)
             {
-                return NULL;
+                return nullptr;
             }
         return &(ret->imgdata);
     }
@@ -49,7 +49,7 @@ extern "C"
     int   libraw_cameraCount() { return LibRaw::cameraCount(); }
     const char* libraw_unpack_function_name(libraw_data_t* lr)
     {
-        if(!lr) return "NULL parameter passed";
+        if(!lr) return "nullptr parameter passed";
         LibRaw *ip = (LibRaw*) lr->parent_class;
         return ip->unpack_function_name();
     }
@@ -69,7 +69,7 @@ extern "C"
         return ip->open_file(file);
     }
 
-    int libraw_open_file_ex(libraw_data_t* lr, const char *file,INT64 sz)
+    int libraw_open_file_ex(libraw_data_t* lr, const char *file,int64_t sz)
     {
         if(!lr) return EINVAL;
         LibRaw *ip = (LibRaw*) lr->parent_class;
@@ -83,7 +83,7 @@ extern "C"
         return ip->open_file(file);
     }
 
-    int libraw_open_wfile_ex(libraw_data_t* lr, const wchar_t *file,INT64 sz)
+    int libraw_open_wfile_ex(libraw_data_t* lr, const wchar_t *file,int64_t sz)
     {
         if(!lr) return EINVAL;
         LibRaw *ip = (LibRaw*) lr->parent_class;
@@ -185,13 +185,13 @@ extern "C"
     }
     libraw_processed_image_t *libraw_dcraw_make_mem_image(libraw_data_t* lr,int *errc)
     {
-        if(!lr) { if(errc) *errc=EINVAL; return NULL;}
+        if(!lr) { if(errc) *errc=EINVAL; return nullptr;}
         LibRaw *ip = (LibRaw*) lr->parent_class;
         return ip->dcraw_make_mem_image(errc);
     }
     libraw_processed_image_t *libraw_dcraw_make_mem_thumb(libraw_data_t* lr,int *errc)
     {
-        if(!lr) { if(errc) *errc=EINVAL; return NULL;}
+        if(!lr) { if(errc) *errc=EINVAL; return nullptr;}
         LibRaw *ip = (LibRaw*) lr->parent_class;
         return ip->dcraw_make_mem_thumb(errc);
     }

@@ -78,7 +78,7 @@ exit:
 Bool PerfTimerNew(PERFTIMERSTATE **ppNewPerfTimer)
 {
     Bool            fResult = FALSE;
-    PERFTIMERSTATE *pState = NULL;
+    PERFTIMERSTATE *pState = nullptr;
     clock_t         ctResult;
 
     // Check if this clock works
@@ -90,7 +90,7 @@ Bool PerfTimerNew(PERFTIMERSTATE **ppNewPerfTimer)
     }
 
     pState = malloc(sizeof(*pState));
-    if (NULL == pState)
+    if (nullptr == pState)
     {
         TraceResult(E_OUTOFMEMORY);
         goto exit;
@@ -105,7 +105,7 @@ Bool PerfTimerNew(PERFTIMERSTATE **ppNewPerfTimer)
     fResult = TRUE;
 
 exit:
-    assert(fResult || NULL == pState); // If error, we need to free pState
+    assert(fResult || nullptr == pState); // If error, we need to free pState
     return fResult;
 } // PerfTimerNew
 
@@ -122,7 +122,7 @@ Bool PerfTimerStart(PERFTIMERSTATE *pState)
 {
     Bool fResult = FALSE;
 
-    if (NULL == pState)
+    if (nullptr == pState)
     {
         // Can happen because we typically ignore errors and use a single bool to
         // control all perf timing (some of which can fail to init)
@@ -158,7 +158,7 @@ Bool PerfTimerStop(PERFTIMERSTATE *pState)
 {
     Bool        fResult = FALSE;
 
-    if (NULL == pState)
+    if (nullptr == pState)
     {
         // Can happen because we typically ignore errors and use a single bool to
         // control all perf timing (some of which can fail to init)
@@ -187,7 +187,7 @@ Bool PerfTimerGetResults(PERFTIMERSTATE *pState, PERFTIMERRESULTS *pResults)
     Bool            fResult = FALSE;
     PERFTIMERTIME   iElapsedTime;
 
-    if (NULL == pState)
+    if (nullptr == pState)
     {
         // Can happen because we typically ignore errors and use a single bool to
         // control all perf timing (some of which can fail to init)
@@ -231,13 +231,13 @@ Bool PerfTimerCopyStartTime(PERFTIMERSTATE *pDestPerfTimer,
 {
     Bool    fResult = FALSE;
 
-    if (NULL == pDestPerfTimer)
+    if (nullptr == pDestPerfTimer)
     {
         TraceResult(E_INVALIDARG);
         goto exit;
     }
 
-    if (NULL == pSrcPerfTimer)
+    if (nullptr == pSrcPerfTimer)
     {
         TraceResult(E_INVALIDARG);
         goto exit;

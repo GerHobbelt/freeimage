@@ -109,7 +109,7 @@ WEBP_EXTERN(WebPMux*) WebPNewInternal(int);
 // Creates an empty mux object.
 // Returns:
 //   A pointer to the newly created empty mux object.
-//   Or NULL in case of memory error.
+//   Or nullptr in case of memory error.
 static WEBP_INLINE WebPMux* WebPMuxNew(void) {
   return WebPNewInternal(WEBP_MUX_ABI_VERSION);
 }
@@ -132,7 +132,7 @@ WEBP_EXTERN(WebPMux*) WebPMuxCreateInternal(const WebPData*, int, int);
 //               object and value 0 indicates data will NOT be copied.
 // Returns:
 //   A pointer to the mux object created from given data - on success.
-//   NULL - In case of invalid data or memory error.
+//   nullptr - In case of invalid data or memory error.
 static WEBP_INLINE WebPMux* WebPMuxCreate(const WebPData* bitstream,
                                           int copy_data) {
   return WebPMuxCreateInternal(bitstream, copy_data, WEBP_MUX_ABI_VERSION);
@@ -156,7 +156,7 @@ static WEBP_INLINE WebPMux* WebPMuxCreate(const WebPData* bitstream,
 //   copy_data - (in) value 1 indicates given data WILL be copied to the mux
 //               object and value 0 indicates data will NOT be copied.
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux, fourcc or chunk_data is NULL
+//   WEBP_MUX_INVALID_ARGUMENT - if mux, fourcc or chunk_data is nullptr
 //                               or if fourcc corresponds to an image chunk.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
@@ -172,7 +172,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxSetChunk(
 //                 e.g., "ICCP", "XMP ", "EXIF" etc.
 //   chunk_data - (out) returned chunk data
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux, fourcc or chunk_data is NULL
+//   WEBP_MUX_INVALID_ARGUMENT - if mux, fourcc or chunk_data is nullptr
 //                               or if fourcc corresponds to an image chunk.
 //   WEBP_MUX_NOT_FOUND - If mux does not contain a chunk with the given id.
 //   WEBP_MUX_OK - on success.
@@ -185,7 +185,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxGetChunk(
 //   fourcc - (in) a character array containing the fourcc of the chunk;
 //                 e.g., "ICCP", "XMP ", "EXIF" etc.
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux or fourcc is NULL
+//   WEBP_MUX_INVALID_ARGUMENT - if mux or fourcc is nullptr
 //                               or if fourcc corresponds to an image chunk.
 //   WEBP_MUX_NOT_FOUND - If mux does not contain a chunk with the given fourcc.
 //   WEBP_MUX_OK - on success.
@@ -219,7 +219,7 @@ struct WebPMuxFrameInfo {
 //   copy_data - (in) value 1 indicates given data WILL be copied to the mux
 //               object and value 0 indicates data will NOT be copied.
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux is NULL or bitstream is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux is nullptr or bitstream is nullptr.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
 WEBP_EXTERN(WebPMuxError) WebPMuxSetImage(
@@ -238,7 +238,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxSetImage(
 //   copy_data - (in) value 1 indicates given data WILL be copied to the mux
 //               object and value 0 indicates data will NOT be copied.
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux or frame is NULL
+//   WEBP_MUX_INVALID_ARGUMENT - if mux or frame is nullptr
 //                               or if content of 'frame' is invalid.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
@@ -255,7 +255,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxPushFrame(
 //   nth - (in) index of the frame in the mux object
 //   frame - (out) data of the returned frame
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux or frame is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux or frame is nullptr.
 //   WEBP_MUX_NOT_FOUND - if there are less than nth frames in the mux object.
 //   WEBP_MUX_BAD_DATA - if nth frame chunk in mux is invalid.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
@@ -269,7 +269,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxGetFrame(
 //   mux - (in/out) object from which a frame is to be deleted
 //   nth - (in) The position from which the frame is to be deleted
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux is nullptr.
 //   WEBP_MUX_NOT_FOUND - If there are less than nth frames in the mux object
 //                        before deletion.
 //   WEBP_MUX_OK - on success.
@@ -294,7 +294,7 @@ struct WebPMuxAnimParams {
 //   mux - (in/out) object in which ANIM chunk is to be set/added
 //   params - (in) animation parameters.
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux or params is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux or params is nullptr.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
 WEBP_EXTERN(WebPMuxError) WebPMuxSetAnimationParams(
@@ -305,7 +305,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxSetAnimationParams(
 //   mux - (in) object from which the animation parameters to be fetched
 //   params - (out) animation parameters extracted from the ANIM chunk
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux or params is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux or params is nullptr.
 //   WEBP_MUX_NOT_FOUND - if ANIM chunk is not present in mux object.
 //   WEBP_MUX_OK - on success.
 WEBP_EXTERN(WebPMuxError) WebPMuxGetAnimationParams(
@@ -326,7 +326,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxGetAnimationParams(
 //   width - (in) canvas width
 //   height - (in) canvas height
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux is NULL; or
+//   WEBP_MUX_INVALID_ARGUMENT - if mux is nullptr; or
 //                               width or height are invalid or out of bounds
 //   WEBP_MUX_OK - on success.
 WEBP_EXTERN(WebPMuxError) WebPMuxSetCanvasSize(WebPMux* mux,
@@ -341,7 +341,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxSetCanvasSize(WebPMux* mux,
 //   width - (out) canvas width
 //   height - (out) canvas height
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux, width or height is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux, width or height is nullptr.
 //   WEBP_MUX_BAD_DATA - if VP8X/VP8/VP8L chunk or canvas size is invalid.
 //   WEBP_MUX_OK - on success.
 WEBP_EXTERN(WebPMuxError) WebPMuxGetCanvasSize(const WebPMux* mux,
@@ -357,7 +357,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxGetCanvasSize(const WebPMux* mux,
 //           mux object. This will be an OR of various flag values.
 //           Enum 'WebPFeatureFlags' can be used to test individual flag values.
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux or flags is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux or flags is nullptr.
 //   WEBP_MUX_BAD_DATA - if VP8X/VP8/VP8L chunk or canvas size is invalid.
 //   WEBP_MUX_OK - on success.
 WEBP_EXTERN(WebPMuxError) WebPMuxGetFeatures(const WebPMux* mux,
@@ -369,7 +369,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxGetFeatures(const WebPMux* mux,
 //   id - (in) chunk id specifying the type of chunk
 //   num_elements - (out) number of chunks with the given chunk id
 // Returns:
-//   WEBP_MUX_INVALID_ARGUMENT - if mux, or num_elements is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux, or num_elements is nullptr.
 //   WEBP_MUX_OK - on success.
 WEBP_EXTERN(WebPMuxError) WebPMuxNumChunks(const WebPMux* mux,
                                            WebPChunkId id, int* num_elements);
@@ -386,7 +386,7 @@ WEBP_EXTERN(WebPMuxError) WebPMuxNumChunks(const WebPMux* mux,
 //   assembled_data - (out) assembled WebP data
 // Returns:
 //   WEBP_MUX_BAD_DATA - if mux object is invalid.
-//   WEBP_MUX_INVALID_ARGUMENT - if mux or assembled_data is NULL.
+//   WEBP_MUX_INVALID_ARGUMENT - if mux or assembled_data is nullptr.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
 WEBP_EXTERN(WebPMuxError) WebPMuxAssemble(WebPMux* mux,
@@ -458,11 +458,11 @@ WEBP_EXTERN(WebPAnimEncoder*) WebPAnimEncoderNewInternal(
 // Creates and initializes a WebPAnimEncoder object.
 // Parameters:
 //   width/height - (in) canvas width and height of the animation.
-//   encoder_options - (in) encoding options; can be passed NULL to pick
+//   encoder_options - (in) encoding options; can be passed nullptr to pick
 //                     reasonable defaults.
 // Returns:
 //   A pointer to the newly created WebPAnimEncoder object.
-//   Or NULL in case of memory error.
+//   Or nullptr in case of memory error.
 static WEBP_INLINE WebPAnimEncoder* WebPAnimEncoderNew(
     int width, int height, const WebPAnimEncoderOptions* enc_options) {
   return WebPAnimEncoderNewInternal(width, height, enc_options,
@@ -475,7 +475,7 @@ static WEBP_INLINE WebPAnimEncoder* WebPAnimEncoderNew(
 //   enc - (in/out) object to which the frame is to be added.
 //   frame - (in/out) frame data in ARGB or YUVA format.
 //   duration - (in) frame duration
-//   config - (in) encoding options; can be passed NULL to pick
+//   config - (in) encoding options; can be passed nullptr to pick
 //            reasonable defaults.
 // Returns:
 //   On error, returns false and frame->error_code is set appropriately.

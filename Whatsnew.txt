@@ -79,13 +79,13 @@ March 23rd, 2014 - 3.16.0
 * [Andreas Baumann] HDR plugin: removed a comma at end of an enumerator list
 * [mark] added missing <string.h> in OpenEXR (needed with mingw)
 * [Herve Drolon] added support for FIC_MINISWHITE color type inside FreeImage_GetColorType for FIT_UINT16 images
-* [Takamasa Mitsuji] FreeImage_Rescale : fixed a NULL-pointer access bug occurring for transparent images with a linear palette
+* [Takamasa Mitsuji] FreeImage_Rescale : fixed a nullptr-pointer access bug occurring for transparent images with a linear palette
 * [Herve Drolon] fixed PSD parser when reading PSD files with corrupted resources
 * [Herve Drolon] fixed TIFF plugin truncating metadata tag on loading if type is ASCII and it's value is of variable size (TIFF_VARIABLE) 
 * [Herve Drolon] fixed loading of TGA 8-bit files with a palette size greater that 256
 * [Anton Kukoba] TIFF parser didn't initialize the memory with zeros in stripped mode. This caused random bitmap data if the tiff file was corrupted/invalid.
 * [Herve Drolon] improved TGA file detection when the format version is < 2.0
-* [Christian Heimes] fixed compiler errors on 64bit Linux (INT64 / UINT64 type mismatches and missing prototype for memset)
+* [Christian Heimes] fixed compiler errors on 64bit Linux (int64_t / uint64_t type mismatches and missing prototype for memset)
 * [Christian Heimes] fixed FreeImage_Get*Mask() returning 0 on 24-, -32-bit FIT_BITMAP images
 * [Mihail Naydenov] fixed GIF plugin LZW decoder failing on some images
 * [Herve Drolon] fixed the TIFF plugin against race condition when used simultaneously in multiple threads
@@ -109,8 +109,8 @@ October 27th, 2012 - 3.15.4
 * [Herve Drolon] fixed loading of JPEG with invalid IPTC marker
 * [Herve Drolon] changed default TIF RowsPerStrips to image height when saving as TIF G3 or TIF G4 (improved compression)
 * [Herve Drolon] improved the memory behavior of the RAW plugin (do not allocate huge variables on the stack)
-* [Herve Drolon] fixed FreeImage_AllocateT so that it returns NULL with images with a zero width and/or height
-* [Herve Drolon] replaced FIUINT64/FIINT64 with standard types UINT64/INT64
+* [Herve Drolon] fixed FreeImage_AllocateT so that it returns nullptr with images with a zero width and/or height
+* [Herve Drolon] replaced FIUINT64/FIINT64 with standard types uint64_t/int64_t
 * [Rustam Abdullaev] fixed PNG plugin with saving of transparent monochrome images
 * [Floris van den Berg] improved plugin registering when replacing an existing internal plugin with a new equivalent plugin
 * [Herve Drolon] fixed a crash when calling FreeImage_GetColorType on a 32-bit RGBA images loaded with the FIF_LOAD_NOPIXELS flag
@@ -258,7 +258,7 @@ August 9th, 2010 - 3.14.0
 * [phe02sf] fixed handling of bad Exif-GPS data in a Nikon D5000 image
 * [Atsuhiro Igarashi] fixed handling of last data block in PluginGIF::Save (sometimes it saves corrupted images)
 * [Christian Heimes] fixed saving of G3 & G4 compressed TIFF with 1bpp on 64bit Linux
-* [Herve Drolon] fixed long data type being 64-bit on Unix/Linux platforms (use LONG/DWORD instead of long/unsigned long)
+* [Herve Drolon] fixed long data type being 64-bit on Unix/Linux platforms (use int32_t/uint32_t instead of long/unsigned long)
 * [Herve Drolon] fixed a memory leak in FreeImage_DeletePage
 * [Herve Drolon] fixed the loading of RGBZ images in OpenEXR plugin
 * [Lucian Sabo] improved conversion from 1-, 4-, 8-bpp transparent images to 32-bpp
@@ -908,7 +908,7 @@ July 22th 2001 - 2.4.0
 * (Yours Detlev) fixed memory leak in FreeImage_GetFIFFromFilename
 * (Yours Detlev) fixed memory leak in the ICO plugin
 * (Yours Detlev) fixed memory leak in the PNG plugin
-* fixed potential NULL-pointer access bug in Plugin::AddNode
+* fixed potential nullptr-pointer access bug in Plugin::AddNode
 * fixed problems with linking the static lib
 - removed LBM plugin. Its functionality is placed in the IFF plugin now
 - removed FreeImage_GetFIFByIndex

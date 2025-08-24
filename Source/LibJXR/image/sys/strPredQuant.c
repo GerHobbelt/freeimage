@@ -135,7 +135,7 @@ Int allocatePredInfo(CWMImageStrCodec *pSC)
         if(((mbWidth >> 16) * iChannels * 2 * sizeof(CWMIPredInfo)) & 0xffff0000)
             return ICERR_ERROR;    
     pMemory = (CWMIPredInfo *)malloc(mbWidth * iChannels * 2 * sizeof(CWMIPredInfo));
-    if (pMemory == NULL)
+    if (pMemory == nullptr)
         return ICERR_ERROR;
 
     pSC->pPredInfoMemory = pMemory;
@@ -159,7 +159,7 @@ Void freePredInfo(CWMImageStrCodec *pSC)
 {
     if (pSC->pPredInfoMemory)
         free (pSC->pPredInfoMemory);
-    pSC->pPredInfoMemory = NULL;
+    pSC->pPredInfoMemory = nullptr;
 }
 
 /* get AC prediction mode: 0(from left) 1(from top) 2(none) */

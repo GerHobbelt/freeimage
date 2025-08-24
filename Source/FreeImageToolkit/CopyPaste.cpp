@@ -68,8 +68,8 @@ Combine1(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned 
 		return FALSE;
 	}
 
-	BYTE *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib));
-	BYTE *src_bits = FreeImage_GetBits(src_dib);	
+	uint8_t *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib));
+	uint8_t *src_bits = FreeImage_GetBits(src_dib);	
 
 	// combine images
 	for(unsigned rows = 0; rows < FreeImage_GetHeight(src_dib); rows++) {
@@ -109,18 +109,18 @@ Combine4(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned 
 	// get src and dst palettes
 	RGBQUAD *src_pal = FreeImage_GetPalette(src_dib);
 	RGBQUAD *dst_pal = FreeImage_GetPalette(dst_dib);
-	if (src_pal == NULL || dst_pal == NULL) {
+	if (src_pal == nullptr || dst_pal == nullptr) {
 		return FALSE;
 	}
 
 	// build a swap table for the closest color match from the source palette to the destination palette
 
 	for (int i = 0; i < 16; i++)	{
-		WORD min_diff = (WORD)-1;
+		uint16_t min_diff = (uint16_t)-1;
 
 		for (int j = 0; j < 16; j++)	{
 			// calculates the color difference using a Manhattan distance
-			WORD abs_diff = (WORD)(
+			uint16_t abs_diff = (uint16_t)(
 				abs(src_pal[i].rgbBlue - dst_pal[j].rgbBlue)
 				+ abs(src_pal[i].rgbGreen - dst_pal[j].rgbGreen)
 				+ abs(src_pal[i].rgbRed - dst_pal[j].rgbRed)
@@ -136,8 +136,8 @@ Combine4(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned 
 		}
 	}
 
-	BYTE *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) *	FreeImage_GetPitch(dst_dib)) + (x >> 1);
-	BYTE *src_bits = FreeImage_GetBits(src_dib);    
+	uint8_t *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) *	FreeImage_GetPitch(dst_dib)) + (x >> 1);
+	uint8_t *src_bits = FreeImage_GetBits(src_dib);    
 
 	// combine images
 
@@ -146,8 +146,8 @@ Combine4(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned 
 	unsigned src_width  = FreeImage_GetWidth(src_dib);
 	unsigned src_height = FreeImage_GetHeight(src_dib);
 
-	BYTE *buffer = (BYTE *)malloc(src_line * sizeof(BYTE));
-	if (buffer == NULL) {
+	uint8_t *buffer = (uint8_t *)malloc(src_line * sizeof(uint8_t));
+	if (buffer == nullptr) {
 		return FALSE;
 	}
 
@@ -166,7 +166,7 @@ Combine4(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned 
 		// change the values in the temp row to be those from the swap table
 		
 		for (unsigned cols = 0; cols < src_line; cols++) {
-			buffer[cols] = (BYTE)((swapTable[HINIBBLE(buffer[cols]) >> 4] << 4) + swapTable[LOWNIBBLE(buffer[cols])]);
+			buffer[cols] = (uint8_t)((swapTable[HINIBBLE(buffer[cols]) >> 4] << 4) + swapTable[LOWNIBBLE(buffer[cols])]);
 		}
 
 		if (bOddStart) {	
@@ -205,8 +205,8 @@ Combine8(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned 
 		return FALSE;
 	}
 
-	BYTE *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x);
-	BYTE *src_bits = FreeImage_GetBits(src_dib);	
+	uint8_t *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x);
+	uint8_t *src_bits = FreeImage_GetBits(src_dib);	
 
 	if(alpha > 255) {
 		// combine images
@@ -220,7 +220,7 @@ Combine8(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned 
 		// alpha blend images
 		for(unsigned rows = 0; rows < FreeImage_GetHeight(src_dib); rows++) {
 			for (unsigned cols = 0; cols < FreeImage_GetLine(src_dib); cols++) {							
-				dst_bits[cols] = (BYTE)(((src_bits[cols] - dst_bits[cols]) * alpha + (dst_bits[cols] << 8)) >> 8);
+				dst_bits[cols] = (uint8_t)(((src_bits[cols] - dst_bits[cols]) * alpha + (dst_bits[cols] << 8)) >> 8);
 			}
 
 			dst_bits += FreeImage_GetPitch(dst_dib);
@@ -247,8 +247,8 @@ Combine16_555(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsi
 		return FALSE;
 	}
 
-	BYTE *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x * 2);
-	BYTE *src_bits = FreeImage_GetBits(src_dib);	
+	uint8_t *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x * 2);
+	uint8_t *src_bits = FreeImage_GetBits(src_dib);	
 
 	if (alpha > 255) {
 		for(unsigned rows = 0; rows < FreeImage_GetHeight(src_dib); rows++) {
@@ -263,24 +263,24 @@ Combine16_555(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsi
 				RGBTRIPLE color_s;
 				RGBTRIPLE color_t;
 				
-				WORD *tmp1 = (WORD *)&dst_bits[cols];
-				WORD *tmp2 = (WORD *)&src_bits[cols];
+				uint16_t *tmp1 = (uint16_t *)&dst_bits[cols];
+				uint16_t *tmp2 = (uint16_t *)&src_bits[cols];
 
 				// convert 16-bit colors to 24-bit
 
-				color_s.rgbtRed = (BYTE)(((*tmp1 & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) << 3);
-				color_s.rgbtGreen = (BYTE)(((*tmp1 & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) << 3);
-				color_s.rgbtBlue = (BYTE)(((*tmp1 & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) << 3);
+				color_s.rgbtRed = (uint8_t)(((*tmp1 & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) << 3);
+				color_s.rgbtGreen = (uint8_t)(((*tmp1 & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) << 3);
+				color_s.rgbtBlue = (uint8_t)(((*tmp1 & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) << 3);
 
-				color_t.rgbtRed = (BYTE)(((*tmp2 & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) << 3);
-				color_t.rgbtGreen = (BYTE)(((*tmp2 & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) << 3);
-				color_t.rgbtBlue = (BYTE)(((*tmp2 & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) << 3);
+				color_t.rgbtRed = (uint8_t)(((*tmp2 & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) << 3);
+				color_t.rgbtGreen = (uint8_t)(((*tmp2 & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) << 3);
+				color_t.rgbtBlue = (uint8_t)(((*tmp2 & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) << 3);
 
 				// alpha blend
 
-				color_s.rgbtRed = (BYTE)(((color_t.rgbtRed - color_s.rgbtRed) * alpha + (color_s.rgbtRed << 8)) >> 8);
-				color_s.rgbtGreen = (BYTE)(((color_t.rgbtGreen - color_s.rgbtGreen) * alpha + (color_s.rgbtGreen << 8)) >> 8);
-				color_s.rgbtBlue = (BYTE)(((color_t.rgbtBlue - color_s.rgbtBlue) * alpha + (color_s.rgbtBlue << 8)) >> 8);
+				color_s.rgbtRed = (uint8_t)(((color_t.rgbtRed - color_s.rgbtRed) * alpha + (color_s.rgbtRed << 8)) >> 8);
+				color_s.rgbtGreen = (uint8_t)(((color_t.rgbtGreen - color_s.rgbtGreen) * alpha + (color_s.rgbtGreen << 8)) >> 8);
+				color_s.rgbtBlue = (uint8_t)(((color_t.rgbtBlue - color_s.rgbtBlue) * alpha + (color_s.rgbtBlue << 8)) >> 8);
 
 				// convert 24-bit color back to 16-bit
 
@@ -307,8 +307,8 @@ Combine16_565(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsi
 		return FALSE;
 	}
 
-	BYTE *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x * 2);
-	BYTE *src_bits = FreeImage_GetBits(src_dib);	
+	uint8_t *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x * 2);
+	uint8_t *src_bits = FreeImage_GetBits(src_dib);	
 
 	if (alpha > 255) {
 		for(unsigned rows = 0; rows < FreeImage_GetHeight(src_dib); rows++) {
@@ -323,24 +323,24 @@ Combine16_565(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsi
 				RGBTRIPLE color_s;
 				RGBTRIPLE color_t;
 				
-				WORD *tmp1 = (WORD *)&dst_bits[cols];
-				WORD *tmp2 = (WORD *)&src_bits[cols];
+				uint16_t *tmp1 = (uint16_t *)&dst_bits[cols];
+				uint16_t *tmp2 = (uint16_t *)&src_bits[cols];
 
 				// convert 16-bit colors to 24-bit
 
-				color_s.rgbtRed = (BYTE)(((*tmp1 & FI16_565_RED_MASK) >> FI16_565_RED_SHIFT) << 3);
-				color_s.rgbtGreen = (BYTE)(((*tmp1 & FI16_565_GREEN_MASK) >> FI16_565_GREEN_SHIFT) << 2);
-				color_s.rgbtBlue = (BYTE)(((*tmp1 & FI16_565_BLUE_MASK) >> FI16_565_BLUE_SHIFT) << 3);
+				color_s.rgbtRed = (uint8_t)(((*tmp1 & FI16_565_RED_MASK) >> FI16_565_RED_SHIFT) << 3);
+				color_s.rgbtGreen = (uint8_t)(((*tmp1 & FI16_565_GREEN_MASK) >> FI16_565_GREEN_SHIFT) << 2);
+				color_s.rgbtBlue = (uint8_t)(((*tmp1 & FI16_565_BLUE_MASK) >> FI16_565_BLUE_SHIFT) << 3);
 
-				color_t.rgbtRed = (BYTE)(((*tmp2 & FI16_565_RED_MASK) >> FI16_565_RED_SHIFT) << 3);
-				color_t.rgbtGreen = (BYTE)(((*tmp2 & FI16_565_GREEN_MASK) >> FI16_565_GREEN_SHIFT) << 2);
-				color_t.rgbtBlue = (BYTE)(((*tmp2 & FI16_565_BLUE_MASK) >> FI16_565_BLUE_SHIFT) << 3);
+				color_t.rgbtRed = (uint8_t)(((*tmp2 & FI16_565_RED_MASK) >> FI16_565_RED_SHIFT) << 3);
+				color_t.rgbtGreen = (uint8_t)(((*tmp2 & FI16_565_GREEN_MASK) >> FI16_565_GREEN_SHIFT) << 2);
+				color_t.rgbtBlue = (uint8_t)(((*tmp2 & FI16_565_BLUE_MASK) >> FI16_565_BLUE_SHIFT) << 3);
 
 				// alpha blend
 
-				color_s.rgbtRed = (BYTE)(((color_t.rgbtRed - color_s.rgbtRed) * alpha + (color_s.rgbtRed << 8)) >> 8);
-				color_s.rgbtGreen = (BYTE)(((color_t.rgbtGreen - color_s.rgbtGreen) * alpha + (color_s.rgbtGreen << 8)) >> 8);
-				color_s.rgbtBlue = (BYTE)(((color_t.rgbtBlue - color_s.rgbtBlue) * alpha + (color_s.rgbtBlue << 8)) >> 8);
+				color_s.rgbtRed = (uint8_t)(((color_t.rgbtRed - color_s.rgbtRed) * alpha + (color_s.rgbtRed << 8)) >> 8);
+				color_s.rgbtGreen = (uint8_t)(((color_t.rgbtGreen - color_s.rgbtGreen) * alpha + (color_s.rgbtGreen << 8)) >> 8);
+				color_s.rgbtBlue = (uint8_t)(((color_t.rgbtBlue - color_s.rgbtBlue) * alpha + (color_s.rgbtBlue << 8)) >> 8);
 
 				// convert 24-bit color back to 16-bit
 
@@ -371,8 +371,8 @@ Combine24(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned
 		return FALSE;
 	}
 
-	BYTE *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x * 3);
-	BYTE *src_bits = FreeImage_GetBits(src_dib);	
+	uint8_t *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x * 3);
+	uint8_t *src_bits = FreeImage_GetBits(src_dib);	
 
 	if(alpha > 255) {
 		// combine images
@@ -386,7 +386,7 @@ Combine24(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned
 		// alpha blend images
 		for(unsigned rows = 0; rows < FreeImage_GetHeight(src_dib); rows++) {
 			for (unsigned cols = 0; cols < FreeImage_GetLine(src_dib); cols++) {							
-				dst_bits[cols] = (BYTE)(((src_bits[cols] - dst_bits[cols]) * alpha + (dst_bits[cols] << 8)) >> 8);
+				dst_bits[cols] = (uint8_t)(((src_bits[cols] - dst_bits[cols]) * alpha + (dst_bits[cols] << 8)) >> 8);
 			}
 
 			dst_bits += FreeImage_GetPitch(dst_dib);
@@ -413,8 +413,8 @@ Combine32(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned
 		return FALSE;
 	}
 
-	BYTE *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x * 4);
-	BYTE *src_bits = FreeImage_GetBits(src_dib);	
+	uint8_t *dst_bits = FreeImage_GetBits(dst_dib) + ((FreeImage_GetHeight(dst_dib) - FreeImage_GetHeight(src_dib) - y) * FreeImage_GetPitch(dst_dib)) + (x * 4);
+	uint8_t *src_bits = FreeImage_GetBits(src_dib);	
 
 	if (alpha > 255) {
 		// combine images
@@ -428,7 +428,7 @@ Combine32(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y, unsigned
 		// alpha blend images
 		for(unsigned rows = 0; rows < FreeImage_GetHeight(src_dib); rows++) {
 			for(unsigned cols = 0; cols < FreeImage_GetLine(src_dib); cols++) {
-				dst_bits[cols] = (BYTE)(((src_bits[cols] - dst_bits[cols]) * alpha + (dst_bits[cols] << 8)) >> 8);
+				dst_bits[cols] = (uint8_t)(((src_bits[cols] - dst_bits[cols]) * alpha + (dst_bits[cols] << 8)) >> 8);
 			}
 
 			dst_bits += FreeImage_GetPitch(dst_dib);
@@ -463,8 +463,8 @@ CombineSameType(FIBITMAP *dst_dib, FIBITMAP *src_dib, unsigned x, unsigned y) {
 		return FALSE;
 	}	
 
-	BYTE *dst_bits = FreeImage_GetBits(dst_dib) + ((dst_height - src_height - y) * dst_pitch) + (x * (src_line / src_width));
-	BYTE *src_bits = FreeImage_GetBits(src_dib);	
+	uint8_t *dst_bits = FreeImage_GetBits(dst_dib) + ((dst_height - src_height - y) * dst_pitch) + (x * (src_line / src_width));
+	uint8_t *src_bits = FreeImage_GetBits(src_dib);	
 
 	// combine images	
 	for(unsigned rows = 0; rows < src_height; rows++) {
@@ -488,13 +488,13 @@ Works with any bitmap type.
 @param top Specifies the top position of the cropped rectangle. 
 @param right Specifies the right position of the cropped rectangle. 
 @param bottom Specifies the bottom position of the cropped rectangle. 
-@return Returns the subimage if successful, NULL otherwise.
+@return Returns the subimage if successful, nullptr otherwise.
 */
 FIBITMAP * DLL_CALLCONV 
 FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 
 	if(!FreeImage_HasPixels(src)) 
-		return NULL;
+		return nullptr;
 
 	// normalize the rectangle
 	if(right < left) {
@@ -507,7 +507,7 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 	int src_width  = FreeImage_GetWidth(src);
 	int src_height = FreeImage_GetHeight(src);
 	if((left < 0) || (right > src_width) || (top < 0) || (bottom > src_height)) {
-		return NULL;
+		return nullptr;
 	}
 
 	// allocate the sub image
@@ -522,7 +522,7 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 							bpp, 
 							FreeImage_GetRedMask(src), FreeImage_GetGreenMask(src), FreeImage_GetBlueMask(src));
 
-	if(NULL == dst) return NULL;
+	if(nullptr == dst) return nullptr;
 
 	// get the dimensions
 	int dst_line = FreeImage_GetLine(dst);
@@ -531,7 +531,7 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 
 	// get the pointers to the bits and such
 
-	BYTE *src_bits = FreeImage_GetScanLine(src, src_height - top - dst_height);
+	uint8_t *src_bits = FreeImage_GetScanLine(src, src_height - top - dst_height);
 	switch(bpp) {
 		case 1:
 			// point to x = 0
@@ -552,7 +552,7 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 	}
 
 	// point to x = 0
-	BYTE *dst_bits = FreeImage_GetBits(dst);
+	uint8_t *dst_bits = FreeImage_GetBits(dst);
 
 	// copy the palette
 
@@ -576,7 +576,7 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 	}
 
 	else if(bpp == 4) {
-		BYTE shift, value;
+		uint8_t shift, value;
 		unsigned y_src, y_dst;
 
 		for(int y = 0; y < dst_height; y++) {
@@ -584,10 +584,10 @@ FreeImage_Copy(FIBITMAP *src, int left, int top, int right, int bottom) {
 			y_dst = y * dst_pitch;
 			for(int x = 0; x < dst_width; x++) {
 				// get nibble at (y, x) in src image
-				shift = (BYTE)((1 - (left+x) % 2) << 2);
+				shift = (uint8_t)((1 - (left+x) % 2) << 2);
 				value = (src_bits[y_src + ((left+x) >> 1)] & (0x0F << shift)) >> shift;
 				// set nibble at (y, x) in dst image
-				shift = (BYTE)((1 - x % 2) << 2);
+				shift = (uint8_t)((1 - x % 2) << 2);
 				dst_bits[y_dst + (x >> 1)] &= ~(0x0F << shift);
 				dst_bits[y_dst + (x >> 1)] |= ((value & 0x0F) << shift);
 			}
@@ -657,7 +657,7 @@ FreeImage_Paste(FIBITMAP *dst, FIBITMAP *src, int left, int top, int alpha) {
 	}
 
 	if(image_type == FIT_BITMAP) {
-		FIBITMAP *clone = NULL;
+		FIBITMAP *clone = nullptr;
 
 		// check the bit depth of src and dst images
 		unsigned bpp_src = FreeImage_GetBPP(src);
@@ -779,13 +779,13 @@ FreeImage_Paste(FIBITMAP *dst, FIBITMAP *src, int left, int top, int alpha) {
  @param top The top position of the view's area.
  @param right The right position of the view's area.
  @param bottom The bottom position of the view's area.
- @return Returns a handle to the newly created view or NULL if the view
+ @return Returns a handle to the newly created view or nullptr if the view
  was not created.
  */
 FIBITMAP * DLL_CALLCONV
 FreeImage_CreateView(FIBITMAP *dib, unsigned left, unsigned top, unsigned right, unsigned bottom) {
 	if (!FreeImage_HasPixels(dib)) {
-		return NULL;
+		return nullptr;
 	}
 
 	// normalize the rectangle
@@ -800,23 +800,23 @@ FreeImage_CreateView(FIBITMAP *dib, unsigned left, unsigned top, unsigned right,
 	unsigned width = FreeImage_GetWidth(dib);
 	unsigned height = FreeImage_GetHeight(dib);
 	if (left < 0 || right > width || top < 0 || bottom > height) {
-		return NULL;
+		return nullptr;
 	}
 
 	unsigned bpp = FreeImage_GetBPP(dib);
-	BYTE *bits = FreeImage_GetScanLine(dib, height - bottom);
+	uint8_t *bits = FreeImage_GetScanLine(dib, height - bottom);
 	switch (bpp) {
 		case 1:
 			if (left % 8 != 0) {
 				// view can only start at a byte boundary
-				return NULL;
+				return nullptr;
 			}
 			bits += (left / 8);
 			break;
 		case 4:
 			if (left % 2 != 0) {
 				// view can only start at a byte boundary
-				return NULL;
+				return nullptr;
 				}
 			bits += (left / 2);
 			break;
@@ -830,8 +830,8 @@ FreeImage_CreateView(FIBITMAP *dib, unsigned left, unsigned top, unsigned right,
 		bpp, 
 		FreeImage_GetRedMask(dib), FreeImage_GetGreenMask(dib), FreeImage_GetBlueMask(dib));
 
-	if (dst == NULL) {
-		return NULL;
+	if (dst == nullptr) {
+		return nullptr;
 	}
 
 	// copy some basic image properties needed for displaying and saving

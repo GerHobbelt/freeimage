@@ -24,7 +24,7 @@
 void /* PRIVATE */
 png_destroy_png_struct(png_structrp png_ptr)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       /* png_free might call png_error and may certainly call
        * png_get_mem_ptr, so fake a temporary png_struct to support this.
@@ -53,7 +53,7 @@ png_calloc,(png_const_structrp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 
    ret = png_malloc(png_ptr, size);
 
-   if (ret != NULL)
+   if (ret != nullptr)
       memset(ret, 0, size);
 
    return ret;
@@ -61,7 +61,7 @@ png_calloc,(png_const_structrp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 
 /* png_malloc_base, an internal function added at libpng 1.6.0, does the work of
  * allocating memory, taking into account limits and PNG_USER_MEM_SUPPORTED.
- * Checking and error handling must happen outside this routine; it returns NULL
+ * Checking and error handling must happen outside this routine; it returns nullptr
  * if the allocation cannot be done (for any reason.)
  */
 PNG_FUNCTION(png_voidp /* PRIVATE */,
@@ -84,7 +84,7 @@ png_malloc_base,(png_const_structrp png_ptr, png_alloc_size_t size),
       )
    {
 #ifdef PNG_USER_MEM_SUPPORTED
-      if (png_ptr != NULL && png_ptr->malloc_fn != NULL)
+      if (png_ptr != nullptr && png_ptr->malloc_fn != nullptr)
          return png_ptr->malloc_fn(png_constcast(png_structrp,png_ptr), size);
 
       else
@@ -93,7 +93,7 @@ png_malloc_base,(png_const_structrp png_ptr, png_alloc_size_t size),
    }
 
    else
-      return NULL;
+      return nullptr;
 }
 
 #if defined(PNG_TEXT_SUPPORTED) || defined(PNG_sPLT_SUPPORTED) ||\
@@ -112,7 +112,7 @@ png_malloc_array_checked(png_const_structrp png_ptr, int nelements,
       return png_malloc_base(png_ptr, req * element_size);
 
    /* The failure case when the request is too large */
-   return NULL;
+   return nullptr;
 }
 
 PNG_FUNCTION(png_voidp /* PRIVATE */,
@@ -131,7 +131,7 @@ png_realloc_array,(png_const_structrp png_ptr, png_const_voidp old_array,
 {
    /* These are internal errors: */
    if (add_elements <= 0 || element_size == 0 || old_elements < 0 ||
-      (old_array == NULL && old_elements > 0))
+      (old_array == nullptr && old_elements > 0))
       png_error(png_ptr, "internal error: array realloc");
 
    /* Check for overflow on the elements count (so the caller does not have to
@@ -142,7 +142,7 @@ png_realloc_array,(png_const_structrp png_ptr, png_const_voidp old_array,
       png_voidp new_array = png_malloc_array_checked(png_ptr,
          old_elements+add_elements, element_size);
 
-      if (new_array != NULL)
+      if (new_array != nullptr)
       {
          /* Because png_malloc_array worked the size calculations below cannot
           * overflow.
@@ -157,7 +157,7 @@ png_realloc_array,(png_const_structrp png_ptr, png_const_voidp old_array,
       }
    }
 
-   return NULL; /* error */
+   return nullptr; /* error */
 }
 #endif /* TEXT || sPLT || STORE_UNKNOWN_CHUNKS */
 
@@ -170,12 +170,12 @@ png_malloc,(png_const_structrp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
 {
    png_voidp ret;
 
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
 
    ret = png_malloc_base(png_ptr, size);
 
-   if (ret == NULL)
+   if (ret == nullptr)
        png_error(png_ptr, "Out of memory"); /* 'm' means png_malloc */
 
    return ret;
@@ -188,13 +188,13 @@ png_malloc_default,(png_const_structrp png_ptr, png_alloc_size_t size),
 {
    png_voidp ret;
 
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
 
-   /* Passing 'NULL' here bypasses the application provided memory handler. */
-   ret = png_malloc_base(NULL/*use malloc*/, size);
+   /* Passing 'nullptr' here bypasses the application provided memory handler. */
+   ret = png_malloc_base(nullptr/*use malloc*/, size);
 
-   if (ret == NULL)
+   if (ret == nullptr)
       png_error(png_ptr, "Out of Memory"); /* 'M' means png_malloc_default */
 
    return ret;
@@ -202,37 +202,37 @@ png_malloc_default,(png_const_structrp png_ptr, png_alloc_size_t size),
 #endif /* USER_MEM */
 
 /* This function was added at libpng version 1.2.3.  The png_malloc_warn()
- * function will issue a png_warning and return NULL instead of issuing a
+ * function will issue a png_warning and return nullptr instead of issuing a
  * png_error, if it fails to allocate the requested memory.
  */
 PNG_FUNCTION(png_voidp,PNGAPI
 png_malloc_warn,(png_const_structrp png_ptr, png_alloc_size_t size),
    PNG_ALLOCATED)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       png_voidp ret = png_malloc_base(png_ptr, size);
 
-      if (ret != NULL)
+      if (ret != nullptr)
          return ret;
 
       png_warning(png_ptr, "Out of memory");
    }
 
-   return NULL;
+   return nullptr;
 }
 
-/* Free a pointer allocated by png_malloc().  If ptr is NULL, return
+/* Free a pointer allocated by png_malloc().  If ptr is nullptr, return
  * without taking any action.
  */
 void PNGAPI
 png_free(png_const_structrp png_ptr, png_voidp ptr)
 {
-   if (png_ptr == NULL || ptr == NULL)
+   if (png_ptr == nullptr || ptr == nullptr)
       return;
 
 #ifdef PNG_USER_MEM_SUPPORTED
-   if (png_ptr->free_fn != NULL)
+   if (png_ptr->free_fn != nullptr)
       png_ptr->free_fn(png_constcast(png_structrp,png_ptr), ptr);
 
    else
@@ -242,7 +242,7 @@ png_free(png_const_structrp png_ptr, png_voidp ptr)
 PNG_FUNCTION(void,PNGAPI
 png_free_default,(png_const_structrp png_ptr, png_voidp ptr),PNG_DEPRECATED)
 {
-   if (png_ptr == NULL || ptr == NULL)
+   if (png_ptr == nullptr || ptr == nullptr)
       return;
 #endif /* USER_MEM */
 
@@ -257,7 +257,7 @@ void PNGAPI
 png_set_mem_fn(png_structrp png_ptr, png_voidp mem_ptr, png_malloc_ptr
   malloc_fn, png_free_ptr free_fn)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       png_ptr->mem_ptr = mem_ptr;
       png_ptr->malloc_fn = malloc_fn;
@@ -272,8 +272,8 @@ png_set_mem_fn(png_structrp png_ptr, png_voidp mem_ptr, png_malloc_ptr
 png_voidp PNGAPI
 png_get_mem_ptr(png_const_structrp png_ptr)
 {
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
 
    return png_ptr->mem_ptr;
 }
