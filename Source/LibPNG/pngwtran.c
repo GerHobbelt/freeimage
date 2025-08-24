@@ -501,12 +501,12 @@ png_do_write_transformations(png_structrp png_ptr, png_row_infop row_info)
 {
    png_debug(1, "in png_do_write_transformations");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
 #ifdef PNG_WRITE_USER_TRANSFORM_SUPPORTED
    if ((png_ptr->transformations & PNG_USER_TRANSFORM) != 0)
-      if (png_ptr->write_user_transform_fn != NULL)
+      if (png_ptr->write_user_transform_fn != nullptr)
          (*(png_ptr->write_user_transform_fn)) /* User write transform
                                                  function */
              (png_ptr,  /* png_ptr */

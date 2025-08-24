@@ -81,11 +81,11 @@ void VP8LFreeHistogram(VP8LHistogram* const histo);
 void VP8LFreeHistogramSet(VP8LHistogramSet* const histo);
 
 // Allocate an array of pointer to histograms, allocated and initialized
-// using 'cache_bits'. Return NULL in case of memory error.
+// using 'cache_bits'. Return nullptr in case of memory error.
 VP8LHistogramSet* VP8LAllocateHistogramSet(int size, int cache_bits);
 
 // Allocate and initialize histogram object with specified 'cache_bits'.
-// Returns NULL in case of memory error.
+// Returns nullptr in case of memory error.
 // Special case of VP8LAllocateHistogramSet, with size equals 1.
 VP8LHistogram* VP8LAllocateHistogram(int cache_bits);
 

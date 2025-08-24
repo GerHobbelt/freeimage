@@ -67,7 +67,7 @@ static void flatten_argb(uint32_t* ptr, uint32_t v, int stride, int size) {
 
 void WebPCleanupTransparentArea(WebPPicture* pic) {
   int x, y, w, h;
-  if (pic == NULL) return;
+  if (pic == nullptr) return;
   w = pic->width / SIZE;
   h = pic->height / SIZE;
 
@@ -92,7 +92,7 @@ void WebPCleanupTransparentArea(WebPPicture* pic) {
   } else {
     const uint8_t* const a_ptr = pic->a;
     int values[3] = { 0 };
-    if (a_ptr == NULL) return;    // nothing to do
+    if (a_ptr == nullptr) return;    // nothing to do
     for (y = 0; y < h; ++y) {
       int need_reset = 1;
       for (x = 0; x < w; ++x) {
@@ -133,7 +133,7 @@ void WebPBlendAlpha(WebPPicture* pic, uint32_t background_rgb) {
   const int green = (background_rgb >> 8) & 0xff;
   const int blue = (background_rgb >> 0) & 0xff;
   int x, y;
-  if (pic == NULL) return;
+  if (pic == nullptr) return;
   if (!pic->use_argb) {
     const int uv_width = (pic->width >> 1);  // omit last pixel during u/v loop
     const int Y0 = VP8RGBToY(red, green, blue, YUV_HALF);
@@ -141,7 +141,7 @@ void WebPBlendAlpha(WebPPicture* pic, uint32_t background_rgb) {
     const int U0 = VP8RGBToU(4 * red, 4 * green, 4 * blue, 4 * YUV_HALF);
     const int V0 = VP8RGBToV(4 * red, 4 * green, 4 * blue, 4 * YUV_HALF);
     const int has_alpha = pic->colorspace & WEBP_CSP_ALPHA_BIT;
-    if (!has_alpha || pic->a == NULL) return;    // nothing to do
+    if (!has_alpha || pic->a == nullptr) return;    // nothing to do
     for (y = 0; y < pic->height; ++y) {
       // Luma blending
       uint8_t* const y_ptr = pic->y + y * pic->y_stride;

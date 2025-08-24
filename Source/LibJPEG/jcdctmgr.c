@@ -358,7 +358,7 @@ start_pass_fdctmgr (j_compress_ptr cinfo)
     qtblno = compptr->quant_tbl_no;
     /* Make sure specified quantization table is present */
     if (qtblno < 0 || qtblno >= NUM_QUANT_TBLS ||
-	cinfo->quant_tbl_ptrs[qtblno] == NULL)
+	cinfo->quant_tbl_ptrs[qtblno] == nullptr)
       ERREXIT1(cinfo, JERR_NO_QUANT_TABLE, qtblno);
     qtbl = cinfo->quant_tbl_ptrs[qtblno];
     /* Create divisor table from quant table */

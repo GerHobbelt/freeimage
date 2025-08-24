@@ -30,7 +30,7 @@ extern "C" {
 #define WEBP_MAX_ALLOCABLE_MEMORY (1ULL << 40)
 
 // size-checking safe malloc/calloc: verify that the requested size is not too
-// large, or return NULL. You don't need to call these for constructs like
+// large, or return nullptr. You don't need to call these for constructs like
 // malloc(sizeof(foo)), but only if there's picture-dependent size involved
 // somewhere (like: malloc(num_pixels * sizeof(*something))). That's why this
 // safe malloc() borrows the signature from calloc(), pointing at the dangerous

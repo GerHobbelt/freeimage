@@ -218,12 +218,12 @@ typedef struct x3f_image_data_s {
   uint32_t rows;                /* height */
   uint32_t row_stride;          /* row size in bytes */
 
-  /* NULL if not used */
+  /* nullptr if not used */
   x3f_huffman_t *huffman;       /* Huffman help data */
   x3f_true_t *tru;		/* TRUE help data */
   x3f_quattro_t *quattro;	/* Quattro help data */
 
-  void *data;                   /* Take from file if NULL. Otherwise,
+  void *data;                   /* Take from file if nullptr. Otherwise,
                                    this is the actual data bytes in
                                    the file. */
   uint32_t data_size;
@@ -416,7 +416,7 @@ unsigned x3f_get4(LibRaw_abstract_datastream *f)
 	return x3f_sget4(str);
 }
 
-#define FREE(P) do { free(P); (P) = NULL; } while (0)
+#define FREE(P) do { free(P); (P) = nullptr; } while (0)
 
 #define PUT_GET_N(_buffer,_size,_file,_func)			\
 	do								\
@@ -461,7 +461,7 @@ unsigned x3f_get4(LibRaw_abstract_datastream *f)
 #define GET_TRUE_HUFF_TABLE(_T)						\
 	do {									\
 	int _i;								\
-	(_T).element = NULL;						\
+	(_T).element = nullptr;						\
 	for (_i = 0; ; _i++) {						\
 	(_T).size = _i + 1;						\
 	(_T).element = (x3f_true_huffman_element_t *)realloc((_T).element,			\
@@ -500,7 +500,7 @@ static void cleanup_true(x3f_true_t **TRUP)
 {
   x3f_true_t *TRU = *TRUP;
 
-  if (TRU == NULL) return;
+  if (TRU == nullptr) return;
 
   FREE(TRU->table.element);
   FREE(TRU->plane_size.element);
@@ -509,7 +509,7 @@ static void cleanup_true(x3f_true_t **TRUP)
 
   FREE(TRU);
 
-  *TRUP = NULL;
+  *TRUP = nullptr;
 }
 
 static x3f_true_t *new_true(x3f_true_t **TRUP)
@@ -519,12 +519,12 @@ static x3f_true_t *new_true(x3f_true_t **TRUP)
   cleanup_true(TRUP);
 
   TRU->table.size = 0;
-  TRU->table.element = NULL;
+  TRU->table.element = nullptr;
   TRU->plane_size.size = 0;
-  TRU->plane_size.element = NULL;
-  TRU->tree.nodes = NULL;
+  TRU->plane_size.element = nullptr;
+  TRU->tree.nodes = nullptr;
   TRU->x3rgb16.size = 0;
-  TRU->x3rgb16.element = NULL;
+  TRU->x3rgb16.element = nullptr;
 
   *TRUP = TRU;
 
@@ -535,11 +535,11 @@ static void cleanup_quattro(x3f_quattro_t **QP)
 {
   x3f_quattro_t *Q = *QP;
 
-  if (Q == NULL) return;
+  if (Q == nullptr) return;
 
   FREE(Q);
 
-  *QP = NULL;
+  *QP = nullptr;
 }
 
 static x3f_quattro_t *new_quattro(x3f_quattro_t **QP)
@@ -569,7 +569,7 @@ static void cleanup_huffman(x3f_huffman_t **HUFP)
 {
   x3f_huffman_t *HUF = *HUFP;
 
-  if (HUF == NULL) return;
+  if (HUF == nullptr) return;
 
   FREE(HUF->mapping.element);
   FREE(HUF->table.element);
@@ -579,7 +579,7 @@ static void cleanup_huffman(x3f_huffman_t **HUFP)
   FREE(HUF->x3rgb16.element);
   FREE(HUF);
 
-  *HUFP = NULL;
+  *HUFP = nullptr;
 }
 
 static x3f_huffman_t *new_huffman(x3f_huffman_t **HUFP)
@@ -588,18 +588,18 @@ static x3f_huffman_t *new_huffman(x3f_huffman_t **HUFP)
 
   cleanup_huffman(HUFP);
 
-  /* Set all not read data block pointers to NULL */
+  /* Set all not read data block pointers to nullptr */
   HUF->mapping.size = 0;
-  HUF->mapping.element = NULL;
+  HUF->mapping.element = nullptr;
   HUF->table.size = 0;
-  HUF->table.element = NULL;
-  HUF->tree.nodes = NULL;
+  HUF->table.element = nullptr;
+  HUF->tree.nodes = nullptr;
   HUF->row_offsets.size = 0;
-  HUF->row_offsets.element = NULL;
+  HUF->row_offsets.element = nullptr;
   HUF->rgb8.size = 0;
-  HUF->rgb8.element = NULL;
+  HUF->rgb8.element = nullptr;
   HUF->x3rgb16.size = 0;
-  HUF->x3rgb16.element = NULL;
+  HUF->x3rgb16.element = nullptr;
 
   *HUFP = HUF;
 
@@ -614,17 +614,17 @@ static x3f_huffman_t *new_huffman(x3f_huffman_t **HUFP)
 /* extern */ x3f_t *x3f_new_from_file(LibRaw_abstract_datastream *infile)
 {
   x3f_t *x3f = (x3f_t *)calloc(1, sizeof(x3f_t));
-  x3f_info_t *I = NULL;
-  x3f_header_t *H = NULL;
-  x3f_directory_section_t *DS = NULL;
+  x3f_info_t *I = nullptr;
+  x3f_header_t *H = nullptr;
+  x3f_directory_section_t *DS = nullptr;
   int i, d;
 
   I = &x3f->info;
-  I->error = NULL;
+  I->error = nullptr;
   I->input.file = infile;
-  I->output.file = NULL;
+  I->output.file = nullptr;
 
-  if (infile == NULL) {
+  if (infile == nullptr) {
     I->error = "No infile";
     return x3f;
   }
@@ -639,7 +639,7 @@ static x3f_huffman_t *new_huffman(x3f_huffman_t **HUFP)
     fprintf(stderr, "Faulty file type\n");
 #endif
     x3f_delete(x3f);
-    return NULL;
+    return nullptr;
   }
 
   GET4(H->version);
@@ -705,8 +705,8 @@ static x3f_huffman_t *new_huffman(x3f_huffman_t **HUFP)
       GET4(PL->reserved);
       GET4(PL->total_length);
 
-      /* Set all not read data block pointers to NULL */
-      PL->data = NULL;
+      /* Set all not read data block pointers to nullptr */
+      PL->data = nullptr;
       PL->data_size = 0;
     }
 
@@ -721,10 +721,10 @@ static x3f_huffman_t *new_huffman(x3f_huffman_t **HUFP)
       GET4(ID->rows);
       GET4(ID->row_stride);
 
-      /* Set all not read data block pointers to NULL */
-      ID->huffman = NULL;
+      /* Set all not read data block pointers to nullptr */
+      ID->huffman = nullptr;
 
-      ID->data = NULL;
+      ID->data = nullptr;
       ID->data_size = 0;
     }
 
@@ -738,17 +738,17 @@ static x3f_huffman_t *new_huffman(x3f_huffman_t **HUFP)
       GET4(CAMF->tN.val2);
       GET4(CAMF->tN.val3);
 
-      /* Set all not read data block pointers to NULL */
-      CAMF->data = NULL;
+      /* Set all not read data block pointers to nullptr */
+      CAMF->data = nullptr;
       CAMF->data_size = 0;
 
-      /* Set all not allocated help pointers to NULL */
-      CAMF->table.element = NULL;
+      /* Set all not allocated help pointers to nullptr */
+      CAMF->table.element = nullptr;
       CAMF->table.size = 0;
-      CAMF->tree.nodes = NULL;
-      CAMF->decoded_data = NULL;
+      CAMF->tree.nodes = nullptr;
+      CAMF->decoded_data = nullptr;
       CAMF->decoded_data_size = 0;
-      CAMF->entry_table.element = NULL;
+      CAMF->entry_table.element = nullptr;
       CAMF->entry_table.size = 0;
     }
 
@@ -770,7 +770,7 @@ static x3f_huffman_t *new_huffman(x3f_huffman_t **HUFP)
   x3f_directory_section_t *DS;
   int d;
 
-  if (x3f == NULL)
+  if (x3f == nullptr)
     return X3F_ARGUMENT_ERROR;
 
   DS = &x3f->directory_section;
@@ -825,7 +825,7 @@ static x3f_directory_entry_t *x3f_get(x3f_t *x3f,
   x3f_directory_section_t *DS;
   int d;
 
-  if (x3f == NULL) return NULL;
+  if (x3f == nullptr) return nullptr;
 
   DS = &x3f->directory_section;
 
@@ -849,29 +849,29 @@ static x3f_directory_entry_t *x3f_get(x3f_t *x3f,
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /* extern */ x3f_directory_entry_t *x3f_get_raw(x3f_t *x3f)
 {
   x3f_directory_entry_t *DE;
 
-  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_HUFFMAN_X530)) != NULL)
+  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_HUFFMAN_X530)) != nullptr)
     return DE;
 
-  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_HUFFMAN_10BIT)) != NULL)
+  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_HUFFMAN_10BIT)) != nullptr)
     return DE;
 
-  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_TRUE)) != NULL)
+  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_TRUE)) != nullptr)
     return DE;
 
-  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_MERRILL)) != NULL)
+  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_MERRILL)) != nullptr)
     return DE;
 
-  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_QUATTRO)) != NULL)
+  if ((DE = x3f_get(x3f, X3F_SECi, X3F_IMAGE_RAW_QUATTRO)) != nullptr)
     return DE;
 
-  return NULL;
+  return nullptr;
 }
 
 /* extern */ x3f_directory_entry_t *x3f_get_thumb_plain(x3f_t *x3f)
@@ -935,8 +935,8 @@ static x3f_huffnode_t *new_node(x3f_hufftree_t *tree)
 {
   x3f_huffnode_t *t = &tree->nodes[tree->free_node_index];
 
-  t->branch[0] = NULL;
-  t->branch[1] = NULL;
+  t->branch[0] = nullptr;
+  t->branch[1] = nullptr;
   t->leaf = UNDEFINED_LEAF;
 
   tree->free_node_index++;
@@ -956,7 +956,7 @@ static void add_code_to_tree(x3f_hufftree_t *tree,
     int bit = (code>>pos)&1;
     x3f_huffnode_t *t_next = t->branch[bit];
 
-    if (t_next == NULL)
+    if (t_next == nullptr)
       t_next = t->branch[bit] = new_node(tree);
 
     t = t_next;
@@ -1043,8 +1043,8 @@ static void print_huffman_tree(x3f_huffnode_t *t, int length, uint32_t code)
 
   printf("%*s (%s,%s) %s (%s)\n",
          length, length < 1 ? "-" : (code&1) ? "1" : "0",
-         t->branch[0]==NULL ? "-" : "0",
-         t->branch[1]==NULL ? "-" : "1",
+         t->branch[0]==nullptr ? "-" : "0",
+         t->branch[1]==nullptr ? "-" : "1",
          t->leaf==UNDEFINED_LEAF ? "-" : (sprintf(buf1, "%x", t->leaf),buf1),
          display_code(length, code, buf2));
 
@@ -1093,12 +1093,12 @@ static int32_t get_true_diff(bit_state_t *BS, x3f_hufftree_t *HTP)
   x3f_huffnode_t *node = &HTP->nodes[0];
   uint8_t bits;
 
-  while (node->branch[0] != NULL || node->branch[1] != NULL) {
+  while (node->branch[0] != nullptr || node->branch[1] != nullptr) {
     uint8_t bit = get_bit(BS);
     x3f_huffnode_t *new_node = node->branch[bit];
 
     node = new_node;
-    if (node == NULL) {
+    if (node == nullptr) {
 #ifdef DCRAW_VERBOSE
       fprintf(stderr, "Huffman coding got unexpected bit\n");
 #endif
@@ -1217,12 +1217,12 @@ static int32_t get_huffman_diff(bit_state_t *BS, x3f_hufftree_t *HTP)
   int32_t diff;
   x3f_huffnode_t *node = &HTP->nodes[0];
 
-  while (node->branch[0] != NULL || node->branch[1] != NULL) {
+  while (node->branch[0] != nullptr || node->branch[1] != nullptr) {
     uint8_t bit = get_bit(BS);
     x3f_huffnode_t *new_node = node->branch[bit];
 
     node = new_node;
-    if (node == NULL) {
+    if (node == nullptr) {
 #ifdef DCRAW_VERBOSE
       fprintf(stderr, "Huffman coding got unexpected bit\n");
 #endif
@@ -1476,7 +1476,7 @@ static void x3f_load_true(x3f_info_t *I,
   x3f_directory_entry_header_t *DEH = &DE->header;
   x3f_image_data_t *ID = &DEH->data_subsection.image_data;
   x3f_true_t *TRU = new_true(&ID->tru);
-  x3f_quattro_t *Q = NULL;
+  x3f_quattro_t *Q = nullptr;
   int i;
 
   if (ID->type_format == X3F_IMAGE_RAW_QUATTRO) {
@@ -1762,7 +1762,7 @@ static void x3f_load_camf_decode_type4(x3f_camf_t *CAMF)
 {
   int i;
   uint8_t *p;
-  x3f_true_huffman_element_t *element = NULL;
+  x3f_true_huffman_element_t *element = nullptr;
 
   for (i=0, p = (uint8_t*)CAMF->data; *p != 0; i++) {
     /* TODO: Is this too expensive ??*/
@@ -1796,7 +1796,7 @@ static void x3f_setup_camf_entries(x3f_camf_t *CAMF)
 {
   uint8_t *p = (uint8_t *)CAMF->decoded_data;
   uint8_t *end = p + CAMF->decoded_data_size;
-  camf_entry_t *table = NULL;
+  camf_entry_t *table = nullptr;
   int i;
 
   for (i=0; p < end; i++) {
@@ -1855,7 +1855,7 @@ static void x3f_load_camf(x3f_info_t *I, x3f_directory_entry_t *DE)
 	break;
   }
 
-  if (CAMF->decoded_data != NULL)
+  if (CAMF->decoded_data != nullptr)
     x3f_setup_camf_entries(CAMF);
 #ifdef DCRAW_VERBOSE
   else
@@ -1867,7 +1867,7 @@ static void x3f_load_camf(x3f_info_t *I, x3f_directory_entry_t *DE)
 {
   x3f_info_t *I = &x3f->info;
 
-  if (DE == NULL)
+  if (DE == nullptr)
     return X3F_ARGUMENT_ERROR;
 
   switch (DE->header.identifier) {
@@ -1894,7 +1894,7 @@ static void x3f_load_camf(x3f_info_t *I, x3f_directory_entry_t *DE)
 {
   x3f_info_t *I = &x3f->info;
 
-  if (DE == NULL)
+  if (DE == nullptr)
     return X3F_ARGUMENT_ERROR;
 
   switch (DE->header.identifier) {

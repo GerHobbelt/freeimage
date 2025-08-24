@@ -56,13 +56,13 @@ static VP8StatusCode CheckDecBuffer(const WebPDecBuffer* const buffer) {
     ok &= (y_stride >= width);
     ok &= (u_stride >= (width + 1) / 2);
     ok &= (v_stride >= (width + 1) / 2);
-    ok &= (buf->y != NULL);
-    ok &= (buf->u != NULL);
-    ok &= (buf->v != NULL);
+    ok &= (buf->y != nullptr);
+    ok &= (buf->u != nullptr);
+    ok &= (buf->v != nullptr);
     if (mode == MODE_YUVA) {
       ok &= (a_stride >= width);
       ok &= (a_size <= buf->a_size);
-      ok &= (buf->a != NULL);
+      ok &= (buf->a != nullptr);
     }
   } else {    // RGB checks
     const WebPRGBABuffer* const buf = &buffer->u.RGBA;
@@ -70,7 +70,7 @@ static VP8StatusCode CheckDecBuffer(const WebPDecBuffer* const buffer) {
     const uint64_t size = (uint64_t)stride * height;
     ok &= (size <= buf->size);
     ok &= (stride >= width * kModeBpp[mode]);
-    ok &= (buf->rgba != NULL);
+    ok &= (buf->rgba != nullptr);
   }
   return ok ? VP8_STATUS_OK : VP8_STATUS_INVALID_PARAM;
 }
@@ -84,7 +84,7 @@ static VP8StatusCode AllocateBuffer(WebPDecBuffer* const buffer) {
     return VP8_STATUS_INVALID_PARAM;
   }
 
-  if (!buffer->is_external_memory && buffer->private_memory == NULL) {
+  if (!buffer->is_external_memory && buffer->private_memory == nullptr) {
     uint8_t* output;
     int uv_stride = 0, a_stride = 0;
     uint64_t uv_size = 0, a_size = 0, total_size;
@@ -105,7 +105,7 @@ static VP8StatusCode AllocateBuffer(WebPDecBuffer* const buffer) {
 
     // Security/sanity checks
     output = (uint8_t*)WebPSafeMalloc(total_size, sizeof(*output));
-    if (output == NULL) {
+    if (output == nullptr) {
       return VP8_STATUS_OUT_OF_MEMORY;
     }
     buffer->private_memory = output;
@@ -137,7 +137,7 @@ static VP8StatusCode AllocateBuffer(WebPDecBuffer* const buffer) {
 }
 
 VP8StatusCode WebPFlipBuffer(WebPDecBuffer* const buffer) {
-  if (buffer == NULL) {
+  if (buffer == nullptr) {
     return VP8_STATUS_INVALID_PARAM;
   }
   if (WebPIsRGBMode(buffer->colorspace)) {
@@ -153,7 +153,7 @@ VP8StatusCode WebPFlipBuffer(WebPDecBuffer* const buffer) {
     buf->u_stride = -buf->u_stride;
     buf->v += ((H - 1) >> 1) * buf->v_stride;
     buf->v_stride = -buf->v_stride;
-    if (buf->a != NULL) {
+    if (buf->a != nullptr) {
       buf->a += (H - 1) * buf->a_stride;
       buf->a_stride = -buf->a_stride;
     }
@@ -165,10 +165,10 @@ VP8StatusCode WebPAllocateDecBuffer(int w, int h,
                                     const WebPDecoderOptions* const options,
                                     WebPDecBuffer* const out) {
   VP8StatusCode status;
-  if (out == NULL || w <= 0 || h <= 0) {
+  if (out == nullptr || w <= 0 || h <= 0) {
     return VP8_STATUS_INVALID_PARAM;
   }
-  if (options != NULL) {    // First, apply options if there is any.
+  if (options != nullptr) {    // First, apply options if there is any.
     if (options->use_cropping) {
       const int cw = options->crop_width;
       const int ch = options->crop_height;
@@ -196,7 +196,7 @@ VP8StatusCode WebPAllocateDecBuffer(int w, int h,
   if (status != VP8_STATUS_OK) return status;
 
   // Use the stride trick if vertical flip is needed.
-  if (options != NULL && options->flip) {
+  if (options != nullptr && options->flip) {
     status = WebPFlipBuffer(out);
   }
   return status;
@@ -209,38 +209,38 @@ int WebPInitDecBufferInternal(WebPDecBuffer* buffer, int version) {
   if (WEBP_ABI_IS_INCOMPATIBLE(version, WEBP_DECODER_ABI_VERSION)) {
     return 0;  // version mismatch
   }
-  if (buffer == NULL) return 0;
+  if (buffer == nullptr) return 0;
   memset(buffer, 0, sizeof(*buffer));
   return 1;
 }
 
 void WebPFreeDecBuffer(WebPDecBuffer* buffer) {
-  if (buffer != NULL) {
+  if (buffer != nullptr) {
     if (!buffer->is_external_memory) {
       WebPSafeFree(buffer->private_memory);
     }
-    buffer->private_memory = NULL;
+    buffer->private_memory = nullptr;
   }
 }
 
 void WebPCopyDecBuffer(const WebPDecBuffer* const src,
                        WebPDecBuffer* const dst) {
-  if (src != NULL && dst != NULL) {
+  if (src != nullptr && dst != nullptr) {
     *dst = *src;
-    if (src->private_memory != NULL) {
+    if (src->private_memory != nullptr) {
       dst->is_external_memory = 1;   // dst buffer doesn't own the memory.
-      dst->private_memory = NULL;
+      dst->private_memory = nullptr;
     }
   }
 }
 
 // Copy and transfer ownership from src to dst (beware of parameter order!)
 void WebPGrabDecBuffer(WebPDecBuffer* const src, WebPDecBuffer* const dst) {
-  if (src != NULL && dst != NULL) {
+  if (src != nullptr && dst != nullptr) {
     *dst = *src;
-    if (src->private_memory != NULL) {
+    if (src->private_memory != nullptr) {
       src->is_external_memory = 1;   // src relinquishes ownership
-      src->private_memory = NULL;
+      src->private_memory = nullptr;
     }
   }
 }

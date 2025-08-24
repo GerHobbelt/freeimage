@@ -212,7 +212,7 @@ static double GetMBSSIM(const uint8_t* yuv1, const uint8_t* yuv2) {
 // loop filter strength
 
 void VP8InitFilter(VP8EncIterator* const it) {
-  if (it->lf_stats_ != NULL) {
+  if (it->lf_stats_ != nullptr) {
     int s, i;
     for (s = 0; s < NUM_MB_SEGMENTS; s++) {
       for (i = 0; i < MAX_LF_LEVELS; i++) {
@@ -233,7 +233,7 @@ void VP8StoreFilterStats(VP8EncIterator* const it) {
   const int delta_max = enc->dqm_[s].quant_;
   const int step_size = (delta_max - delta_min >= 4) ? 4 : 1;
 
-  if (it->lf_stats_ == NULL) return;
+  if (it->lf_stats_ == nullptr) return;
 
   // NOTE: Currently we are applying filter only across the sublock edges
   // There are two reasons for that.
@@ -258,7 +258,7 @@ void VP8StoreFilterStats(VP8EncIterator* const it) {
 
 void VP8AdjustFilterStrength(VP8EncIterator* const it) {
   VP8Encoder* const enc = it->enc_;
-  if (it->lf_stats_ != NULL) {
+  if (it->lf_stats_ != nullptr) {
     int s;
     for (s = 0; s < NUM_MB_SEGMENTS; s++) {
       int i, best_level = 0;

@@ -33,12 +33,12 @@ void /* PRIVATE */
 png_write_data(png_structrp png_ptr, png_const_bytep data, png_size_t length)
 {
    /* NOTE: write_data_fn must not change the buffer! */
-   if (png_ptr->write_data_fn != NULL )
+   if (png_ptr->write_data_fn != nullptr )
       (*(png_ptr->write_data_fn))(png_ptr, png_constcast(png_bytep,data),
          length);
 
    else
-      png_error(png_ptr, "Call to NULL write function");
+      png_error(png_ptr, "Call to nullptr write function");
 }
 
 #ifdef PNG_STDIO_SUPPORTED
@@ -52,7 +52,7 @@ png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
    png_size_t check;
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    check = fwrite(data, 1, length, (png_FILE_p)(png_ptr->io_ptr));
@@ -70,7 +70,7 @@ png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
 void /* PRIVATE */
 png_flush(png_structrp png_ptr)
 {
-   if (png_ptr->output_flush_fn != NULL)
+   if (png_ptr->output_flush_fn != nullptr)
       (*(png_ptr->output_flush_fn))(png_ptr);
 }
 
@@ -80,7 +80,7 @@ png_default_flush(png_structp png_ptr)
 {
    png_FILE_p io_ptr;
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    io_ptr = png_voidcast(png_FILE_p, (png_ptr->io_ptr));
@@ -95,14 +95,14 @@ png_default_flush(png_structp png_ptr)
  * This function takes as its arguments:
  * png_ptr       - pointer to a png output data structure
  * io_ptr        - pointer to user supplied structure containing info about
- *                 the output functions.  May be NULL.
+ *                 the output functions.  May be nullptr.
  * write_data_fn - pointer to a new output function that takes as its
  *                 arguments a pointer to a png_struct, a pointer to
  *                 data to be written, and a 32-bit unsigned int that is
  *                 the number of bytes to be written.  The new write
  *                 function should call png_error(png_ptr, "Error msg")
  *                 to exit and output any fatal error messages.  May be
- *                 NULL, in which case libpng's default function will
+ *                 nullptr, in which case libpng's default function will
  *                 be used.
  * flush_data_fn - pointer to a new flush function that takes as its
  *                 arguments a pointer to a png_struct.  After a call to
@@ -112,7 +112,7 @@ png_default_flush(png_structp png_ptr)
  *                 supplied although it doesn't have to do anything.  If
  *                 PNG_WRITE_FLUSH_SUPPORTED is not defined at libpng compile
  *                 time, output_flush_fn will be ignored, although it must be
- *                 supplied for compatibility.  May be NULL, in which case
+ *                 supplied for compatibility.  May be nullptr, in which case
  *                 libpng's default function will be used, if
  *                 PNG_WRITE_FLUSH_SUPPORTED is defined.  This is not
  *                 a good idea if io_ptr does not point to a standard
@@ -122,13 +122,13 @@ void PNGAPI
 png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr,
     png_rw_ptr write_data_fn, png_flush_ptr output_flush_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->io_ptr = io_ptr;
 
 #ifdef PNG_STDIO_SUPPORTED
-   if (write_data_fn != NULL)
+   if (write_data_fn != nullptr)
       png_ptr->write_data_fn = write_data_fn;
 
    else
@@ -140,7 +140,7 @@ png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr,
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
 #  ifdef PNG_STDIO_SUPPORTED
 
-   if (output_flush_fn != NULL)
+   if (output_flush_fn != nullptr)
       png_ptr->output_flush_fn = output_flush_fn;
 
    else
@@ -155,9 +155,9 @@ png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr,
 
 #ifdef PNG_READ_SUPPORTED
    /* It is an error to read while writing a png file */
-   if (png_ptr->read_data_fn != NULL)
+   if (png_ptr->read_data_fn != nullptr)
    {
-      png_ptr->read_data_fn = NULL;
+      png_ptr->read_data_fn = nullptr;
 
       png_warning(png_ptr,
           "Can't set both read_data_fn and write_data_fn in the"

@@ -297,7 +297,7 @@ write_colormap (j_decompress_ptr cinfo, bmp_dest_ptr dest,
   FILE * outfile = dest->pub.output_file;
   int i;
 
-  if (colormap != NULL) {
+  if (colormap != nullptr) {
     if (cinfo->out_color_components == 3) {
       /* Normal case with RGB colormap */
       for (i = 0; i < num_colors; i++) {
@@ -359,7 +359,7 @@ finish_output_bmp (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
 
   /* Write the file body from our virtual array */
   for (row = cinfo->output_height; row > 0; row--) {
-    if (progress != NULL) {
+    if (progress != nullptr) {
       progress->pub.pass_counter = (long) (cinfo->output_height - row);
       progress->pub.pass_limit = (long) cinfo->output_height;
       (*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
@@ -372,7 +372,7 @@ finish_output_bmp (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
       data_ptr++;
     }
   }
-  if (progress != NULL)
+  if (progress != nullptr)
     progress->completed_extra_passes++;
 
   /* Make sure we wrote the output file OK */
@@ -426,7 +426,7 @@ jinit_write_bmp (j_decompress_ptr cinfo, boolean is_os2)
     ((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
      row_width, cinfo->output_height, (JDIMENSION) 1);
   dest->cur_output_row = 0;
-  if (cinfo->progress != NULL) {
+  if (cinfo->progress != nullptr) {
     cd_progress_ptr progress = (cd_progress_ptr) cinfo->progress;
     progress->total_extra_passes++; /* count file input as separate pass */
   }

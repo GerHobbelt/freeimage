@@ -294,7 +294,7 @@ int main (argc, argv)
   FILE *outfile;
 
   /* Attempt to write jconfig.h */
-  if ((outfile = fopen("jconfig.h", "w")) == NULL) {
+  if ((outfile = fopen("jconfig.h", "w")) == nullptr) {
     printf("Failed to write jconfig.h\n");
     return 1;
   }

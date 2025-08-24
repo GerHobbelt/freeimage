@@ -238,14 +238,14 @@ public:
 
 CameraMetaDataLR::CameraMetaDataLR(char *data, int sz) : CameraMetaData() {
   ctxt = xmlNewParserCtxt();
-  if (ctxt == NULL) {
+  if (ctxt == nullptr) {
     ThrowCME("CameraMetaData:Could not initialize context.");
   }
 
   xmlResetLastError();
-  doc = xmlCtxtReadMemory(ctxt, data,sz, "", NULL, XML_PARSE_DTDVALID);
+  doc = xmlCtxtReadMemory(ctxt, data,sz, "", nullptr, XML_PARSE_DTDVALID);
 
-  if (doc == NULL) {
+  if (doc == nullptr) {
     ThrowCME("CameraMetaData: XML Document could not be parsed successfully. Error was: %s", ctxt->lastError.message);
   }
 
@@ -265,7 +265,7 @@ CameraMetaDataLR::CameraMetaDataLR(char *data, int sz) : CameraMetaData() {
   }
 
   cur = cur->xmlChildrenNode;
-  while (cur != NULL) {
+  while (cur != nullptr) {
     if ((!xmlStrcmp(cur->name, (const xmlChar *)"Camera"))) {
       Camera *camera = new Camera(doc, cur);
       addCamera(camera);
@@ -295,7 +295,7 @@ static CameraMetaDataLR* make_camera_metadata()
         len+=strlen(_rawspeed_data_xml[i]);
       }
   char *rawspeed_xml = (char*)calloc(len+1,sizeof(_rawspeed_data_xml[0][0]));
-  if(!rawspeed_xml) return NULL;
+  if(!rawspeed_xml) return nullptr;
   int offt = 0;
   for(i=0;i<RAWSPEED_DATA_COUNT;i++)
     if(_rawspeed_data_xml[i])
@@ -306,7 +306,7 @@ static CameraMetaDataLR* make_camera_metadata()
         offt+=ll;
       }
   rawspeed_xml[offt]=0;
-  CameraMetaDataLR *ret=NULL;
+  CameraMetaDataLR *ret=nullptr;
   try {
     ret = new CameraMetaDataLR(rawspeed_xml,offt);
   } catch (...) {
@@ -347,16 +347,16 @@ LibRaw:: LibRaw(unsigned int flags)
   ZERO(libraw_internal_data);
   ZERO(callbacks);
 
-  _rawspeed_camerameta = _rawspeed_decoder = NULL;
-  _x3f_data = NULL;
+  _rawspeed_camerameta = _rawspeed_decoder = nullptr;
+  _x3f_data = nullptr;
 
 #ifdef USE_RAWSPEED
-  CameraMetaDataLR *camerameta = make_camera_metadata(); // May be NULL in case of exception in make_camera_metadata()
+  CameraMetaDataLR *camerameta = make_camera_metadata(); // May be nullptr in case of exception in make_camera_metadata()
   _rawspeed_camerameta = static_cast<void*>(camerameta);
 #endif
-  callbacks.mem_cb = (flags & LIBRAW_OPIONS_NO_MEMERR_CALLBACK) ? NULL:  &default_memory_callback;
-  callbacks.data_cb = (flags & LIBRAW_OPIONS_NO_DATAERR_CALLBACK)? NULL : &default_data_callback;
-  callbacks.exif_cb = NULL; // no default callback
+  callbacks.mem_cb = (flags & LIBRAW_OPIONS_NO_MEMERR_CALLBACK) ? nullptr:  &default_memory_callback;
+  callbacks.data_cb = (flags & LIBRAW_OPIONS_NO_DATAERR_CALLBACK)? nullptr : &default_data_callback;
+  callbacks.exif_cb = nullptr; // no default callback
   memmove(&imgdata.params.aber,&aber,sizeof(aber));
   memmove(&imgdata.params.gamm,&gamm,sizeof(gamm));
   memmove(&imgdata.params.greybox,&greybox,sizeof(greybox));
@@ -424,7 +424,7 @@ LibRaw::~LibRaw()
     {
       CameraMetaDataLR *cmeta = static_cast<CameraMetaDataLR*>(_rawspeed_camerameta);
       delete cmeta;
-      _rawspeed_camerameta = NULL;
+      _rawspeed_camerameta = nullptr;
     }
 #endif
 }
@@ -462,7 +462,7 @@ void LibRaw:: recycle_datastream()
   if(libraw_internal_data.internal_data.input && libraw_internal_data.internal_data.input_internal)
     {
       delete libraw_internal_data.internal_data.input;
-      libraw_internal_data.internal_data.input = NULL;
+      libraw_internal_data.internal_data.input = nullptr;
     }
   libraw_internal_data.internal_data.input_internal = 0;
 }
@@ -473,7 +473,7 @@ void x3f_clear(void*);
 void LibRaw:: recycle()
 {
   recycle_datastream();
-#define FREE(a) do { if(a) { free(a); a = NULL;} }while(0)
+#define FREE(a) do { if(a) { free(a); a = nullptr;} }while(0)
 
   FREE(imgdata.image);
   FREE(imgdata.thumbnail.thumb);
@@ -820,14 +820,14 @@ void LibRaw:: merror (void *ptr, const char *where)
     if(callbacks.mem_cb)(*callbacks.mem_cb)(callbacks.memcb_data,
                                             libraw_internal_data.internal_data.input
                                             ?libraw_internal_data.internal_data.input->fname()
-                                            :NULL,
+                                            :nullptr,
                                             where);
     throw LIBRAW_EXCEPTION_ALLOC;
 }
 
 
 
-int LibRaw::open_file(const char *fname, INT64 max_buf_size)
+int LibRaw::open_file(const char *fname, int64_t max_buf_size)
 {
 #ifndef WIN32
   struct stat st;
@@ -874,7 +874,7 @@ int LibRaw::open_file(const char *fname, INT64 max_buf_size)
 }
 
 #if defined(_WIN32) && !defined(__MINGW32__) && defined(_MSC_VER) && (_MSC_VER > 1310)
-int LibRaw::open_file(const wchar_t *fname, INT64 max_buf_size)
+int LibRaw::open_file(const wchar_t *fname, int64_t max_buf_size)
 {
   struct _stati64 st;
   if(_wstati64(fname,&st))
@@ -1342,13 +1342,13 @@ int LibRaw::unpack(void)
        && !(is_sraw() && O.sraw_ycc)
        && (decoder_info.decoder_flags & LIBRAW_DECODER_TRYRAWSPEED) && _rawspeed_camerameta)
       {
-        INT64 spos = ID.input->tell();
+        int64_t spos = ID.input->tell();
         void *_rawspeed_buffer = 0;
         try
           {
             //                printf("Using rawspeed\n");
             ID.input->seek(0,SEEK_SET);
-            INT64 _rawspeed_buffer_sz = ID.input->size()+32;
+            int64_t _rawspeed_buffer_sz = ID.input->size()+32;
             _rawspeed_buffer = malloc(_rawspeed_buffer_sz);
             if(!_rawspeed_buffer) throw LIBRAW_EXCEPTION_ALLOC;
             ID.input->read(_rawspeed_buffer,_rawspeed_buffer_sz,1);
@@ -2182,7 +2182,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
         {
           if(errcode) *errcode= LIBRAW_OUT_OF_ORDER_CALL;
         }
-      return NULL;
+      return nullptr;
     }
 
   if (T.tformat == LIBRAW_THUMBNAIL_BITMAP)
@@ -2193,7 +2193,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
       if(!ret)
         {
           if(errcode) *errcode= ENOMEM;
-          return NULL;
+          return nullptr;
         }
 
       memset(ret,0,sizeof(libraw_processed_image_t));
@@ -2221,7 +2221,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
       if(!ret)
         {
           if(errcode) *errcode= ENOMEM;
-          return NULL;
+          return nullptr;
         }
 
       memset(ret,0,sizeof(libraw_processed_image_t));
@@ -2252,7 +2252,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
   else
     {
       if(errcode) *errcode= LIBRAW_UNSUPPORTED_THUMBNAIL;
-      return NULL;
+      return nullptr;
     }
 }
 
@@ -2370,7 +2370,7 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_image(int *errcode)
     if(!ret)
         {
                 if(errcode) *errcode= ENOMEM;
-                return NULL;
+                return nullptr;
         }
     memset(ret,0,sizeof(libraw_processed_image_t));
 
@@ -2416,7 +2416,7 @@ int LibRaw::dcraw_ppm_tiff_writer(const char *filename)
     libraw_internal_data.internal_data.output = f;
     write_ppm_tiff();
     SET_PROC_FLAG(LIBRAW_PROGRESS_FLIP);
-    libraw_internal_data.internal_data.output = NULL;
+    libraw_internal_data.internal_data.output = nullptr;
     fclose(f);
     return 0;
   }
@@ -4101,7 +4101,7 @@ static const char  *static_camera_list[] =
 "JaiPulnix BB-500CL",
 "JaiPulnix BB-500GE",
 "SVS SVS625CL",
-   NULL
+   nullptr
 };
 
 const char** LibRaw::cameraList() { return static_camera_list;}
@@ -4190,11 +4190,11 @@ static void *lr_memmem(const void *l, size_t l_len, const void *s, size_t s_len)
 
 	/* we need something to compare */
 	if (l_len == 0 || s_len == 0)
-		return NULL;
+		return nullptr;
 
 	/* "s" must be smaller or equal to "l" */
 	if (l_len < s_len)
-		return NULL;
+		return nullptr;
 
 	/* special case where s_len == 1 */
 	if (s_len == 1)
@@ -4206,7 +4206,7 @@ static void *lr_memmem(const void *l, size_t l_len, const void *s, size_t s_len)
 	for (cur = (char *)cl; cur <= last; cur++)
 		if (cur[0] == cs[0] && memcmp(cur, cs, s_len) == 0)
 			return cur;
-	return NULL;
+	return nullptr;
 }
 
 void LibRaw::parse_x3f()
@@ -4216,8 +4216,8 @@ void LibRaw::parse_x3f()
       return;
   _x3f_data = x3f;
 
-  x3f_header_t *H = NULL;
-  x3f_directory_section_t *DS = NULL;
+  x3f_header_t *H = nullptr;
+  x3f_directory_section_t *DS = nullptr;
 
   H = &x3f->header;
   // Parse RAW size from RAW section
@@ -4487,17 +4487,17 @@ void LibRaw::x3f_load_raw()
       x3f_image_data_t *ID = &DEH->data_subsection.image_data;
       x3f_huffman_t *HUF = ID->huffman;
       x3f_true_t *TRU = ID->tru;
-      uint16_t *data = NULL;
+      uint16_t *data = nullptr;
       if(ID->rows != S.raw_height || ID->columns != S.raw_width)
         {
           raise_error = 1;
           goto end;
         }
-      if (HUF != NULL)
+      if (HUF != nullptr)
         data = HUF->x3rgb16.element;
-      if (TRU != NULL)
+      if (TRU != nullptr)
         data = TRU->x3rgb16.element;
-      if (data == NULL)
+      if (data == nullptr)
         {
           raise_error = 1;
           goto end;

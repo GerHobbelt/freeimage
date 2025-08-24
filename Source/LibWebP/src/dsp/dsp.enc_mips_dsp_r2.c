@@ -451,8 +451,8 @@ HORIZONTAL_PRED(dst, left, 16)
 #define TRUE_MOTION(DST, LEFT, TOP, SIZE)                                      \
 static WEBP_INLINE void TrueMotion##SIZE(uint8_t* (DST), const uint8_t* (LEFT),\
                                          const uint8_t* (TOP)) {               \
-  if ((LEFT) != NULL) {                                                        \
-    if ((TOP) != NULL) {                                                       \
+  if ((LEFT) != nullptr) {                                                        \
+    if ((TOP) != nullptr) {                                                       \
       CLIP_TO_DST((DST), (LEFT), (TOP), (SIZE));                               \
     } else {                                                                   \
       HorizontalPred##SIZE((DST), (LEFT));                                     \
@@ -462,7 +462,7 @@ static WEBP_INLINE void TrueMotion##SIZE(uint8_t* (DST), const uint8_t* (LEFT),\
     /* is equivalent to VE prediction where you just copy the top samples. */  \
     /* Note that if top samples are not available, the default value is    */  \
     /* then 129, and not 127 as in the VerticalPred case.                  */  \
-    if ((TOP) != NULL) {                                                       \
+    if ((TOP) != nullptr) {                                                       \
       VerticalPred##SIZE((DST), (TOP));                                        \
     } else {                                                                   \
       FILL_8_OR_16((DST), 129, (SIZE));                                        \

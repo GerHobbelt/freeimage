@@ -47,7 +47,7 @@ TIFFFlush(TIFF* tif)
         && !(tif->tif_flags & TIFF_DIRTYDIRECT) 
         && tif->tif_mode == O_RDWR )
     {
-        uint64  *offsets=NULL, *sizes=NULL;
+        uint64  *offsets=nullptr, *sizes=nullptr;
 
         if( TIFFIsTiled(tif) )
         {

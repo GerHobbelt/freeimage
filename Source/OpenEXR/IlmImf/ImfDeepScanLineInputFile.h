@@ -193,7 +193,7 @@ class IMF_EXPORT DeepScanLineInputFile : public GenericInputFile
     // used to implement OutputFile::copyPixels()).
     // note: returns the entire payload of the relevant chunk of data, not including part number
     // including compressed and uncompressed sizes
-    // on entry, if pixelDataSize is insufficiently large, no bytes are read (pixelData can safely be NULL)
+    // on entry, if pixelDataSize is insufficiently large, no bytes are read (pixelData can safely be nullptr)
     // on exit, pixelDataSize is the number of bytes required to read the chunk
     // 
     //----------------------------------------------

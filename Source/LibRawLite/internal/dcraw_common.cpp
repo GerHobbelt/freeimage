@@ -1251,7 +1251,7 @@ void CLASS nikon_load_raw()
 void CLASS nikon_yuv_load_raw()
 {
   int row, col, yuv[4], rgb[3], b, c;
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
 
   for (row=0; row < raw_height; row++)
   {
@@ -1262,7 +1262,7 @@ void CLASS nikon_yuv_load_raw()
     for (col=0; col < raw_width; col++) {
       if (!(b = col & 1)) {
 	bitbuf = 0;
-	FORC(6) bitbuf |= (UINT64) fgetc(ifp) << c*8;
+	FORC(6) bitbuf |= (uint64_t) fgetc(ifp) << c*8;
 	FORC(4) yuv[c] = (bitbuf >> c*12 & 0xfff) - (c >> 1 << 11);
       }
       rgb[0] = yuv[b] + 1.370705*yuv[3];
@@ -1779,7 +1779,7 @@ unsigned CLASS ph1_bithuff (int nbits, ushort *huff)
 #define bitbuf tls->ph1_bits.bitbuf
 #define vbits  tls->ph1_bits.vbits
 #else
-  static UINT64 bitbuf=0;
+  static uint64_t bitbuf=0;
   static int vbits=0;
 #endif
   unsigned c;
@@ -2103,7 +2103,7 @@ void CLASS imacon_full_load_raw()
 void CLASS packed_load_raw()
 {
   int vbits=0, bwide, rbits, bite, half, irow, row, col, val, i;
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
 
   bwide = raw_width * tiff_bps / 8;
   bwide += bwide & load_flags >> 7;
@@ -2200,7 +2200,7 @@ void CLASS android_loose_load_raw()
 {
   uchar *data, *dp;
   int bwide, row, col, c;
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
 
   bwide = (raw_width+5)/6 << 3;
   data = (uchar *) malloc (bwide);
@@ -2999,7 +2999,7 @@ int CLASS kodak_65000_decode (short *out, int bsize)
 {
   uchar c, blen[768];
   ushort raw[6];
-  INT64 bitbuf=0;
+  int64_t bitbuf=0;
   int save, bits=0, i, j, len, diff;
 
   save = ftell(ifp);
@@ -3028,7 +3028,7 @@ int CLASS kodak_65000_decode (short *out, int bsize)
     len = blen[i];
     if (bits < len) {
       for (j=0; j < 32; j+=8)
-	bitbuf += (INT64) fgetc(ifp) << (bits+(j^8));
+	bitbuf += (int64_t) fgetc(ifp) << (bits+(j^8));
       bits += 32;
     }
     diff = bitbuf & (0xffff >> (16-len));
@@ -10491,8 +10491,8 @@ void CLASS parse_cine()
   fseek (ifp, off_image, SEEK_SET);
   if (shot_select < is_raw)
     fseek (ifp, shot_select*8, SEEK_CUR);
-  data_offset  = (INT64) get4() + 8;
-  data_offset += (INT64) get4() << 32;
+  data_offset  = (int64_t) get4() + 8;
+  data_offset += (int64_t) get4() << 32;
 }
 
 void CLASS parse_redcine()
@@ -11624,7 +11624,7 @@ short CLASS guess_byte_order (int words)
 
 float CLASS find_green (int bps, int bite, int off0, int off1)
 {
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
   int vbits, col, i, c;
   ushort img[2][2064];
   double sum[]={0,0};

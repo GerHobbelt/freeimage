@@ -91,7 +91,7 @@ Void writePacketHeader(BitIOInfo * pIO, U8 ptPacketType, U8 pID)
 
 Int writeTileHeaderDC(CWMImageStrCodec * pSC, BitIOInfo * pIO)
 {
-    size_t iTile, j = (pSC->m_pNextSC == NULL ? 1U : 2U);
+    size_t iTile, j = (pSC->m_pNextSC == nullptr ? 1U : 2U);
 
     for(; j > 0; j --){
         if((pSC->m_param.uQPMode & 1) != 0){ // not DC uniform
@@ -124,7 +124,7 @@ Int writeTileHeaderDC(CWMImageStrCodec * pSC, BitIOInfo * pIO)
 
 Int writeTileHeaderLP(CWMImageStrCodec * pSC, BitIOInfo * pIO)
 {
-    size_t k = (pSC->m_pNextSC == NULL ? 1U : 2U);
+    size_t k = (pSC->m_pNextSC == nullptr ? 1U : 2U);
     
     for(; k > 0; k --){
         if(pSC->WMISCP.sbSubband != SB_DC_ONLY && (pSC->m_param.uQPMode & 2) != 0){ // not LP uniform
@@ -168,7 +168,7 @@ Int writeTileHeaderLP(CWMImageStrCodec * pSC, BitIOInfo * pIO)
 
 Int writeTileHeaderHP(CWMImageStrCodec * pSC, BitIOInfo * pIO)
 {
-    size_t k = (pSC->m_pNextSC == NULL ? 1U : 2U);
+    size_t k = (pSC->m_pNextSC == nullptr ? 1U : 2U);
     
     for(; k > 0; k --){
         if(pSC->WMISCP.sbSubband != SB_DC_ONLY && pSC->WMISCP.sbSubband != SB_NO_HIGHPASS && (pSC->m_param.uQPMode & 4) != 0){ // not HP uniform
@@ -260,7 +260,7 @@ Int encodeMB(CWMImageStrCodec * pSC, Int iMBX, Int iMBY)
         size_t k, l;
 
         // get sizes of each packet and update index table
-        if (pSC->m_pNextSC == NULL || pSC->m_bSecondary) {
+        if (pSC->m_pNextSC == nullptr || pSC->m_bSecondary) {
             for(k = 0; k < pSC->cNumBitIO; k ++){
                 fillToByte(pSC->m_ppBitIO[k]);
                 pSC->ppWStream[k]->GetPos(pSC->ppWStream[k], &l);
@@ -285,7 +285,7 @@ Int processMacroblock(CWMImageStrCodec *pSC)
 {
     Bool topORleft = (pSC->cColumn == 0 || pSC->cRow == 0);
     ERR_CODE result = ICERR_OK;
-    size_t j, jend = (pSC->m_pNextSC != NULL);
+    size_t j, jend = (pSC->m_pNextSC != nullptr);
 
     for (j = 0; j <= jend; j++) {
         transformMacroblock(pSC);
@@ -431,22 +431,22 @@ Int StrIOEncInit(CWMImageStrCodec* pSC)
         size_t i;
 #if defined(_WINDOWS_) || defined(UNDER_CE)  // tmpnam does not exist in VS2005 WinCE CRT
         TCHAR szPath[MAX_PATH];
-        DWORD cSize, j, k;
+        uint32_t cSize, j, k;
 #endif
         char * pFilename;
 
         pSC->ppWStream = (struct WMPStream **)malloc(pSC->cNumBitIO * sizeof(struct WMPStream *));
-        if(pSC->ppWStream == NULL) return ICERR_ERROR;
+        if(pSC->ppWStream == nullptr) return ICERR_ERROR;
         memset(pSC->ppWStream, 0, pSC->cNumBitIO * sizeof(struct WMPStream *));
 
         if (pSC->cmbHeight * pSC->cmbWidth * pSC->WMISCP.cChannel >= MAX_MEMORY_SIZE_IN_WORDS) {
 #ifdef _WINDOWS_
             pSC->ppTempFile = (TCHAR **)malloc(pSC->cNumBitIO * sizeof(TCHAR *));
-            if(pSC->ppTempFile == NULL) return ICERR_ERROR;
+            if(pSC->ppTempFile == nullptr) return ICERR_ERROR;
             memset(pSC->ppTempFile, 0, pSC->cNumBitIO * sizeof(TCHAR *)); 
 #else
             pSC->ppTempFile = (char **)malloc(pSC->cNumBitIO * sizeof(char *));
-            if(pSC->ppTempFile == NULL) return ICERR_ERROR;
+            if(pSC->ppTempFile == nullptr) return ICERR_ERROR;
             memset(pSC->ppTempFile, 0, pSC->cNumBitIO * sizeof(char *));
 #endif
         }
@@ -456,7 +456,7 @@ Int StrIOEncInit(CWMImageStrCodec* pSC)
 #if defined(_WINDOWS_) || defined(UNDER_CE)  // tmpnam does not exist in VS2005 WinCE CRT              
                 Bool bUnicode = sizeof(TCHAR) == 2;
                 pSC->ppTempFile[i] = (TCHAR *)malloc(MAX_PATH * sizeof(TCHAR));
-                if(pSC->ppTempFile[i] == NULL) return ICERR_ERROR;
+                if(pSC->ppTempFile[i] == nullptr) return ICERR_ERROR;
 
                 pFilename = (char *)pSC->ppTempFile[i];
 
@@ -480,9 +480,9 @@ Int StrIOEncInit(CWMImageStrCodec* pSC)
 
 #else //DPK needs to support ANSI 
                 pSC->ppTempFile[i] = (char *)malloc(FILENAME_MAX * sizeof(char));
-                if(pSC->ppTempFile[i] == NULL) return ICERR_ERROR;
+                if(pSC->ppTempFile[i] == nullptr) return ICERR_ERROR;
 
-                if ((pFilename = tmpnam(NULL)) == NULL)
+                if ((pFilename = tmpnam(nullptr)) == nullptr)
                     return ICERR_ERROR;                
                 strcpy(pSC->ppTempFile[i], pFilename);
 #endif
@@ -938,7 +938,7 @@ Int StrEncInit(CWMImageStrCodec* pSC)
         }
         pSC->pResU = (PixelI *)malloc(cSize * sizeof(PixelI));
         pSC->pResV = (PixelI *)malloc(cSize * sizeof(PixelI));
-        if(pSC->pResU == NULL || pSC->pResV == NULL){
+        if(pSC->pResU == nullptr || pSC->pResV == nullptr){
             return ICERR_ERROR;
         }
     }
@@ -1091,7 +1091,7 @@ Int StrEncInit(CWMImageStrCodec* pSC)
 static Int StrEncTerm(CTXSTRCODEC ctxSC)
 {
     CWMImageStrCodec* pSC = (CWMImageStrCodec*)ctxSC;
-    size_t j, jend = (pSC->m_pNextSC != NULL);
+    size_t j, jend = (pSC->m_pNextSC != nullptr);
 
     for (j = 0; j <= jend; j++) {
         if (sizeof(*pSC) != pSC->cbStruct) {
@@ -1099,9 +1099,9 @@ static Int StrEncTerm(CTXSTRCODEC ctxSC)
         }
 
         if(pSC->m_bUVResolutionChange){
-            if(pSC->pResU != NULL)
+            if(pSC->pResU != nullptr)
                 free(pSC->pResU);
-            if(pSC->pResV != NULL)
+            if(pSC->pResV != nullptr)
                 free(pSC->pResV);
         }
 
@@ -1335,7 +1335,7 @@ static Void InitializeStrEnc(CWMImageStrCodec *pSC,
     pSC->ProcessBottom = processMacroblock;
     pSC->ProcessBottomRight = processMacroblock;
 
-    pSC->m_pNextSC = NULL;
+    pSC->m_pNextSC = nullptr;
     pSC->m_bSecondary = FALSE;
 }
 
@@ -1352,8 +1352,8 @@ Int ImageStrEncInit(
     size_t cbChannel = 0, cblkChroma = 0, i;
     size_t cbMacBlockStride = 0, cbMacBlockChroma = 0, cMacBlock = 0;
 
-    CWMImageStrCodec* pSC = NULL, *pNextSC = NULL;
-    char* pb = NULL;
+    CWMImageStrCodec* pSC = nullptr, *pNextSC = nullptr;
+    char* pb = nullptr;
     size_t cb = 0;
     Bool b32bit = sizeof(size_t) == 4;
 
@@ -1364,7 +1364,7 @@ Int ImageStrEncInit(
     }
 
     //================================================
-    *pctxSC = NULL;
+    *pctxSC = nullptr;
 
     //================================================
     cbChannel = cbChannels[pSCP->bdBitDepth];
@@ -1383,7 +1383,7 @@ Int ImageStrEncInit(
     cb += i;
 
     pb = malloc(cb);
-    if (NULL == pb)
+    if (nullptr == pb)
     {
         goto ErrorExit;
     }
@@ -1439,7 +1439,7 @@ Int ImageStrEncInit(
         //================================================
         cb = sizeof(*pNextSC) + (128 - 1) + cbMacBlockStride * cMacBlock * 2;
         pb = malloc(cb);
-        if (NULL == pb)
+        if (nullptr == pb)
         {
             goto ErrorExit;
         }
@@ -1739,7 +1739,7 @@ Void padHorizontally(CWMImageStrCodec * pSC)
 // centralized alpha channel color conversion, small perf penalty
 Int inputMBRowAlpha(CWMImageStrCodec* pSC)
 {
-    if(pSC->m_bSecondary == FALSE && pSC->m_pNextSC != NULL){ // alpha channel is present
+    if(pSC->m_bSecondary == FALSE && pSC->m_pNextSC != nullptr){ // alpha channel is present
         const size_t cShift = (pSC->m_pNextSC->m_param.bScaledArith ? (SHIFTZERO + QPFRACBITS) : 0);
         const BITDEPTH_BITS bdExt = pSC->WMII.bdBitDepth;
         const size_t iAlphaPos = pSC->WMII.cLeadingPadding + (pSC->WMII.cfColorFormat == CMYK ? 4 : 3);//only RGB and CMYK may have interleaved alpha

@@ -258,7 +258,7 @@ void opj_jp2_setup_decoder(opj_jp2_t *jp2, opj_dparameters_t *parameters);
  * @param p_image   FIXME DOC
  * @param p_manager FIXME DOC
  *
- * @return Returns a decoded image if successful, returns NULL otherwise
+ * @return Returns a decoded image if successful, returns nullptr otherwise
 */
 OPJ_BOOL opj_jp2_decode(opj_jp2_t *jp2,
                         opj_stream_private_t *p_stream,

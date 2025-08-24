@@ -217,15 +217,15 @@ Int readPackets(CWMImageStrCodec * pSC)
         else {
             // get sizes of each packet and update index table
             for(k = 0; k < pSC->cNumBitIO; k ++){
-                if(pSC->ppWStream != NULL){ // new API
+                if(pSC->ppWStream != nullptr){ // new API
                     unsigned cBands = (pSC->WMISCP.bfBitstreamFormat == SPATIAL ? 1 : pSC->cSB);
                     struct WMPStream ** ppWS = pSC->ppWStream + (pSC->WMISCP.cNumOfSliceMinus1V + 1) * pSC->cTileRow * cBands
                         + k / cBands * cBands + (k % cBands);
 
-                    if(pSC->cTileRow > 0 && pSC->m_ppBitIO[k]->pWS != NULL)     // attached to the same packet of the tile on top
+                    if(pSC->cTileRow > 0 && pSC->m_ppBitIO[k]->pWS != nullptr)     // attached to the same packet of the tile on top
                         detachISRead(pSC, pSC->m_ppBitIO[k]);    // detach it
                     
-                    if(ppWS[0] != NULL)
+                    if(ppWS[0] != nullptr)
                         attachISRead(pSC->m_ppBitIO[k], ppWS[0], pSC); // need to attach it
                 }
                 else{
@@ -238,7 +238,7 @@ Int readPackets(CWMImageStrCodec * pSC)
             
             if(pSC->cNumBitIO == 0){
                 detachISRead(pSC, pSC->pIOHeader);
-                if(pSC->ppWStream != NULL){// new API
+                if(pSC->ppWStream != nullptr){// new API
                     attachISRead(pSC->pIOHeader, pSC->ppWStream[0], pSC); // need to attach it
                 }
                 else{
@@ -254,24 +254,24 @@ Int readPackets(CWMImageStrCodec * pSC)
                 if(pSC->WMISCP.bfBitstreamFormat == SPATIAL){
                     BitIOInfo * pIO = (pSC->cNumBitIO == 0 ? pSC->pIOHeader : pSC->m_ppBitIO[k]);
 
-                    if(pIO->pWS == NULL || readPacketHeader(pIO, 0, pID) != ICERR_OK)
+                    if(pIO->pWS == nullptr || readPacketHeader(pIO, 0, pID) != ICERR_OK)
                         return ICERR_ERROR;
                     pSC->m_pCodingContext[k].m_iTrimFlexBits = (pSC->m_param.bTrimFlexbitsFlag) ? getBit16(pIO, 4) : 0;
                 }
                 else{
-                    if(pSC->m_ppBitIO[k * pSC->cSB + 0] == NULL || readPacketHeader(pSC->m_ppBitIO[k * pSC->cSB + 0], 1, pID) != ICERR_OK)
+                    if(pSC->m_ppBitIO[k * pSC->cSB + 0] == nullptr || readPacketHeader(pSC->m_ppBitIO[k * pSC->cSB + 0], 1, pID) != ICERR_OK)
                         return ICERR_ERROR;
                     if(pSC->cSB > 1){
-                        if(pSC->m_ppBitIO[k * pSC->cSB + 1] == NULL || readPacketHeader(pSC->m_ppBitIO[k * pSC->cSB + 1], 2, pID) != ICERR_OK)
+                        if(pSC->m_ppBitIO[k * pSC->cSB + 1] == nullptr || readPacketHeader(pSC->m_ppBitIO[k * pSC->cSB + 1], 2, pID) != ICERR_OK)
                             return ICERR_ERROR;
                     }
                     if(pSC->cSB > 2){
-                        if(pSC->m_ppBitIO[k * pSC->cSB + 2] == NULL || readPacketHeader(pSC->m_ppBitIO[k * pSC->cSB + 2], 3, pID) != ICERR_OK)
+                        if(pSC->m_ppBitIO[k * pSC->cSB + 2] == nullptr || readPacketHeader(pSC->m_ppBitIO[k * pSC->cSB + 2], 3, pID) != ICERR_OK)
                             return ICERR_ERROR;
 //                        readTileHeaderHP(pSC, pSC->m_ppBitIO[k * pSC->cSB + 2]);
                     }
                     if(pSC->cSB > 3){
-                        if(pSC->m_ppBitIO[k * pSC->cSB + 3] == NULL)
+                        if(pSC->m_ppBitIO[k * pSC->cSB + 3] == nullptr)
                             return ICERR_ERROR;
                         readPacketHeader(pSC->m_ppBitIO[k * pSC->cSB + 3], 4, pID);  // bad flexbits packet doesn't generate an error
                         pSC->m_pCodingContext[k].m_iTrimFlexBits = (pSC->m_param.bTrimFlexbitsFlag) ? getBit16(pSC->m_ppBitIO[k * pSC->cSB + 3], 4) : 0;
@@ -288,16 +288,16 @@ Int readPackets(CWMImageStrCodec * pSC)
         CCodingContext *pContext = &pSC->m_pCodingContext[pSC->cTileColumn];
         
         readTileHeaderDC(pSC, pContext->m_pIODC);
-        if(pSC->m_pNextSC != NULL)
+        if(pSC->m_pNextSC != nullptr)
             readTileHeaderDC(pSC->m_pNextSC, pContext->m_pIODC);
         if(pSC->cSB > 1){
             readTileHeaderLP(pSC, pContext->m_pIOLP);
-            if(pSC->m_pNextSC != NULL)
+            if(pSC->m_pNextSC != nullptr)
                 readTileHeaderLP(pSC->m_pNextSC, pContext->m_pIOLP);
         }
         if(pSC->cSB > 2){
             readTileHeaderHP(pSC, pContext->m_pIOAC);
-            if(pSC->m_pNextSC != NULL)
+            if(pSC->m_pNextSC != nullptr)
                 readTileHeaderHP(pSC->m_pNextSC, pContext->m_pIOAC);
         }
     }
@@ -315,7 +315,7 @@ Int processMacroblockDec(CWMImageStrCodec * pSC)
     // const size_t mbWidth = pSC->cmbWidth, mbX = pSC->cColumn;
     // Int iQIndex = 0;
     ERR_CODE result = ICERR_OK;
-    size_t j, jend = (pSC->m_pNextSC != NULL);
+    size_t j, jend = (pSC->m_pNextSC != nullptr);
 
     for (j = 0; j <= jend; j++) {
         if(!bottomORright){
@@ -793,7 +793,7 @@ Int outputMBRowAlpha(CWMImageStrCodec * pSC)
     if(pSC->WMII.bdBitDepth == BD_8 && pSC->WMISCP.cfColorFormat == CF_RGB)  // has been taken care of and optimized out
         return ICERR_OK;
 
-    if(pSC->m_bSecondary == FALSE && pSC->m_pNextSC != NULL){ // with alpha channel
+    if(pSC->m_bSecondary == FALSE && pSC->m_pNextSC != nullptr){ // with alpha channel
         const BITDEPTH_BITS bd = pSC->WMII.bdBitDepth;
         const PixelI iShift = (pSC->m_param.bScaledArith ? SHIFTZERO + QPFRACBITS : 0);
         const size_t cHeight = min((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
@@ -881,7 +881,7 @@ Int outputMBRow(CWMImageStrCodec * pSC)
     const PixelI *pY = pSC->a0MBbuffer[0];
     const PixelI *pU = (pSC->m_bUVResolutionChange ? pSC->pResU : pSC->a0MBbuffer[1]);
     const PixelI *pV = (pSC->m_bUVResolutionChange ? pSC->pResV : pSC->a0MBbuffer[2]);
-    const PixelI *pA = NULL;
+    const PixelI *pA = nullptr;
 	const size_t iB = (pSC->WMII.bRGB ? 2 : 0);
 	const size_t iR = 2 - iB;
     const U8 nLen = pSC->WMISCP.nLenMantissaOrShift;
@@ -1834,7 +1834,7 @@ Void outputNChannelThumbnail(CWMImageStrCodec * pSC, const PixelI cMul, const si
 // centralized alpha channel thumbnail, small perf penalty
 Int decodeThumbnailAlpha(CWMImageStrCodec * pSC, const size_t nBits, const PixelI cMul, const size_t rShiftY)
 {
-    if(pSC->m_bSecondary == FALSE && pSC->m_pNextSC != NULL){ // with alpha channel
+    if(pSC->m_bSecondary == FALSE && pSC->m_pNextSC != nullptr){ // with alpha channel
         const size_t tScale = (size_t)(1U << nBits);
         const size_t cHeight = min((pSC->m_Dparam->cROIBottomY + 1) - (pSC->cRow - 1) * 16, 16);
         const size_t cWidth = (pSC->m_Dparam->cROIRightX + 1);
@@ -2476,11 +2476,11 @@ Int readIndexTable(CWMImageStrCodec * pSC)
         //iBits = getBit16(pIO, 5) + 1; // how many bits per entry
         for(i = 0; i < iEntry; i ++){
             readIS_L1(pSC, pIO);
-            pTable[i] = GetVLWordEsc(pIO, NULL);  // escape handling is not important since the respective band is not accessed
+            pTable[i] = GetVLWordEsc(pIO, nullptr);  // escape handling is not important since the respective band is not accessed
         }
     }
 
-    pSC->cHeaderSize = GetVLWordEsc(pIO, NULL);  // escape handling is not important
+    pSC->cHeaderSize = GetVLWordEsc(pIO, nullptr);  // escape handling is not important
     flushToByte(pIO);    
     
     pSC->cHeaderSize += getPosRead(pSC->pIOHeader); // get header length
@@ -2625,7 +2625,7 @@ Int initLookupTables(CWMImageStrCodec* pSC)
         i =cStrideX, cStrideX = cStrideY, cStrideY = i;
 
     pSC->m_Dparam->pOffsetX = (size_t *)malloc(w * sizeof(size_t));
-    if(pSC->m_Dparam->pOffsetX == NULL || w * sizeof(size_t) < w)
+    if(pSC->m_Dparam->pOffsetX == nullptr || w * sizeof(size_t) < w)
         return ICERR_ERROR;
     /*
     consider a row in the source image. if it becomes a reversed row in the target, or a reversed (upside-down)column 
@@ -2641,7 +2641,7 @@ Int initLookupTables(CWMImageStrCodec* pSC)
     }
 
     pSC->m_Dparam->pOffsetY = (size_t *)malloc(h * sizeof(size_t));
-    if(pSC->m_Dparam->pOffsetY == NULL || h * sizeof(size_t) < h)
+    if(pSC->m_Dparam->pOffsetY == nullptr || h * sizeof(size_t) < h)
         return ICERR_ERROR;
     /*
     consider a column in the source image. if it becomes an upside-down column in the target, or a reversed row 
@@ -2723,7 +2723,7 @@ Int StrDecInit(CWMImageStrCodec* pSC)
     if(pSC->m_bUVResolutionChange){
         pSC->pResU = (PixelI *)malloc((cfExt == YUV_422 ? 128 : 256) * pSC->cmbWidth * sizeof(PixelI));
         pSC->pResV = (PixelI *)malloc((cfExt == YUV_422 ? 128 : 256) * pSC->cmbWidth * sizeof(PixelI));
-        if(pSC->pResU == NULL || pSC->pResV == NULL || (cfExt == YUV_422 ? 128 : 256) * pSC->cmbWidth * sizeof(PixelI) < pSC->cmbWidth){
+        if(pSC->pResU == nullptr || pSC->pResV == nullptr || (cfExt == YUV_422 ? 128 : 256) * pSC->cmbWidth * sizeof(PixelI) < pSC->cmbWidth){
             return ICERR_ERROR;
         }
     }
@@ -2793,13 +2793,13 @@ Int StrDecInit(CWMImageStrCodec* pSC)
 
 Int StrDecTerm(CWMImageStrCodec* pSC)
 {
-    size_t j, jend = (pSC->m_pNextSC != NULL);
+    size_t j, jend = (pSC->m_pNextSC != nullptr);
 
     for (j = 0; j <= jend; j++) {
         if(pSC->m_bUVResolutionChange){        
-            if(pSC->pResU != NULL)
+            if(pSC->pResU != nullptr)
                 free(pSC->pResU);
-            if(pSC->pResV != NULL)
+            if(pSC->pResV != nullptr)
                 free(pSC->pResV);
         }
 
@@ -2813,9 +2813,9 @@ Int StrDecTerm(CWMImageStrCodec* pSC)
             StrIODecTerm(pSC);
 
             // free lookup tables for rotation and flipping
-            if(pSC->m_Dparam->pOffsetX != NULL)
+            if(pSC->m_Dparam->pOffsetX != nullptr)
                 free(pSC->m_Dparam->pOffsetX);
-            if(pSC->m_Dparam->pOffsetY != NULL)
+            if(pSC->m_Dparam->pOffsetY != nullptr)
                 free(pSC->m_Dparam->pOffsetY);
         }
 
@@ -2957,7 +2957,7 @@ Int ReadWMIHeader(
     // U32 bits = 0;
     // Int HEADERSIZE = 0;
 
-    assert(pSC != NULL);
+    assert(pSC != nullptr);
     //================================
 // 0
     /** signature **/
@@ -3212,7 +3212,7 @@ static Void InitializeStrDec(CWMImageStrCodec *pSC,
     pSC->ProcessBottom = processMacroblockDec;
     pSC->ProcessBottomRight = processMacroblockDec;
 
-    pSC->m_pNextSC = NULL;
+    pSC->m_pNextSC = nullptr;
     pSC->m_bSecondary = FALSE;
 }
 
@@ -3231,14 +3231,14 @@ Int ImageStrDecInit(
     size_t cbMacBlockStride = 0, cbMacBlockChroma = 0, cMacBlock = 0;
 
     CWMImageStrCodec SC = {0};
-    CWMImageStrCodec *pSC = NULL, *pNextSC = NULL;
-    char* pb = NULL;
+    CWMImageStrCodec *pSC = nullptr, *pNextSC = nullptr;
+    char* pb = nullptr;
     size_t cb = 0, i;
     Bool bLossyTranscoding = FALSE;
     Bool bUseHardTileBoundaries = FALSE; //default is soft tile boundaries
     Bool bLessThan64Bit = sizeof(void *) < 8;
 
-    *pctxSC = NULL;
+    *pctxSC = nullptr;
 
     if(WMPhotoValidate(pII, pSCP) != ICERR_OK)
         return ICERR_ERROR;
@@ -3288,13 +3288,13 @@ Int ImageStrDecInit(
     cb += i * cMacBlock;
 
     pb = malloc(cb);
-    if(pb == NULL)
+    if(pb == nullptr)
         return WMP_errOutOfMemory;
     memset(pb, 0, cb);
 
     //================================================
     pSC = (CWMImageStrCodec*)pb; pb += sizeof(*pSC);
-    if(pSC == NULL)
+    if(pSC == nullptr)
         return ICERR_ERROR;
 
     // Set up perf timers
@@ -3337,7 +3337,7 @@ Int ImageStrDecInit(
         cb = sizeof(*pNextSC) + (128 - 1) + cbMacBlockStride * cMacBlock * 2;
         // if primary image is safe to allocate, alpha channel is certainly safe
         pb = malloc(cb);
-        if(pb == NULL)
+        if(pb == nullptr)
             return WMP_errOutOfMemory;
         memset(pb, 0, cb);
         //================================================
@@ -3350,7 +3350,7 @@ Int ImageStrDecInit(
         detach_SB(&SB);
 
         // 2. initialize pNextSC
-        if(pNextSC == NULL)
+        if(pNextSC == nullptr)
             return ICERR_ERROR;
         pNextSC->m_Dparam = pSC->m_Dparam;
         pNextSC->cbChannel = cbChannel;
@@ -3418,7 +3418,7 @@ Int ImageStrDecDecode(
     size_t cMBRow, k;
 
     ImageDataProc ProcessLeft, ProcessCenter, ProcessRight;
-    ImageDataProc Transform = NULL;
+    ImageDataProc Transform = nullptr;
     const size_t iChromaElements = (pSC->m_param.cfColorFormat == YUV_420) ? 8 * 8 
         : ((pSC->m_param.cfColorFormat == YUV_422) ? 8 * 16 : 16 * 16);
 
@@ -3537,7 +3537,7 @@ Int ImageStrDecDecode(
         for (k = 1; k < pSC->m_param.cNumChannels; k++) {
             memset(pSC->p1MBbuffer[k], 0, sizeof(PixelI) * iChromaElements * pSC->cmbWidth);
         }
-        if (pSC->m_pNextSC != NULL) {  // alpha channel
+        if (pSC->m_pNextSC != nullptr) {  // alpha channel
             memset(pSC->m_pNextSC->p1MBbuffer[0], 0, sizeof(PixelI) * 16 * 16 * pSC->m_pNextSC->cmbWidth);
         }
 
@@ -3604,7 +3604,7 @@ Int ImageStrDecTerm(
     CTXSTRCODEC ctxSC)
 {
     CWMImageStrCodec* pSC = (CWMImageStrCodec*)ctxSC;
-    if (NULL == pSC)
+    if (nullptr == pSC)
     {
         return ICERR_OK;
     }

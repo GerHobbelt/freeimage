@@ -178,7 +178,7 @@ static WEBP_INLINE int WebPConfigPreset(WebPConfig* config,
 // and 'lossless'. Returns false in case of parameter error.
 WEBP_EXTERN(int) WebPConfigLosslessPreset(WebPConfig* config, int level);
 
-// Returns true if 'config' is non-NULL and all configuration parameters are
+// Returns true if 'config' is non-nullptr and all configuration parameters are
 // within their valid ranges.
 WEBP_EXTERN(int) WebPValidateConfig(const WebPConfig* config);
 
@@ -262,7 +262,7 @@ typedef enum WebPEncodingError {
   VP8_ENC_OK = 0,
   VP8_ENC_ERROR_OUT_OF_MEMORY,            // memory error allocating objects
   VP8_ENC_ERROR_BITSTREAM_OUT_OF_MEMORY,  // memory error while flushing bits
-  VP8_ENC_ERROR_NULL_PARAMETER,           // a pointer parameter is NULL
+  VP8_ENC_ERROR_NULL_PARAMETER,           // a pointer parameter is nullptr
   VP8_ENC_ERROR_INVALID_CONFIGURATION,    // configuration is invalid
   VP8_ENC_ERROR_BAD_DIMENSION,            // picture has invalid width/height
   VP8_ENC_ERROR_PARTITION0_OVERFLOW,      // partition is bigger than 512k
@@ -303,7 +303,7 @@ struct WebPPicture {
   //   OUTPUT
   ///////////////
   // Byte-emission hook, to store compressed bytes as they are ready.
-  WebPWriterFunction writer;  // can be NULL
+  WebPWriterFunction writer;  // can be nullptr
   void* custom_ptr;           // can be used by the writer.
 
   // map for extra information (only for lossy compression mode)
@@ -311,20 +311,20 @@ struct WebPPicture {
                           // 4: intra-16 prediction mode,
                           // 5: chroma prediction mode,
                           // 6: bit cost, 7: distortion
-  uint8_t* extra_info;    // if not NULL, points to an array of size
+  uint8_t* extra_info;    // if not nullptr, points to an array of size
                           // ((width + 15) / 16) * ((height + 15) / 16) that
                           // will be filled with a macroblock map, depending
                           // on extra_info_type.
 
   //   STATS AND REPORTS
   ///////////////////////////
-  // Pointer to side statistics (updated only if not NULL)
+  // Pointer to side statistics (updated only if not nullptr)
   WebPAuxStats* stats;
 
   // Error code for the latest error encountered during encoding
   WebPEncodingError error_code;
 
-  // If not NULL, report progress during encoding.
+  // If not nullptr, report progress during encoding.
   WebPProgressHook progress_hook;
 
   void* user_data;        // this field is free to be set to any value and

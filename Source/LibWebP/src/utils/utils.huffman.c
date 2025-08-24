@@ -25,15 +25,15 @@
 HTreeGroup* VP8LHtreeGroupsNew(int num_htree_groups) {
   HTreeGroup* const htree_groups =
       (HTreeGroup*)WebPSafeMalloc(num_htree_groups, sizeof(*htree_groups));
-  if (htree_groups == NULL) {
-    return NULL;
+  if (htree_groups == nullptr) {
+    return nullptr;
   }
   assert(num_htree_groups <= MAX_HTREE_GROUPS);
   return htree_groups;
 }
 
 void VP8LHtreeGroupsFree(HTreeGroup* const htree_groups) {
-  if (htree_groups != NULL) {
+  if (htree_groups != nullptr) {
     WebPSafeFree(htree_groups);
   }
 }
@@ -79,7 +79,7 @@ int VP8LBuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
                           const int code_lengths[], int code_lengths_size) {
   HuffmanCode* table = root_table;  // next available space in table
   int total_size = 1 << root_bits;  // total size root table + 2nd level table
-  int* sorted = NULL;               // symbols sorted by code length
+  int* sorted = nullptr;               // symbols sorted by code length
   int len;                          // current code length
   int symbol;                       // symbol index in original or sorted table
   // number of codes of each length:
@@ -88,8 +88,8 @@ int VP8LBuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
   int offset[MAX_ALLOWED_CODE_LENGTH + 1];
 
   assert(code_lengths_size != 0);
-  assert(code_lengths != NULL);
-  assert(root_table != NULL);
+  assert(code_lengths != nullptr);
+  assert(root_table != nullptr);
   assert(root_bits > 0);
 
   // Build histogram of code lengths.
@@ -115,7 +115,7 @@ int VP8LBuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
   }
 
   sorted = (int*)WebPSafeMalloc(code_lengths_size, sizeof(*sorted));
-  if (sorted == NULL) {
+  if (sorted == nullptr) {
     return 0;
   }
 

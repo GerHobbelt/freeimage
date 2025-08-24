@@ -218,7 +218,7 @@ put_3bytes (gif_dest_ptr dinfo, int val)
 LOCAL(void)
 emit_header (gif_dest_ptr dinfo, int num_colors, JSAMPARRAY colormap)
 /* Output the GIF file header, including color map */
-/* If colormap==NULL, synthesize a gray-scale colormap */
+/* If colormap==nullptr, synthesize a gray-scale colormap */
 {
   int BitsPerPixel, ColorMapSize, InitCodeSize, FlagByte;
   int cshift = dinfo->cinfo->data_precision - 8;
@@ -259,7 +259,7 @@ emit_header (gif_dest_ptr dinfo, int num_colors, JSAMPARRAY colormap)
   /* we reduce it to 8 bits by shifting */
   for (i=0; i < ColorMapSize; i++) {
     if (i < num_colors) {
-      if (colormap != NULL) {
+      if (colormap != nullptr) {
 	if (dinfo->cinfo->out_color_space == JCS_RGB) {
 	  /* Normal case: RGB color map */
 	  putc(GETJSAMPLE(colormap[0][i]) >> cshift, dinfo->pub.output_file);
@@ -306,7 +306,7 @@ start_output_gif (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   if (cinfo->quantize_colors)
     emit_header(dest, cinfo->actual_number_of_colors, cinfo->colormap);
   else
-    emit_header(dest, 256, (JSAMPARRAY) NULL);
+    emit_header(dest, 256, (JSAMPARRAY) nullptr);
 }
 
 

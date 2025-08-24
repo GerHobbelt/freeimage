@@ -25,8 +25,8 @@
 // Helpful macro.
 
 # define SANITY_CHECK(in, out)                                                 \
-  assert(in != NULL);                                                          \
-  assert(out != NULL);                                                         \
+  assert(in != nullptr);                                                          \
+  assert(out != nullptr);                                                         \
   assert(width > 0);                                                           \
   assert(height > 0);                                                          \
   assert(stride >= width);                                                     \
