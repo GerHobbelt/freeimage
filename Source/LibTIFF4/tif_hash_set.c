@@ -46,7 +46,7 @@ struct _TIFFList
      * caller.
      * */
     void *pData;
-    /*! Pointer to the next element in list. NULL, if current element is the
+    /*! Pointer to the next element in list. nullptr, if current element is the
      * last one.
      */
     struct _TIFFList *psNext;
@@ -118,19 +118,19 @@ static bool TIFFHashSetEqualPointer(const void *elt1, const void *elt2)
  * Creates a new hash set
  *
  * The hash function must return a hash value for the elements to insert.
- * If fnHashFunc is NULL, TIFFHashSetHashPointer will be used.
+ * If fnHashFunc is nullptr, TIFFHashSetHashPointer will be used.
  *
  * The equal function must return if two elements are equal.
- * If fnEqualFunc is NULL, TIFFHashSetEqualPointer will be used.
+ * If fnEqualFunc is nullptr, TIFFHashSetEqualPointer will be used.
  *
  * The free function is used to free elements inserted in the hash set,
  * when the hash set is destroyed, when elements are removed or replaced.
- * If fnFreeEltFunc is NULL, elements inserted into the hash set will not be
+ * If fnFreeEltFunc is nullptr, elements inserted into the hash set will not be
  * freed.
  *
- * @param fnHashFunc hash function. May be NULL.
- * @param fnEqualFunc equal function. May be NULL.
- * @param fnFreeEltFunc element free function. May be NULL.
+ * @param fnHashFunc hash function. May be nullptr.
+ * @param fnEqualFunc equal function. May be nullptr.
+ * @param fnFreeEltFunc element free function. May be nullptr.
  *
  * @return a new hash set
  */
@@ -140,21 +140,21 @@ TIFFHashSet *TIFFHashSetNew(TIFFHashSetHashFunc fnHashFunc,
                             TIFFHashSetFreeEltFunc fnFreeEltFunc)
 {
     TIFFHashSet *set = (TIFFHashSet *)malloc(sizeof(TIFFHashSet));
-    if (set == NULL)
-        return NULL;
+    if (set == nullptr)
+        return nullptr;
     set->fnHashFunc = fnHashFunc ? fnHashFunc : TIFFHashSetHashPointer;
     set->fnEqualFunc = fnEqualFunc ? fnEqualFunc : TIFFHashSetEqualPointer;
     set->fnFreeEltFunc = fnFreeEltFunc;
     set->nSize = 0;
     set->tabList = (TIFFList **)(calloc(sizeof(TIFFList *), 53));
-    if (set->tabList == NULL)
+    if (set->tabList == nullptr)
     {
         free(set);
-        return NULL;
+        return nullptr;
     }
     set->nIndiceAllocatedSize = 0;
     set->nAllocatedSize = 53;
-    set->psRecyclingList = NULL;
+    set->psRecyclingList = nullptr;
     set->nRecyclingListSize = 0;
     set->bRehash = false;
 #ifdef HASH_DEBUG
@@ -179,7 +179,7 @@ TIFFHashSet *TIFFHashSetNew(TIFFHashSetHashFunc fnHashFunc,
 
 int TIFFHashSetSize(const TIFFHashSet *set)
 {
-    assert(set != NULL);
+    assert(set != nullptr);
     return set->nSize;
 }
 
@@ -192,7 +192,7 @@ static TIFFList *TIFFHashSetGetNewListElt(TIFFHashSet *set)
     if (set->psRecyclingList)
     {
         TIFFList *psRet = set->psRecyclingList;
-        psRet->pData = NULL;
+        psRet->pData = nullptr;
         set->nRecyclingListSize--;
         set->psRecyclingList = psRet->psNext;
         return psRet;
@@ -225,7 +225,7 @@ static void TIFFHashSetReturnListElt(TIFFHashSet *set, TIFFList *psList)
 
 static void TIFFHashSetClearInternal(TIFFHashSet *set, bool bFinalize)
 {
-    assert(set != NULL);
+    assert(set != nullptr);
     for (int i = 0; i < set->nAllocatedSize; i++)
     {
         TIFFList *cur = set->tabList[i];
@@ -240,7 +240,7 @@ static void TIFFHashSetClearInternal(TIFFHashSet *set, bool bFinalize)
                 TIFFHashSetReturnListElt(set, cur);
             cur = psNext;
         }
-        set->tabList[i] = NULL;
+        set->tabList[i] = nullptr;
     }
     set->bRehash = false;
 }
@@ -341,7 +341,7 @@ void TIFFHashSetClear(TIFFHashSet *set)
 void TIFFHashSetForeach(TIFFHashSet *set, TIFFHashSetIterEltFunc fnIterFunc,
                         void *user_data)
 {
-    assert(set != NULL);
+    assert(set != nullptr);
     if (!fnIterFunc)
         return;
 
@@ -368,7 +368,7 @@ static bool TIFFHashSetRehash(TIFFHashSet *set)
     int nNewAllocatedSize = anPrimes[set->nIndiceAllocatedSize];
     TIFFList **newTabList =
         (TIFFList **)(calloc(sizeof(TIFFList *), nNewAllocatedSize));
-    if (newTabList == NULL)
+    if (newTabList == nullptr)
         return false;
 #ifdef HASH_DEBUG
     TIFFDebug("TIFFHASH",
@@ -416,7 +416,7 @@ static void **TIFFHashSetFindPtr(TIFFHashSet *set, const void *elt)
             return &cur->pData;
         cur = cur->psNext;
     }
-    return NULL;
+    return nullptr;
 }
 
 /************************************************************************/
@@ -439,7 +439,7 @@ static void **TIFFHashSetFindPtr(TIFFHashSet *set, const void *elt)
 
 bool TIFFHashSetInsert(TIFFHashSet *set, void *elt)
 {
-    assert(set != NULL);
+    assert(set != nullptr);
     void **pElt = TIFFHashSetFindPtr(set, elt);
     if (pElt)
     {
@@ -471,7 +471,7 @@ bool TIFFHashSetInsert(TIFFHashSet *set, void *elt)
 #endif
 
     TIFFList *new_elt = TIFFHashSetGetNewListElt(set);
-    if (new_elt == NULL)
+    if (new_elt == nullptr)
     {
         if (set->fnFreeEltFunc)
             set->fnFreeEltFunc(elt);
@@ -496,17 +496,17 @@ bool TIFFHashSetInsert(TIFFHashSet *set, void *elt)
  * @param set the hash set
  * @param elt the element to look up in the hash set
  *
- * @return the element found in the hash set or NULL
+ * @return the element found in the hash set or nullptr
  */
 
 void *TIFFHashSetLookup(TIFFHashSet *set, const void *elt)
 {
-    assert(set != NULL);
+    assert(set != nullptr);
     void **pElt = TIFFHashSetFindPtr(set, elt);
     if (pElt)
         return *pElt;
 
-    return NULL;
+    return nullptr;
 }
 
 /************************************************************************/
@@ -516,7 +516,7 @@ void *TIFFHashSetLookup(TIFFHashSet *set, const void *elt)
 static bool TIFFHashSetRemoveInternal(TIFFHashSet *set, const void *elt,
                                       bool bDeferRehash)
 {
-    assert(set != NULL);
+    assert(set != nullptr);
     if (set->nIndiceAllocatedSize > 0 && set->nSize <= set->nAllocatedSize / 2)
     {
         set->nIndiceAllocatedSize--;
@@ -534,7 +534,7 @@ static bool TIFFHashSetRemoveInternal(TIFFHashSet *set, const void *elt,
 
     int nHashVal = (int)(set->fnHashFunc(elt) % set->nAllocatedSize);
     TIFFList *cur = set->tabList[nHashVal];
-    TIFFList *prev = NULL;
+    TIFFList *prev = nullptr;
     while (cur)
     {
         if (set->fnEqualFunc(cur->pData, elt))

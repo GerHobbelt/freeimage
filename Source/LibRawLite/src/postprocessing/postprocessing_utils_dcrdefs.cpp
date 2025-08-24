@@ -58,7 +58,7 @@ void LibRaw::convert_to_rgb()
 	size_t prof_desc_len;
 	std::vector<char> prof_desc;
     int i, j, k;
-    prof_desc_len = snprintf(NULL, 0, "%s gamma %g toe slope %g", name[output_color - 1],
+    prof_desc_len = snprintf(nullptr, 0, "%s gamma %g toe slope %g", name[output_color - 1],
                              floorf(1000.f / gamm[0] + .5f) / 1000.f, floorf(gamm[1] * 1000.0f + .5f) / 1000.f) +
                     1;
     prof_desc.resize(prof_desc_len);

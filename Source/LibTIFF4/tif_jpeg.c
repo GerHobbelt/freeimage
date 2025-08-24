@@ -56,7 +56,7 @@ typedef struct
     TIFFTileMethod deftparent;  /* super-class method */
 
     /* pseudo-tag fields */
-    void *jpegtables;           /* JPEGTables tag value, or NULL */
+    void *jpegtables;           /* JPEGTables tag value, or nullptr */
     uint32_t jpegtables_length; /* number of bytes in same */
     int jpegquality;            /* Compression quality level */
     int jpegcolormode;          /* Auto RGB<=>YCbCr convert? */
@@ -220,13 +220,13 @@ static int DecodeRowError(TIFF *tif, uint8_t *buf, tmsize_t cc, uint16_t s);
 
 static const TIFFField jpegFields[] = {
     {TIFFTAG_JPEGTABLES, -3, -3, TIFF_UNDEFINED, 0, TIFF_SETGET_C32_UINT8,
-     TIFF_SETGET_C32_UINT8, FIELD_JPEGTABLES, FALSE, TRUE, "JPEGTables", NULL},
+     TIFF_SETGET_C32_UINT8, FIELD_JPEGTABLES, FALSE, TRUE, "JPEGTables", nullptr},
     {TIFFTAG_JPEGQUALITY, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "", NULL},
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "", nullptr},
     {TIFFTAG_JPEGCOLORMODE, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "", NULL},
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "", nullptr},
     {TIFFTAG_JPEGTABLESMODE, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "", NULL}};
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "", nullptr}};
 
 /*
  * libjpeg interface layer.
@@ -311,7 +311,7 @@ static int TIFFjpeg_create_compress(JPEGState *sp)
     sp->err.output_message = TIFFjpeg_output_message;
 
     /* set client_data to avoid UMR warning from tools like Purify */
-    sp->cinfo.c.client_data = NULL;
+    sp->cinfo.c.client_data = nullptr;
 
     return CALLVJPEG(sp, jpeg_create_compress(&sp->cinfo.c));
 }
@@ -324,7 +324,7 @@ static int TIFFjpeg_create_decompress(JPEGState *sp)
     sp->err.output_message = TIFFjpeg_output_message;
 
     /* set client_data to avoid UMR warning from tools like Purify */
-    sp->cinfo.d.client_data = NULL;
+    sp->cinfo.d.client_data = nullptr;
 
     return CALLVJPEG(sp, jpeg_create_decompress(&sp->cinfo.d));
 }
@@ -466,7 +466,7 @@ static JSAMPARRAY TIFFjpeg_alloc_sarray(JPEGState *sp, int pool_id,
                                         JDIMENSION samplesperrow,
                                         JDIMENSION numrows)
 {
-    return CALLJPEG(sp, (JSAMPARRAY)NULL,
+    return CALLJPEG(sp, (JSAMPARRAY)nullptr,
                     (*sp->cinfo.comm.mem->alloc_sarray)(
                         &sp->cinfo.comm, pool_id, samplesperrow, numrows));
 }
@@ -557,7 +557,7 @@ static boolean tables_empty_output_buffer(j_compress_ptr cinfo)
     newbuf =
         _TIFFreallocExt(sp->tif, (void *)sp->otherSettings.jpegtables,
                         (tmsize_t)(sp->otherSettings.jpegtables_length + 1000));
-    if (newbuf == NULL)
+    if (newbuf == nullptr)
         ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 100);
     sp->dest.next_output_byte =
         (JOCTET *)newbuf + sp->otherSettings.jpegtables_length;
@@ -587,7 +587,7 @@ static int TIFFjpeg_tables_dest(JPEGState *sp, TIFF *tif)
     sp->otherSettings.jpegtables_length = 1000;
     sp->otherSettings.jpegtables = (void *)_TIFFmallocExt(
         tif, (tmsize_t)sp->otherSettings.jpegtables_length);
-    if (sp->otherSettings.jpegtables == NULL)
+    if (sp->otherSettings.jpegtables == nullptr)
     {
         sp->otherSettings.jpegtables_length = 0;
         TIFFErrorExtR(sp->tif, "TIFFjpeg_tables_dest",
@@ -685,7 +685,7 @@ static void TIFFjpeg_data_src(JPEGState *sp)
     sp->src.resync_to_restart = jpeg_resync_to_restart;
     sp->src.term_source = std_term_source;
     sp->src.bytes_in_buffer = 0; /* for safety */
-    sp->src.next_input_byte = NULL;
+    sp->src.next_input_byte = nullptr;
 }
 
 /*
@@ -729,7 +729,7 @@ static int alloc_downsampled_buffers(TIFF *tif, jpeg_component_info *comp_info,
         buf = (TIFF_JSAMPARRAY)TIFFjpeg_alloc_sarray(
             sp, JPOOL_IMAGE, compptr->width_in_blocks * DCTSIZE,
             (JDIMENSION)(compptr->v_samp_factor * DCTSIZE));
-        if (buf == NULL)
+        if (buf == nullptr)
             return (0);
         sp->ds_buffer[ci] = buf;
     }
@@ -826,7 +826,7 @@ static void JPEGFixupTagsSubsampling(TIFF *tif)
     if (fileoffset == 0)
     {
         /* Do not even try to check if the first strip/tile does not
-           yet exist, as occurs when GDAL has created a new NULL file
+           yet exist, as occurs when GDAL has created a new nullptr file
            for instance. */
         return;
     }
@@ -834,14 +834,14 @@ static void JPEGFixupTagsSubsampling(TIFF *tif)
     m.tif = tif;
     m.buffersize = 2048;
     m.buffer = _TIFFmallocExt(tif, m.buffersize);
-    if (m.buffer == NULL)
+    if (m.buffer == nullptr)
     {
         TIFFWarningExtR(tif, module,
                         "Unable to allocate memory for auto-correcting of "
                         "subsampling values; auto-correcting skipped");
         return;
     }
-    m.buffercurrentbyte = NULL;
+    m.buffercurrentbyte = nullptr;
     m.bufferbytesleft = 0;
     m.fileoffset = fileoffset;
     m.filepositioned = 0;
@@ -1085,7 +1085,7 @@ static int JPEGSetupDecode(TIFF *tif)
 
     JPEGInitializeLibJPEG(tif, TRUE);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(sp->cinfo.comm.is_decompressor);
 
     /* Read JPEGTables if it is present */
@@ -1168,7 +1168,7 @@ int TIFFJPEGIsFullStripRequired(TIFF *tif)
     int downsampled_output;
     int ci;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     if (sp->cinfo.comm.is_decompressor == 0)
     {
@@ -1327,7 +1327,7 @@ int TIFFJPEGIsFullStripRequired(TIFF *tif)
 
         if (sp->cinfo.d.mem->max_memory_to_use > 0 &&
             nRequiredMemory > (toff_t)(sp->cinfo.d.mem->max_memory_to_use) &&
-            getenv("LIBTIFF_ALLOW_LARGE_LIBJPEG_MEM_ALLOC") == NULL)
+            getenv("LIBTIFF_ALLOW_LARGE_LIBJPEG_MEM_ALLOC") == nullptr)
         {
             TIFFErrorExtR(
                 tif, module,
@@ -1518,7 +1518,7 @@ static int JPEGDecode(TIFF *tif, uint8_t *buf, tmsize_t cc, uint16_t s)
     /* data is expected to be read in multiples of a scanline */
     if (nrows)
     {
-        TIFF_JSAMPROW line_work_buf = NULL;
+        TIFF_JSAMPROW line_work_buf = nullptr;
 
         /*
          * For 6B, only use temporary buffer for 12 bit imagery.
@@ -1533,7 +1533,7 @@ static int JPEGDecode(TIFF *tif, uint8_t *buf, tmsize_t cc, uint16_t s)
 
         do
         {
-            if (line_work_buf != NULL)
+            if (line_work_buf != nullptr)
             {
                 /*
                  * In the MK1 case, we always read into a 16bit
@@ -1583,7 +1583,7 @@ static int JPEGDecode(TIFF *tif, uint8_t *buf, tmsize_t cc, uint16_t s)
             cc -= sp->bytesperline;
         } while (--nrows > 0);
 
-        if (line_work_buf != NULL)
+        if (line_work_buf != nullptr)
             _TIFFfreeExt(tif, line_work_buf);
     }
 
@@ -1633,7 +1633,7 @@ static int JPEGDecode(TIFF *tif, uint8_t *buf, tmsize_t cc, uint16_t s)
         nrows = td->td_imagelength - tif->tif_row;
 
 #if defined(JPEG_LIB_MK1_OR_12BIT)
-    unsigned short *tmpbuf = NULL;
+    unsigned short *tmpbuf = nullptr;
 #endif
 
     /* data is expected to be read in multiples of a scanline */
@@ -1648,7 +1648,7 @@ static int JPEGDecode(TIFF *tif, uint8_t *buf, tmsize_t cc, uint16_t s)
         tmpbuf = _TIFFmallocExt(tif, sizeof(unsigned short) *
                                          sp->cinfo.d.output_width *
                                          sp->cinfo.d.num_components);
-        if (tmpbuf == NULL)
+        if (tmpbuf == nullptr)
         {
             TIFFErrorExtR(tif, "JPEGDecodeRaw", "Out of memory");
             return 0;
@@ -1801,7 +1801,7 @@ static void unsuppress_quant_table(JPEGState *sp, int tblno)
 {
     JQUANT_TBL *qtbl;
 
-    if ((qtbl = sp->cinfo.c.quant_tbl_ptrs[tblno]) != NULL)
+    if ((qtbl = sp->cinfo.c.quant_tbl_ptrs[tblno]) != nullptr)
         qtbl->sent_table = FALSE;
 }
 
@@ -1809,7 +1809,7 @@ static void suppress_quant_table(JPEGState *sp, int tblno)
 {
     JQUANT_TBL *qtbl;
 
-    if ((qtbl = sp->cinfo.c.quant_tbl_ptrs[tblno]) != NULL)
+    if ((qtbl = sp->cinfo.c.quant_tbl_ptrs[tblno]) != nullptr)
         qtbl->sent_table = TRUE;
 }
 
@@ -1817,9 +1817,9 @@ static void unsuppress_huff_table(JPEGState *sp, int tblno)
 {
     JHUFF_TBL *htbl;
 
-    if ((htbl = sp->cinfo.c.dc_huff_tbl_ptrs[tblno]) != NULL)
+    if ((htbl = sp->cinfo.c.dc_huff_tbl_ptrs[tblno]) != nullptr)
         htbl->sent_table = FALSE;
-    if ((htbl = sp->cinfo.c.ac_huff_tbl_ptrs[tblno]) != NULL)
+    if ((htbl = sp->cinfo.c.ac_huff_tbl_ptrs[tblno]) != nullptr)
         htbl->sent_table = FALSE;
 }
 
@@ -1827,9 +1827,9 @@ static void suppress_huff_table(JPEGState *sp, int tblno)
 {
     JHUFF_TBL *htbl;
 
-    if ((htbl = sp->cinfo.c.dc_huff_tbl_ptrs[tblno]) != NULL)
+    if ((htbl = sp->cinfo.c.dc_huff_tbl_ptrs[tblno]) != nullptr)
         htbl->sent_table = TRUE;
-    if ((htbl = sp->cinfo.c.ac_huff_tbl_ptrs[tblno]) != NULL)
+    if ((htbl = sp->cinfo.c.ac_huff_tbl_ptrs[tblno]) != nullptr)
         htbl->sent_table = TRUE;
 }
 
@@ -1875,19 +1875,19 @@ static int prepare_JPEGTables(TIFF *tif)
 static void TIFF_std_huff_tables(j_compress_ptr cinfo)
 {
 
-    if (cinfo->dc_huff_tbl_ptrs[0] == NULL)
+    if (cinfo->dc_huff_tbl_ptrs[0] == nullptr)
     {
         (void)jpeg_std_huff_table((j_common_ptr)cinfo, TRUE, 0);
     }
-    if (cinfo->ac_huff_tbl_ptrs[0] == NULL)
+    if (cinfo->ac_huff_tbl_ptrs[0] == nullptr)
     {
         (void)jpeg_std_huff_table((j_common_ptr)cinfo, FALSE, 0);
     }
-    if (cinfo->dc_huff_tbl_ptrs[1] == NULL)
+    if (cinfo->dc_huff_tbl_ptrs[1] == nullptr)
     {
         (void)jpeg_std_huff_table((j_common_ptr)cinfo, TRUE, 1);
     }
-    if (cinfo->ac_huff_tbl_ptrs[1] == NULL)
+    if (cinfo->ac_huff_tbl_ptrs[1] == nullptr)
     {
         (void)jpeg_std_huff_table((j_common_ptr)cinfo, FALSE, 1);
     }
@@ -1912,7 +1912,7 @@ static int JPEGSetupEncode(TIFF *tif)
 
     JPEGInitializeLibJPEG(tif, FALSE);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(!sp->cinfo.comm.is_decompressor);
 
     sp->photometric = td->td_photometric;
@@ -1976,7 +1976,7 @@ static int JPEGSetupEncode(TIFF *tif)
         sp->otherSettings.jpegtablesmode &= ~JPEGTABLESMODE_HUFF;
     }
     sp->cinfo.c.num_scans = 0;
-    sp->cinfo.c.scan_info = NULL;
+    sp->cinfo.c.scan_info = nullptr;
 
     /* Set per-file parameters */
     switch (sp->photometric)
@@ -2090,17 +2090,17 @@ static int JPEGSetupEncode(TIFF *tif)
     if (sp->otherSettings.jpegtablesmode &
         (JPEGTABLESMODE_QUANT | JPEGTABLESMODE_HUFF))
     {
-        if (sp->otherSettings.jpegtables == NULL ||
+        if (sp->otherSettings.jpegtables == nullptr ||
             memcmp(sp->otherSettings.jpegtables, "\0\0\0\0\0\0\0\0\0", 8) == 0)
         {
 #if defined(JPEG_LIB_VERSION_MAJOR) &&                                         \
     (JPEG_LIB_VERSION_MAJOR > 9 ||                                             \
      (JPEG_LIB_VERSION_MAJOR == 9 && JPEG_LIB_VERSION_MINOR >= 4))
             if ((sp->otherSettings.jpegtablesmode & JPEGTABLESMODE_HUFF) != 0 &&
-                (sp->cinfo.c.dc_huff_tbl_ptrs[0] == NULL ||
-                 sp->cinfo.c.dc_huff_tbl_ptrs[1] == NULL ||
-                 sp->cinfo.c.ac_huff_tbl_ptrs[0] == NULL ||
-                 sp->cinfo.c.ac_huff_tbl_ptrs[1] == NULL))
+                (sp->cinfo.c.dc_huff_tbl_ptrs[0] == nullptr ||
+                 sp->cinfo.c.dc_huff_tbl_ptrs[1] == nullptr ||
+                 sp->cinfo.c.ac_huff_tbl_ptrs[0] == nullptr ||
+                 sp->cinfo.c.ac_huff_tbl_ptrs[1] == nullptr))
             {
                 /* libjpeg-9d no longer initializes default Huffman tables in */
                 /* jpeg_set_defaults() */
@@ -2140,7 +2140,7 @@ static int JPEGPreEncode(TIFF *tif, uint16_t s)
     uint32_t segment_width, segment_height;
     int downsampled_input;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     if (sp->cinfo.comm.is_decompressor == 1)
     {
@@ -2301,11 +2301,11 @@ static int JPEGEncode(TIFF *tif, uint8_t *buf, tmsize_t cc, uint16_t s)
     JPEGState *sp = JState(tif);
     tmsize_t nrows;
     TIFF_JSAMPROW bufptr[1];
-    short *line16 = NULL;
+    short *line16 = nullptr;
     int line16_count = 0;
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     /* data is expected to be supplied in multiples of a scanline */
     nrows = cc / sp->bytesperline;
     if (cc % sp->bytesperline)
@@ -2383,7 +2383,7 @@ static int JPEGEncodeRaw(TIFF *tif, uint8_t *buf, tmsize_t cc, uint16_t s)
     tmsize_t bytesperclumpline;
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     /* data is expected to be supplied in multiples of a clumpline */
     /* a clumpline is equivalent to v_sampling desubsampled scanlines */
     /* TODO: the following calculation of bytesperclumpline, should substitute
@@ -2515,7 +2515,7 @@ static void JPEGCleanup(TIFF *tif)
     if (sp->otherSettings.jpegtables) /* tag value */
         _TIFFfreeExt(tif, sp->otherSettings.jpegtables);
     _TIFFfreeExt(tif, tif->tif_data); /* release local state */
-    tif->tif_data = NULL;
+    tif->tif_data = nullptr;
 
     _TIFFSetDefaultCompressionState(tif);
 }
@@ -2564,7 +2564,7 @@ static int JPEGVSetField(TIFF *tif, uint32_t tag, va_list ap)
     const TIFFField *fip;
     uint32_t v32;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     switch (tag)
     {
@@ -2605,7 +2605,7 @@ static int JPEGVSetField(TIFF *tif, uint32_t tag, va_list ap)
             return (*sp->otherSettings.vsetparent)(tif, tag, ap);
     }
 
-    if ((fip = TIFFFieldWithTag(tif, tag)) != NULL)
+    if ((fip = TIFFFieldWithTag(tif, tag)) != nullptr)
     {
         TIFFSetFieldBit(tif, fip->field_bit);
     }
@@ -2622,7 +2622,7 @@ static int JPEGVGetField(TIFF *tif, uint32_t tag, va_list ap)
 {
     JPEGState *sp = JState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     switch (tag)
     {
@@ -2649,10 +2649,10 @@ static void JPEGPrintDir(TIFF *tif, FILE *fd, long flags)
 {
     JPEGState *sp = JState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     (void)flags;
 
-    if (sp != NULL)
+    if (sp != nullptr)
     {
         if (TIFFFieldSet(tif, FIELD_JPEGTABLES))
             fprintf(fd, "  JPEG Tables: (%" PRIu32 " bytes)\n",
@@ -2743,7 +2743,7 @@ static int JPEGInitializeLibJPEG(TIFF *tif, int decompress)
         if (sp->cinfo.c.mem->max_memory_to_use > 0)
         {
             /* This is to address bug related in ticket GDAL #1795. */
-            if (getenv("JPEGMEM") == NULL)
+            if (getenv("JPEGMEM") == nullptr)
             {
                 /* Increase the max memory usable. This helps when creating
                  * files */
@@ -2772,7 +2772,7 @@ static void TIFFInitJPEGCommon(TIFF *tif)
     sp->tif = tif; /* back link */
 
     /* Default values for codec-specific fields */
-    sp->otherSettings.jpegtables = NULL;
+    sp->otherSettings.jpegtables = nullptr;
     sp->otherSettings.jpegtables_length = 0;
     sp->otherSettings.jpegquality = 75; /* Default IJG quality */
     sp->otherSettings.jpegcolormode = JPEGCOLORMODE_RAW;
@@ -2829,7 +2829,7 @@ int TIFFInitJPEG(TIFF *tif, int scheme)
      */
     tif->tif_data = (uint8_t *)_TIFFmallocExt(tif, sizeof(JPEGState));
 
-    if (tif->tif_data == NULL)
+    if (tif->tif_data == nullptr)
     {
         TIFFErrorExtR(tif, "TIFFInitJPEG", "No space for JPEG state block");
         return 0;

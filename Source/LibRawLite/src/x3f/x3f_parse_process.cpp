@@ -85,11 +85,11 @@ static void *lr_memmem(const void *l, size_t l_len, const void *s, size_t s_len)
 
   /* we need something to compare */
   if (l_len == 0 || s_len == 0)
-    return NULL;
+    return nullptr;
 
   /* "s" must be smaller or equal to "l" */
   if (l_len < s_len)
-    return NULL;
+    return nullptr;
 
   /* special case where s_len == 1 */
   if (s_len == 1)
@@ -101,7 +101,7 @@ static void *lr_memmem(const void *l, size_t l_len, const void *s, size_t s_len)
   for (cur = (char *)cl; cur <= last; cur++)
     if (cur[0] == cs[0] && memcmp(cur, cs, s_len) == 0)
       return cur;
-  return NULL;
+  return nullptr;
 }
 
 void LibRaw::parse_x3f()
@@ -111,7 +111,7 @@ void LibRaw::parse_x3f()
     return;
   _x3f_data = x3f;
 
-  x3f_header_t *H = NULL;
+  x3f_header_t *H = nullptr;
 
   H = &x3f->header;
   // Parse RAW size from RAW section
@@ -295,7 +295,7 @@ void LibRaw::parse_x3f()
   }
 }
 
-INT64 LibRaw::x3f_thumb_size()
+int64_t LibRaw::x3f_thumb_size()
 {
   try
   {
@@ -573,17 +573,17 @@ void LibRaw::x3f_load_raw()
     x3f_quattro_t *Q = ID->quattro;
     x3f_huffman_t *HUF = ID->huffman;
     x3f_true_t *TRU = ID->tru;
-    uint16_t *data = NULL;
+    uint16_t *data = nullptr;
     if (ID->rows != S.raw_height || ID->columns != S.raw_width)
     {
       raise_error = 1;
       goto end;
     }
-    if (HUF != NULL)
+    if (HUF != nullptr)
       data = HUF->x3rgb16.data;
-    if (TRU != NULL)
+    if (TRU != nullptr)
       data = TRU->x3rgb16.data;
-    if (data == NULL)
+    if (data == nullptr)
     {
       raise_error = 1;
       goto end;

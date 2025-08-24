@@ -169,7 +169,7 @@ static int Fax3PreDecode(TIFF *tif, uint16_t s)
     Fax3CodecState *sp = DecoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     sp->bit = 0; /* force initial read */
     sp->data = 0;
     sp->EOLcnt = 0; /* force initial scan for EOL */
@@ -569,7 +569,7 @@ static int Fax3SetupState(TIFF *tif)
 
       TIFFroundup and TIFFSafeMultiply return zero on integer overflow
     */
-    dsp->runs = (uint32_t *)NULL;
+    dsp->runs = (uint32_t *)nullptr;
     dsp->nruns = TIFFroundup_32(rowpixels + 1, 32);
     if (needsRefLine)
     {
@@ -585,7 +585,7 @@ static int Fax3SetupState(TIFF *tif)
     dsp->runs = (uint32_t *)_TIFFCheckMalloc(
         tif, TIFFSafeMultiply(uint32_t, dsp->nruns, 2), sizeof(uint32_t),
         "for Group 3/4 run arrays");
-    if (dsp->runs == NULL)
+    if (dsp->runs == nullptr)
         return (0);
     memset(dsp->runs, 0,
            TIFFSafeMultiply(uint32_t, dsp->nruns, 2) * sizeof(uint32_t));
@@ -593,7 +593,7 @@ static int Fax3SetupState(TIFF *tif)
     if (needsRefLine)
         dsp->refruns = dsp->runs + dsp->nruns;
     else
-        dsp->refruns = NULL;
+        dsp->refruns = nullptr;
     if (td->td_compression == COMPRESSION_CCITTFAX3 && is2DEncoding(dsp))
     { /* NB: default is 1D routine */
         tif->tif_decoderow = Fax3Decode2D;
@@ -612,14 +612,14 @@ static int Fax3SetupState(TIFF *tif)
          * be initialized to be ``white'' (done elsewhere).
          */
         esp->refline = (unsigned char *)_TIFFmallocExt(tif, rowbytes);
-        if (esp->refline == NULL)
+        if (esp->refline == nullptr)
         {
             TIFFErrorExtR(tif, module, "No space for Group 3/4 reference line");
             return (0);
         }
     }
     else /* 1d encoding */
-        EncoderState(tif)->refline = NULL;
+        EncoderState(tif)->refline = nullptr;
 
     return (1);
 }
@@ -806,7 +806,7 @@ static int Fax3PreEncode(TIFF *tif, uint16_t s)
     Fax3CodecState *sp = EncoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     sp->bit = 8;
     sp->data = 0;
     sp->tag = G3_1D;
@@ -1255,7 +1255,7 @@ static void Fax3Cleanup(TIFF *tif)
         _TIFFfreeExt(tif, sp->refline);
 
     _TIFFfreeExt(tif, tif->tif_data);
-    tif->tif_data = NULL;
+    tif->tif_data = nullptr;
 
     _TIFFSetDefaultCompressionState(tif);
 }
@@ -1268,23 +1268,23 @@ static void Fax3Cleanup(TIFF *tif)
 
 static const TIFFField faxFields[] = {
     {TIFFTAG_FAXMODE, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT, TIFF_SETGET_UNDEFINED,
-     FIELD_PSEUDO, FALSE, FALSE, "FaxMode", NULL},
+     FIELD_PSEUDO, FALSE, FALSE, "FaxMode", nullptr},
     {TIFFTAG_FAXFILLFUNC, 0, 0, TIFF_ANY, 0, TIFF_SETGET_OTHER,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "FaxFillFunc", NULL},
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "FaxFillFunc", nullptr},
     {TIFFTAG_BADFAXLINES, 1, 1, TIFF_LONG, 0, TIFF_SETGET_UINT32,
-     TIFF_SETGET_UINT32, FIELD_BADFAXLINES, TRUE, FALSE, "BadFaxLines", NULL},
+     TIFF_SETGET_UINT32, FIELD_BADFAXLINES, TRUE, FALSE, "BadFaxLines", nullptr},
     {TIFFTAG_CLEANFAXDATA, 1, 1, TIFF_SHORT, 0, TIFF_SETGET_UINT16,
-     TIFF_SETGET_UINT16, FIELD_CLEANFAXDATA, TRUE, FALSE, "CleanFaxData", NULL},
+     TIFF_SETGET_UINT16, FIELD_CLEANFAXDATA, TRUE, FALSE, "CleanFaxData", nullptr},
     {TIFFTAG_CONSECUTIVEBADFAXLINES, 1, 1, TIFF_LONG, 0, TIFF_SETGET_UINT32,
      TIFF_SETGET_UINT32, FIELD_BADFAXRUN, TRUE, FALSE, "ConsecutiveBadFaxLines",
-     NULL}};
+     nullptr}};
 static const TIFFField fax3Fields[] = {
     {TIFFTAG_GROUP3OPTIONS, 1, 1, TIFF_LONG, 0, TIFF_SETGET_UINT32,
-     TIFF_SETGET_UINT32, FIELD_OPTIONS, FALSE, FALSE, "Group3Options", NULL},
+     TIFF_SETGET_UINT32, FIELD_OPTIONS, FALSE, FALSE, "Group3Options", nullptr},
 };
 static const TIFFField fax4Fields[] = {
     {TIFFTAG_GROUP4OPTIONS, 1, 1, TIFF_LONG, 0, TIFF_SETGET_UINT32,
-     TIFF_SETGET_UINT32, FIELD_OPTIONS, FALSE, FALSE, "Group4Options", NULL},
+     TIFF_SETGET_UINT32, FIELD_OPTIONS, FALSE, FALSE, "Group4Options", nullptr},
 };
 
 static int Fax3VSetField(TIFF *tif, uint32_t tag, va_list ap)
@@ -1326,7 +1326,7 @@ static int Fax3VSetField(TIFF *tif, uint32_t tag, va_list ap)
             return (*sp->vsetparent)(tif, tag, ap);
     }
 
-    if ((fip = TIFFFieldWithTag(tif, tag)) != NULL)
+    if ((fip = TIFFFieldWithTag(tif, tag)) != nullptr)
         TIFFSetFieldBit(tif, fip->field_bit);
     else
         return 0;
@@ -1451,7 +1451,7 @@ static int InitCCITTFax3(TIFF *tif)
      */
     tif->tif_data = (uint8_t *)_TIFFmallocExt(tif, sizeof(Fax3CodecState));
 
-    if (tif->tif_data == NULL)
+    if (tif->tif_data == nullptr)
     {
         TIFFErrorExtR(tif, module, "No space for state block");
         return (0);
@@ -1474,9 +1474,9 @@ static int InitCCITTFax3(TIFF *tif)
 
     if (sp->rw_mode == O_RDONLY) /* FIXME: improve for in place update */
         tif->tif_flags |= TIFF_NOBITREV; /* decoder does bit reversal */
-    DecoderState(tif)->runs = NULL;
+    DecoderState(tif)->runs = nullptr;
     TIFFSetField(tif, TIFFTAG_FAXFILLFUNC, _TIFFFax3fillruns);
-    EncoderState(tif)->refline = NULL;
+    EncoderState(tif)->refline = nullptr;
 
     /*
      * Install codec methods.

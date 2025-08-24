@@ -35,7 +35,7 @@ testBuildMPage(const char *src_filename, const char *dst_filename, FREE_IMAGE_FO
 
 		if(FreeImage_GetBPP(rescaled) != bpp) {
 			// convert to the requested bitdepth
-			FIBITMAP *tmp = NULL;
+			FIBITMAP *tmp = nullptr;
 			switch(bpp) {
 				case 8:
 					tmp = FreeImage_ConvertTo8Bits(rescaled);
@@ -44,7 +44,7 @@ testBuildMPage(const char *src_filename, const char *dst_filename, FREE_IMAGE_FO
 					tmp = FreeImage_ConvertTo24Bits(rescaled);
 					break;
 			}
-			assert(tmp != NULL);
+			assert(tmp != nullptr);
 			FreeImage_Unload(rescaled); 
 			rescaled = tmp;
 		}
@@ -67,12 +67,12 @@ void testMPageCache(const char *src_filename, const char *dst_filename) {
 	FREE_IMAGE_FORMAT src_fif = FreeImage_GetFileType(src_filename);
 	// load the file
 	FIBITMAP *src = FreeImage_Load(src_fif, src_filename, 0); //24bit image 
-	assert(src != NULL);
+	assert(src != nullptr);
 
 	// convert to 24-bit
 	if(FreeImage_GetBPP(src) != 24) {
 		FIBITMAP *tmp = FreeImage_ConvertTo24Bits(src);
-		assert(tmp != NULL);
+		assert(tmp != nullptr);
 		FreeImage_Unload(src); 
 		src = tmp;
 	}

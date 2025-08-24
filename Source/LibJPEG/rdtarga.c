@@ -306,7 +306,7 @@ preload_image (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 
   /* Read the data into a virtual array in input-file row order. */
   for (row = 0; row < cinfo->image_height; row++) {
-    if (progress != NULL) {
+    if (progress != nullptr) {
       progress->pub.pass_counter = (long) row;
       progress->pub.pass_limit = (long) cinfo->image_height;
       (*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
@@ -315,7 +315,7 @@ preload_image (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
       ((j_common_ptr) cinfo, source->whole_image, row, (JDIMENSION) 1, TRUE);
     (*source->get_pixel_rows) (cinfo, sinfo);
   }
-  if (progress != NULL)
+  if (progress != nullptr)
     progress->completed_extra_passes++;
 
   /* Set up to read from the virtual array in unscrambled order */
@@ -424,7 +424,7 @@ start_input_tga (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
     source->whole_image = (*cinfo->mem->request_virt_sarray)
       ((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
        (JDIMENSION) width * components, (JDIMENSION) height, (JDIMENSION) 1);
-    if (cinfo->progress != NULL) {
+    if (cinfo->progress != nullptr) {
       cd_progress_ptr progress = (cd_progress_ptr) cinfo->progress;
       progress->total_extra_passes++; /* count file input as separate pass */
     }
@@ -433,7 +433,7 @@ start_input_tga (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
     source->pub.get_pixel_rows = preload_image;
   } else {
     /* Don't need a virtual array, but do need a one-row input buffer. */
-    source->whole_image = NULL;
+    source->whole_image = nullptr;
     source->pub.buffer = (*cinfo->mem->alloc_sarray) ((j_common_ptr) cinfo,
       JPOOL_IMAGE, (JDIMENSION) width * components, (JDIMENSION) 1);
     source->pub.buffer_height = 1;
@@ -455,7 +455,7 @@ start_input_tga (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   } else {
     if (cmaptype)		/* but you promised a cmap! */
       ERREXIT(cinfo, JERR_TGA_BADPARMS);
-    source->colormap = NULL;
+    source->colormap = nullptr;
     source->cmap_length = 0;
   }
 

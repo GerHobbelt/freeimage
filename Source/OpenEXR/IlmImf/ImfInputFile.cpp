@@ -125,7 +125,7 @@ InputFile::Data::Data (int numThreads):
     cachedTileY (-1),
     numThreads (numThreads),
     partNumber (-1),
-    part(NULL),
+    part(nullptr),
     multiPartBackwardSupport (false),
     multiPartFile (0),
     _streamData(0),
@@ -345,7 +345,7 @@ bufferedReadPixels (InputFile::Data* ifd, int scanLine1, int scanLine2)
 InputFile::InputFile (const char fileName[], int numThreads):
     _data (new Data (numThreads))
 {
-    _data->_streamData = NULL;
+    _data->_streamData = nullptr;
     _data->_deleteStream=true;
     
     OPENEXR_IMF_INTERNAL_NAMESPACE::IStream* is = 0;
@@ -389,11 +389,11 @@ InputFile::InputFile (const char fileName[], int numThreads):
         if ( _data && !_data->multiPartBackwardSupport  && _data->_streamData)
         {
             delete _data->_streamData;
-            _data->_streamData=NULL;
+            _data->_streamData=nullptr;
         }
         
         if (_data)       delete _data;
-        _data=NULL;
+        _data=nullptr;
 
         REPLACE_EXC (e, "Cannot read image file "
 			"\"" << fileName << "\". " << e);
@@ -416,7 +416,7 @@ InputFile::InputFile (const char fileName[], int numThreads):
 InputFile::InputFile (OPENEXR_IMF_INTERNAL_NAMESPACE::IStream &is, int numThreads):
     _data (new Data (numThreads))
 {
-    _data->_streamData=NULL;
+    _data->_streamData=nullptr;
     _data->_deleteStream=false;
     try
     {
@@ -454,7 +454,7 @@ InputFile::InputFile (OPENEXR_IMF_INTERNAL_NAMESPACE::IStream &is, int numThread
     {
         if (_data && !_data->multiPartBackwardSupport && _data->_streamData) delete _data->_streamData;
         if (_data)       delete _data;
-        _data=NULL; 
+        _data=nullptr; 
 
         REPLACE_EXC (e, "Cannot read image file "
 			"\"" << is.fileName() << "\". " << e);
@@ -464,7 +464,7 @@ InputFile::InputFile (OPENEXR_IMF_INTERNAL_NAMESPACE::IStream &is, int numThread
     {
         if (_data &&  !_data->multiPartBackwardSupport  && _data->_streamData) delete _data->_streamData;
         if (_data)       delete _data;
-        _data=NULL;
+        _data=nullptr;
         throw;
     }
 }

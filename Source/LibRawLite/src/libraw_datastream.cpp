@@ -114,7 +114,7 @@ static void lr_term_source(j_decompress_ptr /*cinfo*/) {}
 static void lr_jpeg_src(j_decompress_ptr cinfo, LibRaw_abstract_datastream *inf)
 {
     lr_jpg_src_ptr src;
-    if (cinfo->src == NULL)
+    if (cinfo->src == nullptr)
     { /* first time for this JPEG object? */
         cinfo->src = (struct jpeg_source_mgr *)(*cinfo->mem->alloc_small)(
             (j_common_ptr)cinfo, JPOOL_PERMANENT, sizeof(lr_jpg_source_mgr));
@@ -136,7 +136,7 @@ static void lr_jpeg_src(j_decompress_ptr cinfo, LibRaw_abstract_datastream *inf)
     src->pub.term_source = lr_term_source;
     src->instream = inf;
     src->pub.bytes_in_buffer = 0;    /* forces fill_input_buffer on first read */
-    src->pub.next_input_byte = NULL; /* until buffer loaded */
+    src->pub.next_input_byte = nullptr; /* until buffer loaded */
 }
 #endif
 
@@ -169,7 +169,7 @@ LibRaw_file_datastream::LibRaw_file_datastream(const char *fname)
       wfilename()
 #endif
       ,
-      jas_file(NULL)
+      jas_file(nullptr)
 {
   if (filename.size() > 0)
   {
@@ -200,7 +200,7 @@ LibRaw_file_datastream::LibRaw_file_datastream(const char *fname)
 }
 #ifdef LIBRAW_WIN32_UNICODEPATHS
 LibRaw_file_datastream::LibRaw_file_datastream(const wchar_t *fname)
-    : filename(), wfilename(fname), jas_file(NULL), _fsize(0)
+    : filename(), wfilename(fname), jas_file(nullptr), _fsize(0)
 {
   if (wfilename.size() > 0)
   {
@@ -225,7 +225,7 @@ LibRaw_file_datastream::LibRaw_file_datastream(const wchar_t *fname)
 }
 const wchar_t *LibRaw_file_datastream::wfname()
 {
-  return wfilename.size() > 0 ? wfilename.c_str() : NULL;
+  return wfilename.size() > 0 ? wfilename.c_str() : nullptr;
 }
 #endif
 
@@ -258,7 +258,7 @@ int LibRaw_file_datastream::eof()
   return f->sgetc() == EOF;
 }
 
-int LibRaw_file_datastream::seek(INT64 o, int whence)
+int LibRaw_file_datastream::seek(int64_t o, int whence)
 {
   LR_STREAM_CHK();
   std::ios_base::seekdir dir;
@@ -279,7 +279,7 @@ int LibRaw_file_datastream::seek(INT64 o, int whence)
   return f->pubseekoff((long)o, dir) < 0;
 }
 
-INT64 LibRaw_file_datastream::tell()
+int64_t LibRaw_file_datastream::tell()
 {
   LR_STREAM_CHK();
   return f->pubseekoff(0, std::ios_base::cur);
@@ -287,7 +287,7 @@ INT64 LibRaw_file_datastream::tell()
 
 char *LibRaw_file_datastream::gets(char *str, int sz)
 {
-  if(sz<1) return NULL;
+  if(sz<1) return nullptr;
   LR_STREAM_CHK();
   std::istream is(f.get());
   is.getline(str, sz);
@@ -325,7 +325,7 @@ int LibRaw_file_datastream::scanf_one(const char *fmt, void *val)
 
 const char *LibRaw_file_datastream::fname()
 {
-  return filename.size() > 0 ? filename.c_str() : NULL;
+  return filename.size() > 0 ? filename.c_str() : nullptr;
 }
 
 #undef LR_STREAM_CHK
@@ -334,7 +334,7 @@ const char *LibRaw_file_datastream::fname()
 void *LibRaw_file_datastream::make_jas_stream()
 {
 #ifdef NO_JASPER
-  return NULL;
+  return nullptr;
 #else
 #ifdef LIBRAW_WIN32_UNICODEPATHS
   if (wfname())
@@ -374,7 +374,7 @@ int LibRaw_buffer_datastream::read(void *ptr, size_t sz, size_t nmemb)
   return int((to_read + sz - 1) / (sz > 0 ? sz : 1));
 }
 
-int LibRaw_buffer_datastream::seek(INT64 o, int whence)
+int LibRaw_buffer_datastream::seek(int64_t o, int whence)
 {
   switch (whence)
   {
@@ -415,19 +415,19 @@ int LibRaw_buffer_datastream::seek(INT64 o, int whence)
   }
 }
 
-INT64 LibRaw_buffer_datastream::tell()
+int64_t LibRaw_buffer_datastream::tell()
 {
-  return INT64(streampos);
+  return int64_t(streampos);
 }
 
 char *LibRaw_buffer_datastream::gets(char *s, int sz)
 {
-  if(sz<1) return NULL;
+  if(sz<1) return nullptr;
   unsigned char *psrc, *pdest, *str;
   str = (unsigned char *)s;
   psrc = buf + streampos;
   pdest = str;
-  if(streampos >= streamsize) return NULL;
+  if(streampos >= streamsize) return nullptr;
   while ((size_t(psrc - buf) < streamsize) && ((pdest - str) < (sz-1)))
   {
     *pdest = *psrc;
@@ -482,7 +482,7 @@ int LibRaw_buffer_datastream::valid() { return buf ? 1 : 0; }
 void *LibRaw_buffer_datastream::make_jas_stream()
 {
 #ifdef NO_JASPER
-  return NULL;
+  return nullptr;
 #else
   return jas_stream_memopen((char *)buf + streampos, streamsize - streampos);
 #endif
@@ -560,7 +560,7 @@ LibRaw_bigfile_datastream::LibRaw_bigfile_datastream(const wchar_t *fname)
 }
 const wchar_t *LibRaw_bigfile_datastream::wfname()
 {
-  return wfilename.size() > 0 ? wfilename.c_str() : NULL;
+  return wfilename.size() > 0 ? wfilename.c_str() : nullptr;
 }
 #endif
 
@@ -590,7 +590,7 @@ int LibRaw_bigfile_datastream::eof()
   return feof(f);
 }
 
-int LibRaw_bigfile_datastream::seek(INT64 o, int whence)
+int LibRaw_bigfile_datastream::seek(int64_t o, int whence)
 {
   LR_BF_CHK();
 #if defined(_WIN32)
@@ -604,7 +604,7 @@ int LibRaw_bigfile_datastream::seek(INT64 o, int whence)
 #endif
 }
 
-INT64 LibRaw_bigfile_datastream::tell()
+int64_t LibRaw_bigfile_datastream::tell()
 {
   LR_BF_CHK();
 #if defined(_WIN32)
@@ -620,7 +620,7 @@ INT64 LibRaw_bigfile_datastream::tell()
 
 char *LibRaw_bigfile_datastream::gets(char *str, int sz)
 {
-  if(sz<1) return NULL;
+  if(sz<1) return nullptr;
   LR_BF_CHK();
   return fgets(str, sz, f);
 }
@@ -639,14 +639,14 @@ int LibRaw_bigfile_datastream::scanf_one(const char *fmt, void *val)
 
 const char *LibRaw_bigfile_datastream::fname()
 {
-  return filename.size() > 0 ? filename.c_str() : NULL;
+  return filename.size() > 0 ? filename.c_str() : nullptr;
 }
 
 #ifdef LIBRAW_OLD_VIDEO_SUPPORT
 void *LibRaw_bigfile_datastream::make_jas_stream()
 {
 #ifdef NO_JASPER
-  return NULL;
+  return nullptr;
 #else
   return jas_stream_fdopen(fileno(f), "rb");
 #endif
@@ -657,7 +657,7 @@ void *LibRaw_bigfile_datastream::make_jas_stream()
 #ifdef LIBRAW_WIN32_CALLS
 
 LibRaw_windows_datastream::LibRaw_windows_datastream(const TCHAR *sFile)
-    : LibRaw_buffer_datastream(NULL, 0), hMap_(0), pView_(NULL)
+    : LibRaw_buffer_datastream(nullptr, 0), hMap_(0), pView_(nullptr)
 {
 #if defined(WINAPI_FAMILY) && defined(WINAPI_FAMILY_APP) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
     HANDLE hFile = CreateFile2(sFile, GENERIC_READ, 0, OPEN_EXISTING, 0);
@@ -686,7 +686,7 @@ LibRaw_windows_datastream::LibRaw_windows_datastream(const TCHAR *sFile)
 // ctor: construct with a file handle - caller is responsible for closing the
 // file handle
 LibRaw_windows_datastream::LibRaw_windows_datastream(HANDLE hFile)
-    : LibRaw_buffer_datastream(NULL, 0), hMap_(0), pView_(NULL)
+    : LibRaw_buffer_datastream(nullptr, 0), hMap_(0), pView_(nullptr)
 {
   Open(hFile);
   reconstruct_base();
@@ -695,7 +695,7 @@ LibRaw_windows_datastream::LibRaw_windows_datastream(HANDLE hFile)
 // dtor: unmap and close the mapping handle
 LibRaw_windows_datastream::~LibRaw_windows_datastream()
 {
-  if (pView_ != NULL)
+  if (pView_ != nullptr)
     ::UnmapViewOfFile(pView_);
 
   if (hMap_ != 0)
@@ -706,7 +706,7 @@ void LibRaw_windows_datastream::Open(HANDLE hFile)
 {
   // create a file mapping handle on the file handle
   hMap_ = ::CreateFileMapping(hFile, 0, PAGE_READONLY, 0, 0, 0);
-  if (hMap_ == NULL)
+  if (hMap_ == nullptr)
     throw std::runtime_error("failed to create file mapping");
 
   // now map the whole file base view
@@ -714,7 +714,7 @@ void LibRaw_windows_datastream::Open(HANDLE hFile)
     throw std::runtime_error("failed to get the file size");
 
   pView_ = ::MapViewOfFile(hMap_, FILE_MAP_READ, 0, 0, (size_t)cbView_);
-  if (pView_ == NULL)
+  if (pView_ == nullptr)
     throw std::runtime_error("failed to map the file");
 }
 
@@ -802,7 +802,7 @@ LibRaw_bigfile_buffered_datastream::LibRaw_bigfile_buffered_datastream(const wch
 
 const wchar_t *LibRaw_bigfile_buffered_datastream::wfname()
 {
-    return wfilename.size() > 0 ? wfilename.c_str() : NULL;
+    return wfilename.size() > 0 ? wfilename.c_str() : nullptr;
 }
 #endif
 
@@ -812,30 +812,30 @@ LibRaw_bigfile_buffered_datastream::~LibRaw_bigfile_buffered_datastream()
         CloseHandle(fhandle);
 }
 int LibRaw_bigfile_buffered_datastream::valid() {
-    return (fhandle != NULL) && (fhandle != INVALID_HANDLE_VALUE);
+    return (fhandle != nullptr) && (fhandle != INVALID_HANDLE_VALUE);
 }
 
 const char *LibRaw_bigfile_buffered_datastream::fname()
 {
-    return filename.size() > 0 ? filename.c_str() : NULL;
+    return filename.size() > 0 ? filename.c_str() : nullptr;
 }
 
 #ifdef LIBRAW_OLD_VIDEO_SUPPORT
 void *LibRaw_bigfile_buffered_datastream::make_jas_stream()
 {
 #ifdef NO_JASPER
-    return NULL;
+    return nullptr;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 #endif
 
-INT64 LibRaw_bigfile_buffered_datastream::readAt(void *ptr, size_t size, INT64 off)
+int64_t LibRaw_bigfile_buffered_datastream::readAt(void *ptr, size_t size, int64_t off)
 {
     LR_BF_CHK();
-    DWORD NumberOfBytesRead;
-    DWORD nNumberOfBytesToRead = (DWORD)size;
+    uint32_t NumberOfBytesRead;
+    uint32_t nNumberOfBytesToRead = (uint32_t)size;
     struct _OVERLAPPED olap;
     memset(&olap, 0, sizeof(olap));
     olap.Offset = off & 0xffffffff;
@@ -858,11 +858,11 @@ int LibRaw_bigfile_buffered_datastream::read(void *data, size_t size, size_t nme
     if (size < 1 || nmemb < 1)
         return 0;
     LR_BF_CHK();
-    INT64 count = size * nmemb;
-    INT64 partbytes = 0;
+    int64_t count = size * nmemb;
+    int64_t partbytes = 0;
     if (!buffered)
     {
-        INT64 r = readAt(data, count, _fpos);
+        int64_t r = readAt(data, count, _fpos);
         _fpos += r;
         return int(r / size);
     }
@@ -870,7 +870,7 @@ int LibRaw_bigfile_buffered_datastream::read(void *data, size_t size, size_t nme
     unsigned char *fBuffer = (unsigned char*)iobuffers[0].data();
     while (count)
     {
-        INT64 inbuffer = 0;
+        int64_t inbuffer = 0;
         // See if the request is totally inside buffer.
         if (iobuffers[0].contains(_fpos, inbuffer))
         {
@@ -886,14 +886,14 @@ int LibRaw_bigfile_buffered_datastream::read(void *data, size_t size, size_t nme
             data = (void *)(((char *)data) + inbuffer);
             _fpos += inbuffer;
         }
-        if (count > (INT64) iobuffers[0].size())
+        if (count > (int64_t) iobuffers[0].size())
         {
         fallback:
             if (_fpos + count > _fsize)
                 count = MAX(0, _fsize - _fpos);
             if (count > 0)
             {
-                INT64 r = readAt(data, count, _fpos);
+                int64_t r = readAt(data, count, _fpos);
                 _fpos += r;
                 return int((r + partbytes) / size);
             }
@@ -907,17 +907,17 @@ int LibRaw_bigfile_buffered_datastream::read(void *data, size_t size, size_t nme
     return 0;
 }
 
-bool LibRaw_bigfile_buffered_datastream::fillBufferAt(int bi, INT64 off)
+bool LibRaw_bigfile_buffered_datastream::fillBufferAt(int bi, int64_t off)
 {
     if (off < 0LL) return false;
     iobuffers[bi]._bstart = off;
     if (iobuffers[bi].size() >= LIBRAW_BUFFER_ALIGN * 2)// Align to a file block.
-        iobuffers[bi]._bstart &= (INT64)~((INT64)(LIBRAW_BUFFER_ALIGN - 1));
+        iobuffers[bi]._bstart &= (int64_t)~((int64_t)(LIBRAW_BUFFER_ALIGN - 1));
 
-    iobuffers[bi]._bend = MIN(iobuffers[bi]._bstart + (INT64)iobuffers[bi].size(), _fsize);
+    iobuffers[bi]._bend = MIN(iobuffers[bi]._bstart + (int64_t)iobuffers[bi].size(), _fsize);
     if (iobuffers[bi]._bend <= off) // Buffer alignment problem, fallback
         return false;
-    INT64 rr = readAt(iobuffers[bi].data(), (uint32_t)(iobuffers[bi]._bend - iobuffers[bi]._bstart), iobuffers[bi]._bstart);
+    int64_t rr = readAt(iobuffers[bi].data(), (uint32_t)(iobuffers[bi]._bend - iobuffers[bi]._bstart), iobuffers[bi]._bstart);
     if (rr > 0)
     {
         iobuffers[bi]._bend = iobuffers[bi]._bstart + rr;
@@ -933,7 +933,7 @@ int LibRaw_bigfile_buffered_datastream::eof()
     return _fpos >= _fsize;
 }
 
-int LibRaw_bigfile_buffered_datastream::seek(INT64 o, int whence)
+int LibRaw_bigfile_buffered_datastream::seek(int64_t o, int whence)
 {
     LR_BF_CHK();
     if (whence == SEEK_SET) _fpos = o;
@@ -942,7 +942,7 @@ int LibRaw_bigfile_buffered_datastream::seek(INT64 o, int whence)
     return 0;
 }
 
-INT64 LibRaw_bigfile_buffered_datastream::tell()
+int64_t LibRaw_bigfile_buffered_datastream::tell()
 {
     LR_BF_CHK();
     return _fpos;
@@ -951,7 +951,7 @@ INT64 LibRaw_bigfile_buffered_datastream::tell()
 char *LibRaw_bigfile_buffered_datastream::gets(char *s, int sz)
 {
     if (sz < 1)
-        return NULL;
+        return nullptr;
     else if (sz < 2)
     {
         s[0] = 0;
@@ -959,9 +959,9 @@ char *LibRaw_bigfile_buffered_datastream::gets(char *s, int sz)
     }
 
     LR_BF_CHK();
-    INT64 contains;
+    int64_t contains;
     int bufindex = selectStringBuffer(sz, contains);
-    if (bufindex < 0) return NULL;
+    if (bufindex < 0) return nullptr;
     if (contains >= sz)
     {
         unsigned char *buf = iobuffers[bufindex].data() + (_fpos - iobuffers[bufindex]._bstart);
@@ -990,10 +990,10 @@ char *LibRaw_bigfile_buffered_datastream::gets(char *s, int sz)
         _fpos += streampos;
         return s;
     }
-    return NULL;
+    return nullptr;
 }
 
-int LibRaw_bigfile_buffered_datastream::selectStringBuffer(INT64 len, INT64& contains)
+int LibRaw_bigfile_buffered_datastream::selectStringBuffer(int64_t len, int64_t& contains)
 {
     if (iobuffers[0].contains(_fpos, contains) && contains >= len)
         return 0;
@@ -1010,7 +1010,7 @@ int LibRaw_bigfile_buffered_datastream::selectStringBuffer(INT64 len, INT64& con
 int LibRaw_bigfile_buffered_datastream::scanf_one(const char *fmt, void *val)
 {
     LR_BF_CHK();
-    INT64 contains = 0;
+    int64_t contains = 0;
     int bufindex = selectStringBuffer(24, contains);
     if (bufindex < 0) return -1;
     if (contains >= 24)

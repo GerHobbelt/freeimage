@@ -39,8 +39,8 @@ it under the terms of the one of two licenses as you choose:
 #define CRX_BUF_SIZE 0x10000
 #if !defined(_WIN32) || (defined(__GNUC__) && !defined(__INTRINSIC_SPECIAL__BitScanReverse))
 /* __INTRINSIC_SPECIAL__BitScanReverse found in MinGW32-W64 v7.30 headers, may be there is a better solution? */
-typedef uint32_t DWORD;
-libraw_inline void _BitScanReverse(DWORD *Index, unsigned long Mask)
+typedef uint32_t uint32_t;
+libraw_inline void _BitScanReverse(uint32_t *Index, unsigned long Mask)
 {
   *Index = sizeof(unsigned long) * 8 - 1 - __builtin_clzl(Mask);
 }
@@ -233,7 +233,7 @@ libraw_inline int crxBitstreamGetZeros(CrxBitstream *bitStrm)
 
   if (bitStrm->bitData)
   {
-    _BitScanReverse((DWORD *)&nonZeroBit, (DWORD)bitStrm->bitData);
+    _BitScanReverse((uint32_t *)&nonZeroBit, (uint32_t)bitStrm->bitData);
     result = 31 - nonZeroBit;
     bitStrm->bitData <<= 32 - nonZeroBit;
     bitStrm->bitsLeft -= 32 - nonZeroBit;
@@ -250,7 +250,7 @@ libraw_inline int crxBitstreamGetZeros(CrxBitstream *bitStrm)
         crxFillBuffer(bitStrm);
         if (nextData)
         {
-          _BitScanReverse((DWORD *)&nonZeroBit, (DWORD)nextData);
+          _BitScanReverse((uint32_t *)&nonZeroBit, (uint32_t)nextData);
           result = bitsLeft + 31 - nonZeroBit;
           bitStrm->bitData = nextData << (32 - nonZeroBit);
           bitStrm->bitsLeft = nonZeroBit;
@@ -266,7 +266,7 @@ libraw_inline int crxBitstreamGetZeros(CrxBitstream *bitStrm)
         break;
       bitsLeft += 8;
     }
-    _BitScanReverse((DWORD *)&nonZeroBit, (DWORD)nextData);
+    _BitScanReverse((uint32_t *)&nonZeroBit, (uint32_t)nextData);
     result = (uint32_t)(bitsLeft + 7 - nonZeroBit);
     bitStrm->bitData = nextData << (32 - nonZeroBit);
     bitStrm->bitsLeft = nonZeroBit;

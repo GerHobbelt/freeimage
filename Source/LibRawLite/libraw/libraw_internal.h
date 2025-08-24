@@ -36,7 +36,7 @@ public:
   } getbits;
   struct
   {
-    UINT64 bitbuf;
+    uint64_t bitbuf;
     int vbits;
 
   } ph1_bits;
@@ -90,8 +90,8 @@ typedef struct
   FILE *output;
   int input_internal;
   char *meta_data;
-  INT64 profile_offset;
-  INT64 toffset;
+  int64_t profile_offset;
+  int64_t toffset;
   unsigned pana_black[4];
 
 } internal_data_t;
@@ -139,7 +139,7 @@ typedef struct
   int32_t medianBits;
   // Not from header, but from datastream
   uint32_t MediaSize;
-  INT64 MediaOffset;
+  int64_t MediaOffset;
   uint32_t MediaType; /* 1 -> /C/RAW, 2-> JPEG, 3-> CTMD metadata*/
   crx_sample_to_chunk_t * stsc_data; /* samples to chunk */
   uint32_t stsc_count;
@@ -147,7 +147,7 @@ typedef struct
   uint32_t sample_size; /* zero if not fixed sample size */
   int32_t *sample_sizes;
   uint32_t chunk_count;
-  INT64  *chunk_offsets;
+  int64_t  *chunk_offsets;
 } crx_data_header_t;
 
 typedef struct
@@ -155,9 +155,9 @@ typedef struct
   short order;
   ushort sraw_mul[4], cr2_slice[3];
   unsigned kodak_cbpp;
-  INT64 strip_offset, data_offset;
-  INT64 meta_offset;
-  INT64 exif_offset, exif_subdir_offset, ifd0_offset;
+  int64_t strip_offset, data_offset;
+  int64_t meta_offset;
+  int64_t exif_offset, exif_subdir_offset, ifd0_offset;
   unsigned data_size;
   unsigned meta_length;
   unsigned cr3_exif_length, cr3_ifd0_length;
@@ -221,8 +221,8 @@ struct tiff_ifd_t
   int t_fuji_width;
   float t_shutter;
   /* Per-IFD DNG fields */
-  INT64 opcode2_offset;
-  INT64 lineartable_offset;
+  int64_t opcode2_offset;
+  int64_t lineartable_offset;
   int lineartable_len;
   libraw_dng_color_t dng_color[2];
   libraw_dng_levels_t dng_levels;

@@ -38,30 +38,30 @@ LibRaw::LibRaw(unsigned int flags) : memmgr(1024)
   ZERO(libraw_internal_data);
   ZERO(callbacks);
 
-  _rawspeed_camerameta = _rawspeed_decoder = NULL;
-  _rawspeed3_handle = NULL;
-  dnghost = NULL;
-  dngnegative = NULL;
-  dngimage = NULL;
-  _x3f_data = NULL;
+  _rawspeed_camerameta = _rawspeed_decoder = nullptr;
+  _rawspeed3_handle = nullptr;
+  dnghost = nullptr;
+  dngnegative = nullptr;
+  dngimage = nullptr;
+  _x3f_data = nullptr;
 
 #ifdef USE_RAWSPEED
   CameraMetaDataLR *camerameta =
-      make_camera_metadata(); // May be NULL in case of exception in
+      make_camera_metadata(); // May be nullptr in case of exception in
                               // make_camera_metadata()
   _rawspeed_camerameta = static_cast<void *>(camerameta);
 #endif
   callbacks.data_cb = (flags & LIBRAW_OPTIONS_NO_DATAERR_CALLBACK)
-                          ? NULL
+                          ? nullptr
                           : &default_data_callback;
-  callbacks.exif_cb = NULL; // no default callback
-  callbacks.pre_identify_cb = NULL;
-  callbacks.post_identify_cb = NULL;
+  callbacks.exif_cb = nullptr; // no default callback
+  callbacks.pre_identify_cb = nullptr;
+  callbacks.post_identify_cb = nullptr;
   callbacks.pre_subtractblack_cb = callbacks.pre_scalecolors_cb =
       callbacks.pre_preinterpolate_cb = callbacks.pre_interpolate_cb =
           callbacks.interpolate_bayer_cb = callbacks.interpolate_xtrans_cb =
               callbacks.post_interpolate_cb = callbacks.pre_converttorgb_cb =
-                  callbacks.post_converttorgb_cb = NULL;
+                  callbacks.post_converttorgb_cb = nullptr;
 
   memmove(&imgdata.params.aber, &aber, sizeof(aber));
   memmove(&imgdata.params.gamm, &gamm, sizeof(gamm));
@@ -112,7 +112,7 @@ LibRaw::~LibRaw()
 #ifdef USE_RAWSPEED3
   if (_rawspeed3_handle)
       rawspeed3_close(_rawspeed3_handle);
-  _rawspeed3_handle = NULL;
+  _rawspeed3_handle = nullptr;
 #endif
 
 #ifdef USE_RAWSPEED
@@ -121,7 +121,7 @@ LibRaw::~LibRaw()
     CameraMetaDataLR *cmeta =
         static_cast<CameraMetaDataLR *>(_rawspeed_camerameta);
     delete cmeta;
-    _rawspeed_camerameta = NULL;
+    _rawspeed_camerameta = nullptr;
   }
 #endif
 }
@@ -137,7 +137,7 @@ void LibRaw::recycle()
     if (a)                                                                     \
     {                                                                          \
       free(a);                                                                 \
-      a = NULL;                                                                \
+      a = nullptr;                                                                \
     }                                                                          \
   } while (0)
 

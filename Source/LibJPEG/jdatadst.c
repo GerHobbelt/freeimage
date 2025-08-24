@@ -129,12 +129,12 @@ empty_mem_output_buffer (j_compress_ptr cinfo)
   nextsize = dest->bufsize * 2;
   nextbuffer = (JOCTET *) malloc(nextsize);
 
-  if (nextbuffer == NULL)
+  if (nextbuffer == nullptr)
     ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 11);
 
   MEMCOPY(nextbuffer, dest->buffer, dest->bufsize);
 
-  if (dest->newbuffer != NULL)
+  if (dest->newbuffer != nullptr)
     free(dest->newbuffer);
 
   dest->newbuffer = nextbuffer;
@@ -202,7 +202,7 @@ jpeg_stdio_dest (j_compress_ptr cinfo, FILE * outfile)
    * manager serially with the same JPEG object, because their private object
    * sizes may be different.  Caveat programmer.
    */
-  if (cinfo->dest == NULL) {	/* first time for this JPEG object? */
+  if (cinfo->dest == nullptr) {	/* first time for this JPEG object? */
     cinfo->dest = (struct jpeg_destination_mgr *) (*cinfo->mem->alloc_small)
       ((j_common_ptr) cinfo, JPOOL_PERMANENT, SIZEOF(my_destination_mgr));
   }
@@ -235,13 +235,13 @@ jpeg_mem_dest (j_compress_ptr cinfo,
 {
   my_mem_dest_ptr dest;
 
-  if (outbuffer == NULL || outsize == NULL)	/* sanity check */
+  if (outbuffer == nullptr || outsize == nullptr)	/* sanity check */
     ERREXIT(cinfo, JERR_BUFFER_SIZE);
 
   /* The destination object is made permanent so that multiple JPEG images
    * can be written to the same buffer without re-executing jpeg_mem_dest.
    */
-  if (cinfo->dest == NULL) {	/* first time for this JPEG object? */
+  if (cinfo->dest == nullptr) {	/* first time for this JPEG object? */
     cinfo->dest = (struct jpeg_destination_mgr *) (*cinfo->mem->alloc_small)
       ((j_common_ptr) cinfo, JPOOL_PERMANENT, SIZEOF(my_mem_destination_mgr));
   }
@@ -252,12 +252,12 @@ jpeg_mem_dest (j_compress_ptr cinfo,
   dest->pub.term_destination = term_mem_destination;
   dest->outbuffer = outbuffer;
   dest->outsize = outsize;
-  dest->newbuffer = NULL;
+  dest->newbuffer = nullptr;
 
-  if (*outbuffer == NULL || *outsize == 0) {
+  if (*outbuffer == nullptr || *outsize == 0) {
     /* Allocate initial buffer */
     dest->newbuffer = *outbuffer = (unsigned char *) malloc(OUTPUT_BUF_SIZE);
-    if (dest->newbuffer == NULL)
+    if (dest->newbuffer == nullptr)
       ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 10);
     *outsize = OUTPUT_BUF_SIZE;
   }

@@ -177,8 +177,8 @@ void LibRaw::kodak_jpeg_load_raw()
   cinfo.err = jpeg_std_error(&pub);
   pub.error_exit = jpegErrorExit_k;
 
-  if (INT64(data_size) >
-          INT64(imgdata.rawparams.max_raw_memory_mb) * INT64(1024 * 1024))
+  if (int64_t(data_size) >
+          int64_t(imgdata.rawparams.max_raw_memory_mb) * int64_t(1024 * 1024))
 	  throw LIBRAW_EXCEPTION_TOOBIG;
 
   unsigned char *jpg_buf = (unsigned char *)malloc(data_size);
@@ -368,7 +368,7 @@ int LibRaw::kodak_65000_decode(short *out, int bsize)
 {
   uchar c, blen[768];
   ushort raw[6];
-  INT64 bitbuf = 0;
+  int64_t bitbuf = 0;
   int save, bits = 0, i, j, len, diff;
 
   save = ftell(ifp);
@@ -402,7 +402,7 @@ int LibRaw::kodak_65000_decode(short *out, int bsize)
     if (bits < len)
     {
       for (j = 0; j < 32; j += 8)
-        bitbuf += (INT64)fgetc(ifp) << (bits + (j ^ 8));
+        bitbuf += (int64_t)fgetc(ifp) << (bits + (j ^ 8));
       bits += 32;
     }
     diff = bitbuf & (0xffff >> (16 - len));

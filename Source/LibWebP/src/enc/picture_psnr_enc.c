@@ -133,13 +133,13 @@ int WebPPlaneDistortion(const uint8_t* src, size_t src_stride,
                         const uint8_t* ref, size_t ref_stride,
                         int width, int height, size_t x_step,
                         int type, float* distortion, float* result) {
-  uint8_t* allocated = NULL;
+  uint8_t* allocated = nullptr;
   const AccumulateFunc metric = (type == 0) ? AccumulateSSE :
                                 (type == 1) ? AccumulateSSIM :
                                               AccumulateLSIM;
-  if (src == NULL || ref == NULL ||
+  if (src == nullptr || ref == nullptr ||
       src_stride < x_step * width || ref_stride < x_step * width ||
-      result == NULL || distortion == NULL) {
+      result == nullptr || distortion == nullptr) {
     return 0;
   }
 
@@ -150,7 +150,7 @@ int WebPPlaneDistortion(const uint8_t* src, size_t src_stride,
     uint8_t* tmp2;
     allocated =
         (uint8_t*)WebPSafeMalloc(2ULL * width * height, sizeof(*allocated));
-    if (allocated == NULL) return 0;
+    if (allocated == nullptr) return 0;
     tmp1 = allocated;
     tmp2 = tmp1 + (size_t)width * height;
     for (y = 0; y < height; ++y) {
@@ -182,9 +182,9 @@ int WebPPictureDistortion(const WebPPicture* src, const WebPPicture* ref,
   int ok = 0;
   WebPPicture p0, p1;
   double total_size = 0., total_distortion = 0.;
-  if (src == NULL || ref == NULL ||
+  if (src == nullptr || ref == nullptr ||
       src->width != ref->width || src->height != ref->height ||
-      results == NULL) {
+      results == nullptr) {
     return 0;
   }
 
@@ -238,7 +238,7 @@ int WebPPlaneDistortion(const uint8_t* src, size_t src_stride,
   (void)height;
   (void)x_step;
   (void)type;
-  if (distortion == NULL || result == NULL) return 0;
+  if (distortion == nullptr || result == nullptr) return 0;
   *distortion = 0.f;
   *result = 0.f;
   return 1;
@@ -250,7 +250,7 @@ int WebPPictureDistortion(const WebPPicture* src, const WebPPicture* ref,
   (void)src;
   (void)ref;
   (void)type;
-  if (results == NULL) return 0;
+  if (results == nullptr) return 0;
   for (i = 0; i < 5; ++i) results[i] = 0.f;
   return 1;
 }

@@ -22,7 +22,7 @@ local int gz_init(state)
 
     /* allocate input buffer (double size for gzprintf) */
     state->in = (unsigned char *)malloc(state->want << 1);
-    if (state->in == NULL) {
+    if (state->in == nullptr) {
         gz_error(state, Z_MEM_ERROR, "out of memory");
         return -1;
     }
@@ -31,7 +31,7 @@ local int gz_init(state)
     if (!state->direct) {
         /* allocate output buffer */
         state->out = (unsigned char *)malloc(state->want);
-        if (state->out == NULL) {
+        if (state->out == nullptr) {
             free(state->in);
             gz_error(state, Z_MEM_ERROR, "out of memory");
             return -1;
@@ -49,7 +49,7 @@ local int gz_init(state)
             gz_error(state, Z_MEM_ERROR, "out of memory");
             return -1;
         }
-        strm->next_in = NULL;
+        strm->next_in = nullptr;
     }
 
     /* mark state as initialized */
@@ -260,7 +260,7 @@ int ZEXPORT gzwrite(file, buf, len)
     gz_statep state;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return 0;
     state = (gz_statep)file;
 
@@ -290,7 +290,7 @@ z_size_t ZEXPORT gzfwrite(buf, size, nitems, file)
     gz_statep state;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return 0;
     state = (gz_statep)file;
 
@@ -320,7 +320,7 @@ int ZEXPORT gzputc(file, c)
     z_streamp strm;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return -1;
     state = (gz_statep)file;
     strm = &(state->strm);
@@ -366,7 +366,7 @@ int ZEXPORT gzputs(file, s)
     gz_statep state;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return -1;
     state = (gz_statep)file;
 
@@ -397,7 +397,7 @@ int ZEXPORTVA gzvprintf(gzFile file, const char *format, va_list va)
     z_streamp strm;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return Z_STREAM_ERROR;
     state = (gz_statep)file;
     strm = &(state->strm);
@@ -487,7 +487,7 @@ int ZEXPORTVA gzprintf(file, format, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10,
     z_streamp strm;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return Z_STREAM_ERROR;
     state = (gz_statep)file;
     strm = &(state->strm);
@@ -569,7 +569,7 @@ int ZEXPORT gzflush(file, flush)
     gz_statep state;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return Z_STREAM_ERROR;
     state = (gz_statep)file;
 
@@ -603,7 +603,7 @@ int ZEXPORT gzsetparams(file, level, strategy)
     z_streamp strm;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return Z_STREAM_ERROR;
     state = (gz_statep)file;
     strm = &(state->strm);
@@ -643,7 +643,7 @@ int ZEXPORT gzclose_w(file)
     gz_statep state;
 
     /* get internal structure */
-    if (file == NULL)
+    if (file == nullptr)
         return Z_STREAM_ERROR;
     state = (gz_statep)file;
 
@@ -668,7 +668,7 @@ int ZEXPORT gzclose_w(file)
         }
         free(state->in);
     }
-    gz_error(state, Z_OK, NULL);
+    gz_error(state, Z_OK, nullptr);
     free(state->path);
     if (close(state->fd) == -1)
         ret = Z_ERRNO;

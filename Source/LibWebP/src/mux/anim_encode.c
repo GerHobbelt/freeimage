@@ -90,7 +90,7 @@ struct WebPAnimEncoder {
   // Misc.
   int is_first_frame_;  // True if first frame is yet to be added/being added.
   int got_null_frame_;  // True if WebPAnimEncoderAdd() has already been called
-                        // with a NULL frame.
+                        // with a nullptr frame.
 
   size_t in_frame_count_;   // Number of input frames processed so far.
   size_t out_frame_count_;  // Number of frames added to mux so far. This may be
@@ -182,7 +182,7 @@ static void DefaultEncoderOptions(WebPAnimEncoderOptions* const enc_options) {
 
 int WebPAnimEncoderOptionsInitInternal(WebPAnimEncoderOptions* enc_options,
                                        int abi_version) {
-  if (enc_options == NULL ||
+  if (enc_options == nullptr ||
       WEBP_ABI_IS_INCOMPATIBLE(abi_version, WEBP_MUX_ABI_VERSION)) {
     return 0;
   }
@@ -207,7 +207,7 @@ static void ClearRectangle(WebPPicture* const picture,
 
 static void WebPUtilClearPic(WebPPicture* const picture,
                              const FrameRectangle* const rect) {
-  if (rect != NULL) {
+  if (rect != nullptr) {
     ClearRectangle(picture, rect->x_offset_, rect->y_offset_,
                    rect->width_, rect->height_);
   } else {
@@ -239,21 +239,21 @@ WebPAnimEncoder* WebPAnimEncoderNewInternal(
   WebPAnimEncoder* enc;
 
   if (WEBP_ABI_IS_INCOMPATIBLE(abi_version, WEBP_MUX_ABI_VERSION)) {
-    return NULL;
+    return nullptr;
   }
   if (width <= 0 || height <= 0 ||
       (width * (uint64_t)height) >= MAX_IMAGE_AREA) {
-    return NULL;
+    return nullptr;
   }
 
   enc = (WebPAnimEncoder*)WebPSafeCalloc(1, sizeof(*enc));
-  if (enc == NULL) return NULL;
+  if (enc == nullptr) return nullptr;
   MarkNoError(enc);
 
   // Dimensions and options.
   *(int*)&enc->canvas_width_ = width;
   *(int*)&enc->canvas_height_ = height;
-  if (enc_options != NULL) {
+  if (enc_options != nullptr) {
     *(WebPAnimEncoderOptions*)&enc->options_ = *enc_options;
     SanitizeEncoderOptions((WebPAnimEncoderOptions*)&enc->options_);
   } else {
@@ -274,7 +274,7 @@ WebPAnimEncoder* WebPAnimEncoderNewInternal(
       !WebPPictureCopy(&enc->curr_canvas_copy_, &enc->prev_canvas_disposed_)) {
     goto Err;
   }
-  WebPUtilClearPic(&enc->prev_canvas_, NULL);
+  WebPUtilClearPic(&enc->prev_canvas_, nullptr);
   enc->curr_canvas_copy_modified_ = 1;
 
   // Encoded frames.
@@ -286,10 +286,10 @@ WebPAnimEncoder* WebPAnimEncoderNewInternal(
   if (enc->size_ < 2) enc->size_ = 2;
   enc->encoded_frames_ =
       (EncodedFrame*)WebPSafeCalloc(enc->size_, sizeof(*enc->encoded_frames_));
-  if (enc->encoded_frames_ == NULL) goto Err;
+  if (enc->encoded_frames_ == nullptr) goto Err;
 
   enc->mux_ = WebPMuxNew();
-  if (enc->mux_ == NULL) goto Err;
+  if (enc->mux_ == nullptr) goto Err;
 
   enc->count_since_key_frame_ = 0;
   enc->first_timestamp_ = 0;
@@ -302,12 +302,12 @@ WebPAnimEncoder* WebPAnimEncoderNewInternal(
 
  Err:
   WebPAnimEncoderDelete(enc);
-  return NULL;
+  return nullptr;
 }
 
 // Release the data contained by 'encoded_frame'.
 static void FrameRelease(EncodedFrame* const encoded_frame) {
-  if (encoded_frame != NULL) {
+  if (encoded_frame != nullptr) {
     WebPDataClear(&encoded_frame->sub_frame_.bitstream);
     WebPDataClear(&encoded_frame->key_frame_.bitstream);
     memset(encoded_frame, 0, sizeof(*encoded_frame));
@@ -315,11 +315,11 @@ static void FrameRelease(EncodedFrame* const encoded_frame) {
 }
 
 void WebPAnimEncoderDelete(WebPAnimEncoder* enc) {
-  if (enc != NULL) {
+  if (enc != nullptr) {
     WebPPictureFree(&enc->curr_canvas_copy_);
     WebPPictureFree(&enc->prev_canvas_);
     WebPPictureFree(&enc->prev_canvas_disposed_);
-    if (enc->encoded_frames_ != NULL) {
+    if (enc->encoded_frames_ != nullptr) {
       size_t i;
       for (i = 0; i < enc->size_; ++i) {
         FrameRelease(&enc->encoded_frames_[i]);
@@ -597,7 +597,7 @@ int WebPAnimEncoderRefineRect(
   const int left = clip(*x_offset, 0, curr_canvas->width - 1);
   const int bottom = clip(*y_offset + *height, 0, curr_canvas->height);
   const int top = clip(*y_offset, 0, curr_canvas->height - 1);
-  if (prev_canvas == NULL || curr_canvas == NULL ||
+  if (prev_canvas == nullptr || curr_canvas == nullptr ||
       prev_canvas->width != curr_canvas->width ||
       prev_canvas->height != curr_canvas->height ||
       !prev_canvas->use_argb || !curr_canvas->use_argb) {
@@ -620,7 +620,7 @@ int WebPAnimEncoderRefineRect(
 static void DisposeFrameRectangle(int dispose_method,
                                   const FrameRectangle* const rect,
                                   WebPPicture* const curr_canvas) {
-  assert(rect != NULL);
+  assert(rect != nullptr);
   if (dispose_method == WEBP_MUX_DISPOSE_BACKGROUND) {
     WebPUtilClearPic(curr_canvas, rect);
   }
@@ -685,7 +685,7 @@ static int IncreaseTransparency(const WebPPicture* const src,
                                 WebPPicture* const dst) {
   int i, j;
   int modified = 0;
-  assert(src != NULL && dst != NULL && rect != NULL);
+  assert(src != nullptr && dst != nullptr && rect != nullptr);
   assert(src->width == dst->width && src->height == dst->height);
   for (j = rect->y_offset_; j < rect->y_offset_ + rect->height_; ++j) {
     const uint32_t* const psrc = src->argb + j * src->argb_stride;
@@ -717,7 +717,7 @@ static int FlattenSimilarBlocks(const WebPPicture* const src,
   const int y_end = (rect->y_offset_ + rect->height_) & ~(block_size - 1);
   const int x_start = (rect->x_offset_ + block_size) & ~(block_size - 1);
   const int x_end = (rect->x_offset_ + rect->width_) & ~(block_size - 1);
-  assert(src != NULL && dst != NULL && rect != NULL);
+  assert(src != nullptr && dst != nullptr && rect != nullptr);
   assert(src->width == dst->width && src->height == dst->height);
   assert((block_size & (block_size - 1)) == 0);  // must be a power of 2
   // Iterate over each block and count similar pixels.
@@ -788,7 +788,7 @@ static WebPEncodingError EncodeCandidate(WebPPicture* const sub_frame,
                                          Candidate* const candidate) {
   WebPConfig config = *encoder_config;
   WebPEncodingError error_code = VP8_ENC_OK;
-  assert(candidate != NULL);
+  assert(candidate != nullptr);
   memset(candidate, 0, sizeof(*candidate));
 
   // Set frame rect and info.
@@ -880,7 +880,7 @@ static WebPEncodingError GenerateCandidates(
     evaluate_ll = 1;
     evaluate_lossy = 1;
   } else {  // Use a heuristic for trying lossless and/or lossy compression.
-    const int num_colors = WebPGetColorPalette(&params->sub_frame_ll_, NULL);
+    const int num_colors = WebPGetColorPalette(&params->sub_frame_ll_, nullptr);
     evaluate_ll = (num_colors < MAX_COLORS_LOSSLESS);
     evaluate_lossy = (num_colors >= MIN_COLORS_LOSSY);
   }
@@ -1298,7 +1298,7 @@ static int FlushFrames(WebPAnimEncoder* const enc) {
     EncodedFrame* const curr = GetFrame(enc, 0);
     const WebPMuxFrameInfo* const info =
         curr->is_key_frame_ ? &curr->key_frame_ : &curr->sub_frame_;
-    assert(enc->mux_ != NULL);
+    assert(enc->mux_ != nullptr);
     err = WebPMuxPushFrame(enc->mux_, info, 1);
     if (err != WEBP_MUX_OK) {
       MarkError2(enc, "ERROR adding frame. WebPMuxError", err);
@@ -1337,7 +1337,7 @@ int WebPAnimEncoderAdd(WebPAnimEncoder* enc, WebPPicture* frame, int timestamp,
   WebPConfig config;
   int ok;
 
-  if (enc == NULL) {
+  if (enc == nullptr) {
     return 0;
   }
   MarkNoError(enc);
@@ -1347,7 +1347,7 @@ int WebPAnimEncoderAdd(WebPAnimEncoder* enc, WebPPicture* frame, int timestamp,
     const uint32_t prev_frame_duration =
         (uint32_t)timestamp - enc->prev_timestamp_;
     if (prev_frame_duration >= MAX_DURATION) {
-      if (frame != NULL) {
+      if (frame != nullptr) {
         frame->error_code = VP8_ENC_ERROR_INVALID_CONFIGURATION;
       }
       MarkError(enc, "ERROR adding frame: timestamps must be non-decreasing");
@@ -1366,7 +1366,7 @@ int WebPAnimEncoderAdd(WebPAnimEncoder* enc, WebPPicture* frame, int timestamp,
     enc->first_timestamp_ = timestamp;
   }
 
-  if (frame == NULL) {  // Special: last call.
+  if (frame == nullptr) {  // Special: last call.
     enc->got_null_frame_ = 1;
     enc->prev_timestamp_ = timestamp;
     return 1;
@@ -1390,7 +1390,7 @@ int WebPAnimEncoderAdd(WebPAnimEncoder* enc, WebPPicture* frame, int timestamp,
     }
   }
 
-  if (encoder_config != NULL) {
+  if (encoder_config != nullptr) {
     if (!WebPValidateConfig(encoder_config)) {
       MarkError(enc, "ERROR adding frame: Invalid WebPConfig");
       return 0;
@@ -1400,14 +1400,14 @@ int WebPAnimEncoderAdd(WebPAnimEncoder* enc, WebPPicture* frame, int timestamp,
     WebPConfigInit(&config);
     config.lossless = 1;
   }
-  assert(enc->curr_canvas_ == NULL);
+  assert(enc->curr_canvas_ == nullptr);
   enc->curr_canvas_ = frame;  // Store reference.
   assert(enc->curr_canvas_copy_modified_ == 1);
   CopyCurrentCanvas(enc);
 
   ok = CacheFrame(enc, &config) && FlushFrames(enc);
 
-  enc->curr_canvas_ = NULL;
+  enc->curr_canvas_ = nullptr;
   enc->curr_canvas_copy_modified_ = 1;
   if (ok) {
     enc->prev_timestamp_ = timestamp;
@@ -1424,7 +1424,7 @@ static int DecodeFrameOntoCanvas(const WebPMuxFrameInfo* const frame,
   WebPPicture sub_image;
   WebPDecoderConfig config;
   WebPInitDecoderConfig(&config);
-  WebPUtilClearPic(canvas, NULL);
+  WebPUtilClearPic(canvas, nullptr);
   if (WebPGetFeatures(image->bytes, image->size, &config.input) !=
       VP8_STATUS_OK) {
     return 0;
@@ -1485,7 +1485,7 @@ static WebPMuxError OptimizeSingleFrame(WebPAnimEncoder* const enc,
   WebPData full_image;
   WebPData webp_data2;
   WebPMux* const mux = WebPMuxCreate(webp_data, 0);
-  if (mux == NULL) return WEBP_MUX_BAD_DATA;
+  if (mux == nullptr) return WEBP_MUX_BAD_DATA;
   assert(enc->out_frame_count_ == 1);
   WebPDataInit(&frame.bitstream);
   WebPDataInit(&full_image);
@@ -1523,13 +1523,13 @@ int WebPAnimEncoderAssemble(WebPAnimEncoder* enc, WebPData* webp_data) {
   WebPMux* mux;
   WebPMuxError err;
 
-  if (enc == NULL) {
+  if (enc == nullptr) {
     return 0;
   }
   MarkNoError(enc);
 
-  if (webp_data == NULL) {
-    MarkError(enc, "ERROR assembling: NULL input");
+  if (webp_data == nullptr) {
+    MarkError(enc, "ERROR assembling: nullptr input");
     return 0;
   }
 
@@ -1578,7 +1578,7 @@ int WebPAnimEncoderAssemble(WebPAnimEncoder* enc, WebPData* webp_data) {
 }
 
 const char* WebPAnimEncoderGetError(WebPAnimEncoder* enc) {
-  if (enc == NULL) return NULL;
+  if (enc == nullptr) return nullptr;
   return enc->error_str_;
 }
 

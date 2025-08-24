@@ -38,12 +38,12 @@ static int BitWriterResize(VP8BitWriter* const bw, size_t extra_size) {
   if (new_size < needed_size) new_size = needed_size;
   if (new_size < 1024) new_size = 1024;
   new_buf = (uint8_t*)WebPSafeMalloc(1ULL, new_size);
-  if (new_buf == NULL) {
+  if (new_buf == nullptr) {
     bw->error_ = 1;
     return 0;
   }
   if (bw->pos_ > 0) {
-    assert(bw->buf_ != NULL);
+    assert(bw->buf_ != nullptr);
     memcpy(new_buf, bw->buf_, bw->pos_);
   }
   WebPSafeFree(bw->buf_);
@@ -167,7 +167,7 @@ int VP8BitWriterInit(VP8BitWriter* const bw, size_t expected_size) {
   bw->pos_     = 0;
   bw->max_pos_ = 0;
   bw->error_   = 0;
-  bw->buf_     = NULL;
+  bw->buf_     = nullptr;
   return (expected_size > 0) ? BitWriterResize(bw, expected_size) : 1;
 }
 
@@ -180,7 +180,7 @@ uint8_t* VP8BitWriterFinish(VP8BitWriter* const bw) {
 
 int VP8BitWriterAppend(VP8BitWriter* const bw,
                        const uint8_t* data, size_t size) {
-  assert(data != NULL);
+  assert(data != nullptr);
   if (bw->nb_bits_ != -8) return 0;   // Flush() must have been called
   if (!BitWriterResize(bw, size)) return 0;
   memcpy(bw->buf_ + bw->pos_, data, size);
@@ -189,7 +189,7 @@ int VP8BitWriterAppend(VP8BitWriter* const bw,
 }
 
 void VP8BitWriterWipeOut(VP8BitWriter* const bw) {
-  if (bw != NULL) {
+  if (bw != nullptr) {
     WebPSafeFree(bw->buf_);
     memset(bw, 0, sizeof(*bw));
   }
@@ -220,7 +220,7 @@ static int VP8LBitWriterResize(VP8LBitWriter* const bw, size_t extra_size) {
   // make allocated size multiple of 1k
   allocated_size = (((allocated_size >> 10) + 1) << 10);
   allocated_buf = (uint8_t*)WebPSafeMalloc(1ULL, allocated_size);
-  if (allocated_buf == NULL) {
+  if (allocated_buf == nullptr) {
     bw->error_ = 1;
     return 0;
   }
@@ -253,7 +253,7 @@ int VP8LBitWriterClone(const VP8LBitWriter* const src,
 }
 
 void VP8LBitWriterWipeOut(VP8LBitWriter* const bw) {
-  if (bw != NULL) {
+  if (bw != nullptr) {
     WebPSafeFree(bw->buf_);
     memset(bw, 0, sizeof(*bw));
   }

@@ -109,7 +109,7 @@ static void Upsample32Pixels_SSE41(const uint8_t r1[], const uint8_t r2[],
 #define CONVERT2RGB_32(FUNC, XSTEP, top_y, bottom_y,                           \
                        top_dst, bottom_dst, cur_x) do {                        \
   FUNC##32_SSE41((top_y) + (cur_x), r_u, r_v, (top_dst) + (cur_x) * (XSTEP));  \
-  if ((bottom_y) != NULL) {                                                    \
+  if ((bottom_y) != nullptr) {                                                    \
     FUNC##32_SSE41((bottom_y) + (cur_x), r_u + 64, r_v + 64,                   \
                   (bottom_dst) + (cur_x) * (XSTEP));                           \
   }                                                                            \
@@ -126,14 +126,14 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bottom_y,           \
   uint8_t* const r_u = (uint8_t*)((uintptr_t)(uv_buf + 15) & ~15);             \
   uint8_t* const r_v = r_u + 32;                                               \
                                                                                \
-  assert(top_y != NULL);                                                       \
+  assert(top_y != nullptr);                                                       \
   {   /* Treat the first pixel in regular way */                               \
     const int u_diag = ((top_u[0] + cur_u[0]) >> 1) + 1;                       \
     const int v_diag = ((top_v[0] + cur_v[0]) >> 1) + 1;                       \
     const int u0_t = (top_u[0] + u_diag) >> 1;                                 \
     const int v0_t = (top_v[0] + v_diag) >> 1;                                 \
     FUNC(top_y[0], u0_t, v0_t, top_dst);                                       \
-    if (bottom_y != NULL) {                                                    \
+    if (bottom_y != nullptr) {                                                    \
       const int u0_b = (cur_u[0] + u_diag) >> 1;                               \
       const int v0_b = (cur_v[0] + v_diag) >> 1;                               \
       FUNC(bottom_y[0], u0_b, v0_b, bottom_dst);                               \
@@ -150,16 +150,16 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bottom_y,           \
     uint8_t* const tmp_top_dst = r_u + 4 * 32;                                 \
     uint8_t* const tmp_bottom_dst = tmp_top_dst + 4 * 32;                      \
     uint8_t* const tmp_top = tmp_bottom_dst + 4 * 32;                          \
-    uint8_t* const tmp_bottom = (bottom_y == NULL) ? NULL : tmp_top + 32;      \
+    uint8_t* const tmp_bottom = (bottom_y == nullptr) ? nullptr : tmp_top + 32;      \
     assert(left_over > 0);                                                     \
     UPSAMPLE_LAST_BLOCK(top_u + uv_pos, cur_u + uv_pos, left_over, r_u);       \
     UPSAMPLE_LAST_BLOCK(top_v + uv_pos, cur_v + uv_pos, left_over, r_v);       \
     memcpy(tmp_top, top_y + pos, len - pos);                                   \
-    if (bottom_y != NULL) memcpy(tmp_bottom, bottom_y + pos, len - pos);       \
+    if (bottom_y != nullptr) memcpy(tmp_bottom, bottom_y + pos, len - pos);       \
     CONVERT2RGB_32(FUNC, XSTEP, tmp_top, tmp_bottom, tmp_top_dst,              \
          tmp_bottom_dst, 0);                                                   \
     memcpy(top_dst + pos * (XSTEP), tmp_top_dst, (len - pos) * (XSTEP));       \
-    if (bottom_y != NULL) {                                                    \
+    if (bottom_y != nullptr) {                                                    \
       memcpy(bottom_dst + pos * (XSTEP), tmp_bottom_dst,                       \
              (len - pos) * (XSTEP));                                           \
     }                                                                          \

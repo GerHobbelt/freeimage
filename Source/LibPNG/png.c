@@ -50,7 +50,7 @@ png_set_sig_bytes(png_structrp png_ptr, int num_bytes)
 
    png_debug(1, "in png_set_sig_bytes");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    if (num_bytes < 0)
@@ -99,14 +99,14 @@ png_zalloc,(voidpf png_ptr, uInt items, uInt size),PNG_ALLOCATED)
 {
    png_alloc_size_t num_bytes = size;
 
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
 
    if (items >= (~(png_alloc_size_t)0)/size)
    {
       png_warning (png_voidcast(png_structrp, png_ptr),
           "Potential overflow in png_zalloc()");
-      return NULL;
+      return nullptr;
    }
 
    num_bytes *= items;
@@ -197,7 +197,7 @@ png_user_version_check(png_structrp png_ptr, png_const_charp user_png_ver)
     * applications that use any older library version.
     */
 
-   if (user_png_ver != NULL)
+   if (user_png_ver != nullptr)
    {
       int i = -1;
       int found_dots = 0;
@@ -319,7 +319,7 @@ png_create_png_struct,(png_const_charp user_png_ver, png_voidp error_ptr,
             png_structrp png_ptr = png_voidcast(png_structrp,
                 png_malloc_warn(&create_struct, (sizeof *png_ptr)));
 
-            if (png_ptr != NULL)
+            if (png_ptr != nullptr)
             {
                /* png_ptr->zstream holds a back-pointer to the png_struct, so
                 * this can only be done now:
@@ -330,7 +330,7 @@ png_create_png_struct,(png_const_charp user_png_ver, png_voidp error_ptr,
 
 #              ifdef PNG_SETJMP_SUPPORTED
                /* Eliminate the local error handling: */
-               create_struct.jmp_buf_ptr = NULL;
+               create_struct.jmp_buf_ptr = nullptr;
                create_struct.jmp_buf_size = 0;
                create_struct.longjmp_fn = 0;
 #              endif
@@ -346,7 +346,7 @@ png_create_png_struct,(png_const_charp user_png_ver, png_voidp error_ptr,
    /* A longjmp because of a bug in the application storage allocator or a
     * simple failure to allocate the png_struct.
     */
-   return NULL;
+   return nullptr;
 }
 
 /* Allocate the memory for an info_struct for the application. */
@@ -357,8 +357,8 @@ png_create_info_struct,(png_const_structrp png_ptr),PNG_ALLOCATED)
 
    png_debug(1, "in png_create_info_struct");
 
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
 
    /* Use the internal API that does not (or at least should not) error out, so
     * that this call always returns ok.  The application typically sets up the
@@ -368,7 +368,7 @@ png_create_info_struct,(png_const_structrp png_ptr),PNG_ALLOCATED)
    info_ptr = png_voidcast(png_inforp, png_malloc_base(png_ptr,
        (sizeof *info_ptr)));
 
-   if (info_ptr != NULL)
+   if (info_ptr != nullptr)
       memset(info_ptr, 0, (sizeof *info_ptr));
 
    return info_ptr;
@@ -385,17 +385,17 @@ png_create_info_struct,(png_const_structrp png_ptr),PNG_ALLOCATED)
 void PNGAPI
 png_destroy_info_struct(png_const_structrp png_ptr, png_infopp info_ptr_ptr)
 {
-   png_inforp info_ptr = NULL;
+   png_inforp info_ptr = nullptr;
 
    png_debug(1, "in png_destroy_info_struct");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
-   if (info_ptr_ptr != NULL)
+   if (info_ptr_ptr != nullptr)
       info_ptr = *info_ptr_ptr;
 
-   if (info_ptr != NULL)
+   if (info_ptr != nullptr)
    {
       /* Do this first in case of an error below; if the app implements its own
        * memory management this can lead to png_free calling png_error, which
@@ -403,7 +403,7 @@ png_destroy_info_struct(png_const_structrp png_ptr, png_infopp info_ptr_ptr)
        * An infinite loop may result if it then tries to free the same info
        * ptr.
        */
-      *info_ptr_ptr = NULL;
+      *info_ptr_ptr = nullptr;
 
       png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
       memset(info_ptr, 0, (sizeof *info_ptr));
@@ -428,17 +428,17 @@ png_info_init_3,(png_infopp ptr_ptr, size_t png_info_struct_size),
 
    png_debug(1, "in png_info_init_3");
 
-   if (info_ptr == NULL)
+   if (info_ptr == nullptr)
       return;
 
    if ((sizeof (png_info)) > png_info_struct_size)
    {
-      *ptr_ptr = NULL;
+      *ptr_ptr = nullptr;
       /* The following line is why this API should not be used: */
       free(info_ptr);
-      info_ptr = png_voidcast(png_inforp, png_malloc_base(NULL,
+      info_ptr = png_voidcast(png_inforp, png_malloc_base(nullptr,
           (sizeof *info_ptr)));
-      if (info_ptr == NULL)
+      if (info_ptr == nullptr)
          return;
       *ptr_ptr = info_ptr;
    }
@@ -454,7 +454,7 @@ png_data_freer(png_const_structrp png_ptr, png_inforp info_ptr,
 {
    png_debug(1, "in png_data_freer");
 
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
    if (freer == PNG_DESTROY_WILL_FREE_DATA)
@@ -473,18 +473,18 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
 {
    png_debug(1, "in png_free_data");
 
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
 #ifdef PNG_TEXT_SUPPORTED
    /* Free text item num or (if num == -1) all text items */
-   if (info_ptr->text != NULL &&
+   if (info_ptr->text != nullptr &&
        ((mask & PNG_FREE_TEXT) & info_ptr->free_me) != 0)
    {
       if (num != -1)
       {
          png_free(png_ptr, info_ptr->text[num].key);
-         info_ptr->text[num].key = NULL;
+         info_ptr->text[num].key = nullptr;
       }
 
       else
@@ -495,7 +495,7 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
             png_free(png_ptr, info_ptr->text[i].key);
 
          png_free(png_ptr, info_ptr->text);
-         info_ptr->text = NULL;
+         info_ptr->text = nullptr;
          info_ptr->num_text = 0;
          info_ptr->max_text = 0;
       }
@@ -508,7 +508,7 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
    {
       info_ptr->valid &= ~PNG_INFO_tRNS;
       png_free(png_ptr, info_ptr->trans_alpha);
-      info_ptr->trans_alpha = NULL;
+      info_ptr->trans_alpha = nullptr;
       info_ptr->num_trans = 0;
    }
 #endif
@@ -519,8 +519,8 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
    {
       png_free(png_ptr, info_ptr->scal_s_width);
       png_free(png_ptr, info_ptr->scal_s_height);
-      info_ptr->scal_s_width = NULL;
-      info_ptr->scal_s_height = NULL;
+      info_ptr->scal_s_width = nullptr;
+      info_ptr->scal_s_height = nullptr;
       info_ptr->valid &= ~PNG_INFO_sCAL;
    }
 #endif
@@ -531,10 +531,10 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
    {
       png_free(png_ptr, info_ptr->pcal_purpose);
       png_free(png_ptr, info_ptr->pcal_units);
-      info_ptr->pcal_purpose = NULL;
-      info_ptr->pcal_units = NULL;
+      info_ptr->pcal_purpose = nullptr;
+      info_ptr->pcal_units = nullptr;
 
-      if (info_ptr->pcal_params != NULL)
+      if (info_ptr->pcal_params != nullptr)
          {
             int i;
 
@@ -542,7 +542,7 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
                png_free(png_ptr, info_ptr->pcal_params[i]);
 
             png_free(png_ptr, info_ptr->pcal_params);
-            info_ptr->pcal_params = NULL;
+            info_ptr->pcal_params = nullptr;
          }
       info_ptr->valid &= ~PNG_INFO_pCAL;
    }
@@ -554,23 +554,23 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
    {
       png_free(png_ptr, info_ptr->iccp_name);
       png_free(png_ptr, info_ptr->iccp_profile);
-      info_ptr->iccp_name = NULL;
-      info_ptr->iccp_profile = NULL;
+      info_ptr->iccp_name = nullptr;
+      info_ptr->iccp_profile = nullptr;
       info_ptr->valid &= ~PNG_INFO_iCCP;
    }
 #endif
 
 #ifdef PNG_sPLT_SUPPORTED
    /* Free a given sPLT entry, or (if num == -1) all sPLT entries */
-   if (info_ptr->splt_palettes != NULL &&
+   if (info_ptr->splt_palettes != nullptr &&
        ((mask & PNG_FREE_SPLT) & info_ptr->free_me) != 0)
    {
       if (num != -1)
       {
          png_free(png_ptr, info_ptr->splt_palettes[num].name);
          png_free(png_ptr, info_ptr->splt_palettes[num].entries);
-         info_ptr->splt_palettes[num].name = NULL;
-         info_ptr->splt_palettes[num].entries = NULL;
+         info_ptr->splt_palettes[num].name = nullptr;
+         info_ptr->splt_palettes[num].entries = nullptr;
       }
 
       else
@@ -584,7 +584,7 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
          }
 
          png_free(png_ptr, info_ptr->splt_palettes);
-         info_ptr->splt_palettes = NULL;
+         info_ptr->splt_palettes = nullptr;
          info_ptr->splt_palettes_num = 0;
          info_ptr->valid &= ~PNG_INFO_sPLT;
       }
@@ -592,13 +592,13 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
 #endif
 
 #ifdef PNG_STORE_UNKNOWN_CHUNKS_SUPPORTED
-   if (info_ptr->unknown_chunks != NULL &&
+   if (info_ptr->unknown_chunks != nullptr &&
        ((mask & PNG_FREE_UNKN) & info_ptr->free_me) != 0)
    {
       if (num != -1)
       {
           png_free(png_ptr, info_ptr->unknown_chunks[num].data);
-          info_ptr->unknown_chunks[num].data = NULL;
+          info_ptr->unknown_chunks[num].data = nullptr;
       }
 
       else
@@ -609,7 +609,7 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
             png_free(png_ptr, info_ptr->unknown_chunks[i].data);
 
          png_free(png_ptr, info_ptr->unknown_chunks);
-         info_ptr->unknown_chunks = NULL;
+         info_ptr->unknown_chunks = nullptr;
          info_ptr->unknown_chunks_num = 0;
       }
    }
@@ -623,13 +623,13 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
       if (info_ptr->eXIf_buf)
       {
          png_free(png_ptr, info_ptr->eXIf_buf);
-         info_ptr->eXIf_buf = NULL;
+         info_ptr->eXIf_buf = nullptr;
       }
 # endif
       if (info_ptr->exif)
       {
          png_free(png_ptr, info_ptr->exif);
-         info_ptr->exif = NULL;
+         info_ptr->exif = nullptr;
       }
       info_ptr->valid &= ~PNG_INFO_eXIf;
    }
@@ -640,7 +640,7 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
    if (((mask & PNG_FREE_HIST) & info_ptr->free_me) != 0)
    {
       png_free(png_ptr, info_ptr->hist);
-      info_ptr->hist = NULL;
+      info_ptr->hist = nullptr;
       info_ptr->valid &= ~PNG_INFO_hIST;
    }
 #endif
@@ -649,7 +649,7 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
    if (((mask & PNG_FREE_PLTE) & info_ptr->free_me) != 0)
    {
       png_free(png_ptr, info_ptr->palette);
-      info_ptr->palette = NULL;
+      info_ptr->palette = nullptr;
       info_ptr->valid &= ~PNG_INFO_PLTE;
       info_ptr->num_palette = 0;
    }
@@ -658,14 +658,14 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
    /* Free any image bits attached to the info structure */
    if (((mask & PNG_FREE_ROWS) & info_ptr->free_me) != 0)
    {
-      if (info_ptr->row_pointers != NULL)
+      if (info_ptr->row_pointers != nullptr)
       {
          png_uint_32 row;
          for (row = 0; row < info_ptr->height; row++)
             png_free(png_ptr, info_ptr->row_pointers[row]);
 
          png_free(png_ptr, info_ptr->row_pointers);
-         info_ptr->row_pointers = NULL;
+         info_ptr->row_pointers = nullptr;
       }
       info_ptr->valid &= ~PNG_INFO_IDAT;
    }
@@ -685,8 +685,8 @@ png_free_data(png_const_structrp png_ptr, png_inforp info_ptr, png_uint_32 mask,
 png_voidp PNGAPI
 png_get_io_ptr(png_const_structrp png_ptr)
 {
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 
    return (png_ptr->io_ptr);
 }
@@ -704,7 +704,7 @@ png_init_io(png_structrp png_ptr, png_FILE_p fp)
 {
    png_debug(1, "in png_init_io");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->io_ptr = (png_voidp)fp;
@@ -740,7 +740,7 @@ png_convert_to_rfc1123_buffer(char out[29], png_const_timep ptime)
         {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-   if (out == NULL)
+   if (out == nullptr)
       return 0;
 
    if (ptime->year > 9999 /* RFC1123 limitation */ ||
@@ -790,9 +790,9 @@ png_convert_to_rfc1123_buffer(char out[29], png_const_timep ptime)
 png_const_charp PNGAPI
 png_convert_to_rfc1123(png_structrp png_ptr, png_const_timep ptime)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
-      /* The only failure above if png_ptr != NULL is from an invalid ptime */
+      /* The only failure above if png_ptr != nullptr is from an invalid ptime */
       if (png_convert_to_rfc1123_buffer(png_ptr->time_buffer, ptime) == 0)
          png_warning(png_ptr, "Ignoring invalid time value");
 
@@ -800,7 +800,7 @@ png_convert_to_rfc1123(png_structrp png_ptr, png_const_timep ptime)
          return png_ptr->time_buffer;
    }
 
-   return NULL;
+   return nullptr;
 }
 #    endif /* LIBPNG_VER < 10700 */
 #  endif /* TIME_RFC1123 */
@@ -881,7 +881,7 @@ png_build_grayscale_palette(int bit_depth, png_colorp palette)
 
    png_debug(1, "in png_do_build_grayscale_palette");
 
-   if (palette == NULL)
+   if (palette == nullptr)
       return;
 
    switch (bit_depth)
@@ -928,7 +928,7 @@ png_handle_as_unknown(png_const_structrp png_ptr, png_const_bytep chunk_name)
    /* Check chunk_name and return "keep" value if it's on the list, else 0 */
    png_const_bytep p, p_end;
 
-   if (png_ptr == NULL || chunk_name == NULL || png_ptr->num_chunk_list == 0)
+   if (png_ptr == nullptr || chunk_name == nullptr || png_ptr->num_chunk_list == 0)
       return PNG_HANDLE_CHUNK_AS_DEFAULT;
 
    p_end = png_ptr->chunk_list;
@@ -973,7 +973,7 @@ png_chunk_unknown_handling(png_const_structrp png_ptr, png_uint_32 chunk_name)
 int PNGAPI
 png_reset_zstream(png_structrp png_ptr)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return Z_STREAM_ERROR;
 
    /* WARNING: this resets the window bits to the maximum! */
@@ -1001,7 +1001,7 @@ png_zstream_error(png_structrp png_ptr, int ret)
     * one in zstream if set.  This always returns a string, even in cases like
     * Z_OK or Z_STREAM_END where the error code is a success code.
     */
-   if (png_ptr->zstream.msg == NULL) switch (ret)
+   if (png_ptr->zstream.msg == nullptr) switch (ret)
    {
       default:
       case Z_OK:
@@ -1214,7 +1214,7 @@ png_colorspace_sync_info(png_const_structrp png_ptr, png_inforp info_ptr)
 void /* PRIVATE */
 png_colorspace_sync(png_const_structrp png_ptr, png_inforp info_ptr)
 {
-   if (info_ptr == NULL) /* reduce code size; check here not in the caller */
+   if (info_ptr == nullptr) /* reduce code size; check here not in the caller */
       return;
 
    info_ptr->colorspace = png_ptr->colorspace;
@@ -1826,7 +1826,7 @@ png_icc_profile_error(png_const_structrp png_ptr, png_colorspacerp colorspace,
    size_t pos;
    char message[196]; /* see below for calculation */
 
-   if (colorspace != NULL)
+   if (colorspace != nullptr)
       colorspace->flags |= PNG_COLORSPACE_INVALID;
 
    pos = png_safecat(message, (sizeof message), 0, "profile '"); /* 9 chars */
@@ -1861,7 +1861,7 @@ png_icc_profile_error(png_const_structrp png_ptr, png_colorspacerp colorspace,
     * application errors the PNG won't be written.)
     */
    png_chunk_report(png_ptr, message,
-       (colorspace != NULL) ? PNG_CHUNK_ERROR : PNG_CHUNK_WRITE_ERROR);
+       (colorspace != nullptr) ? PNG_CHUNK_ERROR : PNG_CHUNK_WRITE_ERROR);
 
    return 0;
 }
@@ -2050,7 +2050,7 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
     * versions.
     */
    if (temp >= PNG_sRGB_INTENT_LAST)
-      (void)png_icc_profile_error(png_ptr, NULL, name, temp,
+      (void)png_icc_profile_error(png_ptr, nullptr, name, temp,
           "intent outside defined range");
 
    /* At this point the tag table can't be checked because it hasn't necessarily
@@ -2078,7 +2078,7 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
     * following is just a warning.
     */
    if (memcmp(profile+68, D50_nCIEXYZ, 12) != 0)
-      (void)png_icc_profile_error(png_ptr, NULL, name, 0/*no tag value*/,
+      (void)png_icc_profile_error(png_ptr, nullptr, name, 0/*no tag value*/,
           "PCS illuminant is not D50");
 
    /* The PNG spec requires this:
@@ -2160,7 +2160,7 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
           * contain an AToB0 tag that is open to misinterpretation.  Almost
           * certainly it will fail the tests below.
           */
-         (void)png_icc_profile_error(png_ptr, NULL, name, temp,
+         (void)png_icc_profile_error(png_ptr, nullptr, name, temp,
              "unexpected NamedColor ICC profile class");
          break;
 
@@ -2170,7 +2170,7 @@ png_icc_check_header(png_const_structrp png_ptr, png_colorspacerp colorspace,
           * tag content to ensure they are backward compatible with one of the
           * understood profiles.
           */
-         (void)png_icc_profile_error(png_ptr, NULL, name, temp,
+         (void)png_icc_profile_error(png_ptr, nullptr, name, temp,
              "unrecognized ICC profile class");
          break;
    }
@@ -2231,7 +2231,7 @@ png_icc_check_tag_table(png_const_structrp png_ptr, png_colorspacerp colorspace,
           * only a warning here because libpng does not care about the
           * alignment.
           */
-         (void)png_icc_profile_error(png_ptr, NULL, name, tag_id,
+         (void)png_icc_profile_error(png_ptr, nullptr, name, tag_id,
              "ICC profile tag start not a multiple of 4");
       }
    }
@@ -2359,7 +2359,7 @@ png_compare_ICC_profile_with_sRGB(png_const_structrp png_ptr,
             /* Now calculate the adler32 if not done already. */
             if (adler == 0)
             {
-               adler = adler32(0, NULL, 0);
+               adler = adler32(0, nullptr, 0);
                adler = adler32(adler, profile, length);
             }
 
@@ -2372,7 +2372,7 @@ png_compare_ICC_profile_with_sRGB(png_const_structrp png_ptr,
 #              if PNG_sRGB_PROFILE_CHECKS > 1
                   if (crc == 0)
                   {
-                     crc = crc32(0, NULL, 0);
+                     crc = crc32(0, nullptr, 0);
                      crc = crc32(crc, profile, length);
                   }
 
@@ -4136,10 +4136,10 @@ void /* PRIVATE */
 png_destroy_gamma_table(png_structrp png_ptr)
 {
    png_free(png_ptr, png_ptr->gamma_table);
-   png_ptr->gamma_table = NULL;
+   png_ptr->gamma_table = nullptr;
 
 #ifdef PNG_16BIT_SUPPORTED
-   if (png_ptr->gamma_16_table != NULL)
+   if (png_ptr->gamma_16_table != nullptr)
    {
       int i;
       int istop = (1 << (8 - png_ptr->gamma_shift));
@@ -4148,7 +4148,7 @@ png_destroy_gamma_table(png_structrp png_ptr)
          png_free(png_ptr, png_ptr->gamma_16_table[i]);
       }
    png_free(png_ptr, png_ptr->gamma_16_table);
-   png_ptr->gamma_16_table = NULL;
+   png_ptr->gamma_16_table = nullptr;
    }
 #endif /* 16BIT */
 
@@ -4156,12 +4156,12 @@ png_destroy_gamma_table(png_structrp png_ptr)
    defined(PNG_READ_ALPHA_MODE_SUPPORTED) || \
    defined(PNG_READ_RGB_TO_GRAY_SUPPORTED)
    png_free(png_ptr, png_ptr->gamma_from_1);
-   png_ptr->gamma_from_1 = NULL;
+   png_ptr->gamma_from_1 = nullptr;
    png_free(png_ptr, png_ptr->gamma_to_1);
-   png_ptr->gamma_to_1 = NULL;
+   png_ptr->gamma_to_1 = nullptr;
 
 #ifdef PNG_16BIT_SUPPORTED
-   if (png_ptr->gamma_16_from_1 != NULL)
+   if (png_ptr->gamma_16_from_1 != nullptr)
    {
       int i;
       int istop = (1 << (8 - png_ptr->gamma_shift));
@@ -4170,9 +4170,9 @@ png_destroy_gamma_table(png_structrp png_ptr)
          png_free(png_ptr, png_ptr->gamma_16_from_1[i]);
       }
    png_free(png_ptr, png_ptr->gamma_16_from_1);
-   png_ptr->gamma_16_from_1 = NULL;
+   png_ptr->gamma_16_from_1 = nullptr;
    }
-   if (png_ptr->gamma_16_to_1 != NULL)
+   if (png_ptr->gamma_16_to_1 != nullptr)
    {
       int i;
       int istop = (1 << (8 - png_ptr->gamma_shift));
@@ -4181,7 +4181,7 @@ png_destroy_gamma_table(png_structrp png_ptr)
          png_free(png_ptr, png_ptr->gamma_16_to_1[i]);
       }
    png_free(png_ptr, png_ptr->gamma_16_to_1);
-   png_ptr->gamma_16_to_1 = NULL;
+   png_ptr->gamma_16_to_1 = nullptr;
    }
 #endif /* 16BIT */
 #endif /* READ_BACKGROUND || READ_ALPHA_MODE || RGB_TO_GRAY */
@@ -4203,7 +4203,7 @@ png_build_gamma_table(png_structrp png_ptr, int bit_depth)
     * call png_read_update_info() multiple times is new in 1.5.6 so it seems
     * sensible to warn if the app introduces such a hit.
     */
-   if (png_ptr->gamma_table != NULL || png_ptr->gamma_16_table != NULL)
+   if (png_ptr->gamma_table != nullptr || png_ptr->gamma_16_table != nullptr)
    {
       png_warning(png_ptr, "gamma table being rebuilt");
       png_destroy_gamma_table(png_ptr);
@@ -4331,7 +4331,7 @@ png_build_gamma_table(png_structrp png_ptr, int bit_depth)
 int PNGAPI
 png_set_option(png_structrp png_ptr, int option, int onoff)
 {
-   if (png_ptr != NULL && option >= 0 && option < PNG_OPTION_NEXT &&
+   if (png_ptr != nullptr && option >= 0 && option < PNG_OPTION_NEXT &&
       (option & 1) == 0)
    {
       png_uint_32 mask = 3U << option;
@@ -4528,7 +4528,7 @@ png_image_free_function(png_voidp argument)
    /* Double check that we have a png_ptr - it should be impossible to get here
     * without one.
     */
-   if (cp->png_ptr == NULL)
+   if (cp->png_ptr == nullptr)
       return 0;
 
    /* First free any data held in the control structure. */
@@ -4539,9 +4539,9 @@ png_image_free_function(png_voidp argument)
          cp->owned_file = 0;
 
          /* Ignore errors here. */
-         if (fp != NULL)
+         if (fp != nullptr)
          {
-            cp->png_ptr->io_ptr = NULL;
+            cp->png_ptr->io_ptr = nullptr;
             (void)fclose(fp);
          }
       }
@@ -4568,7 +4568,7 @@ png_image_free_function(png_voidp argument)
    else
    {
 #     ifdef PNG_SIMPLIFIED_READ_SUPPORTED
-         png_destroy_read_struct(&c.png_ptr, &c.info_ptr, NULL);
+         png_destroy_read_struct(&c.png_ptr, &c.info_ptr, nullptr);
 #     else
          png_error(c.png_ptr, "simplified read not supported");
 #     endif
@@ -4585,11 +4585,11 @@ png_image_free(png_imagep image)
     * (if not inside an error handling context).  Otherwise assume
     * png_safe_execute will call this API after the return.
     */
-   if (image != NULL && image->opaque != NULL &&
-      image->opaque->error_buf == NULL)
+   if (image != nullptr && image->opaque != nullptr &&
+      image->opaque->error_buf == nullptr)
    {
       png_image_free_function(image);
-      image->opaque = NULL;
+      image->opaque = nullptr;
    }
 }
 

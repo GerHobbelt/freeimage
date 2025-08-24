@@ -99,11 +99,11 @@ void LibRaw::parse_kodak_ifd(int base)
   entries = get2();
   if (entries > 1024)
     return;
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
   while (entries--)
   {
     tiff_get(base, &tag, &type, &len, &save);
-    INT64 savepos = ftell(ifp);
+    int64_t savepos = ftell(ifp);
     if (len > 8 && len + savepos > 2 * fsize)
     {
       fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!
@@ -158,7 +158,7 @@ void LibRaw::parse_kodak_ifd(int base)
         char *last = 0;
         pkti = strtok_r(kti, "\x0a", &last);
 #endif
-        while (pkti != NULL)
+        while (pkti != nullptr)
         {
           c = 12;
           if (((int)strlen(pkti) > c) && (!strncasecmp(pkti, "Camera body:", c)))
@@ -212,9 +212,9 @@ void LibRaw::parse_kodak_ifd(int base)
             ilm.MinAp4CurFocal = atof(pkti + c);
           }
 #ifdef LIBRAW_WIN32_CALLS
-          pkti = strtok(NULL, "\x0a");
+          pkti = strtok(nullptr, "\x0a");
 #else
-          pkti = strtok_r(NULL, "\x0a", &last);
+          pkti = strtok_r(nullptr, "\x0a", &last);
 #endif
         }
       }

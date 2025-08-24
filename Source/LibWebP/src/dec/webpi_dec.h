@@ -37,7 +37,7 @@ struct WebPDecParams {
                                      // or used for tmp rescaling
 
   int last_y;                 // coordinate of the line that was last output
-  const WebPDecoderOptions* options;  // if not NULL, use alt decoding features
+  const WebPDecoderOptions* options;  // if not nullptr, use alt decoding features
 
   WebPRescaler* scaler_y, *scaler_u, *scaler_v, *scaler_a;  // rescalers
   void* memory;                  // overall scratch memory for the output work.
@@ -98,7 +98,7 @@ int WebPIoInitFromOptions(const WebPDecoderOptions* const options,
 // If no external storage is supplied, initializes buffer by allocating output
 // memory and setting up the stride information. Validate the parameters. Return
 // an error code in case of problem (no memory, or invalid stride / size /
-// dimension / etc.). If *options is not NULL, also verify that the options'
+// dimension / etc.). If *options is not nullptr, also verify that the options'
 // parameters are valid and apply them to the width/height dimensions of the
 // output buffer. This takes cropping / scaling / rotation into account.
 // Also incorporates the options->flip flag to flip the buffer parameters if

@@ -289,12 +289,12 @@ typedef struct x3f_image_data_s
   uint32_t rows;       /* height */
   uint32_t row_stride; /* row size in bytes */
 
-  /* NULL if not used */
+  /* nullptr if not used */
   x3f_huffman_t *huffman; /* Huffman help data */
   x3f_true_t *tru;        /* TRUE help data */
   x3f_quattro_t *quattro; /* Quattro help data */
 
-  void *data; /* Take from file if NULL. Otherwise,
+  void *data; /* Take from file if nullptr. Otherwise,
                  this is the actual data bytes in
                  the file. */
   uint32_t data_size;

@@ -17,7 +17,7 @@
 
 void LibRaw::kodak_thumb_loader()
 {
-  INT64 est_datasize =
+  int64_t est_datasize =
       T.theight * T.twidth / 3; // is 0.3 bytes per pixel good estimate?
   if (ID.toffset < 0)
     throw LIBRAW_EXCEPTION_IO_CORRUPT;
@@ -25,10 +25,10 @@ void LibRaw::kodak_thumb_loader()
   if (ID.toffset + est_datasize > ID.input->size() + THUMB_READ_BEYOND)
     throw LIBRAW_EXCEPTION_IO_EOF;
 
-  if(INT64(T.theight) * INT64(T.twidth) > 1024ULL * 1024ULL * LIBRAW_MAX_THUMBNAIL_MB)
+  if(int64_t(T.theight) * int64_t(T.twidth) > 1024ULL * 1024ULL * LIBRAW_MAX_THUMBNAIL_MB)
       throw LIBRAW_EXCEPTION_IO_CORRUPT;
 
-  if (INT64(T.theight) * INT64(T.twidth) < 64ULL)
+  if (int64_t(T.theight) * int64_t(T.twidth) < 64ULL)
       throw LIBRAW_EXCEPTION_IO_CORRUPT;
 
   if(T.twidth < 16 || T.twidth > 8192 || T.theight < 16 || T.theight > 8192)
@@ -239,7 +239,7 @@ void LibRaw::kodak_thumb_loader()
 
 // ������� thumbnail �� �����, ������ thumb_format � ������������ � ��������
 
-int LibRaw::thumbOK(INT64 maxsz)
+int LibRaw::thumbOK(int64_t maxsz)
 {
   if (!ID.input)
     return 0;
@@ -252,7 +252,7 @@ int LibRaw::thumbOK(INT64 maxsz)
 #endif
   )
     return 0;
-  INT64 fsize = ID.input->size();
+  int64_t fsize = ID.input->size();
   if (fsize > 0xffffffffU)
     return 0; // No thumb for raw > 4Gb-1
   int tsize = 0;

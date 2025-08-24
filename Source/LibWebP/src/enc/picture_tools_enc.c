@@ -84,7 +84,7 @@ static int SmoothenBlock(const uint8_t* a_ptr, int a_stride, uint8_t* y_ptr,
 }
 
 void WebPReplaceTransparentPixels(WebPPicture* const pic, uint32_t color) {
-  if (pic != NULL && pic->use_argb) {
+  if (pic != nullptr && pic->use_argb) {
     int y = pic->height;
     uint32_t* argb = pic->argb;
     color &= 0xffffffu;   // force alpha=0
@@ -98,7 +98,7 @@ void WebPReplaceTransparentPixels(WebPPicture* const pic, uint32_t color) {
 
 void WebPCleanupTransparentArea(WebPPicture* pic) {
   int x, y, w, h;
-  if (pic == NULL) return;
+  if (pic == nullptr) return;
   w = pic->width / SIZE;
   h = pic->height / SIZE;
 
@@ -131,7 +131,7 @@ void WebPCleanupTransparentArea(WebPPicture* pic) {
     uint8_t* v_ptr = pic->v;
     const uint8_t* a_ptr = pic->a;
     int values[3] = { 0 };
-    if (a_ptr == NULL || y_ptr == NULL || u_ptr == NULL || v_ptr == NULL) {
+    if (a_ptr == nullptr || y_ptr == nullptr || u_ptr == nullptr || v_ptr == nullptr) {
       return;
     }
     for (y = 0; y + SIZE <= height; y += SIZE) {
@@ -195,7 +195,7 @@ void WebPBlendAlpha(WebPPicture* pic, uint32_t background_rgb) {
   const int green = (background_rgb >> 8) & 0xff;
   const int blue = (background_rgb >> 0) & 0xff;
   int x, y;
-  if (pic == NULL) return;
+  if (pic == nullptr) return;
   if (!pic->use_argb) {
     const int uv_width = (pic->width >> 1);  // omit last pixel during u/v loop
     const int Y0 = VP8RGBToY(red, green, blue, YUV_HALF);
@@ -207,7 +207,7 @@ void WebPBlendAlpha(WebPPicture* pic, uint32_t background_rgb) {
     uint8_t* u_ptr = pic->u;
     uint8_t* v_ptr = pic->v;
     uint8_t* a_ptr = pic->a;
-    if (!has_alpha || a_ptr == NULL) return;    // nothing to do
+    if (!has_alpha || a_ptr == nullptr) return;    // nothing to do
     for (y = 0; y < pic->height; ++y) {
       // Luma blending
       for (x = 0; x < pic->width; ++x) {

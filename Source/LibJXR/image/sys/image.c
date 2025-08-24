@@ -172,7 +172,7 @@ void ResetCodingContext(CCodingContext *pContext)
 *************************************************************************/
 void InitZigzagScan(CCodingContext * pContext)
 {
-    if (NULL != pContext) {
+    if (nullptr != pContext) {
         Int i;
         for (i=0; i<16; i++) {
             pContext->m_aScanLowpass[i].uScan = grgiZigzagInv4x4_lowpass[i];

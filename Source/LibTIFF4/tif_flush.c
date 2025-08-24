@@ -113,7 +113,7 @@ int TIFFForceStrileArrayWriting(TIFF *tif)
             return 0;
         }
 
-        if (tif->tif_dir.td_stripoffset_p == NULL && !TIFFSetupStrips(tif))
+        if (tif->tif_dir.td_stripoffset_p == nullptr && !TIFFSetupStrips(tif))
             return 0;
     }
 

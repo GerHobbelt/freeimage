@@ -20,15 +20,15 @@ using namespace RawSpeed;
 CameraMetaDataLR::CameraMetaDataLR(char *data, int sz) : CameraMetaData()
 {
   ctxt = xmlNewParserCtxt();
-  if (ctxt == NULL)
+  if (ctxt == nullptr)
   {
     ThrowCME("CameraMetaData:Could not initialize context.");
   }
 
   xmlResetLastError();
-  doc = xmlCtxtReadMemory(ctxt, data, sz, "", NULL, XML_PARSE_DTDVALID);
+  doc = xmlCtxtReadMemory(ctxt, data, sz, "", nullptr, XML_PARSE_DTDVALID);
 
-  if (doc == NULL)
+  if (doc == nullptr)
   {
     ThrowCME("CameraMetaData: XML Document could not be parsed successfully. "
              "Error was: %s",
@@ -58,7 +58,7 @@ CameraMetaDataLR::CameraMetaDataLR(char *data, int sz) : CameraMetaData()
   }
 
   cur = cur->xmlChildrenNode;
-  while (cur != NULL)
+  while (cur != nullptr)
   {
     if ((!xmlStrcmp(cur->name, (const xmlChar *)"Camera")))
     {
@@ -92,7 +92,7 @@ CameraMetaDataLR *make_camera_metadata()
   char *rawspeed_xml =
       (char *)calloc(len + 1, sizeof(_rawspeed_data_xml[0][0]));
   if (!rawspeed_xml)
-    return NULL;
+    return nullptr;
   int offt = 0;
   for (i = 0; i < RAWSPEED_DATA_COUNT; i++)
     if (_rawspeed_data_xml[i])
@@ -104,7 +104,7 @@ CameraMetaDataLR *make_camera_metadata()
       offt += ll;
     }
   rawspeed_xml[offt] = 0;
-  CameraMetaDataLR *ret = NULL;
+  CameraMetaDataLR *ret = nullptr;
   try
   {
     ret = new CameraMetaDataLR(rawspeed_xml, offt);
@@ -171,12 +171,12 @@ int LibRaw::try_rawspeed()
     rawspeed_ignore_errors = 1;
 
   // RawSpeed Supported,
-  INT64 spos = ID.input->tell();
+  int64_t spos = ID.input->tell();
   void *_rawspeed_buffer = 0;
   try
   {
     ID.input->seek(0, SEEK_SET);
-    INT64 _rawspeed_buffer_sz = ID.input->size() + 32;
+    int64_t _rawspeed_buffer_sz = ID.input->size() + 32;
     _rawspeed_buffer = malloc(_rawspeed_buffer_sz);
     if (!_rawspeed_buffer)
       throw LIBRAW_EXCEPTION_ALLOC;

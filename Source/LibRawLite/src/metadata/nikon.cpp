@@ -258,7 +258,7 @@ uchar *cj_block, *ck_block;
 
   short morder, sorder = order;
   char buf[10];
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
 
   fread(buf, 1, 10, ifp);
 
@@ -271,7 +271,7 @@ uchar *cj_block, *ck_block;
     if (get2() != 42)
       goto quit;
     offset = get4();
-    fseek(ifp, INT64(offset) - 8LL, SEEK_CUR);
+    fseek(ifp, int64_t(offset) - 8LL, SEEK_CUR);
   }
   else
   {
@@ -288,7 +288,7 @@ uchar *cj_block, *ck_block;
     order = morder;
     tiff_get(base, &tag, &type, &len, &save);
 
-    INT64 pos = ifp->tell();
+    int64_t pos = ifp->tell();
     if (len > 8 && pos + len > 2 * fsize)
     {
       fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!
@@ -1010,7 +1010,7 @@ void hexDump(char *title, void *addr, int len)
     unsigned char *pc = (unsigned char*)addr;
 
     // Output description if given.
-    if (title != NULL)
+    if (title != nullptr)
         printf ("%s:\n", title);
 
     // Process every byte in the data.

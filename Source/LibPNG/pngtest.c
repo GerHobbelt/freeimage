@@ -132,7 +132,7 @@ tIME_to_str(png_structp png_ptr, png_charp ts, png_const_timep t)
 {
    png_const_charp str = png_convert_to_rfc1123(png_ptr, t);
 
-   if (str == NULL)
+   if (str == nullptr)
        return 0;
 
    strcpy(ts, str);
@@ -173,7 +173,7 @@ static int status_dots = 1;
 static void PNGCBAPI
 read_row_callback(png_structp png_ptr, png_uint_32 row_number, int pass)
 {
-   if (png_ptr == NULL || row_number > PNG_UINT_31_MAX)
+   if (png_ptr == nullptr || row_number > PNG_UINT_31_MAX)
       return;
 
    if (status_pass != pass)
@@ -198,7 +198,7 @@ read_row_callback(png_structp png_ptr, png_uint_32 row_number, int pass)
 static void PNGCBAPI
 write_row_callback(png_structp png_ptr, png_uint_32 row_number, int pass)
 {
-   if (png_ptr == NULL || row_number > PNG_UINT_31_MAX || pass > 7)
+   if (png_ptr == nullptr || row_number > PNG_UINT_31_MAX || pass > 7)
       return;
 
    fprintf(stdout, "w");
@@ -229,7 +229,7 @@ static void PNGCBAPI
 count_zero_samples(png_structp png_ptr, png_row_infop row_info, png_bytep data)
 {
    png_bytep dp = data;
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* Contents of row_info:
@@ -395,7 +395,7 @@ pngtest_read_data(png_structp png_ptr, png_bytep data, size_t length)
     * instead of an int, which is what fread() actually returns.
     */
    io_ptr = png_get_io_ptr(png_ptr);
-   if (io_ptr != NULL)
+   if (io_ptr != nullptr)
    {
       check = fread(data, 1, length, (png_FILE_p)io_ptr);
    }
@@ -461,7 +461,7 @@ pngtest_warning(png_structp png_ptr, png_const_charp message)
 
    ++warning_count;
 
-   if (test != NULL && test->file_name != NULL)
+   if (test != nullptr && test->file_name != nullptr)
       name = test->file_name;
 
    fprintf(STDERR, "\n%s: libpng warning: %s\n", name, message);
@@ -469,7 +469,7 @@ pngtest_warning(png_structp png_ptr, png_const_charp message)
 
 /* This is the default error handling function.  Note that replacements for
  * this function MUST NOT RETURN, or the program will likely crash.  This
- * function is used by default, or if the program supplies NULL for the
+ * function is used by default, or if the program supplies nullptr for the
  * error function pointer in png_set_error_fn().
  */
 static void PNGCBAPI
@@ -505,7 +505,7 @@ typedef struct memory_information
 } memory_information;
 typedef memory_information *memory_infop;
 
-static memory_infop pinformation = NULL;
+static memory_infop pinformation = nullptr;
 static int current_allocation = 0;
 static int maximum_allocation = 0;
 static int total_allocation = 0;
@@ -519,19 +519,19 @@ png_voidp
 PNGCBAPI png_debug_malloc(png_structp png_ptr, png_alloc_size_t size)
 {
 
-   /* png_malloc has already tested for NULL; png_create_struct calls
-    * png_debug_malloc directly, with png_ptr == NULL which is OK
+   /* png_malloc has already tested for nullptr; png_create_struct calls
+    * png_debug_malloc directly, with png_ptr == nullptr which is OK
     */
 
    if (size == 0)
-      return (NULL);
+      return (nullptr);
 
    /* This calls the library allocator twice, once to get the requested
       buffer and once to get a new free list entry. */
    {
       /* Disable malloc_fn and free_fn */
       memory_infop pinfo;
-      png_set_mem_fn(png_ptr, NULL, NULL, NULL);
+      png_set_mem_fn(png_ptr, nullptr, nullptr, nullptr);
       pinfo = (memory_infop)png_malloc(png_ptr,
           (sizeof *pinfo));
       pinfo->size = size;
@@ -546,9 +546,9 @@ PNGCBAPI png_debug_malloc(png_structp png_ptr, png_alloc_size_t size)
       /* Restore malloc_fn and free_fn */
 
       png_set_mem_fn(png_ptr,
-          NULL, png_debug_malloc, png_debug_free);
+          nullptr, png_debug_malloc, png_debug_free);
 
-      if (size != 0 && pinfo->pointer == NULL)
+      if (size != 0 && pinfo->pointer == nullptr)
       {
          current_allocation -= size;
          total_allocation -= size;
@@ -573,19 +573,19 @@ PNGCBAPI png_debug_malloc(png_structp png_ptr, png_alloc_size_t size)
 void PNGCBAPI
 png_debug_free(png_structp png_ptr, png_voidp ptr)
 {
-   if (png_ptr == NULL)
-      fprintf(STDERR, "NULL pointer to png_debug_free.\n");
+   if (png_ptr == nullptr)
+      fprintf(STDERR, "nullptr pointer to png_debug_free.\n");
 
    if (ptr == 0)
    {
 #if 0 /* This happens all the time. */
-      fprintf(STDERR, "WARNING: freeing NULL pointer\n");
+      fprintf(STDERR, "WARNING: freeing nullptr pointer\n");
 #endif
       return;
    }
 
    /* Unlink the element from the list. */
-   if (pinformation != NULL)
+   if (pinformation != nullptr)
    {
       memory_infop *ppinfo = &pinformation;
 
@@ -603,11 +603,11 @@ png_debug_free(png_structp png_ptr, png_voidp ptr)
                the memory that is to be freed. */
             memset(ptr, 0x55, pinfo->size);
             free(pinfo);
-            pinfo = NULL;
+            pinfo = nullptr;
             break;
          }
 
-         if (pinfo->next == NULL)
+         if (pinfo->next == nullptr)
          {
             fprintf(STDERR, "Pointer %p not found\n", ptr);
             break;
@@ -621,9 +621,9 @@ png_debug_free(png_structp png_ptr, png_voidp ptr)
    if (verbose != 0)
       printf("Freeing %p\n", ptr);
 
-   if (ptr != NULL)
+   if (ptr != nullptr)
       free(ptr);
-   ptr = NULL;
+   ptr = nullptr;
 }
 #endif /* USER_MEM && DEBUG */
 /* END of code to test memory allocation/deallocation */
@@ -670,7 +670,7 @@ set_location(png_structp png_ptr, struct user_chunk_data *data, int what)
    /* Find where we are (the code below zeroes info_ptr to indicate that the
     * chunks before the first IDAT have been read.)
     */
-   if (data->info_ptr == NULL) /* after IDAT */
+   if (data->info_ptr == nullptr) /* after IDAT */
       location = what | after_IDAT;
 
    else if (png_get_valid(png_ptr, data->info_ptr, PNG_INFO_PLTE) != 0)
@@ -694,7 +694,7 @@ read_user_chunk_callback(png_struct *png_ptr, png_unknown_chunkp chunk)
    struct user_chunk_data *my_user_chunk_data =
       (struct user_chunk_data*)png_get_user_chunk_ptr(png_ptr);
 
-   if (my_user_chunk_data == NULL)
+   if (my_user_chunk_data == nullptr)
       png_error(png_ptr, "lost user chunk pointer");
 
    /* Return one of the following:
@@ -865,9 +865,9 @@ test_one_file(const char *inname, const char *outname)
    int interlace_preserved = 1;
 #endif /* WRITE_FILTER */
 #else /* !WRITE */
-   png_structp write_ptr = NULL;
-   png_infop write_info_ptr = NULL;
-   png_infop write_end_info_ptr = NULL;
+   png_structp write_ptr = nullptr;
+   png_infop write_info_ptr = nullptr;
+   png_infop write_end_info_ptr = nullptr;
 #endif /* !WRITE */
    png_bytep row_buf;
    png_uint_32 y;
@@ -876,16 +876,16 @@ test_one_file(const char *inname, const char *outname)
    int pass;
    int bit_depth, color_type;
 
-   row_buf = NULL;
+   row_buf = nullptr;
    error_parameters.file_name = inname;
 
-   if ((fpin = fopen(inname, "rb")) == NULL)
+   if ((fpin = fopen(inname, "rb")) == nullptr)
    {
       fprintf(STDERR, "Could not find input file %s\n", inname);
       return (1);
    }
 
-   if ((fpout = fopen(outname, "wb")) == NULL)
+   if ((fpout = fopen(outname, "wb")) == nullptr)
    {
       fprintf(STDERR, "Could not open output file %s\n", outname);
       FCLOSE(fpin);
@@ -895,11 +895,11 @@ test_one_file(const char *inname, const char *outname)
    pngtest_debug("Allocating read and write structures");
 #if defined(PNG_USER_MEM_SUPPORTED) && PNG_DEBUG
    read_ptr =
-       png_create_read_struct_2(PNG_LIBPNG_VER_STRING, NULL,
-       NULL, NULL, NULL, png_debug_malloc, png_debug_free);
+       png_create_read_struct_2(PNG_LIBPNG_VER_STRING, nullptr,
+       nullptr, nullptr, nullptr, png_debug_malloc, png_debug_free);
 #else
    read_ptr =
-       png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+       png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 #endif
    png_set_error_fn(read_ptr, &error_parameters, pngtest_error,
        pngtest_warning);
@@ -907,11 +907,11 @@ test_one_file(const char *inname, const char *outname)
 #ifdef PNG_WRITE_SUPPORTED
 #if defined(PNG_USER_MEM_SUPPORTED) && PNG_DEBUG
    write_ptr =
-       png_create_write_struct_2(PNG_LIBPNG_VER_STRING, NULL,
-       NULL, NULL, NULL, png_debug_malloc, png_debug_free);
+       png_create_write_struct_2(PNG_LIBPNG_VER_STRING, nullptr,
+       nullptr, nullptr, nullptr, png_debug_malloc, png_debug_free);
 #else
    write_ptr =
-       png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+       png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 #endif
    png_set_error_fn(write_ptr, &error_parameters, pngtest_error,
        pngtest_warning);
@@ -936,7 +936,7 @@ test_one_file(const char *inname, const char *outname)
    {
       fprintf(STDERR, "%s -> %s: libpng read error\n", inname, outname);
       png_free(read_ptr, row_buf);
-      row_buf = NULL;
+      row_buf = nullptr;
       if (verbose != 0)
         fprintf(STDERR, "   destroy read structs\n");
       png_destroy_read_struct(&read_ptr, &read_info_ptr, &end_info_ptr);
@@ -958,7 +958,7 @@ test_one_file(const char *inname, const char *outname)
    {
       fprintf(STDERR, "%s -> %s: libpng write error\n", inname, outname);
       png_free(read_ptr, row_buf);
-      row_buf = NULL;
+      row_buf = nullptr;
       if (verbose != 0)
         fprintf(STDERR, "   destroying read structs\n");
       png_destroy_read_struct(&read_ptr, &read_info_ptr, &end_info_ptr);
@@ -1023,7 +1023,7 @@ test_one_file(const char *inname, const char *outname)
 #    ifdef PNG_WRITE_FLUSH_SUPPORTED
        pngtest_flush);
 #    else
-       NULL);
+       nullptr);
 #    endif
 #  endif
 #endif
@@ -1039,9 +1039,9 @@ test_one_file(const char *inname, const char *outname)
    else
    {
 #ifdef PNG_WRITE_SUPPORTED
-      png_set_write_status_fn(write_ptr, NULL);
+      png_set_write_status_fn(write_ptr, nullptr);
 #endif
-      png_set_read_status_fn(read_ptr, NULL);
+      png_set_read_status_fn(read_ptr, nullptr);
    }
 
 #ifdef PNG_READ_USER_TRANSFORM_SUPPORTED
@@ -1063,11 +1063,11 @@ test_one_file(const char *inname, const char *outname)
     */
 #ifdef PNG_SAVE_UNKNOWN_CHUNKS_SUPPORTED
    png_set_keep_unknown_chunks(read_ptr, PNG_HANDLE_CHUNK_ALWAYS,
-       NULL, 0);
+       nullptr, 0);
 #endif
 #ifdef PNG_WRITE_UNKNOWN_CHUNKS_SUPPORTED
    png_set_keep_unknown_chunks(write_ptr, PNG_HANDLE_CHUNK_ALWAYS,
-       NULL, 0);
+       nullptr, 0);
 #endif
 #endif
 
@@ -1080,7 +1080,7 @@ test_one_file(const char *inname, const char *outname)
     * remove the info_ptr (which is only used to determine position relative to
     * PLTE) here to indicate that we are after the IDAT.
     */
-   user_chunk_data.info_ptr = NULL;
+   user_chunk_data.info_ptr = nullptr;
 #endif
 
    pngtest_debug("Transferring info struct");
@@ -1203,7 +1203,7 @@ test_one_file(const char *inname, const char *outname)
 #endif
 #ifdef PNG_READ_eXIf_SUPPORTED
    {
-      png_bytep exif=NULL;
+      png_bytep exif=nullptr;
       png_uint_32 exif_length;
 
       if (png_get_eXIf_1(read_ptr, read_info_ptr, &exif_length, &exif) != 0)
@@ -1496,7 +1496,7 @@ test_one_file(const char *inname, const char *outname)
              (unsigned long)png_get_rowbytes(read_ptr, read_info_ptr));
 
 #endif /* !SINGLE_ROWBUF_ALLOC */
-         png_read_rows(read_ptr, (png_bytepp)&row_buf, NULL, 1);
+         png_read_rows(read_ptr, (png_bytepp)&row_buf, nullptr, 1);
 
 #ifdef PNG_WRITE_SUPPORTED
 #ifdef PNGTEST_TIMING
@@ -1515,7 +1515,7 @@ test_one_file(const char *inname, const char *outname)
 #ifndef SINGLE_ROWBUF_ALLOC
          pngtest_debug2("Freeing row buffer (pass %d, y = %u)", pass, y);
          png_free(read_ptr, row_buf);
-         row_buf = NULL;
+         row_buf = nullptr;
 #endif /* !SINGLE_ROWBUF_ALLOC */
       }
    }
@@ -1561,7 +1561,7 @@ test_one_file(const char *inname, const char *outname)
 #endif
 #ifdef PNG_READ_eXIf_SUPPORTED
    {
-      png_bytep exif=NULL;
+      png_bytep exif=nullptr;
       png_uint_32 exif_length;
 
       if (png_get_eXIf_1(read_ptr, end_info_ptr, &exif_length, &exif) != 0)
@@ -1658,7 +1658,7 @@ test_one_file(const char *inname, const char *outname)
 #ifdef SINGLE_ROWBUF_ALLOC
    pngtest_debug("destroying row_buf for read_ptr");
    png_free(read_ptr, row_buf);
-   row_buf = NULL;
+   row_buf = nullptr;
 #endif /* SINGLE_ROWBUF_ALLOC */
    pngtest_debug("destroying read_ptr, read_info_ptr, end_info_ptr");
    png_destroy_read_struct(&read_ptr, &read_info_ptr, &end_info_ptr);
@@ -1708,13 +1708,13 @@ test_one_file(const char *inname, const char *outname)
    }
 
    pngtest_debug("Opening files for comparison");
-   if ((fpin = fopen(inname, "rb")) == NULL)
+   if ((fpin = fopen(inname, "rb")) == nullptr)
    {
       fprintf(STDERR, "Could not find file %s\n", inname);
       return (1);
    }
 
-   if ((fpout = fopen(outname, "rb")) == NULL)
+   if ((fpout = fopen(outname, "rb")) == nullptr)
    {
       fprintf(STDERR, "Could not find file %s\n", outname);
       FCLOSE(fpin);
@@ -1828,11 +1828,11 @@ main(int argc, char *argv[])
 
    fprintf(STDERR, "\n Testing libpng version %s\n", PNG_LIBPNG_VER_STRING);
    fprintf(STDERR, "   with zlib   version %s\n", ZLIB_VERSION);
-   fprintf(STDERR, "%s", png_get_copyright(NULL));
+   fprintf(STDERR, "%s", png_get_copyright(nullptr));
    /* Show the version of libpng used in building the library */
    fprintf(STDERR, " library (%lu):%s",
        (unsigned long)png_access_version_number(),
-       png_get_header_version(NULL));
+       png_get_header_version(nullptr));
 
    /* Show the version of libpng used in building the application */
    fprintf(STDERR, " pngtest (%lu):%s", (unsigned long)PNG_LIBPNG_VER,
@@ -1988,7 +1988,7 @@ main(int argc, char *argv[])
             fprintf(STDERR, "MEMORY ERROR: %d bytes still allocated\n",
                 current_allocation);
 
-            while (pinfo != NULL)
+            while (pinfo != nullptr)
             {
                fprintf(STDERR, " %lu bytes at %p\n",
                    (unsigned long)pinfo->size,
@@ -2082,7 +2082,7 @@ main(int argc, char *argv[])
              fprintf(STDERR, "MEMORY ERROR: %d bytes still allocated\n",
                  current_allocation);
 
-             while (pinfo != NULL)
+             while (pinfo != nullptr)
              {
                 fprintf(STDERR, " %lu bytes at %p\n",
                     (unsigned long)pinfo->size, pinfo->pointer);
@@ -2123,7 +2123,7 @@ main(int argc, char *argv[])
    else
       fprintf(STDERR, " libpng FAILS test\n");
 
-   dummy_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+   dummy_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
    fprintf(STDERR, " Default limits:\n");
    fprintf(STDERR, "  width_max  = %lu\n",
        (unsigned long) png_get_user_width_max(dummy_ptr));
@@ -2139,7 +2139,7 @@ main(int argc, char *argv[])
    else
       fprintf(STDERR, "  malloc_max = %lu\n",
           (unsigned long) png_get_chunk_malloc_max(dummy_ptr));
-   png_destroy_read_struct(&dummy_ptr, NULL, NULL);
+   png_destroy_read_struct(&dummy_ptr, nullptr, nullptr);
 
    return (int)(ierror != 0);
 }

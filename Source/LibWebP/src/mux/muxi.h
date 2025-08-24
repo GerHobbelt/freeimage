@@ -172,8 +172,8 @@ void MuxImageInit(WebPMuxImage* const wpi);
 // Releases image 'wpi' and returns wpi->next.
 WebPMuxImage* MuxImageRelease(WebPMuxImage* const wpi);
 
-// Delete image 'wpi' and return the next image in the list or NULL.
-// 'wpi' can be NULL.
+// Delete image 'wpi' and return the next image in the list or nullptr.
+// 'wpi' can be nullptr.
 WebPMuxImage* MuxImageDelete(WebPMuxImage* const wpi);
 
 // Count number of images matching the given tag id in the 'wpi_list'.

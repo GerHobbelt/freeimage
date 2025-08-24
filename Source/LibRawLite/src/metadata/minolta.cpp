@@ -22,14 +22,14 @@ void LibRaw::parse_minolta(int base)
 {
   int tag, len, offset, high = 0, wide = 0, i, c;
   short sorder = order;
-  INT64 save;
+  int64_t save;
 
   fseek(ifp, base, SEEK_SET);
   if (fgetc(ifp) || fgetc(ifp) - 'M' || fgetc(ifp) - 'R')
     return;
   order = fgetc(ifp) * 0x101;
   offset = base + get4() + 8;
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
   if (offset > fsize - 8) // At least 8 bytes for tag/len
     offset = fsize - 8;
 
@@ -40,7 +40,7 @@ void LibRaw::parse_minolta(int base)
     len = get4();
     if (len < 0)
       return; // just ignore wrong len?? or raise bad file exception?
-    if ((INT64)len + save + 8LL > fsize)
+    if ((int64_t)len + save + 8LL > fsize)
       return; // just ignore out of file metadata, stop parse
     switch (tag)
     {

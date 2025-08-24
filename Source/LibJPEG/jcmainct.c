@@ -83,7 +83,7 @@ start_pass_main (j_compress_ptr cinfo, J_BUF_MODE pass_mode)
   switch (pass_mode) {
   case JBUF_PASS_THRU:
 #ifdef FULL_MAIN_BUFFER_SUPPORTED
-    if (mainp->whole_image[0] != NULL)
+    if (mainp->whole_image[0] != nullptr)
       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
 #endif
     mainp->pub.process_data = process_data_simple_main;
@@ -92,7 +92,7 @@ start_pass_main (j_compress_ptr cinfo, J_BUF_MODE pass_mode)
   case JBUF_SAVE_SOURCE:
   case JBUF_CRANK_DEST:
   case JBUF_SAVE_AND_PASS:
-    if (mainp->whole_image[0] == NULL)
+    if (mainp->whole_image[0] == nullptr)
       ERREXIT(cinfo, JERR_BAD_BUFFER_MODE);
     mainp->pub.process_data = process_data_buffer_main;
     break;
@@ -283,7 +283,7 @@ jinit_c_main_controller (j_compress_ptr cinfo, boolean need_full_buffer)
 #endif
   } else {
 #ifdef FULL_MAIN_BUFFER_SUPPORTED
-    mainp->whole_image[0] = NULL; /* flag for no virtual arrays */
+    mainp->whole_image[0] = nullptr; /* flag for no virtual arrays */
 #endif
     /* Allocate a strip buffer for each component */
     for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;

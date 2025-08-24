@@ -56,7 +56,7 @@ it under the terms of the one of two licenses as you choose:
 	ushort	sget2 (uchar *s);
 	ushort	sget2Rev(uchar *s);
 	libraw_area_t	get_CanonArea();
-	int	parseCR3(INT64 oAtomList, INT64 szAtomList, short &nesting, char *AtomNameStack, short& nTrack, short &TrackType);
+	int	parseCR3(int64_t oAtomList, int64_t szAtomList, short &nesting, char *AtomNameStack, short& nTrack, short &TrackType);
 	void 	selectCRXTrack();
 	void    parseCR3_Free();
 	int     parseCR3_CTMD(short trackNum);
@@ -329,8 +329,8 @@ it under the terms of the one of two licenses as you choose:
 
 // Tiff/Exif parsers
 	void        tiff_get (unsigned base,unsigned *tag, unsigned *type, unsigned *len, unsigned *save);
-	short       tiff_sget(unsigned save, uchar *buf, unsigned buf_len, INT64 *tag_offset,
-                          unsigned *tag_id, unsigned *tag_type, INT64 *tag_dataoffset,
+	short       tiff_sget(unsigned save, uchar *buf, unsigned buf_len, int64_t *tag_offset,
+                          unsigned *tag_id, unsigned *tag_type, int64_t *tag_dataoffset,
                           unsigned *tag_datalen, int *tag_dataunit_len);
 	void        parse_thumb_note (int base, unsigned toff, unsigned tlen);
 	void        parse_makernote (int base, int uptag);
@@ -349,7 +349,7 @@ it under the terms of the one of two licenses as you choose:
 	void        parse_gps_libraw(int base);
 	void        aRGB_coeff(double aRGB_cam[3][3]);
 	void        romm_coeff(float romm_cam[3][3]);
-	void        parse_mos (INT64 offset);
+	void        parse_mos (int64_t offset);
 	void        parse_qt (int end);
 	void        get_timestamp (int reversed);
 
@@ -371,7 +371,7 @@ it under the terms of the one of two licenses as you choose:
 	void ahd_interpolate_combine_homogeneous_pixels(int top, int left, ushort (*rgb)[LIBRAW_AHD_TILE][LIBRAW_AHD_TILE][3], char (*homogeneity_map)[LIBRAW_AHD_TILE][2]);
 
 	void init_fuji_compr(struct fuji_compressed_params* info);
-	void init_fuji_block(struct fuji_compressed_block* info, const struct fuji_compressed_params *params, INT64 raw_offset, unsigned dsize);
+	void init_fuji_block(struct fuji_compressed_block* info, const struct fuji_compressed_params *params, int64_t raw_offset, unsigned dsize);
 	void copy_line_to_xtrans(struct fuji_compressed_block* info, int cur_line, int cur_block, int cur_block_width);
 	void copy_line_to_bayer(struct fuji_compressed_block* info, int cur_line, int cur_block, int cur_block_width);
 	void xtrans_decode_block(struct fuji_compressed_block* info, const struct fuji_compressed_params *params, int cur_line);

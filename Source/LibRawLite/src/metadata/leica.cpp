@@ -183,7 +183,7 @@ void LibRaw::parseLeicaMakernote(int base, int uptag, unsigned MakernoteTagType)
   short morder, sorder = order;
   char buf[10];
   int LeicaMakernoteSignature = -1;
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
 
   fread(buf, 1, 10, ifp);
   if (strncmp(buf, "LEICA", 5))
@@ -221,7 +221,7 @@ void LibRaw::parseLeicaMakernote(int base, int uptag, unsigned MakernoteTagType)
     order = morder;
     tiff_get(base, &tag, &type, &len, &save);
 
-    INT64 pos = ifp->tell();
+    int64_t pos = ifp->tell();
     if (len > 8 && pos + len > 2 * fsize)
     {
       fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!

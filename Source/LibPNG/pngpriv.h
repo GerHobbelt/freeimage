@@ -991,7 +991,7 @@ PNG_INTERNAL_FUNCTION(png_fixed_point,png_fixed,(png_const_structrp png_ptr,
 PNG_INTERNAL_FUNCTION(int,png_user_version_check,(png_structrp png_ptr,
    png_const_charp user_png_ver),PNG_EMPTY);
 
-/* Internal base allocator - no messages, NULL on failure to allocate.  This
+/* Internal base allocator - no messages, nullptr on failure to allocate.  This
  * does, however, call the application provided allocator and that could call
  * png_error (although that would be a bug in the application implementation.)
  */
@@ -1001,7 +1001,7 @@ PNG_INTERNAL_FUNCTION(png_voidp,png_malloc_base,(png_const_structrp png_ptr,
 #if defined(PNG_TEXT_SUPPORTED) || defined(PNG_sPLT_SUPPORTED) ||\
    defined(PNG_STORE_UNKNOWN_CHUNKS_SUPPORTED)
 /* Internal array allocator, outputs no error or warning messages on failure,
- * just returns NULL.
+ * just returns nullptr.
  */
 PNG_INTERNAL_FUNCTION(png_voidp,png_malloc_array,(png_const_structrp png_ptr,
    int nelements, size_t element_size),PNG_ALLOCATED);
@@ -1363,7 +1363,7 @@ PNG_INTERNAL_FUNCTION(void,png_write_find_filter,(png_structrp png_ptr,
 PNG_INTERNAL_FUNCTION(void,png_read_IDAT_data,(png_structrp png_ptr,
    png_bytep output, png_alloc_size_t avail_out),PNG_EMPTY);
    /* Read 'avail_out' bytes of data from the IDAT stream.  If the output buffer
-    * is NULL the function checks, instead, for the end of the stream.  In this
+    * is nullptr the function checks, instead, for the end of the stream.  In this
     * case a benign error will be issued if the stream end is not found or if
     * extra data has to be consumed.
     */
@@ -1631,7 +1631,7 @@ PNG_INTERNAL_FUNCTION(void,png_colorspace_sync_info,(png_const_structrp png_ptr,
 PNG_INTERNAL_FUNCTION(void,png_colorspace_sync,(png_const_structrp png_ptr,
     png_inforp info_ptr), PNG_EMPTY);
    /* Copy the png_struct colorspace to the info_struct and call the above to
-    * synchronize the flags.  Checks for NULL info_ptr and does nothing.
+    * synchronize the flags.  Checks for nullptr info_ptr and does nothing.
     */
 #endif
 

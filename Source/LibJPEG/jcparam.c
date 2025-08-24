@@ -43,7 +43,7 @@ jpeg_add_quant_table (j_compress_ptr cinfo, int which_tbl,
 
   qtblptr = & cinfo->quant_tbl_ptrs[which_tbl];
 
-  if (*qtblptr == NULL)
+  if (*qtblptr == nullptr)
     *qtblptr = jpeg_alloc_quant_table((j_common_ptr) cinfo);
 
   for (i = 0; i < DCTSIZE2; i++) {
@@ -168,16 +168,16 @@ jpeg_set_quality (j_compress_ptr cinfo, int quality, boolean force_baseline)
 LOCAL(void)
 std_huff_tables (j_compress_ptr cinfo)
 {
-  if (cinfo->dc_huff_tbl_ptrs[0] != NULL)
+  if (cinfo->dc_huff_tbl_ptrs[0] != nullptr)
     (void) jpeg_std_huff_table((j_common_ptr) cinfo, TRUE, 0);
 
-  if (cinfo->ac_huff_tbl_ptrs[0] != NULL)
+  if (cinfo->ac_huff_tbl_ptrs[0] != nullptr)
     (void) jpeg_std_huff_table((j_common_ptr) cinfo, FALSE, 0);
 
-  if (cinfo->dc_huff_tbl_ptrs[1] != NULL)
+  if (cinfo->dc_huff_tbl_ptrs[1] != nullptr)
     (void) jpeg_std_huff_table((j_common_ptr) cinfo, TRUE, 1);
 
-  if (cinfo->ac_huff_tbl_ptrs[1] != NULL)
+  if (cinfo->ac_huff_tbl_ptrs[1] != nullptr)
     (void) jpeg_std_huff_table((j_common_ptr) cinfo, FALSE, 1);
 }
 
@@ -205,7 +205,7 @@ jpeg_set_defaults (j_compress_ptr cinfo)
    * Array is made permanent in case application wants to compress
    * multiple images at same param settings.
    */
-  if (cinfo->comp_info == NULL)
+  if (cinfo->comp_info == nullptr)
     cinfo->comp_info = (jpeg_component_info *)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,
 				  MAX_COMPONENTS * SIZEOF(jpeg_component_info));
@@ -228,7 +228,7 @@ jpeg_set_defaults (j_compress_ptr cinfo)
   }
 
   /* Default is no multiple-scan output */
-  cinfo->scan_info = NULL;
+  cinfo->scan_info = nullptr;
   cinfo->num_scans = 0;
 
   /* Expect normal source image, not raw downsampled data */
@@ -537,7 +537,7 @@ jpeg_simple_progression (j_compress_ptr cinfo)
    * object, we try to re-use previously allocated space, and we allocate
    * enough space to handle YCC even if initially asked for grayscale.
    */
-  if (cinfo->script_space == NULL || cinfo->script_space_size < nscans) {
+  if (cinfo->script_space == nullptr || cinfo->script_space_size < nscans) {
     cinfo->script_space_size = MAX(nscans, 10);
     cinfo->script_space = (jpeg_scan_info *)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_PERMANENT,

@@ -136,8 +136,8 @@ select_file_name (char * fname)
     /* Get temp directory name from environment TMP or TEMP variable;
      * if none, use "."
      */
-    if ((env = (const char *) getenv("TMP")) == NULL)
-      if ((env = (const char *) getenv("TEMP")) == NULL)
+    if ((env = (const char *) getenv("TMP")) == nullptr)
+      if ((env = (const char *) getenv("TEMP")) == nullptr)
 	env = ".";
     if (*env == '\0')		/* null string means "." */
       env = ".";
@@ -150,7 +150,7 @@ select_file_name (char * fname)
     next_file_num++;		/* advance counter */
     sprintf(ptr, "JPG%03d.TMP", next_file_num);
     /* Probe to see if file name is already in use */
-    if ((tfile = fopen(fname, READ_BINARY)) == NULL)
+    if ((tfile = fopen(fname, READ_BINARY)) == nullptr)
       break;
     fclose(tfile);		/* oops, it's there; close tfile & try again */
   }
@@ -418,7 +418,7 @@ open_xms_store (j_common_ptr cinfo, backing_store_ptr info,
 
   /* Get address of XMS driver */
   jxms_getdriver((XMSDRIVER far *) & xms_driver);
-  if (xms_driver == NULL)
+  if (xms_driver == nullptr)
     return FALSE;		/* no driver to be had */
 
   /* Get version number, must be >= 2.00 */

@@ -182,25 +182,25 @@
 static const TIFFField ojpegFields[] = {
     {TIFFTAG_JPEGIFOFFSET, 1, 1, TIFF_LONG8, 0, TIFF_SETGET_UINT64,
      TIFF_SETGET_UNDEFINED, FIELD_OJPEG_JPEGINTERCHANGEFORMAT, TRUE, FALSE,
-     "JpegInterchangeFormat", NULL},
+     "JpegInterchangeFormat", nullptr},
     {TIFFTAG_JPEGIFBYTECOUNT, 1, 1, TIFF_LONG8, 0, TIFF_SETGET_UINT64,
      TIFF_SETGET_UNDEFINED, FIELD_OJPEG_JPEGINTERCHANGEFORMATLENGTH, TRUE,
-     FALSE, "JpegInterchangeFormatLength", NULL},
+     FALSE, "JpegInterchangeFormatLength", nullptr},
     {TIFFTAG_JPEGQTABLES, TIFF_VARIABLE2, TIFF_VARIABLE2, TIFF_LONG8, 0,
      TIFF_SETGET_C32_UINT64, TIFF_SETGET_UNDEFINED, FIELD_OJPEG_JPEGQTABLES,
-     FALSE, TRUE, "JpegQTables", NULL},
+     FALSE, TRUE, "JpegQTables", nullptr},
     {TIFFTAG_JPEGDCTABLES, TIFF_VARIABLE2, TIFF_VARIABLE2, TIFF_LONG8, 0,
      TIFF_SETGET_C32_UINT64, TIFF_SETGET_UNDEFINED, FIELD_OJPEG_JPEGDCTABLES,
-     FALSE, TRUE, "JpegDcTables", NULL},
+     FALSE, TRUE, "JpegDcTables", nullptr},
     {TIFFTAG_JPEGACTABLES, TIFF_VARIABLE2, TIFF_VARIABLE2, TIFF_LONG8, 0,
      TIFF_SETGET_C32_UINT64, TIFF_SETGET_UNDEFINED, FIELD_OJPEG_JPEGACTABLES,
-     FALSE, TRUE, "JpegAcTables", NULL},
+     FALSE, TRUE, "JpegAcTables", nullptr},
     {TIFFTAG_JPEGPROC, 1, 1, TIFF_SHORT, 0, TIFF_SETGET_UINT16,
      TIFF_SETGET_UNDEFINED, FIELD_OJPEG_JPEGPROC, FALSE, FALSE, "JpegProc",
-     NULL},
+     nullptr},
     {TIFFTAG_JPEGRESTARTINTERVAL, 1, 1, TIFF_SHORT, 0, TIFF_SETGET_UINT16,
      TIFF_SETGET_UNDEFINED, FIELD_OJPEG_JPEGRESTARTINTERVAL, FALSE, FALSE,
-     "JpegRestartInterval", NULL},
+     "JpegRestartInterval", nullptr},
 };
 
 #ifndef LIBJPEG_ENCAP_EXTERNAL
@@ -475,7 +475,7 @@ int TIFFInitOJPEG(TIFF *tif, int scheme)
 
     /* state block */
     sp = _TIFFmallocExt(tif, sizeof(OJPEGState));
-    if (sp == NULL)
+    if (sp == nullptr)
     {
         TIFFErrorExtR(tif, module, "No space for OJPEG state block");
         return (0);
@@ -643,7 +643,7 @@ static int OJPEGVSetField(TIFF *tif, uint32_t tag, va_list ap)
             return (*sp->vsetparent)(tif, tag, ap);
     }
     fip = TIFFFieldWithTag(tif, tag);
-    if (fip == NULL) /* shouldn't happen */
+    if (fip == nullptr) /* shouldn't happen */
         return (0);
     TIFFSetFieldBit(tif, fip->field_bit);
     tif->tif_flags |= TIFF_DIRTYDIRECT;
@@ -655,7 +655,7 @@ static void OJPEGPrintDir(TIFF *tif, FILE *fd, long flags)
     OJPEGState *sp = (OJPEGState *)tif->tif_data;
     uint8_t m;
     (void)flags;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     if (TIFFFieldSet(tif, FIELD_OJPEG_JPEGINTERCHANGEFORMAT))
         fprintf(fd, "  JpegInterchangeFormat: %" PRIu64 "\n",
                 (uint64_t)sp->jpeg_interchange_format);
@@ -815,10 +815,10 @@ static int OJPEGPreDecodeSkipScanlines(TIFF *tif)
     static const char module[] = "OJPEGPreDecodeSkipScanlines";
     OJPEGState *sp = (OJPEGState *)tif->tif_data;
     uint32_t m;
-    if (sp->skip_buffer == NULL)
+    if (sp->skip_buffer == nullptr)
     {
         sp->skip_buffer = _TIFFmallocExt(tif, sp->bytes_per_line);
-        if (sp->skip_buffer == NULL)
+        if (sp->skip_buffer == nullptr)
         {
             TIFFErrorExtR(tif, module, "Out of memory");
             return (0);
@@ -1066,7 +1066,7 @@ static void OJPEGCleanup(TIFF *tif)
         if (sp->skip_buffer != 0)
             _TIFFfreeExt(tif, sp->skip_buffer);
         _TIFFfreeExt(tif, sp);
-        tif->tif_data = NULL;
+        tif->tif_data = nullptr;
         _TIFFSetDefaultCompressionState(tif);
     }
 }

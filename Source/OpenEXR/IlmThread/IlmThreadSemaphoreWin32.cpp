@@ -54,7 +54,7 @@ std::string
 errorString ()
 {
     LPSTR messageBuffer;
-    DWORD bufferLength;
+    uint32_t bufferLength;
     std::string message;
 
     //
@@ -71,7 +71,7 @@ errorString ()
 						   SUBLANG_DEFAULT),
 				       (LPSTR) &messageBuffer,
 				       0,
-				       NULL))
+				       nullptr))
     {
 	message = messageBuffer;
         LocalFree (messageBuffer);
@@ -132,7 +132,7 @@ Semaphore::post()
 int
 Semaphore::value() const
 {
-    LONG v = -1;
+    int32_t v = -1;
 
     if (!::ReleaseSemaphore (_semaphore, 0, &v) || v < 0)
     {

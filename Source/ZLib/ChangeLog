@@ -388,7 +388,7 @@ Changes in 1.2.5 (19 Apr 2010)
 - Update copyright dates on modified source files
 - Update trees.c to be able to generate modified trees.h
 - Exit configure for MinGW, suggesting win32/Makefile.gcc
-- Check for NULL path in gz_open [Homurlu]
+- Check for nullptr path in gz_open [Homurlu]
 
 Changes in 1.2.4.5 (18 Apr 2010)
 - Set sharedlibdir in configure [Torok]
@@ -465,7 +465,7 @@ Changes in 1.2.4 (14 Mar 2010)
 - Fix VER3 extraction in configure for no fourth subversion
 - Update zlib.3, add docs to Makefile.in to make .pdf out of it
 - Add zlib.3.pdf to distribution
-- Don't set error code in gzerror() if passed pointer is NULL
+- Don't set error code in gzerror() if passed pointer is nullptr
 - Apply destination directory fixes to CMakeLists.txt [Lowman]
 - Move #cmakedefine's to a new zconf.in.cmakein
 - Restore zconf.h for builds that don't use configure or cmake
@@ -500,9 +500,9 @@ Changes in 1.2.3.9 (21 Feb 2010)
 - Add const to vsnprintf test in configure to avoid warnings [Weigelt]
 - Delete zconf.h (made by configure) [Weigelt]
 - Change zconf.in.h to zconf.h.in per convention [Weigelt]
-- Check for NULL buf in gzgets()
+- Check for nullptr buf in gzgets()
 - Return empty string for gzgets() with len == 1 (like fgets())
-- Fix description of gzgets() in zlib.h for end-of-file, NULL return
+- Fix description of gzgets() in zlib.h for end-of-file, nullptr return
 - Update minizip to 1.1 [Vollant]
 - Avoid MSVC loss of data warnings in gzread.c, gzwrite.c
 - Note in zlib.h that gzerror() should be used to distinguish from EOF
@@ -535,7 +535,7 @@ Changes in 1.2.3.7 (24 Jan 2010)
 - Catch memory allocation failure in gz_open()
 - Complete close operation if seek forward in gzclose_w() fails
 - Return Z_ERRNO from gzclose_r() if close() fails
-- Return Z_STREAM_ERROR instead of EOF for gzclose() being passed NULL
+- Return Z_STREAM_ERROR instead of EOF for gzclose() being passed nullptr
 - Return zero for gzwrite() errors to match zlib.h description
 - Return -1 on gzputs() error to match zlib.h description
 - Add zconf.in.h to allow recovery from configure modification [Weigelt]
@@ -597,7 +597,7 @@ Changes in 1.2.3.4 (21 Dec 2009)
 - Update comments in configure and Makefile.in for default --shared
 - Fix test -z's in configure [Marquess]
 - Build examplesh and minigzipsh when not testing
-- Change NULL's to Z_NULL's in deflate.c and in comments in zlib.h
+- Change nullptr's to Z_NULL's in deflate.c and in comments in zlib.h
 - Import LDFLAGS from the environment in configure
 - Fix configure to populate SFLAGS with discovered CFLAGS options
 - Adapt make_vms.com to the new Makefile.in [Zinser]
@@ -959,7 +959,7 @@ Changes in 1.2.0.5 (8 September 2003)
   INSERT_STRING [Truta]
 - Compare TOO_FAR with 32767 instead of 32768, to avoid 16-bit warnings
   [Truta]
-- Compare function pointers with 0, not with NULL or Z_NULL [Truta]
+- Compare function pointers with 0, not with nullptr or Z_NULL [Truta]
 - Fix prototype of syncsearch in inflate.c [Truta]
 - Introduce ASMINF macro to be enabled when using an ASM implementation
   of inflate_fast [Truta]

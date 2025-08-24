@@ -187,7 +187,7 @@ typedef struct _codec
     struct _codec *next;
     TIFFCodec *info;
 } codec_t;
-static codec_t *registeredCODECS = NULL;
+static codec_t *registeredCODECS = nullptr;
 
 const TIFFCodec *TIFFFindCODEC(uint16_t scheme)
 {
@@ -207,10 +207,10 @@ TIFFCodec *TIFFRegisterCODEC(uint16_t scheme, const char *name,
                              TIFFInitMethod init)
 {
     codec_t *cd = (codec_t *)_TIFFmallocExt(
-        NULL,
+        nullptr,
         (tmsize_t)(sizeof(codec_t) + sizeof(TIFFCodec) + strlen(name) + 1));
 
-    if (cd != NULL)
+    if (cd != nullptr)
     {
         cd->info = (TIFFCodec *)((uint8_t *)cd + sizeof(codec_t));
         cd->info->name = (char *)((uint8_t *)cd->info + sizeof(TIFFCodec));
@@ -224,7 +224,7 @@ TIFFCodec *TIFFRegisterCODEC(uint16_t scheme, const char *name,
     {
         TIFFErrorExt(0, "TIFFRegisterCODEC",
                      "No space to register compression scheme %s", name);
-        return NULL;
+        return nullptr;
     }
     return (cd->info);
 }
@@ -234,11 +234,11 @@ void TIFFUnRegisterCODEC(TIFFCodec *c)
     codec_t *cd;
     codec_t **pcd;
 
-    for (pcd = &registeredCODECS; (cd = *pcd) != NULL; pcd = &cd->next)
+    for (pcd = &registeredCODECS; (cd = *pcd) != nullptr; pcd = &cd->next)
         if (cd->info == c)
         {
             *pcd = cd->next;
-            _TIFFfreeExt(NULL, cd);
+            _TIFFfreeExt(nullptr, cd);
             return;
         }
     TIFFErrorExt(0, "TIFFUnRegisterCODEC",
@@ -254,8 +254,8 @@ void TIFFUnRegisterCODEC(TIFFCodec *c)
  * Get list of configured codecs, both built-in and registered by user.
  * Caller is responsible to free this structure.
  *
- * @return returns array of TIFFCodec records (the last record should be NULL)
- * or NULL if function failed.
+ * @return returns array of TIFFCodec records (the last record should be nullptr)
+ * or nullptr if function failed.
  */
 
 TIFFCodec *TIFFGetConfiguredCODECs()
@@ -263,17 +263,17 @@ TIFFCodec *TIFFGetConfiguredCODECs()
     int i = 1;
     codec_t *cd;
     const TIFFCodec *c;
-    TIFFCodec *codecs = NULL;
+    TIFFCodec *codecs = nullptr;
     TIFFCodec *new_codecs;
 
     for (cd = registeredCODECS; cd; cd = cd->next)
     {
         new_codecs =
-            (TIFFCodec *)_TIFFreallocExt(NULL, codecs, i * sizeof(TIFFCodec));
+            (TIFFCodec *)_TIFFreallocExt(nullptr, codecs, i * sizeof(TIFFCodec));
         if (!new_codecs)
         {
-            _TIFFfreeExt(NULL, codecs);
-            return NULL;
+            _TIFFfreeExt(nullptr, codecs);
+            return nullptr;
         }
         codecs = new_codecs;
         _TIFFmemcpy(codecs + i - 1, cd->info, sizeof(TIFFCodec));
@@ -283,12 +283,12 @@ TIFFCodec *TIFFGetConfiguredCODECs()
     {
         if (TIFFIsCODECConfigured(c->scheme))
         {
-            new_codecs = (TIFFCodec *)_TIFFreallocExt(NULL, codecs,
+            new_codecs = (TIFFCodec *)_TIFFreallocExt(nullptr, codecs,
                                                       i * sizeof(TIFFCodec));
             if (!new_codecs)
             {
-                _TIFFfreeExt(NULL, codecs);
-                return NULL;
+                _TIFFfreeExt(nullptr, codecs);
+                return nullptr;
             }
             codecs = new_codecs;
             _TIFFmemcpy(codecs + i - 1, (const void *)c, sizeof(TIFFCodec));
@@ -297,11 +297,11 @@ TIFFCodec *TIFFGetConfiguredCODECs()
     }
 
     new_codecs =
-        (TIFFCodec *)_TIFFreallocExt(NULL, codecs, i * sizeof(TIFFCodec));
+        (TIFFCodec *)_TIFFreallocExt(nullptr, codecs, i * sizeof(TIFFCodec));
     if (!new_codecs)
     {
-        _TIFFfreeExt(NULL, codecs);
-        return NULL;
+        _TIFFfreeExt(nullptr, codecs);
+        return nullptr;
     }
     codecs = new_codecs;
     _TIFFmemset(codecs + i - 1, 0, sizeof(TIFFCodec));

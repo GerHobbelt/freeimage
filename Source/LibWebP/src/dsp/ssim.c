@@ -149,7 +149,7 @@ WEBP_DSP_INIT_FUNC(VP8SSIMDspInit) {
   VP8AccumulateSSE = AccumulateSSE_C;
 #endif
 
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_HAVE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8SSIMDspInitSSE2();

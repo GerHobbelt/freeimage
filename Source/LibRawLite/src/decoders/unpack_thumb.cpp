@@ -54,21 +54,21 @@ int LibRaw::unpack_thumb(void)
 
 #define THUMB_SIZE_CHECKT(A) \
   do { \
-    if (INT64(A) > 1024LL * 1024LL * LIBRAW_MAX_THUMBNAIL_MB) return LIBRAW_UNSUPPORTED_THUMBNAIL; \
-    if (INT64(A) > 0 &&  INT64(A) < 64LL)        return LIBRAW_NO_THUMBNAIL; \
+    if (int64_t(A) > 1024LL * 1024LL * LIBRAW_MAX_THUMBNAIL_MB) return LIBRAW_UNSUPPORTED_THUMBNAIL; \
+    if (int64_t(A) > 0 &&  int64_t(A) < 64LL)        return LIBRAW_NO_THUMBNAIL; \
   } while (0)
 
 #define THUMB_SIZE_CHECKTNZ(A) \
   do { \
-    if (INT64(A) > 1024LL * 1024LL * LIBRAW_MAX_THUMBNAIL_MB) return LIBRAW_UNSUPPORTED_THUMBNAIL; \
-    if (INT64(A) < 64LL)        return LIBRAW_NO_THUMBNAIL; \
+    if (int64_t(A) > 1024LL * 1024LL * LIBRAW_MAX_THUMBNAIL_MB) return LIBRAW_UNSUPPORTED_THUMBNAIL; \
+    if (int64_t(A) < 64LL)        return LIBRAW_NO_THUMBNAIL; \
   } while (0)
 
 
 #define THUMB_SIZE_CHECKWH(W,H) \
   do { \
-    if (INT64(W)*INT64(H) > 1024ULL * 1024ULL * LIBRAW_MAX_THUMBNAIL_MB) return LIBRAW_UNSUPPORTED_THUMBNAIL; \
-    if (INT64(W)*INT64(H) < 64ULL)        return LIBRAW_NO_THUMBNAIL; \
+    if (int64_t(W)*int64_t(H) > 1024ULL * 1024ULL * LIBRAW_MAX_THUMBNAIL_MB) return LIBRAW_UNSUPPORTED_THUMBNAIL; \
+    if (int64_t(W)*int64_t(H) < 64ULL)        return LIBRAW_NO_THUMBNAIL; \
   } while (0)
 
 #define Tformat libraw_internal_data.unpacker_data.thumb_format
@@ -105,11 +105,11 @@ int LibRaw::unpack_thumb(void)
 #ifdef USE_X3FTOOLS
 	if (Tformat == LIBRAW_INTERNAL_THUMBNAIL_X3F)
       {
-        INT64 tsize = x3f_thumb_size();
-        if (tsize < 2048 || INT64(ID.toffset) + tsize < 1)
+        int64_t tsize = x3f_thumb_size();
+        if (tsize < 2048 || int64_t(ID.toffset) + tsize < 1)
           throw LIBRAW_EXCEPTION_IO_CORRUPT;
 
-        if (INT64(ID.toffset) + tsize > ID.input->size() + THUMB_READ_BEYOND)
+        if (int64_t(ID.toffset) + tsize > ID.input->size() + THUMB_READ_BEYOND)
           throw LIBRAW_EXCEPTION_IO_EOF;
         THUMB_SIZE_CHECKT(tsize);
       }
@@ -118,10 +118,10 @@ int LibRaw::unpack_thumb(void)
 #endif
       else
       {
-        if (INT64(ID.toffset) + INT64(T.tlength) < 1)
+        if (int64_t(ID.toffset) + int64_t(T.tlength) < 1)
           throw LIBRAW_EXCEPTION_IO_CORRUPT;
 
-        if (INT64(ID.toffset) + INT64(T.tlength) >
+        if (int64_t(ID.toffset) + int64_t(T.tlength) >
             ID.input->size() + THUMB_READ_BEYOND)
           throw LIBRAW_EXCEPTION_IO_EOF;
       }
@@ -266,7 +266,7 @@ int LibRaw::unpack_thumb(void)
               tiff_ifd[pifd].strip_byte_counts_count)
           {
             // We found it, calculate final size
-            INT64 total_size = 0;
+            int64_t total_size = 0;
             for (int i = 0; i < tiff_ifd[pifd].strip_byte_counts_count 
 				&& i < tiff_ifd[pifd].strip_offsets_count; i++)
               total_size += tiff_ifd[pifd].strip_byte_counts[i];
@@ -284,16 +284,16 @@ int LibRaw::unpack_thumb(void)
             T.thumb = (char *)malloc(T.tlength);
 
             char *dest = T.thumb;
-            INT64 pos = ID.input->tell();
-            INT64 remain = T.tlength;
+            int64_t pos = ID.input->tell();
+            int64_t remain = T.tlength;
 
             for (int i = 0; i < tiff_ifd[pifd].strip_byte_counts_count &&
                             i < tiff_ifd[pifd].strip_offsets_count;
                  i++)
             {
               int sz = tiff_ifd[pifd].strip_byte_counts[i];
-              INT64 off = tiff_ifd[pifd].strip_offsets[i];
-              if (off >= 0 && off + sz <= ID.input->size() && sz > 0 && INT64(sz) <= remain)
+              int64_t off = tiff_ifd[pifd].strip_offsets[i];
+              if (off >= 0 && off + sz <= ID.input->size() && sz > 0 && int64_t(sz) <= remain)
               {
                 ID.input->seek(off, SEEK_SET);
                 ID.input->read(dest, sz, 1);

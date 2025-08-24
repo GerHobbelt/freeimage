@@ -20,8 +20,8 @@
 // Helpful macro.
 
 # define SANITY_CHECK(in, out)                                                 \
-  assert((in) != NULL);                                                        \
-  assert((out) != NULL);                                                       \
+  assert((in) != nullptr);                                                        \
+  assert((out) != nullptr);                                                       \
   assert(width > 0);                                                           \
   assert(height > 0);                                                          \
   assert(stride >= width);                                                     \
@@ -191,7 +191,7 @@ static void GradientFilter_C(const uint8_t* data, int width, int height,
 
 static void HorizontalUnfilter_C(const uint8_t* prev, const uint8_t* in,
                                  uint8_t* out, int width) {
-  uint8_t pred = (prev == NULL) ? 0 : prev[0];
+  uint8_t pred = (prev == nullptr) ? 0 : prev[0];
   int i;
   for (i = 0; i < width; ++i) {
     out[i] = (uint8_t)(pred + in[i]);
@@ -202,8 +202,8 @@ static void HorizontalUnfilter_C(const uint8_t* prev, const uint8_t* in,
 #if !WEBP_NEON_OMIT_C_CODE
 static void VerticalUnfilter_C(const uint8_t* prev, const uint8_t* in,
                                uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter_C(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter_C(nullptr, in, out, width);
   } else {
     int i;
     for (i = 0; i < width; ++i) out[i] = (uint8_t)(prev[i] + in[i]);
@@ -213,8 +213,8 @@ static void VerticalUnfilter_C(const uint8_t* prev, const uint8_t* in,
 
 static void GradientUnfilter_C(const uint8_t* prev, const uint8_t* in,
                                uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter_C(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter_C(nullptr, in, out, width);
   } else {
     uint8_t top = prev[0], top_left = top, left = top;
     int i;
@@ -239,21 +239,21 @@ extern void VP8FiltersInitNEON(void);
 extern void VP8FiltersInitSSE2(void);
 
 WEBP_DSP_INIT_FUNC(VP8FiltersInit) {
-  WebPUnfilters[WEBP_FILTER_NONE] = NULL;
+  WebPUnfilters[WEBP_FILTER_NONE] = nullptr;
 #if !WEBP_NEON_OMIT_C_CODE
   WebPUnfilters[WEBP_FILTER_HORIZONTAL] = HorizontalUnfilter_C;
   WebPUnfilters[WEBP_FILTER_VERTICAL] = VerticalUnfilter_C;
 #endif
   WebPUnfilters[WEBP_FILTER_GRADIENT] = GradientUnfilter_C;
 
-  WebPFilters[WEBP_FILTER_NONE] = NULL;
+  WebPFilters[WEBP_FILTER_NONE] = nullptr;
 #if !WEBP_NEON_OMIT_C_CODE
   WebPFilters[WEBP_FILTER_HORIZONTAL] = HorizontalFilter_C;
   WebPFilters[WEBP_FILTER_VERTICAL] = VerticalFilter_C;
   WebPFilters[WEBP_FILTER_GRADIENT] = GradientFilter_C;
 #endif
 
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_HAVE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8FiltersInitSSE2();
@@ -273,15 +273,15 @@ WEBP_DSP_INIT_FUNC(VP8FiltersInit) {
 
 #if defined(WEBP_HAVE_NEON)
   if (WEBP_NEON_OMIT_C_CODE ||
-      (VP8GetCPUInfo != NULL && VP8GetCPUInfo(kNEON))) {
+      (VP8GetCPUInfo != nullptr && VP8GetCPUInfo(kNEON))) {
     VP8FiltersInitNEON();
   }
 #endif
 
-  assert(WebPUnfilters[WEBP_FILTER_HORIZONTAL] != NULL);
-  assert(WebPUnfilters[WEBP_FILTER_VERTICAL] != NULL);
-  assert(WebPUnfilters[WEBP_FILTER_GRADIENT] != NULL);
-  assert(WebPFilters[WEBP_FILTER_HORIZONTAL] != NULL);
-  assert(WebPFilters[WEBP_FILTER_VERTICAL] != NULL);
-  assert(WebPFilters[WEBP_FILTER_GRADIENT] != NULL);
+  assert(WebPUnfilters[WEBP_FILTER_HORIZONTAL] != nullptr);
+  assert(WebPUnfilters[WEBP_FILTER_VERTICAL] != nullptr);
+  assert(WebPUnfilters[WEBP_FILTER_GRADIENT] != nullptr);
+  assert(WebPFilters[WEBP_FILTER_HORIZONTAL] != nullptr);
+  assert(WebPFilters[WEBP_FILTER_VERTICAL] != nullptr);
+  assert(WebPFilters[WEBP_FILTER_GRADIENT] != nullptr);
 }

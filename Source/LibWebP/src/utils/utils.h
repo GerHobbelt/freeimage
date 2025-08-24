@@ -47,7 +47,7 @@ static WEBP_INLINE int CheckSizeOverflow(uint64_t size) {
 }
 
 // size-checking safe malloc/calloc: verify that the requested size is not too
-// large, or return NULL. You don't need to call these for constructs like
+// large, or return nullptr. You don't need to call these for constructs like
 // malloc(sizeof(foo)), but only if there's picture-dependent size involved
 // somewhere (like: malloc(num_pixels * sizeof(*something))). That's why this
 // safe malloc() borrows the signature from calloc(), pointing at the dangerous
@@ -184,7 +184,7 @@ WEBP_EXTERN void WebPCopyPixels(const struct WebPPicture* const src,
 // Returns count of unique colors in 'pic', assuming pic->use_argb is true.
 // If the unique color count is more than MAX_PALETTE_SIZE, returns
 // MAX_PALETTE_SIZE+1.
-// If 'palette' is not NULL and number of unique colors is less than or equal to
+// If 'palette' is not nullptr and number of unique colors is less than or equal to
 // MAX_PALETTE_SIZE, also outputs the actual unique colors into 'palette'.
 // Note: 'palette' is assumed to be an array already allocated with at least
 // MAX_PALETTE_SIZE elements.

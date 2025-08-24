@@ -47,12 +47,12 @@ int LibRaw::parse_tiff_ifd(int base)
   if (entries > 512)
     return 1;
 
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
 
   while (entries--)
   {
     tiff_get(base, &tag, &type, &len, &save);
-    INT64 savepos = ftell(ifp);
+    int64_t savepos = ftell(ifp);
     if (len > 8 && savepos + len > 2 * fsize)
     {
       fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!
@@ -238,7 +238,7 @@ int LibRaw::parse_tiff_ifd(int base)
         base = ftell(ifp);
         order = get2();
         fseek(ifp, 2, SEEK_CUR);
-        fseek(ifp, INT64(get4()) - 8LL, SEEK_CUR);
+        fseek(ifp, int64_t(get4()) - 8LL, SEEK_CUR);
         parse_tiff_ifd(base);
         base = sbase;
         order = sorder;
@@ -983,7 +983,7 @@ int LibRaw::parse_tiff_ifd(int base)
               (libraw_internal_data.unpacker_data.lenRAFData > 3) &&
               (libraw_internal_data.unpacker_data.lenRAFData < 10240000))
           {
-            INT64 f_save = ftell(ifp);
+            int64_t f_save = ftell(ifp);
             rafdata = (ushort *)malloc(
                 sizeof(ushort) * libraw_internal_data.unpacker_data.lenRAFData);
             fseek(ifp, libraw_internal_data.unpacker_data.posRAFData, SEEK_SET);
@@ -1342,7 +1342,7 @@ int LibRaw::parse_tiff_ifd(int base)
     case 0xc634: /* 50740 : DNG Adobe, DNG Pentax, Sony SR2, DNG Private */
       {
         char mbuf[64];
-        INT64 curr_pos, start_pos = ftell(ifp);
+        int64_t curr_pos, start_pos = ftell(ifp);
         unsigned MakN_order, m_sorder = order;
         unsigned MakN_length;
         unsigned pos_in_original_raw;
@@ -1369,7 +1369,7 @@ int LibRaw::parse_tiff_ifd(int base)
               pos_in_original_raw = get4();
               order = MakN_order;
 
-              INT64 save_pos = ifp->tell();
+              int64_t save_pos = ifp->tell();
               parse_makernote_0xc634(curr_pos + 6 - pos_in_original_raw, 0,
                                      AdobeDNG);
 
@@ -1545,7 +1545,7 @@ int LibRaw::parse_tiff_ifd(int base)
 
 int LibRaw::parse_tiff(int _base)
 {
-  INT64 base = _base;
+  int64_t base = _base;
   int doff;
   fseek(ifp, base, SEEK_SET);
   order = get2();
@@ -1554,7 +1554,7 @@ int LibRaw::parse_tiff(int _base)
   get2();
   while ((doff = get4()))
   {
-	INT64 doff64 = doff;
+	int64_t doff64 = doff;
 	if (doff64 + base > ifp->size()) break;
     fseek(ifp, doff64 + base, SEEK_SET);
     if (parse_tiff_ifd(_base))
@@ -1566,7 +1566,7 @@ int LibRaw::parse_tiff(int _base)
 struct ifd_size_t
 {
   int ifdi;
-  INT64 databits;
+  int64_t databits;
 };
 
 int ifd_size_t_cmp(const void *a, const void *b)
@@ -1841,22 +1841,22 @@ void LibRaw::apply_tiff()
     {
     case 32767:
       if (!dng_version &&
-          INT64(tiff_ifd[raw].bytes) == INT64(raw_width) * INT64(raw_height))
+          int64_t(tiff_ifd[raw].bytes) == int64_t(raw_width) * int64_t(raw_height))
       {
         tiff_bps = 14;
         load_raw = &LibRaw::sony_arw2_load_raw;
         break;
       }
       if (!dng_version && !strncasecmp(make, "Sony", 4) &&
-          INT64(tiff_ifd[raw].bytes) ==
-              INT64(raw_width) * INT64(raw_height) * 2LL)
+          int64_t(tiff_ifd[raw].bytes) ==
+              int64_t(raw_width) * int64_t(raw_height) * 2LL)
       {
         tiff_bps = 14;
         load_raw = &LibRaw::unpacked_load_raw;
         break;
       }
-      if (INT64(tiff_ifd[raw].bytes) * 8LL !=
-          INT64(raw_width) * INT64(raw_height) * INT64(tiff_bps))
+      if (int64_t(tiff_ifd[raw].bytes) * 8LL !=
+          int64_t(raw_width) * int64_t(raw_height) * int64_t(tiff_bps))
       {
         raw_height += 8;
         load_raw = &LibRaw::sony_arw_load_raw;
@@ -1878,8 +1878,8 @@ void LibRaw::apply_tiff()
         }
       // Sony 14-bit uncompressed
       if (!dng_version && !strncasecmp(make, "Sony", 4) &&
-          INT64(tiff_ifd[raw].bytes) ==
-              INT64(raw_width) * INT64(raw_height) * 2LL)
+          int64_t(tiff_ifd[raw].bytes) ==
+              int64_t(raw_width) * int64_t(raw_height) * 2LL)
       {
         tiff_bps = 14;
         load_raw = &LibRaw::unpacked_load_raw;
@@ -1887,8 +1887,8 @@ void LibRaw::apply_tiff()
       }
       if (!dng_version && !strncasecmp(make, "Sony", 4) &&
           tiff_ifd[raw].samples == 4 &&
-          INT64(tiff_ifd[raw].bytes) ==
-              INT64(raw_width) * INT64(raw_height) * 8LL) // Sony ARQ
+          int64_t(tiff_ifd[raw].bytes) ==
+              int64_t(raw_width) * int64_t(raw_height) * 8LL) // Sony ARQ
       {
         // maybe to detect ARQ with the following:
         // if (tiff_ifd[raw].phint == 32892)
@@ -1912,11 +1912,11 @@ void LibRaw::apply_tiff()
       if ((!strncmp(make, "OLYMPUS", 7) || !strncmp(make, "OM Digi", 7) ||
            (!strncasecmp(make, "CLAUSS", 6) &&
             !strncasecmp(model, "piX 5oo", 7))) && // 0x5330303539 works here
-          (INT64(tiff_ifd[raw].bytes) * 2ULL ==
-           INT64(raw_width) * INT64(raw_height) * 3ULL))
+          (int64_t(tiff_ifd[raw].bytes) * 2ULL ==
+           int64_t(raw_width) * int64_t(raw_height) * 3ULL))
         load_flags = 24;
-      if (!dng_version && INT64(tiff_ifd[raw].bytes) * 5ULL ==
-                              INT64(raw_width) * INT64(raw_height) * 8ULL)
+      if (!dng_version && int64_t(tiff_ifd[raw].bytes) * 5ULL ==
+                              int64_t(raw_width) * int64_t(raw_height) * 8ULL)
       {
         load_flags = 81;
         tiff_bps = 12;
@@ -1944,8 +1944,8 @@ void LibRaw::apply_tiff()
         if ((!strncmp(make, "OLYMPUS", 7) || !strncmp(make, "OM Digi", 7) ||
              (!strncasecmp(make, "CLAUSS", 6) &&
               !strncasecmp(model, "piX 5oo", 7))) && // 0x5330303539 works here
-            (INT64(tiff_ifd[raw].bytes) * 7LL >
-             INT64(raw_width) * INT64(raw_height)))
+            (int64_t(tiff_ifd[raw].bytes) * 7LL >
+             int64_t(raw_width) * int64_t(raw_height)))
           load_raw = &LibRaw::olympus_load_raw;
       }
       break;
@@ -1961,37 +1961,37 @@ void LibRaw::apply_tiff()
       load_raw = &LibRaw::kodak_262_load_raw;
       break;
     case 34713:
-      if ((INT64(raw_width) + 9LL) / 10LL * 16LL * INT64(raw_height) ==
-          INT64(tiff_ifd[raw].bytes))
+      if ((int64_t(raw_width) + 9LL) / 10LL * 16LL * int64_t(raw_height) ==
+          int64_t(tiff_ifd[raw].bytes))
       {
         load_raw = &LibRaw::packed_load_raw;
         load_flags = 1;
       }
-      else if (INT64(raw_width) * INT64(raw_height) * 3LL ==
-               INT64(tiff_ifd[raw].bytes) * 2LL)
+      else if (int64_t(raw_width) * int64_t(raw_height) * 3LL ==
+               int64_t(tiff_ifd[raw].bytes) * 2LL)
       {
         load_raw = &LibRaw::packed_load_raw;
         if (model[0] == 'N')
           load_flags = 80;
       }
-      else if (INT64(raw_width) * INT64(raw_height) * 3LL ==
-               INT64(tiff_ifd[raw].bytes))
+      else if (int64_t(raw_width) * int64_t(raw_height) * 3LL ==
+               int64_t(tiff_ifd[raw].bytes))
       {
         load_raw = &LibRaw::nikon_yuv_load_raw;
         gamma_curve(1 / 2.4, 12.92, 1, 4095);
         memset(cblack, 0, sizeof cblack);
         filters = 0;
       }
-      else if (INT64(raw_width) * INT64(raw_height) * 2LL ==
-               INT64(tiff_ifd[raw].bytes))
+      else if (int64_t(raw_width) * int64_t(raw_height) * 2LL ==
+               int64_t(tiff_ifd[raw].bytes))
       {
         load_raw = &LibRaw::unpacked_load_raw;
         load_flags = 4;
         order = 0x4d4d;
       }
 #if 0 /* Never used because of same condition above, but need to recheck */
-      else if (INT64(raw_width) * INT64(raw_height) * 3LL ==
-               INT64(tiff_ifd[raw].bytes) * 2LL)
+      else if (int64_t(raw_width) * int64_t(raw_height) * 3LL ==
+               int64_t(tiff_ifd[raw].bytes) * 2LL)
       {
         load_raw = &LibRaw::packed_load_raw;
         load_flags = 80;
@@ -2005,8 +2005,8 @@ void LibRaw::apply_tiff()
         int fit = 1;
         for (int q = 0; q < tiff_ifd[raw].strip_byte_counts_count - 1;
              q++) // all but last
-          if (INT64(tiff_ifd[raw].strip_byte_counts[q]) * 2LL !=
-              INT64(tiff_ifd[raw].rows_per_strip) * INT64(raw_width) * 3LL)
+          if (int64_t(tiff_ifd[raw].strip_byte_counts[q]) * 2LL !=
+              int64_t(tiff_ifd[raw].rows_per_strip) * int64_t(raw_width) * 3LL)
           {
             fit = 0;
             break;
@@ -2016,20 +2016,20 @@ void LibRaw::apply_tiff()
         else
           load_raw = &LibRaw::nikon_load_raw; // fallback
       }
-      else if ((((INT64(raw_width) * 3LL / 2LL) + 15LL) / 16LL) * 16LL *
-                   INT64(raw_height) ==
-               INT64(tiff_ifd[raw].bytes))
+      else if ((((int64_t(raw_width) * 3LL / 2LL) + 15LL) / 16LL) * 16LL *
+                   int64_t(raw_height) ==
+               int64_t(tiff_ifd[raw].bytes))
       {
         load_raw = &LibRaw::nikon_load_padded_packed_raw;
-        load_flags = (((INT64(raw_width) * 3ULL / 2ULL) + 15ULL) / 16ULL) *
+        load_flags = (((int64_t(raw_width) * 3ULL / 2ULL) + 15ULL) / 16ULL) *
                      16ULL; // bytes per row
       }
       else if (!strncmp(model, "NIKON Z 9", 9) && tiff_ifd[raw].offset)
       {
-          INT64 pos = ftell(ifp);
+          int64_t pos = ftell(ifp);
           unsigned char cmp[] = "CONTACT_INTOPIX"; // 15
           unsigned char buf[16];
-          fseek(ifp, INT64(tiff_ifd[raw].offset) + 6LL, SEEK_SET);
+          fseek(ifp, int64_t(tiff_ifd[raw].offset) + 6LL, SEEK_SET);
           fread(buf, 1, 16, ifp);
           fseek(ifp, pos, SEEK_SET);
           if(!memcmp(buf,cmp,15))
@@ -2089,7 +2089,7 @@ void LibRaw::apply_tiff()
           is_raw = 0; // SKIP RGB+Alpha IFDs
   }
 
-  INT64 fsizecheck = 0ULL;
+  int64_t fsizecheck = 0ULL;
 
   if (imgdata.rawparams.options & LIBRAW_RAWOPTIONS_CHECK_THUMBNAILS_ALL_VENDORS)
       fsizecheck = ifp->size();
@@ -2126,8 +2126,8 @@ void LibRaw::apply_tiff()
             if(!ok)
                 continue;
         }
-		if ( (INT64(tiff_ifd[i].t_width) * INT64(tiff_ifd[i].t_height) / INT64(SQR(tiff_ifd[i].bps) + 1)) >
-			 (INT64(thumb_width) * INT64(thumb_height) / INT64(SQR(thumb_misc) + 1)) ) 
+		if ( (int64_t(tiff_ifd[i].t_width) * int64_t(tiff_ifd[i].t_height) / int64_t(SQR(tiff_ifd[i].bps) + 1)) >
+			 (int64_t(thumb_width) * int64_t(thumb_height) / int64_t(SQR(thumb_misc) + 1)) ) 
 		{
 
 			thumb_width = tiff_ifd[i].t_width;

@@ -27,7 +27,7 @@
  */
 #include "tiffiop.h"
 
-TIFFErrorHandlerExt _TIFFerrorHandlerExt = NULL;
+TIFFErrorHandlerExt _TIFFerrorHandlerExt = nullptr;
 
 TIFFErrorHandler TIFFSetErrorHandler(TIFFErrorHandler handler)
 {
@@ -84,7 +84,7 @@ void _TIFFErrorEarly(TIFFOpenOptions *opts, thandle_t clientdata,
     if (opts && opts->errorhandler)
     {
         va_start(ap, fmt);
-        int stop = opts->errorhandler(NULL, opts->errorhandler_user_data,
+        int stop = opts->errorhandler(nullptr, opts->errorhandler_user_data,
                                       module, fmt, ap);
         va_end(ap);
         if (stop)
@@ -125,7 +125,7 @@ void TIFFErrorExtR(TIFF *tif, const char *module, const char *fmt, ...)
     if (_TIFFerrorHandlerExt)
     {
         va_start(ap, fmt);
-        (*_TIFFerrorHandlerExt)(tif ? tif->tif_clientdata : NULL, module, fmt,
+        (*_TIFFerrorHandlerExt)(tif ? tif->tif_clientdata : nullptr, module, fmt,
                                 ap);
         va_end(ap);
     }

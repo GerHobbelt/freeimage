@@ -742,7 +742,7 @@ static void PredictorSub##PREDICTOR_I##_C(const uint32_t* in,              \
                                           const uint32_t* upper,           \
                                           int num_pixels, uint32_t* out) { \
   int x;                                                                   \
-  assert(upper != NULL);                                                   \
+  assert(upper != nullptr);                                                   \
   for (x = 0; x < num_pixels; ++x) {                                       \
     const uint32_t pred =                                                  \
         VP8LPredictor##PREDICTOR_I##_C(in[x - 1], upper + x);              \
@@ -861,7 +861,7 @@ WEBP_DSP_INIT_FUNC(VP8LEncDspInit) {
   VP8LPredictorsSub_C[15] = PredictorSub0_C;
 
   // If defined, use CPUInfo() to overwrite some pointers with faster versions.
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_HAVE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8LEncDspInitSSE2();
@@ -891,58 +891,58 @@ WEBP_DSP_INIT_FUNC(VP8LEncDspInit) {
 
 #if defined(WEBP_HAVE_NEON)
   if (WEBP_NEON_OMIT_C_CODE ||
-      (VP8GetCPUInfo != NULL && VP8GetCPUInfo(kNEON))) {
+      (VP8GetCPUInfo != nullptr && VP8GetCPUInfo(kNEON))) {
     VP8LEncDspInitNEON();
   }
 #endif
 
-  assert(VP8LSubtractGreenFromBlueAndRed != NULL);
-  assert(VP8LTransformColor != NULL);
-  assert(VP8LCollectColorBlueTransforms != NULL);
-  assert(VP8LCollectColorRedTransforms != NULL);
-  assert(VP8LFastLog2Slow != NULL);
-  assert(VP8LFastSLog2Slow != NULL);
-  assert(VP8LExtraCost != NULL);
-  assert(VP8LExtraCostCombined != NULL);
-  assert(VP8LCombinedShannonEntropy != NULL);
-  assert(VP8LGetEntropyUnrefined != NULL);
-  assert(VP8LGetCombinedEntropyUnrefined != NULL);
-  assert(VP8LAddVector != NULL);
-  assert(VP8LAddVectorEq != NULL);
-  assert(VP8LVectorMismatch != NULL);
-  assert(VP8LBundleColorMap != NULL);
-  assert(VP8LPredictorsSub[0] != NULL);
-  assert(VP8LPredictorsSub[1] != NULL);
-  assert(VP8LPredictorsSub[2] != NULL);
-  assert(VP8LPredictorsSub[3] != NULL);
-  assert(VP8LPredictorsSub[4] != NULL);
-  assert(VP8LPredictorsSub[5] != NULL);
-  assert(VP8LPredictorsSub[6] != NULL);
-  assert(VP8LPredictorsSub[7] != NULL);
-  assert(VP8LPredictorsSub[8] != NULL);
-  assert(VP8LPredictorsSub[9] != NULL);
-  assert(VP8LPredictorsSub[10] != NULL);
-  assert(VP8LPredictorsSub[11] != NULL);
-  assert(VP8LPredictorsSub[12] != NULL);
-  assert(VP8LPredictorsSub[13] != NULL);
-  assert(VP8LPredictorsSub[14] != NULL);
-  assert(VP8LPredictorsSub[15] != NULL);
-  assert(VP8LPredictorsSub_C[0] != NULL);
-  assert(VP8LPredictorsSub_C[1] != NULL);
-  assert(VP8LPredictorsSub_C[2] != NULL);
-  assert(VP8LPredictorsSub_C[3] != NULL);
-  assert(VP8LPredictorsSub_C[4] != NULL);
-  assert(VP8LPredictorsSub_C[5] != NULL);
-  assert(VP8LPredictorsSub_C[6] != NULL);
-  assert(VP8LPredictorsSub_C[7] != NULL);
-  assert(VP8LPredictorsSub_C[8] != NULL);
-  assert(VP8LPredictorsSub_C[9] != NULL);
-  assert(VP8LPredictorsSub_C[10] != NULL);
-  assert(VP8LPredictorsSub_C[11] != NULL);
-  assert(VP8LPredictorsSub_C[12] != NULL);
-  assert(VP8LPredictorsSub_C[13] != NULL);
-  assert(VP8LPredictorsSub_C[14] != NULL);
-  assert(VP8LPredictorsSub_C[15] != NULL);
+  assert(VP8LSubtractGreenFromBlueAndRed != nullptr);
+  assert(VP8LTransformColor != nullptr);
+  assert(VP8LCollectColorBlueTransforms != nullptr);
+  assert(VP8LCollectColorRedTransforms != nullptr);
+  assert(VP8LFastLog2Slow != nullptr);
+  assert(VP8LFastSLog2Slow != nullptr);
+  assert(VP8LExtraCost != nullptr);
+  assert(VP8LExtraCostCombined != nullptr);
+  assert(VP8LCombinedShannonEntropy != nullptr);
+  assert(VP8LGetEntropyUnrefined != nullptr);
+  assert(VP8LGetCombinedEntropyUnrefined != nullptr);
+  assert(VP8LAddVector != nullptr);
+  assert(VP8LAddVectorEq != nullptr);
+  assert(VP8LVectorMismatch != nullptr);
+  assert(VP8LBundleColorMap != nullptr);
+  assert(VP8LPredictorsSub[0] != nullptr);
+  assert(VP8LPredictorsSub[1] != nullptr);
+  assert(VP8LPredictorsSub[2] != nullptr);
+  assert(VP8LPredictorsSub[3] != nullptr);
+  assert(VP8LPredictorsSub[4] != nullptr);
+  assert(VP8LPredictorsSub[5] != nullptr);
+  assert(VP8LPredictorsSub[6] != nullptr);
+  assert(VP8LPredictorsSub[7] != nullptr);
+  assert(VP8LPredictorsSub[8] != nullptr);
+  assert(VP8LPredictorsSub[9] != nullptr);
+  assert(VP8LPredictorsSub[10] != nullptr);
+  assert(VP8LPredictorsSub[11] != nullptr);
+  assert(VP8LPredictorsSub[12] != nullptr);
+  assert(VP8LPredictorsSub[13] != nullptr);
+  assert(VP8LPredictorsSub[14] != nullptr);
+  assert(VP8LPredictorsSub[15] != nullptr);
+  assert(VP8LPredictorsSub_C[0] != nullptr);
+  assert(VP8LPredictorsSub_C[1] != nullptr);
+  assert(VP8LPredictorsSub_C[2] != nullptr);
+  assert(VP8LPredictorsSub_C[3] != nullptr);
+  assert(VP8LPredictorsSub_C[4] != nullptr);
+  assert(VP8LPredictorsSub_C[5] != nullptr);
+  assert(VP8LPredictorsSub_C[6] != nullptr);
+  assert(VP8LPredictorsSub_C[7] != nullptr);
+  assert(VP8LPredictorsSub_C[8] != nullptr);
+  assert(VP8LPredictorsSub_C[9] != nullptr);
+  assert(VP8LPredictorsSub_C[10] != nullptr);
+  assert(VP8LPredictorsSub_C[11] != nullptr);
+  assert(VP8LPredictorsSub_C[12] != nullptr);
+  assert(VP8LPredictorsSub_C[13] != nullptr);
+  assert(VP8LPredictorsSub_C[14] != nullptr);
+  assert(VP8LPredictorsSub_C[15] != nullptr);
 }
 
 //------------------------------------------------------------------------------

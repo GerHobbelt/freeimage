@@ -36,7 +36,7 @@ void LibRaw::packed_tiled_dng_load_raw()
   try
   {
       unsigned trow = 0, tcol = 0;
-      INT64 save;
+      int64_t save;
       while (trow < raw_height)
       {
         checkCancel();
@@ -75,7 +75,7 @@ void LibRaw::packed_tiled_dng_load_raw()
 void LibRaw::sony_ljpeg_load_raw()
 {
   unsigned trow = 0, tcol = 0, jrow, jcol, row, col;
-  INT64 save;
+  int64_t save;
   struct jhead jh;
 
   while (trow < raw_height)
@@ -244,7 +244,7 @@ void LibRaw::android_loose_load_raw()
 {
   uchar *data, *dp;
   int bwide, row, col, c;
-  UINT64 bitbuf = 0;
+  uint64_t bitbuf = 0;
 
   bwide = (raw_width + 5) / 6 << 3;
   data = (uchar *)malloc(bwide);

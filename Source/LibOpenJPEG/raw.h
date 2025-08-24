@@ -65,7 +65,7 @@ typedef struct opj_raw {
 /* ----------------------------------------------------------------------- */
 /**
 Create a new RAW handle 
-@return Returns a new RAW handle if successful, returns NULL otherwise
+@return Returns a new RAW handle if successful, returns nullptr otherwise
 */
 opj_raw_t* opj_raw_create(void);
 /**

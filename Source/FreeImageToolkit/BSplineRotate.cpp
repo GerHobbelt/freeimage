@@ -303,7 +303,7 @@ SamplesToCoefficients(double *Image, long Width, long Height, long spline_degree
 
 	// in-place separable process, along x 
 	Line = (double *)malloc(Width * sizeof(double));
-	if (Line == NULL) {
+	if (Line == nullptr) {
 		// Row allocation failed
 		return false;
 	}
@@ -316,7 +316,7 @@ SamplesToCoefficients(double *Image, long Width, long Height, long spline_degree
 
 	// in-place separable process, along y 
 	Line = (double *)malloc(Height * sizeof(double));
-	if (Line == NULL) {
+	if (Line == nullptr) {
 		// Column allocation failed
 		return false;
 	}
@@ -518,7 +518,7 @@ InterpolatedValue(double *Bcoeff, long Width, long Height, double x, double y, l
  @param y_origin Output origin of the y-axis
  @param spline_degree Output degree of the B-spline model
  @param use_mask Whether or not to mask the image
- @return Returns the translated & rotated dib if successful, returns NULL otherwise
+ @return Returns the translated & rotated dib if successful, returns nullptr otherwise
 */
 static FIBITMAP * 
 Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, long spline_degree, BOOL use_mask) {
@@ -532,7 +532,7 @@ Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x
 
 	int bpp = FreeImage_GetBPP(dib);
 	if(bpp != 8) {
-		return NULL;
+		return nullptr;
 	}
 	
 	int width = FreeImage_GetWidth(dib);
@@ -557,23 +557,23 @@ Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x
 	// allocate output image
 	FIBITMAP *dst = FreeImage_Allocate(width, height, bpp);
 	if(!dst)
-		return NULL;
+		return nullptr;
 	// buid a grey scale palette
 	RGBQUAD *pal = FreeImage_GetPalette(dst);
 	for(int i = 0; i < 256; i++) {
-		pal[i].rgbRed = pal[i].rgbGreen = pal[i].rgbBlue = (BYTE)i;
+		pal[i].rgbRed = pal[i].rgbGreen = pal[i].rgbBlue = (uint8_t)i;
 	}
 
 	// allocate a temporary array
 	ImageRasterArray = (double*)malloc(width * height * sizeof(double));
 	if(!ImageRasterArray) {
 		FreeImage_Unload(dst);
-		return NULL;
+		return nullptr;
 	}
 	// copy data samples
 	for(y = 0; y < height; y++) {
 		double *pImage = &ImageRasterArray[y*width];
-		BYTE *src_bits = FreeImage_GetScanLine(dib, height-1-y);
+		uint8_t *src_bits = FreeImage_GetScanLine(dib, height-1-y);
 
 		for(x = 0; x < width; x++) {
 			pImage[x] = (double)src_bits[x];
@@ -586,7 +586,7 @@ Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x
 	if(!bResult) {
 		FreeImage_Unload(dst);
 		free(ImageRasterArray);
-		return NULL;
+		return nullptr;
 	}
 
 	// prepare the geometry
@@ -602,7 +602,7 @@ Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x
 
 	// visit all pixels of the output image and assign their value
 	for(y = 0; y < height; y++) {
-		BYTE *dst_bits = FreeImage_GetScanLine(dst, height-1-y);
+		uint8_t *dst_bits = FreeImage_GetScanLine(dst, height-1-y);
 		
 		x0 = a12 * (double)y + x_shift;
 		y0 = a22 * (double)y + y_shift;
@@ -621,8 +621,8 @@ Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x
 			else {
 				p = (double)InterpolatedValue(ImageRasterArray, width, height, x1, y1, spline);
 			}
-			// clamp and convert to BYTE
-			dst_bits[x] = (BYTE)MIN(MAX((int)0, (int)(p + 0.5)), (int)255);
+			// clamp and convert to uint8_t
+			dst_bits[x] = (uint8_t)MIN(MAX((int)0, (int)(p + 0.5)), (int)255);
 		}
 	}
 
@@ -642,17 +642,17 @@ Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x
  @param x_origin Output origin of the x-axis
  @param y_origin Output origin of the y-axis
  @param use_mask Whether or not to mask the image
- @return Returns the translated & rotated dib if successful, returns NULL otherwise
+ @return Returns the translated & rotated dib if successful, returns nullptr otherwise
 */
 FIBITMAP * DLL_CALLCONV 
 FreeImage_RotateEx(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, BOOL use_mask) {
 
 	int x, y, bpp;
 	int channel, nb_channels;
-	BYTE *src_bits, *dst_bits;
-	FIBITMAP *src8 = NULL, *dst8 = NULL, *dst = NULL;
+	uint8_t *src_bits, *dst_bits;
+	FIBITMAP *src8 = nullptr, *dst8 = nullptr, *dst = nullptr;
 
-	if(!FreeImage_HasPixels(dib)) return NULL;
+	if(!FreeImage_HasPixels(dib)) return nullptr;
 
 	try {
 
@@ -726,5 +726,5 @@ FreeImage_RotateEx(FIBITMAP *dib, double angle, double x_shift, double y_shift, 
 		if(dst)  FreeImage_Unload(dst);
 	}
 
-	return NULL;
+	return nullptr;
 }

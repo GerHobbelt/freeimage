@@ -49,7 +49,7 @@ TIFFOpen(const char* name, const char* mode)
 	static const char module[] = "TIFFOpen";
 	thandle_t fd;
 	int m;
-	DWORD dwMode;
+	uint32_t dwMode;
 	TIFF* tif;
     size_t nLen;
     size_t nWideLen;
@@ -84,12 +84,12 @@ TIFFOpen(const char* name, const char* mode)
      */
 
     nWideLen = 0;
-    wchName = NULL;
+    wchName = nullptr;
     nLen = strlen(name) + 1;
     
-    nWideLen = MultiByteToWideChar(CP_ACP, 0, name, nLen, NULL, 0);
+    nWideLen = MultiByteToWideChar(CP_ACP, 0, name, nLen, nullptr, 0);
     wchName = (wchar_t*)malloc(sizeof(wchar_t) * nWideLen);
-    if (NULL == wchName)
+    if (nullptr == wchName)
     {
         TIFFErrorExt(0, module, "Memory allocation error!");
 		return ((TIFF *)0);
@@ -99,9 +99,9 @@ TIFFOpen(const char* name, const char* mode)
 
 	fd = (thandle_t)CreateFile(wchName,
 		(m == O_RDONLY)?GENERIC_READ:(GENERIC_READ | GENERIC_WRITE),
-		FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, dwMode,
+		FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, dwMode,
 		(m == O_RDONLY)?FILE_ATTRIBUTE_READONLY:FILE_ATTRIBUTE_NORMAL,
-		NULL);
+		nullptr);
 
     free(wchName);
 
@@ -127,7 +127,7 @@ TIFFOpenW(const wchar_t* name, const char* mode)
 	static const char module[] = "TIFFOpenW";
 	thandle_t fd;
 	int m;
-	DWORD dwMode;
+	uint32_t dwMode;
 	int mbsize;
 	char *mbname;
 	TIFF *tif;
@@ -149,16 +149,16 @@ TIFFOpenW(const wchar_t* name, const char* mode)
 
 	fd = (thandle_t)CreateFile(name,
 		(m == O_RDONLY)?GENERIC_READ:(GENERIC_READ|GENERIC_WRITE),
-		FILE_SHARE_READ, NULL, dwMode,
+		FILE_SHARE_READ, nullptr, dwMode,
 		(m == O_RDONLY)?FILE_ATTRIBUTE_READONLY:FILE_ATTRIBUTE_NORMAL,
-		NULL);
+		nullptr);
 	if (fd == INVALID_HANDLE_VALUE) {
 		TIFFErrorExt(0, module, "%S: Cannot open", name);
 		return ((TIFF *)0);
 	}
 
-	mbname = NULL;
-	mbsize = WideCharToMultiByte(CP_ACP, 0, name, -1, NULL, 0, NULL, NULL);
+	mbname = nullptr;
+	mbsize = WideCharToMultiByte(CP_ACP, 0, name, -1, nullptr, 0, nullptr, nullptr);
 	if (mbsize > 0) {
 		mbname = (char *)_TIFFmalloc(mbsize);
 		if (!mbname) {
@@ -168,11 +168,11 @@ TIFFOpenW(const wchar_t* name, const char* mode)
 		}
 
 		WideCharToMultiByte(CP_ACP, 0, name, -1, mbname, mbsize,
-				    NULL, NULL);
+				    nullptr, nullptr);
 	}
 
 	tif = TIFFFdOpen((int)fd,
-			 (mbname != NULL) ? mbname : "<unknown>", mode);
+			 (mbname != nullptr) ? mbname : "<unknown>", mode);
 	if(!tif)
 		CloseHandle(fd);
 
@@ -187,8 +187,8 @@ Win32WarningHandler(const char* module, const char* fmt, va_list ap)
     /* On Windows CE, MessageBox is mapped to wide-char based MessageBoxW. */
 
     size_t nWideLen = 0;
-    LPTSTR szWideTitle = NULL;
-    LPTSTR szWideMsg = NULL;
+    LPTSTR szWideTitle = nullptr;
+    LPTSTR szWideMsg = nullptr;
 
 	LPSTR szTitle;
 	LPSTR szTmp;
@@ -196,10 +196,10 @@ Win32WarningHandler(const char* module, const char* fmt, va_list ap)
 	LPCSTR szDefaultModule = "LIBTIFF";
 	LPCSTR szTmpModule;
 
-	szTmpModule = (module == NULL) ? szDefaultModule : module;
+	szTmpModule = (module == nullptr) ? szDefaultModule : module;
 	if ((szTitle = (LPSTR)LocalAlloc(LMEM_FIXED,
         (strlen(szTmpModule) + strlen(szTitleText)
-        + strlen(fmt) + 128) * sizeof(char))) == NULL)
+        + strlen(fmt) + 128) * sizeof(char))) == nullptr)
 		return;
 
 	sprintf(szTitle, szTitleText, szTmpModule);
@@ -208,11 +208,11 @@ Win32WarningHandler(const char* module, const char* fmt, va_list ap)
 
     /* Convert error message to Unicode. */
 
-    nWideLen = MultiByteToWideChar(CP_ACP, 0, szTitle, -1, NULL, 0);
+    nWideLen = MultiByteToWideChar(CP_ACP, 0, szTitle, -1, nullptr, 0);
     szWideTitle = (wchar_t*)malloc(sizeof(wchar_t) * nWideLen);
     MultiByteToWideChar(CP_ACP, 0, szTitle, -1, szWideTitle, nWideLen);
 
-    nWideLen = MultiByteToWideChar(CP_ACP, 0, szTmp, -1, NULL, 0);
+    nWideLen = MultiByteToWideChar(CP_ACP, 0, szTmp, -1, nullptr, 0);
     szWideMsg = (wchar_t*)malloc(sizeof(wchar_t) * nWideLen);
     MultiByteToWideChar(CP_ACP, 0, szTmp, -1, szWideMsg, nWideLen);
 
@@ -235,8 +235,8 @@ Win32ErrorHandler(const char* module, const char* fmt, va_list ap)
     /* On Windows CE, MessageBox is mapped to wide-char based MessageBoxW. */
 
     size_t nWideLen = 0;
-    LPTSTR szWideTitle = NULL;
-    LPTSTR szWideMsg = NULL;
+    LPTSTR szWideTitle = nullptr;
+    LPTSTR szWideMsg = nullptr;
 
     LPSTR szTitle;
 	LPSTR szTmp;
@@ -244,10 +244,10 @@ Win32ErrorHandler(const char* module, const char* fmt, va_list ap)
 	LPCSTR szDefaultModule = "LIBTIFF";
 	LPCSTR szTmpModule;
 
-	szTmpModule = (module == NULL) ? szDefaultModule : module;
+	szTmpModule = (module == nullptr) ? szDefaultModule : module;
 	if ((szTitle = (LPSTR)LocalAlloc(LMEM_FIXED,
         (strlen(szTmpModule) + strlen(szTitleText)
-        + strlen(fmt) + 128) * sizeof(char))) == NULL)
+        + strlen(fmt) + 128) * sizeof(char))) == nullptr)
 		return;
 
 	sprintf(szTitle, szTitleText, szTmpModule);
@@ -256,11 +256,11 @@ Win32ErrorHandler(const char* module, const char* fmt, va_list ap)
 
     /* Convert error message to Unicode. */
 
-    nWideLen = MultiByteToWideChar(CP_ACP, 0, szTitle, -1, NULL, 0);
+    nWideLen = MultiByteToWideChar(CP_ACP, 0, szTitle, -1, nullptr, 0);
     szWideTitle = (wchar_t*)malloc(sizeof(wchar_t) * nWideLen);
     MultiByteToWideChar(CP_ACP, 0, szTitle, -1, szWideTitle, nWideLen);
 
-    nWideLen = MultiByteToWideChar(CP_ACP, 0, szTmp, -1, NULL, 0);
+    nWideLen = MultiByteToWideChar(CP_ACP, 0, szTmp, -1, nullptr, 0);
     szWideMsg = (wchar_t*)malloc(sizeof(wchar_t) * nWideLen);
     MultiByteToWideChar(CP_ACP, 0, szTmp, -1, szWideMsg, nWideLen);
 

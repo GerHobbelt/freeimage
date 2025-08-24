@@ -33,7 +33,7 @@ opj_image_t* opj_image_create0(void) {
 
 opj_image_t* OPJ_CALLCONV opj_image_create(OPJ_UINT32 numcmpts, opj_image_cmptparm_t *cmptparms, OPJ_COLOR_SPACE clrspc) {
 	OPJ_UINT32 compno;
-	opj_image_t *image = NULL;
+	opj_image_t *image = nullptr;
 
 	image = (opj_image_t*) opj_calloc(1, sizeof(opj_image_t));
 	if(image) {
@@ -44,7 +44,7 @@ opj_image_t* OPJ_CALLCONV opj_image_create(OPJ_UINT32 numcmpts, opj_image_cmptpa
 		if(!image->comps) {
 			fprintf(stderr,"Unable to allocate memory for image.\n");
 			opj_image_destroy(image);
-			return NULL;
+			return nullptr;
 		}
 		/* create the individual image components */
 		for(compno = 0; compno < numcmpts; compno++) {
@@ -62,7 +62,7 @@ opj_image_t* OPJ_CALLCONV opj_image_create(OPJ_UINT32 numcmpts, opj_image_cmptpa
 			if(!comp->data) {
 				fprintf(stderr,"Unable to allocate memory for image.\n");
 				opj_image_destroy(image);
-				return NULL;
+				return nullptr;
 			}
 		}
 	}
@@ -104,7 +104,7 @@ void opj_image_comp_header_update(opj_image_t * p_image_header, const struct opj
 	OPJ_UINT32 i, l_width, l_height;
 	OPJ_INT32 l_x0, l_y0, l_x1, l_y1;
 	OPJ_INT32 l_comp_x0, l_comp_y0, l_comp_x1, l_comp_y1;
-	opj_image_comp_t* l_img_comp = NULL;
+	opj_image_comp_t* l_img_comp = nullptr;
 
 	l_x0 = opj_int_max((OPJ_INT32)p_cp->tx0 , (OPJ_INT32)p_image_header->x0);
 	l_y0 = opj_int_max((OPJ_INT32)p_cp->ty0 , (OPJ_INT32)p_image_header->y0);
@@ -157,14 +157,14 @@ void opj_copy_image_header(const opj_image_t* p_image_src, opj_image_t* p_image_
 			}
 		}
 		opj_free(p_image_dest->comps);
-		p_image_dest->comps = NULL;
+		p_image_dest->comps = nullptr;
 	}
 
 	p_image_dest->numcomps = p_image_src->numcomps;
 
 	p_image_dest->comps = (opj_image_comp_t*) opj_malloc(p_image_dest->numcomps * sizeof(opj_image_comp_t));
 	if (!p_image_dest->comps){
-		p_image_dest->comps = NULL;
+		p_image_dest->comps = nullptr;
 		p_image_dest->numcomps = 0;
 		return;
 	}
@@ -173,7 +173,7 @@ void opj_copy_image_header(const opj_image_t* p_image_src, opj_image_t* p_image_
 		memcpy( &(p_image_dest->comps[compno]),
 				&(p_image_src->comps[compno]),
 				sizeof(opj_image_comp_t));
-		p_image_dest->comps[compno].data = NULL;
+		p_image_dest->comps[compno].data = nullptr;
 	}
 
 	p_image_dest->color_space = p_image_src->color_space;
@@ -182,7 +182,7 @@ void opj_copy_image_header(const opj_image_t* p_image_src, opj_image_t* p_image_
 	if (p_image_dest->icc_profile_len) {
 		p_image_dest->icc_profile_buf = (OPJ_BYTE*)opj_malloc(p_image_dest->icc_profile_len);
 		if (!p_image_dest->icc_profile_buf){
-			p_image_dest->icc_profile_buf = NULL;
+			p_image_dest->icc_profile_buf = nullptr;
 			p_image_dest->icc_profile_len = 0;
 			return;
 		}
@@ -191,7 +191,7 @@ void opj_copy_image_header(const opj_image_t* p_image_src, opj_image_t* p_image_
 				p_image_src->icc_profile_len);
 		}
 		else
-			p_image_dest->icc_profile_buf = NULL;
+			p_image_dest->icc_profile_buf = nullptr;
 
 	return;
 }
