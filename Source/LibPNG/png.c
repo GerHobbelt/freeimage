@@ -28,7 +28,7 @@ png_set_sig_bytes(png_structp png_ptr, int num_bytes)
 {
    png_debug(1, "in png_set_sig_bytes");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    if (num_bytes > 8)
@@ -77,13 +77,13 @@ png_zalloc,(voidpf png_ptr, uInt items, uInt size),PNG_ALLOCATED)
    png_uint_32 save_flags=p->flags;
    png_alloc_size_t num_bytes;
 
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 
    if (items > PNG_UINT_32_MAX/size)
    {
      png_warning (p, "Potential overflow in png_zalloc()");
-     return (NULL);
+     return (nullptr);
    }
    num_bytes = (png_alloc_size_t)items * size;
 
@@ -192,7 +192,7 @@ png_user_version_check(png_structp png_ptr, png_const_charp user_png_ver)
       * For versions after libpng 1.0, we will be compatible, so we need
       * only check the first digit.
       */
-      if (user_png_ver == NULL || user_png_ver[0] != png_libpng_ver[0] ||
+      if (user_png_ver == nullptr || user_png_ver[0] != png_libpng_ver[0] ||
           (user_png_ver[0] == '1' && user_png_ver[2] != png_libpng_ver[2]) ||
           (user_png_ver[0] == '0' && user_png_ver[2] < '9'))
       {
@@ -233,8 +233,8 @@ png_create_info_struct,(png_structp png_ptr),PNG_ALLOCATED)
 
    png_debug(1, "in png_create_info_struct");
 
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 
 #ifdef PNG_USER_MEM_SUPPORTED
    info_ptr = (png_infop)png_create_struct_2(PNG_STRUCT_INFO,
@@ -242,7 +242,7 @@ png_create_info_struct,(png_structp png_ptr),PNG_ALLOCATED)
 #else
    info_ptr = (png_infop)png_create_struct(PNG_STRUCT_INFO);
 #endif
-   if (info_ptr != NULL)
+   if (info_ptr != nullptr)
       png_info_init_3(&info_ptr, png_sizeof(png_info));
 
    return (info_ptr);
@@ -256,17 +256,17 @@ png_create_info_struct,(png_structp png_ptr),PNG_ALLOCATED)
 void PNGAPI
 png_destroy_info_struct(png_structp png_ptr, png_infopp info_ptr_ptr)
 {
-   png_infop info_ptr = NULL;
+   png_infop info_ptr = nullptr;
 
    png_debug(1, "in png_destroy_info_struct");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
-   if (info_ptr_ptr != NULL)
+   if (info_ptr_ptr != nullptr)
       info_ptr = *info_ptr_ptr;
 
-   if (info_ptr != NULL)
+   if (info_ptr != nullptr)
    {
       png_info_destroy(png_ptr, info_ptr);
 
@@ -276,7 +276,7 @@ png_destroy_info_struct(png_structp png_ptr, png_infopp info_ptr_ptr)
 #else
       png_destroy_struct((png_voidp)info_ptr);
 #endif
-      *info_ptr_ptr = NULL;
+      *info_ptr_ptr = nullptr;
    }
 }
 
@@ -292,7 +292,7 @@ png_info_init_3(png_infopp ptr_ptr, png_size_t png_info_struct_size)
 
    png_debug(1, "in png_info_init_3");
 
-   if (info_ptr == NULL)
+   if (info_ptr == nullptr)
       return;
 
    if (png_sizeof(png_info) > png_info_struct_size)
@@ -312,7 +312,7 @@ png_data_freer(png_structp png_ptr, png_infop info_ptr,
 {
    png_debug(1, "in png_data_freer");
 
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
    if (freer == PNG_DESTROY_WILL_FREE_DATA)
@@ -332,7 +332,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
 {
    png_debug(1, "in png_free_data");
 
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
 #ifdef PNG_TEXT_SUPPORTED
@@ -344,7 +344,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
          if (info_ptr->text && info_ptr->text[num].key)
          {
             png_free(png_ptr, info_ptr->text[num].key);
-            info_ptr->text[num].key = NULL;
+            info_ptr->text[num].key = nullptr;
          }
       }
 
@@ -354,7 +354,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
          for (i = 0; i < info_ptr->num_text; i++)
              png_free_data(png_ptr, info_ptr, PNG_FREE_TEXT, i);
          png_free(png_ptr, info_ptr->text);
-         info_ptr->text = NULL;
+         info_ptr->text = nullptr;
          info_ptr->num_text=0;
       }
    }
@@ -365,7 +365,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    if ((mask & PNG_FREE_TRNS) & info_ptr->free_me)
    {
       png_free(png_ptr, info_ptr->trans_alpha);
-      info_ptr->trans_alpha = NULL;
+      info_ptr->trans_alpha = nullptr;
       info_ptr->valid &= ~PNG_INFO_tRNS;
    }
 #endif
@@ -376,8 +376,8 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    {
       png_free(png_ptr, info_ptr->scal_s_width);
       png_free(png_ptr, info_ptr->scal_s_height);
-      info_ptr->scal_s_width = NULL;
-      info_ptr->scal_s_height = NULL;
+      info_ptr->scal_s_width = nullptr;
+      info_ptr->scal_s_height = nullptr;
       info_ptr->valid &= ~PNG_INFO_sCAL;
    }
 #endif
@@ -388,18 +388,18 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    {
       png_free(png_ptr, info_ptr->pcal_purpose);
       png_free(png_ptr, info_ptr->pcal_units);
-      info_ptr->pcal_purpose = NULL;
-      info_ptr->pcal_units = NULL;
-      if (info_ptr->pcal_params != NULL)
+      info_ptr->pcal_purpose = nullptr;
+      info_ptr->pcal_units = nullptr;
+      if (info_ptr->pcal_params != nullptr)
          {
             int i;
             for (i = 0; i < (int)info_ptr->pcal_nparams; i++)
             {
                png_free(png_ptr, info_ptr->pcal_params[i]);
-               info_ptr->pcal_params[i] = NULL;
+               info_ptr->pcal_params[i] = nullptr;
             }
             png_free(png_ptr, info_ptr->pcal_params);
-            info_ptr->pcal_params = NULL;
+            info_ptr->pcal_params = nullptr;
          }
       info_ptr->valid &= ~PNG_INFO_pCAL;
    }
@@ -411,8 +411,8 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    {
       png_free(png_ptr, info_ptr->iccp_name);
       png_free(png_ptr, info_ptr->iccp_profile);
-      info_ptr->iccp_name = NULL;
-      info_ptr->iccp_profile = NULL;
+      info_ptr->iccp_name = nullptr;
+      info_ptr->iccp_profile = nullptr;
       info_ptr->valid &= ~PNG_INFO_iCCP;
    }
 #endif
@@ -427,8 +427,8 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
          {
             png_free(png_ptr, info_ptr->splt_palettes[num].name);
             png_free(png_ptr, info_ptr->splt_palettes[num].entries);
-            info_ptr->splt_palettes[num].name = NULL;
-            info_ptr->splt_palettes[num].entries = NULL;
+            info_ptr->splt_palettes[num].name = nullptr;
+            info_ptr->splt_palettes[num].entries = nullptr;
          }
       }
 
@@ -441,7 +441,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
                png_free_data(png_ptr, info_ptr, PNG_FREE_SPLT, i);
 
             png_free(png_ptr, info_ptr->splt_palettes);
-            info_ptr->splt_palettes = NULL;
+            info_ptr->splt_palettes = nullptr;
             info_ptr->splt_palettes_num = 0;
          }
          info_ptr->valid &= ~PNG_INFO_sPLT;
@@ -453,7 +453,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    if (png_ptr->unknown_chunk.data)
    {
       png_free(png_ptr, png_ptr->unknown_chunk.data);
-      png_ptr->unknown_chunk.data = NULL;
+      png_ptr->unknown_chunk.data = nullptr;
    }
 
    if ((mask & PNG_FREE_UNKN) & info_ptr->free_me)
@@ -463,7 +463,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
           if (info_ptr->unknown_chunks)
           {
              png_free(png_ptr, info_ptr->unknown_chunks[num].data);
-             info_ptr->unknown_chunks[num].data = NULL;
+             info_ptr->unknown_chunks[num].data = nullptr;
           }
       }
 
@@ -477,7 +477,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
                png_free_data(png_ptr, info_ptr, PNG_FREE_UNKN, i);
 
             png_free(png_ptr, info_ptr->unknown_chunks);
-            info_ptr->unknown_chunks = NULL;
+            info_ptr->unknown_chunks = nullptr;
             info_ptr->unknown_chunks_num = 0;
          }
       }
@@ -489,7 +489,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    if ((mask & PNG_FREE_HIST)  & info_ptr->free_me)
    {
       png_free(png_ptr, info_ptr->hist);
-      info_ptr->hist = NULL;
+      info_ptr->hist = nullptr;
       info_ptr->valid &= ~PNG_INFO_hIST;
    }
 #endif
@@ -498,7 +498,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
    if ((mask & PNG_FREE_PLTE) & info_ptr->free_me)
    {
       png_zfree(png_ptr, info_ptr->palette);
-      info_ptr->palette = NULL;
+      info_ptr->palette = nullptr;
       info_ptr->valid &= ~PNG_INFO_PLTE;
       info_ptr->num_palette = 0;
    }
@@ -513,10 +513,10 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
          for (row = 0; row < (int)info_ptr->height; row++)
          {
             png_free(png_ptr, info_ptr->row_pointers[row]);
-            info_ptr->row_pointers[row] = NULL;
+            info_ptr->row_pointers[row] = nullptr;
          }
          png_free(png_ptr, info_ptr->row_pointers);
-         info_ptr->row_pointers = NULL;
+         info_ptr->row_pointers = nullptr;
       }
       info_ptr->valid &= ~PNG_INFO_IDAT;
    }
@@ -530,7 +530,7 @@ png_free_data(png_structp png_ptr, png_infop info_ptr, png_uint_32 mask,
 
 /* This is an internal routine to free any memory that the info struct is
  * pointing to before re-using it or freeing the struct itself.  Recall
- * that png_free() checks for NULL pointers for us.
+ * that png_free() checks for nullptr pointers for us.
  */
 void /* PRIVATE */
 png_info_destroy(png_structp png_ptr, png_infop info_ptr)
@@ -543,7 +543,7 @@ png_info_destroy(png_structp png_ptr, png_infop info_ptr)
    if (png_ptr->num_chunk_list)
    {
       png_free(png_ptr, png_ptr->chunk_list);
-      png_ptr->chunk_list = NULL;
+      png_ptr->chunk_list = nullptr;
       png_ptr->num_chunk_list = 0;
    }
 #endif
@@ -559,8 +559,8 @@ png_info_destroy(png_structp png_ptr, png_infop info_ptr)
 png_voidp PNGAPI
 png_get_io_ptr(png_structp png_ptr)
 {
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 
    return (png_ptr->io_ptr);
 }
@@ -578,7 +578,7 @@ png_init_io(png_structp png_ptr, png_FILE_p fp)
 {
    png_debug(1, "in png_init_io");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->io_ptr = (png_voidp)fp;
@@ -596,8 +596,8 @@ png_convert_to_rfc1123(png_structp png_ptr, png_const_timep ptime)
         {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 
    if (ptime->year > 9999 /* RFC1123 limitation */ ||
        ptime->month == 0    ||  ptime->month > 12  ||
@@ -606,7 +606,7 @@ png_convert_to_rfc1123(png_structp png_ptr, png_const_timep ptime)
        ptime->second > 60)
    {
       png_warning(png_ptr, "Ignoring invalid time value");
-      return (NULL);
+      return (nullptr);
    }
 
    {
@@ -715,7 +715,7 @@ png_handle_as_unknown(png_structp png_ptr, png_const_bytep chunk_name)
    /* Check chunk_name and return "keep" value if it's on the list, else 0 */
    png_const_bytep p, p_end;
 
-   if (png_ptr == NULL || chunk_name == NULL || png_ptr->num_chunk_list <= 0)
+   if (png_ptr == nullptr || chunk_name == nullptr || png_ptr->num_chunk_list <= 0)
       return PNG_HANDLE_CHUNK_AS_DEFAULT;
 
    p_end = png_ptr->chunk_list;
@@ -751,7 +751,7 @@ png_chunk_unknown_handling(png_structp png_ptr, png_uint_32 chunk_name)
 int PNGAPI
 png_reset_zstream(png_structp png_ptr)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return Z_STREAM_ERROR;
 
    return (inflateReset(&png_ptr->zstream));
@@ -787,7 +787,7 @@ png_check_cHRM_fixed(png_structp png_ptr,
 
    png_debug(1, "in function png_check_cHRM_fixed");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return 0;
 
    /* (x,y,z) values are first limited to 0..100000 (PNG_FP_1), the white
@@ -2687,9 +2687,9 @@ void /* PRIVATE */
 png_destroy_gamma_table(png_structp png_ptr)
 {
    png_free(png_ptr, png_ptr->gamma_table);
-   png_ptr->gamma_table = NULL;
+   png_ptr->gamma_table = nullptr;
 
-   if (png_ptr->gamma_16_table != NULL)
+   if (png_ptr->gamma_16_table != nullptr)
    {
       int i;
       int istop = (1 << (8 - png_ptr->gamma_shift));
@@ -2698,18 +2698,18 @@ png_destroy_gamma_table(png_structp png_ptr)
          png_free(png_ptr, png_ptr->gamma_16_table[i]);
       }
    png_free(png_ptr, png_ptr->gamma_16_table);
-   png_ptr->gamma_16_table = NULL;
+   png_ptr->gamma_16_table = nullptr;
    }
 
 #if defined(PNG_READ_BACKGROUND_SUPPORTED) || \
    defined(PNG_READ_ALPHA_MODE_SUPPORTED) || \
    defined(PNG_READ_RGB_TO_GRAY_SUPPORTED)
    png_free(png_ptr, png_ptr->gamma_from_1);
-   png_ptr->gamma_from_1 = NULL;
+   png_ptr->gamma_from_1 = nullptr;
    png_free(png_ptr, png_ptr->gamma_to_1);
-   png_ptr->gamma_to_1 = NULL;
+   png_ptr->gamma_to_1 = nullptr;
 
-   if (png_ptr->gamma_16_from_1 != NULL)
+   if (png_ptr->gamma_16_from_1 != nullptr)
    {
       int i;
       int istop = (1 << (8 - png_ptr->gamma_shift));
@@ -2718,9 +2718,9 @@ png_destroy_gamma_table(png_structp png_ptr)
          png_free(png_ptr, png_ptr->gamma_16_from_1[i]);
       }
    png_free(png_ptr, png_ptr->gamma_16_from_1);
-   png_ptr->gamma_16_from_1 = NULL;
+   png_ptr->gamma_16_from_1 = nullptr;
    }
-   if (png_ptr->gamma_16_to_1 != NULL)
+   if (png_ptr->gamma_16_to_1 != nullptr)
    {
       int i;
       int istop = (1 << (8 - png_ptr->gamma_shift));
@@ -2729,7 +2729,7 @@ png_destroy_gamma_table(png_structp png_ptr)
          png_free(png_ptr, png_ptr->gamma_16_to_1[i]);
       }
    png_free(png_ptr, png_ptr->gamma_16_to_1);
-   png_ptr->gamma_16_to_1 = NULL;
+   png_ptr->gamma_16_to_1 = nullptr;
    }
 #endif /* READ_BACKGROUND || READ_ALPHA_MODE || RGB_TO_GRAY */
 }
@@ -2750,7 +2750,7 @@ png_build_gamma_table(png_structp png_ptr, int bit_depth)
    * png_read_update_info() multiple times is new in 1.5.6 so it seems sensible
    * to warn if the app introduces such a hit.
    */
-  if (png_ptr->gamma_table != NULL || png_ptr->gamma_16_table != NULL)
+  if (png_ptr->gamma_table != nullptr || png_ptr->gamma_16_table != nullptr)
   {
     png_warning(png_ptr, "gamma table being rebuilt");
     png_destroy_gamma_table(png_ptr);

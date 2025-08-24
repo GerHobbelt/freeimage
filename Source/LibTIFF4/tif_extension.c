@@ -41,13 +41,13 @@ int TIFFGetTagListCount( TIFF *tif )
     return td->td_customValueCount;
 }
 
-uint32 TIFFGetTagListEntry( TIFF *tif, int tag_index )
+uint32_t TIFFGetTagListEntry( TIFF *tif, int tag_index )
 
 {
     TIFFDirectory* td = &tif->tif_dir;
 
     if( tag_index < 0 || tag_index >= td->td_customValueCount )
-        return (uint32)(-1);
+        return (uint32_t)(-1);
     else
         return td->td_customValues[tag_index].info->field_tag;
 }
@@ -68,13 +68,13 @@ void *TIFFGetClientInfo( TIFF *tif, const char *name )
 {
     TIFFClientInfoLink *link = tif->tif_clientinfo;
 
-    while( link != NULL && strcmp(link->name,name) != 0 )
+    while( link != nullptr && strcmp(link->name,name) != 0 )
         link = link->next;
 
-    if( link != NULL )
+    if( link != nullptr )
         return link->data;
     else
-        return NULL;
+        return nullptr;
 }
 
 void TIFFSetClientInfo( TIFF *tif, void *data, const char *name )
@@ -86,10 +86,10 @@ void TIFFSetClientInfo( TIFF *tif, void *data, const char *name )
     ** Do we have an existing link with this name?  If so, just
     ** set it.
     */
-    while( link != NULL && strcmp(link->name,name) != 0 )
+    while( link != nullptr && strcmp(link->name,name) != 0 )
         link = link->next;
 
-    if( link != NULL )
+    if( link != nullptr )
     {
         link->data = data;
         return;
@@ -100,10 +100,10 @@ void TIFFSetClientInfo( TIFF *tif, void *data, const char *name )
     */
 
     link = (TIFFClientInfoLink *) _TIFFmalloc(sizeof(TIFFClientInfoLink));
-    assert (link != NULL);
+    assert (link != nullptr);
     link->next = tif->tif_clientinfo;
     link->name = (char *) _TIFFmalloc((tmsize_t)(strlen(name)+1));
-    assert (link->name != NULL);
+    assert (link->name != nullptr);
     strcpy(link->name, name);
     link->data = data;
 

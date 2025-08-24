@@ -1313,7 +1313,7 @@ static void t1_decode_cblk(
 		/* BYPASS mode */
 		type = ((bpno <= (cblk->numbps - 1) - 4) && (passtype < 2) && (cblksty & J2K_CCP_CBLKSTY_LAZY)) ? T1_TYPE_RAW : T1_TYPE_MQ;
 		/* FIXME: slviewer gets here with a null pointer. Why? Partially downloaded and/or corrupt textures? */
-		if(seg->data == NULL){
+		if(seg->data == nullptr){
 			continue;
 		}
 		if (type == T1_TYPE_RAW) {
@@ -1370,15 +1370,15 @@ static void t1_decode_cblk(
 opj_t1_t* t1_create(opj_common_ptr cinfo) {
 	opj_t1_t *t1 = (opj_t1_t*) opj_malloc(sizeof(opj_t1_t));
 	if(!t1)
-		return NULL;
+		return nullptr;
 
 	t1->cinfo = cinfo;
 	/* create MQC and RAW handles */
 	t1->mqc = mqc_create();
 	t1->raw = raw_create();
 
-	t1->data=NULL;
-	t1->flags=NULL;
+	t1->data=nullptr;
+	t1->flags=nullptr;
 	t1->datasize=0;
 	t1->flagssize=0;
 
@@ -1577,7 +1577,7 @@ void t1_decode_cblks(
 					opj_free(cblk->segs);
 				} /* cblkno */
 				opj_free(precinct->cblks.dec);
-                precinct->cblks.dec = NULL;
+                precinct->cblks.dec = nullptr;
 			} /* precno */
 		} /* bandno */
 	} /* resno */

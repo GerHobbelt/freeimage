@@ -24,7 +24,7 @@ FreeImage_LoadFromMem(FREE_IMAGE_FORMAT fif, fiio_mem_handle *handle, int flags)
 		return FreeImage_LoadFromHandle(fif, &io, (fi_handle)handle, flags);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 BOOL

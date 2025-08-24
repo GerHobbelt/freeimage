@@ -26,7 +26,7 @@ png_create_read_struct,(png_const_charp user_png_ver, png_voidp error_ptr,
 
 #ifdef PNG_USER_MEM_SUPPORTED
    return (png_create_read_struct_2(user_png_ver, error_ptr, error_fn,
-       warn_fn, NULL, NULL, NULL));
+       warn_fn, nullptr, nullptr, nullptr));
 }
 
 /* Alternate create PNG structure for reading, and allocate any memory
@@ -59,8 +59,8 @@ png_create_read_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
 #else
    png_ptr = (png_structp)png_create_struct(PNG_STRUCT_PNG);
 #endif
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 
    /* Added at libpng-1.2.6 */
 #ifdef PNG_USER_LIMITS_SUPPORTED
@@ -106,7 +106,7 @@ png_create_read_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
    png_ptr->zbuf_size = PNG_ZBUF_SIZE;
    png_ptr->zbuf = (png_bytep)png_malloc_warn(png_ptr, png_ptr->zbuf_size);
 
-   if (png_ptr->zbuf == NULL)
+   if (png_ptr->zbuf == nullptr)
       png_cleanup_needed = 1;
    }
 
@@ -145,20 +145,20 @@ png_create_read_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
    {
       /* Clean up PNG structure and deallocate any memory. */
       png_free(png_ptr, png_ptr->zbuf);
-      png_ptr->zbuf = NULL;
+      png_ptr->zbuf = nullptr;
 #ifdef PNG_USER_MEM_SUPPORTED
       png_destroy_struct_2((png_voidp)png_ptr,
           (png_free_ptr)free_fn, (png_voidp)mem_ptr);
 #else
       png_destroy_struct((png_voidp)png_ptr);
 #endif
-      return (NULL);
+      return (nullptr);
    }
 
    png_ptr->zstream.next_out = png_ptr->zbuf;
    png_ptr->zstream.avail_out = (uInt)png_ptr->zbuf_size;
 
-   png_set_read_fn(png_ptr, NULL, NULL);
+   png_set_read_fn(png_ptr, nullptr, nullptr);
 
 
    return (png_ptr);
@@ -179,7 +179,7 @@ png_read_info(png_structp png_ptr, png_infop info_ptr)
 {
    png_debug(1, "in png_read_info");
 
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
    /* Read and check the PNG file signature. */
@@ -342,7 +342,7 @@ png_read_update_info(png_structp png_ptr, png_infop info_ptr)
 {
    png_debug(1, "in png_read_update_info");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_read_start_row(png_ptr);
@@ -365,7 +365,7 @@ png_start_read_image(png_structp png_ptr)
 {
    png_debug(1, "in png_start_read_image");
 
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
      png_read_start_row(png_ptr);
 }
 #endif /* PNG_SEQUENTIAL_READ_SUPPORTED */
@@ -378,7 +378,7 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
 
    png_row_info row_info;
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_debug2(1, "in png_read_row (row %lu, pass %d)",
@@ -452,7 +452,7 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
          case 0:
             if (png_ptr->row_number & 0x07)
             {
-               if (dsp_row != NULL)
+               if (dsp_row != nullptr)
                   png_combine_row(png_ptr, dsp_row, 1/*display*/);
                png_read_finish_row(png_ptr);
                return;
@@ -462,7 +462,7 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
          case 1:
             if ((png_ptr->row_number & 0x07) || png_ptr->width < 5)
             {
-               if (dsp_row != NULL)
+               if (dsp_row != nullptr)
                   png_combine_row(png_ptr, dsp_row, 1/*display*/);
 
                png_read_finish_row(png_ptr);
@@ -473,7 +473,7 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
          case 2:
             if ((png_ptr->row_number & 0x07) != 4)
             {
-               if (dsp_row != NULL && (png_ptr->row_number & 4))
+               if (dsp_row != nullptr && (png_ptr->row_number & 4))
                   png_combine_row(png_ptr, dsp_row, 1/*display*/);
 
                png_read_finish_row(png_ptr);
@@ -484,7 +484,7 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
          case 3:
             if ((png_ptr->row_number & 3) || png_ptr->width < 3)
             {
-               if (dsp_row != NULL)
+               if (dsp_row != nullptr)
                   png_combine_row(png_ptr, dsp_row, 1/*display*/);
 
                png_read_finish_row(png_ptr);
@@ -495,7 +495,7 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
          case 4:
             if ((png_ptr->row_number & 3) != 2)
             {
-               if (dsp_row != NULL && (png_ptr->row_number & 2))
+               if (dsp_row != nullptr && (png_ptr->row_number & 2))
                   png_combine_row(png_ptr, dsp_row, 1/*display*/);
 
                png_read_finish_row(png_ptr);
@@ -505,7 +505,7 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
          case 5:
             if ((png_ptr->row_number & 1) || png_ptr->width < 2)
             {
-               if (dsp_row != NULL)
+               if (dsp_row != nullptr)
                   png_combine_row(png_ptr, dsp_row, 1/*display*/);
 
                png_read_finish_row(png_ptr);
@@ -623,25 +623,25 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
          png_do_read_interlace(&row_info, png_ptr->row_buf + 1, png_ptr->pass,
             png_ptr->transformations);
 
-      if (dsp_row != NULL)
+      if (dsp_row != nullptr)
          png_combine_row(png_ptr, dsp_row, 1/*display*/);
 
-      if (row != NULL)
+      if (row != nullptr)
          png_combine_row(png_ptr, row, 0/*row*/);
    }
 
    else
 #endif
    {
-      if (row != NULL)
+      if (row != nullptr)
          png_combine_row(png_ptr, row, -1/*ignored*/);
 
-      if (dsp_row != NULL)
+      if (dsp_row != nullptr)
          png_combine_row(png_ptr, dsp_row, -1/*ignored*/);
    }
    png_read_finish_row(png_ptr);
 
-   if (png_ptr->read_row_fn != NULL)
+   if (png_ptr->read_row_fn != nullptr)
       (*(png_ptr->read_row_fn))(png_ptr, png_ptr->row_number, png_ptr->pass);
 }
 #endif /* PNG_SEQUENTIAL_READ_SUPPORTED */
@@ -659,14 +659,14 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
  * appear to "sparkle" in.  "display_row" can be used to display a
  * "chunky" progressive image, with finer detail added as it becomes
  * available.  If you do not want this "chunky" display, you may pass
- * NULL for display_row.  If you do not want the sparkle display, and
- * you have not called png_handle_alpha(), you may pass NULL for rows.
+ * nullptr for display_row.  If you do not want the sparkle display, and
+ * you have not called png_handle_alpha(), you may pass nullptr for rows.
  * If you have called png_handle_alpha(), and the image has either an
  * alpha channel or a transparency chunk, you must provide a buffer for
  * rows.  In this case, you do not have to provide a display_row buffer
  * also, but you may.  If the image is not interlaced, or if you have
  * not called png_set_interlace_handling(), the display_row buffer will
- * be ignored, so pass NULL to it.
+ * be ignored, so pass nullptr to it.
  *
  * [*] png_handle_alpha() does not exist yet, as of this version of libpng
  */
@@ -681,12 +681,12 @@ png_read_rows(png_structp png_ptr, png_bytepp row,
 
    png_debug(1, "in png_read_rows");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    rp = row;
    dp = display_row;
-   if (rp != NULL && dp != NULL)
+   if (rp != nullptr && dp != nullptr)
       for (i = 0; i < num_rows; i++)
       {
          png_bytep rptr = *rp++;
@@ -695,19 +695,19 @@ png_read_rows(png_structp png_ptr, png_bytepp row,
          png_read_row(png_ptr, rptr, dptr);
       }
 
-   else if (rp != NULL)
+   else if (rp != nullptr)
       for (i = 0; i < num_rows; i++)
       {
          png_bytep rptr = *rp;
-         png_read_row(png_ptr, rptr, NULL);
+         png_read_row(png_ptr, rptr, nullptr);
          rp++;
       }
 
-   else if (dp != NULL)
+   else if (dp != nullptr)
       for (i = 0; i < num_rows; i++)
       {
          png_bytep dptr = *dp;
-         png_read_row(png_ptr, NULL, dptr);
+         png_read_row(png_ptr, nullptr, dptr);
          dp++;
       }
 }
@@ -735,7 +735,7 @@ png_read_image(png_structp png_ptr, png_bytepp image)
 
    png_debug(1, "in png_read_image");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
 #ifdef PNG_READ_INTERLACING_SUPPORTED
@@ -779,7 +779,7 @@ png_read_image(png_structp png_ptr, png_bytepp image)
       rp = image;
       for (i = 0; i < image_height; i++)
       {
-         png_read_row(png_ptr, *rp, NULL);
+         png_read_row(png_ptr, *rp, nullptr);
          rp++;
       }
    }
@@ -789,14 +789,14 @@ png_read_image(png_structp png_ptr, png_bytepp image)
 #ifdef PNG_SEQUENTIAL_READ_SUPPORTED
 /* Read the end of the PNG file.  Will not read past the end of the
  * file, will verify the end is accurate, and will read any comments
- * or time information at the end of the file, if info is not NULL.
+ * or time information at the end of the file, if info is not nullptr.
  */
 void PNGAPI
 png_read_end(png_structp png_ptr, png_infop info_ptr)
 {
    png_debug(1, "in png_read_end");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_crc_finish(png_ptr, 0); /* Finish off CRC from last IDAT chunk */
@@ -943,18 +943,18 @@ void PNGAPI
 png_destroy_read_struct(png_structpp png_ptr_ptr, png_infopp info_ptr_ptr,
     png_infopp end_info_ptr_ptr)
 {
-   png_structp png_ptr = NULL;
-   png_infop info_ptr = NULL, end_info_ptr = NULL;
+   png_structp png_ptr = nullptr;
+   png_infop info_ptr = nullptr, end_info_ptr = nullptr;
 #ifdef PNG_USER_MEM_SUPPORTED
-   png_free_ptr free_fn = NULL;
-   png_voidp mem_ptr = NULL;
+   png_free_ptr free_fn = nullptr;
+   png_voidp mem_ptr = nullptr;
 #endif
 
    png_debug(1, "in png_destroy_read_struct");
 
-   if (png_ptr_ptr != NULL)
+   if (png_ptr_ptr != nullptr)
       png_ptr = *png_ptr_ptr;
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
 #ifdef PNG_USER_MEM_SUPPORTED
@@ -962,15 +962,15 @@ png_destroy_read_struct(png_structpp png_ptr_ptr, png_infopp info_ptr_ptr,
    mem_ptr = png_ptr->mem_ptr;
 #endif
 
-   if (info_ptr_ptr != NULL)
+   if (info_ptr_ptr != nullptr)
       info_ptr = *info_ptr_ptr;
 
-   if (end_info_ptr_ptr != NULL)
+   if (end_info_ptr_ptr != nullptr)
       end_info_ptr = *end_info_ptr_ptr;
 
    png_read_destroy(png_ptr, info_ptr, end_info_ptr);
 
-   if (info_ptr != NULL)
+   if (info_ptr != nullptr)
    {
 #ifdef PNG_TEXT_SUPPORTED
       png_free_data(png_ptr, info_ptr, PNG_FREE_TEXT, -1);
@@ -982,10 +982,10 @@ png_destroy_read_struct(png_structpp png_ptr_ptr, png_infopp info_ptr_ptr,
 #else
       png_destroy_struct((png_voidp)info_ptr);
 #endif
-      *info_ptr_ptr = NULL;
+      *info_ptr_ptr = nullptr;
    }
 
-   if (end_info_ptr != NULL)
+   if (end_info_ptr != nullptr)
    {
 #ifdef PNG_READ_TEXT_SUPPORTED
       png_free_data(png_ptr, end_info_ptr, PNG_FREE_TEXT, -1);
@@ -996,10 +996,10 @@ png_destroy_read_struct(png_structpp png_ptr_ptr, png_infopp info_ptr_ptr,
 #else
       png_destroy_struct((png_voidp)end_info_ptr);
 #endif
-      *end_info_ptr_ptr = NULL;
+      *end_info_ptr_ptr = nullptr;
    }
 
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
 #ifdef PNG_USER_MEM_SUPPORTED
       png_destroy_struct_2((png_voidp)png_ptr, (png_free_ptr)free_fn,
@@ -1007,7 +1007,7 @@ png_destroy_read_struct(png_structpp png_ptr_ptr, png_infopp info_ptr_ptr,
 #else
       png_destroy_struct((png_voidp)png_ptr);
 #endif
-      *png_ptr_ptr = NULL;
+      *png_ptr_ptr = nullptr;
    }
 }
 
@@ -1030,10 +1030,10 @@ png_read_destroy(png_structp png_ptr, png_infop info_ptr,
 
    png_debug(1, "in png_read_destroy");
 
-   if (info_ptr != NULL)
+   if (info_ptr != nullptr)
       png_info_destroy(png_ptr, info_ptr);
 
-   if (end_info_ptr != NULL)
+   if (end_info_ptr != nullptr)
       png_info_destroy(png_ptr, end_info_ptr);
 
 #ifdef PNG_READ_GAMMA_SUPPORTED
@@ -1109,7 +1109,7 @@ png_read_destroy(png_structp png_ptr, png_infop info_ptr,
 void PNGAPI
 png_set_read_status_fn(png_structp png_ptr, png_read_status_ptr read_row_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->read_row_fn = read_row_fn;
@@ -1125,7 +1125,7 @@ png_read_png(png_structp png_ptr, png_infop info_ptr,
 {
    int row;
 
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
    /* png_read_info() gives us all of the information from the
@@ -1274,14 +1274,14 @@ png_read_png(png_structp png_ptr, png_infop info_ptr,
    /* -------------- image transformations end here ------------------- */
 
    png_free_data(png_ptr, info_ptr, PNG_FREE_ROWS, 0);
-   if (info_ptr->row_pointers == NULL)
+   if (info_ptr->row_pointers == nullptr)
    {
       png_uint_32 iptr;
 
       info_ptr->row_pointers = (png_bytepp)png_malloc(png_ptr,
           info_ptr->height * png_sizeof(png_bytep));
       for (iptr=0; iptr<info_ptr->height; iptr++)
-         info_ptr->row_pointers[iptr] = NULL;
+         info_ptr->row_pointers[iptr] = nullptr;
 
       info_ptr->free_me |= PNG_FREE_ROWS;
 

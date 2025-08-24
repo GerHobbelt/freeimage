@@ -132,7 +132,7 @@
 //
 // Example:
 //
-//	ASSERT (ptr != NULL, NullExc, "Null pointer" );
+//	ASSERT (ptr != nullptr, NullExc, "Null pointer" );
 //
 //-------------------------------------------------------------
 

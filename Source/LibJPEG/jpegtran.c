@@ -131,12 +131,12 @@ parse_switches (j_compress_ptr cinfo, int argc, char **argv,
   int argn;
   char * arg;
   boolean simple_progressive;
-  char * scansarg = NULL;	/* saves -scans parm if any */
+  char * scansarg = nullptr;	/* saves -scans parm if any */
 
   /* Set up default JPEG parameters. */
   simple_progressive = FALSE;
-  outfilename = NULL;
-  scaleoption = NULL;
+  outfilename = nullptr;
+  scaleoption = nullptr;
   copyoption = JCOPYOPT_DEFAULT;
   transformoption.transform = JXFORM_NONE;
   transformoption.perfect = FALSE;
@@ -152,7 +152,7 @@ parse_switches (j_compress_ptr cinfo, int argc, char **argv,
     if (*arg != '-') {
       /* Not a switch, must be a file name argument */
       if (argn <= last_file_arg_seen) {
-	outfilename = NULL;	/* -outfile applies to just one input file */
+	outfilename = nullptr;	/* -outfile applies to just one input file */
 	continue;		/* ignore this name if previously processed */
       }
       break;			/* else done parsing switches */
@@ -351,7 +351,7 @@ parse_switches (j_compress_ptr cinfo, int argc, char **argv,
 #endif
 
 #ifdef C_MULTISCAN_FILES_SUPPORTED
-    if (scansarg != NULL)	/* process -scans if it was present */
+    if (scansarg != nullptr)	/* process -scans if it was present */
       if (! read_scan_script(cinfo, scansarg))
 	usage();
 #endif
@@ -388,7 +388,7 @@ main (int argc, char **argv)
 #endif
 
   progname = argv[0];
-  if (progname == NULL || progname[0] == 0)
+  if (progname == nullptr || progname[0] == 0)
     progname = "jpegtran";	/* in case C library doesn't provide it */
 
   /* Initialize the JPEG decompression object with default error handling. */
@@ -419,7 +419,7 @@ main (int argc, char **argv)
 
 #ifdef TWO_FILE_COMMANDLINE
   /* Must have either -outfile switch or explicit output file name */
-  if (outfilename == NULL) {
+  if (outfilename == nullptr) {
     if (file_index != argc-2) {
       fprintf(stderr, "%s: must name one input and one output file\n",
 	      progname);
@@ -443,7 +443,7 @@ main (int argc, char **argv)
 
   /* Open the input file. */
   if (file_index < argc) {
-    if ((fp = fopen(argv[file_index], READ_BINARY)) == NULL) {
+    if ((fp = fopen(argv[file_index], READ_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open %s for reading\n", progname, argv[file_index]);
       exit(EXIT_FAILURE);
     }
@@ -466,7 +466,7 @@ main (int argc, char **argv)
   (void) jpeg_read_header(&srcinfo, TRUE);
 
   /* Adjust default decompression parameters */
-  if (scaleoption != NULL)
+  if (scaleoption != nullptr)
     if (sscanf(scaleoption, "%d/%d",
 	&srcinfo.scale_num, &srcinfo.scale_denom) < 1)
       usage();
@@ -511,8 +511,8 @@ main (int argc, char **argv)
     fclose(fp);
 
   /* Open the output file. */
-  if (outfilename != NULL) {
-    if ((fp = fopen(outfilename, WRITE_BINARY)) == NULL) {
+  if (outfilename != nullptr) {
+    if ((fp = fopen(outfilename, WRITE_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open %s for writing\n", progname, outfilename);
       exit(EXIT_FAILURE);
     }

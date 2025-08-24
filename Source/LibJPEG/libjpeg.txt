@@ -293,7 +293,7 @@ stream beforehand.  Typical code for this step looks like:
 
 	FILE * outfile;
 	...
-	if ((outfile = fopen(filename, "wb")) == NULL) {
+	if ((outfile = fopen(filename, "wb")) == nullptr) {
 	    fprintf(stderr, "can't open %s\n", filename);
 	    exit(1);
 	}
@@ -540,7 +540,7 @@ beforehand.  Typical code for this step looks like:
 
 	FILE * infile;
 	...
-	if ((infile = fopen(filename, "rb")) == NULL) {
+	if ((infile = fopen(filename, "rb")) == nullptr) {
 	    fprintf(stderr, "can't open %s\n", filename);
 	    exit(1);
 	}
@@ -943,8 +943,8 @@ int restart_in_rows
 
 const jpeg_scan_info * scan_info
 int num_scans
-	By default, scan_info is NULL; this causes the compressor to write a
-	single-scan sequential JPEG file.  If not NULL, scan_info points to
+	By default, scan_info is nullptr; this causes the compressor to write a
+	single-scan sequential JPEG file.  If not nullptr, scan_info points to
 	an array of scan definition records of length num_scans.  The
 	compressor will then write a JPEG file having one scan for each scan
 	definition record.  This is used to generate noninterleaved or
@@ -998,7 +998,7 @@ boolean write_Adobe_marker
 
 JQUANT_TBL * quant_tbl_ptrs[NUM_QUANT_TBLS]
 	Pointers to coefficient quantization tables, one per table slot,
-	or NULL if no table is defined for a slot.  Usually these should
+	or nullptr if no table is defined for a slot.  Usually these should
 	be set via one of the above helper routines; jpeg_add_quant_table()
 	is general enough to define any quantization table.  The other
 	routines will set up table slot 0 for luminance quality and table
@@ -1030,7 +1030,7 @@ int q_scale_factor[NUM_QUANT_TBLS]
 
 JHUFF_TBL * dc_huff_tbl_ptrs[NUM_HUFF_TBLS]
 JHUFF_TBL * ac_huff_tbl_ptrs[NUM_HUFF_TBLS]
-	Pointers to Huffman coding tables, one per table slot, or NULL if
+	Pointers to Huffman coding tables, one per table slot, or nullptr if
 	no table is defined for a slot.  Slots 0 and 1 are filled with the
 	JPEG sample tables by jpeg_set_defaults().  If you need to allocate
 	more table structures, jpeg_alloc_huff_table() may be used.
@@ -1177,8 +1177,8 @@ J_DITHER_MODE dither_mode
 	an external color map, you'll get F-S dithering.)
 
 When quantize_colors is TRUE, the target color map is described by the next
-two fields.  colormap is set to NULL by jpeg_read_header().  The application
-can supply a color map by setting colormap non-NULL and setting
+two fields.  colormap is set to nullptr by jpeg_read_header().  The application
+can supply a color map by setting colormap non-nullptr and setting
 actual_number_of_colors to the map size.  Otherwise, jpeg_start_decompress()
 selects a suitable color map and sets these two fields itself.
 [Implementation restriction: at present, an externally supplied colormap is
@@ -1821,7 +1821,7 @@ applications that don't want to get involved in the nitty-gritty of
 progressive scan sequence design.  (If you want to provide user control of
 scan sequences, you may wish to borrow the scan script reading code found
 in rdswitch.c, so that you can read scan script files just like cjpeg's.)
-When scan_info is not NULL, the compression library will store DCT'd data
+When scan_info is not nullptr, the compression library will store DCT'd data
 into a buffer array as jpeg_write_scanlines() is called, and will emit all
 the requested scans during jpeg_finish_compress().  This implies that
 multiple-scan output cannot be created with a suspending data destination
@@ -2112,12 +2112,12 @@ When generating color-quantized output, changing quantization method is a
 very useful way of switching between high-speed and high-quality display.
 The library allows you to change among its three quantization methods:
 1. Single-pass quantization to a fixed color cube.
-   Selected by cinfo.two_pass_quantize = FALSE and cinfo.colormap = NULL.
+   Selected by cinfo.two_pass_quantize = FALSE and cinfo.colormap = nullptr.
 2. Single-pass quantization to an application-supplied colormap.
    Selected by setting cinfo.colormap to point to the colormap (the value of
    two_pass_quantize is ignored); also set cinfo.actual_number_of_colors.
 3. Two-pass quantization to a colormap chosen specifically for the image.
-   Selected by cinfo.two_pass_quantize = TRUE and cinfo.colormap = NULL.
+   Selected by cinfo.two_pass_quantize = TRUE and cinfo.colormap = nullptr.
    (This is the default setting selected by jpeg_read_header, but it is
    probably NOT what you want for the first pass of progressive display!)
 These methods offer successively better quality and lesser speed.  However,
@@ -2140,7 +2140,7 @@ After setting the enable flags correctly at jpeg_start_decompress() time, you
 can change to any enabled quantization method by setting two_pass_quantize
 and colormap properly just before calling jpeg_start_output().  The following
 special rules apply:
-1. You must explicitly set cinfo.colormap to NULL when switching to 1-pass
+1. You must explicitly set cinfo.colormap to nullptr when switching to 1-pass
    or 2-pass mode from a different mode, or when you want the 2-pass
    quantizer to be re-run to generate a new colormap.
 2. To switch to an external colormap, or to change to a different external
@@ -2149,7 +2149,7 @@ special rules apply:
 NOTE: if you want to use the same colormap as was used in the prior pass,
 you should not do either of these things.  This will save some nontrivial
 switchover costs.
-(These requirements exist because cinfo.colormap will always be non-NULL
+(These requirements exist because cinfo.colormap will always be non-nullptr
 after completing a prior output pass, since both the 1-pass and 2-pass
 quantizers set it to point to their output colormaps.  Thus you have to
 do one of these two things to notify the library that something has changed.
@@ -2314,7 +2314,7 @@ If the proper tables are stored in the application program, you can just
 allocate the table structs and fill in their contents directly.  For example,
 to load a fixed quantization table into table slot "n":
 
-    if (cinfo.quant_tbl_ptrs[n] == NULL)
+    if (cinfo.quant_tbl_ptrs[n] == nullptr)
       cinfo.quant_tbl_ptrs[n] = jpeg_alloc_quant_table((j_common_ptr) &cinfo);
     quant_ptr = cinfo.quant_tbl_ptrs[n];	/* quant_ptr is JQUANT_TBL* */
     for (i = 0; i < 64; i++) {
@@ -2324,7 +2324,7 @@ to load a fixed quantization table into table slot "n":
 
 Code to load a fixed Huffman table is typically (for AC table "n"):
 
-    if (cinfo.ac_huff_tbl_ptrs[n] == NULL)
+    if (cinfo.ac_huff_tbl_ptrs[n] == nullptr)
       cinfo.ac_huff_tbl_ptrs[n] = jpeg_alloc_huff_table((j_common_ptr) &cinfo);
     huff_ptr = cinfo.ac_huff_tbl_ptrs[n];	/* huff_ptr is JHUFF_TBL* */
     for (i = 1; i <= 16; i++) {
@@ -2705,8 +2705,8 @@ to release the array storage and return the decompression object to an idle
 state; or just call jpeg_destroy() if you don't need to reuse the object.
 
 If you use a suspending data source, jpeg_read_coefficients() will return
-NULL if it is forced to suspend; a non-NULL return value indicates successful
-completion.  You need not test for a NULL return value when using a
+nullptr if it is forced to suspend; a non-nullptr return value indicates successful
+completion.  You need not test for a nullptr return value when using a
 non-suspending data source.
 
 It is also possible to call jpeg_read_coefficients() to obtain access to the
@@ -2787,7 +2787,7 @@ insert additional calls inside some of the library's inner loops.)
 To establish a progress-monitor callback, create a struct jpeg_progress_mgr,
 fill in its progress_monitor field with a pointer to your callback routine,
 and set cinfo->progress to point to the struct.  The callback will be called
-whenever cinfo->progress is non-NULL.  (This pointer is set to NULL by
+whenever cinfo->progress is non-nullptr.  (This pointer is set to nullptr by
 jpeg_create_compress or jpeg_create_decompress; the library will not change
 it thereafter.  So if you allocate dynamic storage for the progress struct,
 make sure it will live as long as the JPEG object does.  Allocating from the

@@ -97,16 +97,16 @@ typedef	void (*TIFFVoidMethod)(TIFF*);
 typedef	int (*TIFFBoolMethod)(TIFF*);
 typedef	int (*TIFFPreMethod)(TIFF*, tsample_t);
 typedef	int (*TIFFCodeMethod)(TIFF*, tidata_t, tsize_t, tsample_t);
-typedef	int (*TIFFSeekMethod)(TIFF*, uint32);
+typedef	int (*TIFFSeekMethod)(TIFF*, uint32_t);
 typedef	void (*TIFFPostMethod)(TIFF*, tidata_t, tsize_t);
-typedef	uint32 (*TIFFStripMethod)(TIFF*, uint32);
-typedef	void (*TIFFTileMethod)(TIFF*, uint32*, uint32*);
+typedef	uint32_t (*TIFFStripMethod)(TIFF*, uint32_t);
+typedef	void (*TIFFTileMethod)(TIFF*, uint32_t*, uint32_t*);
 
 struct tiff {
 	char*		tif_name;	/* name of open file */
 	int		tif_fd;		/* open file descriptor */
 	int		tif_mode;	/* open mode (O_*) */
-	uint32		tif_flags;
+	uint32_t		tif_flags;
 #define	TIFF_FILLORDER		0x00003	/* natural bit fill order for machine */
 #define	TIFF_DIRTYHEADER	0x00004	/* header must be written on close */
 #define	TIFF_DIRTYDIRECT	0x00008	/* current directory must be written */
@@ -132,23 +132,23 @@ struct tiff {
 	toff_t*		tif_dirlist;	/* list of offsets to already seen */
 					/* directories to prevent IFD looping */
 	tsize_t		tif_dirlistsize;/* number of entires in offset list */
-	uint16		tif_dirnumber;  /* number of already seen directories */
+	uint16_t		tif_dirnumber;  /* number of already seen directories */
 	TIFFDirectory	tif_dir;	/* internal rep of current directory */
 	TIFFDirectory	tif_customdir;	/* custom IFDs are separated from
 					   the main ones */
 	TIFFHeader	tif_header;	/* file's header block */
 	const int*	tif_typeshift;	/* data type shift counts */
 	const long*	tif_typemask;	/* data type masks */
-	uint32		tif_row;	/* current scanline */
+	uint32_t		tif_row;	/* current scanline */
 	tdir_t		tif_curdir;	/* current directory (index) */
 	tstrip_t	tif_curstrip;	/* current strip for read/write */
 	toff_t		tif_curoff;	/* current offset for read/write */
 	toff_t		tif_dataoff;	/* current offset for writing dir */
 /* SubIFD support */
-	uint16		tif_nsubifd;	/* remaining subifds to write */
+	uint16_t		tif_nsubifd;	/* remaining subifds to write */
 	toff_t		tif_subifdoff;	/* offset for patching SubIFD link */
 /* tiling support */
-	uint32 		tif_col;	/* current column (offset by row too) */
+	uint32_t 		tif_col;	/* current column (offset by row too) */
 	ttile_t		tif_curtile;	/* current tile for read/write */
 	tsize_t		tif_tilesize;	/* # of bytes in a tile */
 /* compression scheme hooks */
@@ -238,11 +238,11 @@ struct tiff {
 	(TIFFWriteFile(tif, (tdata_t) buf, (tsize_t) size) == (tsize_t) size)
 #endif
 
-/* NB: the uint32 casts are to silence certain ANSI-C compilers */
-#define TIFFhowmany(x, y) (((uint32)x < (0xffffffff - (uint32)(y-1))) ?	\
-			   ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y))) : \
+/* NB: the uint32_t casts are to silence certain ANSI-C compilers */
+#define TIFFhowmany(x, y) (((uint32_t)x < (0xffffffff - (uint32_t)(y-1))) ?	\
+			   ((((uint32_t)(x))+(((uint32_t)(y))-1))/((uint32_t)(y))) : \
 			   0U)
-#define TIFFhowmany8(x) (((x)&0x07)?((uint32)(x)>>3)+1:(uint32)(x)>>3)
+#define TIFFhowmany8(x) (((x)&0x07)?((uint32_t)(x)>>3)+1:(uint32_t)(x)>>3)
 #define	TIFFroundup(x, y) (TIFFhowmany(x,y)*(y))
 
 /* Safe multiply which returns zero if there is an integer overflow */
@@ -265,7 +265,7 @@ extern	int _TIFFNoStripDecode(TIFF*, tidata_t, tsize_t, tsample_t);
 extern	int _TIFFNoTileDecode(TIFF*, tidata_t, tsize_t, tsample_t);
 extern	void _TIFFNoPostDecode(TIFF*, tidata_t, tsize_t);
 extern  int  _TIFFNoPreCode (TIFF*, tsample_t); 
-extern	int _TIFFNoSeek(TIFF*, uint32);
+extern	int _TIFFNoSeek(TIFF*, uint32_t);
 extern	void _TIFFSwab16BitData(TIFF*, tidata_t, tsize_t);
 extern	void _TIFFSwab24BitData(TIFF*, tidata_t, tsize_t);
 extern	void _TIFFSwab32BitData(TIFF*, tidata_t, tsize_t);
@@ -275,16 +275,16 @@ extern	int TIFFDefaultDirectory(TIFF*);
 extern	void _TIFFSetDefaultCompressionState(TIFF*);
 extern	int TIFFSetCompressionScheme(TIFF*, int);
 extern	int TIFFSetDefaultCompressionState(TIFF*);
-extern	uint32 _TIFFDefaultStripSize(TIFF*, uint32);
-extern	void _TIFFDefaultTileSize(TIFF*, uint32*, uint32*);
+extern	uint32_t _TIFFDefaultStripSize(TIFF*, uint32_t);
+extern	void _TIFFDefaultTileSize(TIFF*, uint32_t*, uint32_t*);
 extern	int _TIFFDataSize(TIFFDataType);
 
-extern	void _TIFFsetByteArray(void**, void*, uint32);
+extern	void _TIFFsetByteArray(void**, void*, uint32_t);
 extern	void _TIFFsetString(char**, char*);
-extern	void _TIFFsetShortArray(uint16**, uint16*, uint32);
-extern	void _TIFFsetLongArray(uint32**, uint32*, uint32);
-extern	void _TIFFsetFloatArray(float**, float*, uint32);
-extern	void _TIFFsetDoubleArray(double**, double*, uint32);
+extern	void _TIFFsetShortArray(uint16_t**, uint16_t*, uint32_t);
+extern	void _TIFFsetLongArray(uint32_t**, uint32_t*, uint32_t);
+extern	void _TIFFsetFloatArray(float**, float*, uint32_t);
+extern	void _TIFFsetDoubleArray(double**, double*, uint32_t);
 
 extern	void _TIFFprintAscii(FILE*, const char*);
 extern	void _TIFFprintAsciiTag(FILE*, const char*, const char*);

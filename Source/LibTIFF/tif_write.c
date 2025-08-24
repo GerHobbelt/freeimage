@@ -40,13 +40,13 @@
 	(((tif)->tif_flags&TIFF_BEENWRITING) || TIFFWriteCheck((tif),1,module))
 #define	BUFFERCHECK(tif)					\
 	((((tif)->tif_flags & TIFF_BUFFERSETUP) && tif->tif_rawdata) ||	\
-	    TIFFWriteBufferSetup((tif), NULL, (tsize_t) -1))
+	    TIFFWriteBufferSetup((tif), nullptr, (tsize_t) -1))
 
 static	int TIFFGrowStrips(TIFF*, int, const char*);
 static	int TIFFAppendToStrip(TIFF*, tstrip_t, tidata_t, tsize_t);
 
 int
-TIFFWriteScanline(TIFF* tif, tdata_t buf, uint32 row, tsample_t sample)
+TIFFWriteScanline(TIFF* tif, tdata_t buf, uint32_t row, tsample_t sample)
 {
 	static const char module[] = "TIFFWriteScanline";
 	register TIFFDirectory *td;
@@ -306,7 +306,7 @@ TIFFWriteRawStrip(TIFF* tif, tstrip_t strip, tdata_t data, tsize_t cc)
  */
 tsize_t
 TIFFWriteTile(TIFF* tif,
-    tdata_t buf, uint32 x, uint32 y, uint32 z, tsample_t s)
+    tdata_t buf, uint32_t x, uint32_t y, uint32_t z, tsample_t s)
 {
 	if (!TIFFCheckTile(tif, x, y, z, s))
 		return (-1);
@@ -455,18 +455,18 @@ TIFFSetupStrips(TIFF* tif)
 	td->td_nstrips = td->td_stripsperimage;
 	if (td->td_planarconfig == PLANARCONFIG_SEPARATE)
 		td->td_stripsperimage /= td->td_samplesperpixel;
-	td->td_stripoffset = (uint32 *)
-	    _TIFFmalloc(td->td_nstrips * sizeof (uint32));
-	td->td_stripbytecount = (uint32 *)
-	    _TIFFmalloc(td->td_nstrips * sizeof (uint32));
-	if (td->td_stripoffset == NULL || td->td_stripbytecount == NULL)
+	td->td_stripoffset = (uint32_t *)
+	    _TIFFmalloc(td->td_nstrips * sizeof (uint32_t));
+	td->td_stripbytecount = (uint32_t *)
+	    _TIFFmalloc(td->td_nstrips * sizeof (uint32_t));
+	if (td->td_stripoffset == nullptr || td->td_stripbytecount == nullptr)
 		return (0);
 	/*
 	 * Place data at the end-of-file
 	 * (by setting offsets to zero).
 	 */
-	_TIFFmemset(td->td_stripoffset, 0, td->td_nstrips*sizeof (uint32));
-	_TIFFmemset(td->td_stripbytecount, 0, td->td_nstrips*sizeof (uint32));
+	_TIFFmemset(td->td_stripoffset, 0, td->td_nstrips*sizeof (uint32_t));
+	_TIFFmemset(td->td_stripbytecount, 0, td->td_nstrips*sizeof (uint32_t));
 	TIFFSetFieldBit(tif, FIELD_STRIPOFFSETS);
 	TIFFSetFieldBit(tif, FIELD_STRIPBYTECOUNTS);
 	return (1);
@@ -527,7 +527,7 @@ TIFFWriteCheck(TIFF* tif, int tiles, const char* module)
 			return (0);
 		}
 	}
-	if (tif->tif_dir.td_stripoffset == NULL && !TIFFSetupStrips(tif)) {
+	if (tif->tif_dir.td_stripoffset == nullptr && !TIFFSetupStrips(tif)) {
 		tif->tif_dir.td_nstrips = 0;
 		TIFFErrorExt(tif->tif_clientdata, module, "%s: No space for %s arrays",
 		    tif->tif_name, isTiled(tif) ? "tile" : "strip");
@@ -552,7 +552,7 @@ TIFFWriteBufferSetup(TIFF* tif, tdata_t bp, tsize_t size)
 			_TIFFfree(tif->tif_rawdata);
 			tif->tif_flags &= ~TIFF_MYBUFFER;
 		}
-		tif->tif_rawdata = NULL;
+		tif->tif_rawdata = nullptr;
 	}
 	if (size == (tsize_t) -1) {
 		size = (isTiled(tif) ?
@@ -562,11 +562,11 @@ TIFFWriteBufferSetup(TIFF* tif, tdata_t bp, tsize_t size)
 		 */
 		if (size < 8*1024)
 			size = 8*1024;
-		bp = NULL;			/* NB: force malloc */
+		bp = nullptr;			/* NB: force malloc */
 	}
-	if (bp == NULL) {
+	if (bp == nullptr) {
 		bp = _TIFFmalloc(size);
-		if (bp == NULL) {
+		if (bp == nullptr) {
 			TIFFErrorExt(tif->tif_clientdata, module, "%s: No space for output buffer",
 			    tif->tif_name);
 			return (0);
@@ -589,14 +589,14 @@ static int
 TIFFGrowStrips(TIFF* tif, int delta, const char* module)
 {
 	TIFFDirectory	*td = &tif->tif_dir;
-	uint32		*new_stripoffset, *new_stripbytecount;
+	uint32_t		*new_stripoffset, *new_stripbytecount;
 
 	assert(td->td_planarconfig == PLANARCONFIG_CONTIG);
-	new_stripoffset = (uint32*)_TIFFrealloc(td->td_stripoffset,
-		(td->td_nstrips + delta) * sizeof (uint32));
-	new_stripbytecount = (uint32*)_TIFFrealloc(td->td_stripbytecount,
-		(td->td_nstrips + delta) * sizeof (uint32));
-	if (new_stripoffset == NULL || new_stripbytecount == NULL) {
+	new_stripoffset = (uint32_t*)_TIFFrealloc(td->td_stripoffset,
+		(td->td_nstrips + delta) * sizeof (uint32_t));
+	new_stripbytecount = (uint32_t*)_TIFFrealloc(td->td_stripbytecount,
+		(td->td_nstrips + delta) * sizeof (uint32_t));
+	if (new_stripoffset == nullptr || new_stripbytecount == nullptr) {
 		if (new_stripoffset)
 			_TIFFfree(new_stripoffset);
 		if (new_stripbytecount)
@@ -609,9 +609,9 @@ TIFFGrowStrips(TIFF* tif, int delta, const char* module)
 	td->td_stripoffset = new_stripoffset;
 	td->td_stripbytecount = new_stripbytecount;
 	_TIFFmemset(td->td_stripoffset + td->td_nstrips,
-		    0, delta*sizeof (uint32));
+		    0, delta*sizeof (uint32_t));
 	_TIFFmemset(td->td_stripbytecount + td->td_nstrips,
-		    0, delta*sizeof (uint32));
+		    0, delta*sizeof (uint32_t));
 	td->td_nstrips += delta;
 	return (1);
 }

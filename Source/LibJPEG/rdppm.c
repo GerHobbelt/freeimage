@@ -75,7 +75,7 @@ typedef struct {
   U_CHAR *iobuffer;		/* non-FAR pointer to I/O buffer */
   JSAMPROW pixrow;		/* FAR pointer to same */
   size_t buffer_width;		/* width of I/O buffer */
-  JSAMPLE *rescale;		/* => maxval-remapping array, or NULL */
+  JSAMPLE *rescale;		/* => maxval-remapping array, or nullptr */
 } ppm_source_struct;
 
 typedef ppm_source_struct * ppm_source_ptr;

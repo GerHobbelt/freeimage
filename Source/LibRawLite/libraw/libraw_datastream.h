@@ -59,8 +59,8 @@ class DllDef LibRaw_abstract_datastream
     virtual             ~LibRaw_abstract_datastream(void){if(substream) delete substream;}
     virtual int         valid() = 0;
     virtual int         read(void *,size_t, size_t ) = 0;
-    virtual int         seek(INT64 , int ) = 0;
-    virtual INT64       tell() = 0;
+    virtual int         seek(int64_t , int ) = 0;
+    virtual int64_t       tell() = 0;
     virtual int         get_char() = 0;
     virtual char*       gets(char *, int) = 0;
     virtual int         scanf_one(const char *, void *) = 0;
@@ -70,7 +70,7 @@ class DllDef LibRaw_abstract_datastream
     virtual LibRaw_byte_buffer *make_byte_buffer(unsigned int sz);
 
     /* subfile parsing not implemented in base class */
-    virtual const char* fname(){ return NULL;};
+    virtual const char* fname(){ return nullptr;};
     virtual int         subfile_open(const char*) { return -1;}
     virtual void        subfile_close() { }
 
@@ -100,8 +100,8 @@ class DllDef  LibRaw_file_datastream: public LibRaw_abstract_datastream
     virtual int         valid();
     virtual int         read(void * ptr,size_t size, size_t nmemb);
     virtual int         eof();
-    virtual int         seek(INT64 o, int whence);
-    virtual INT64       tell();
+    virtual int         seek(int64_t o, int whence);
+    virtual int64_t       tell();
     virtual int         get_char()
         { 
             if(substream) return substream->get_char();
@@ -124,8 +124,8 @@ class DllDef  LibRaw_buffer_datastream : public LibRaw_abstract_datastream
     virtual LibRaw_byte_buffer *make_byte_buffer(unsigned int sz);
     virtual int         read(void * ptr,size_t sz, size_t nmemb);
     virtual int         eof();
-    virtual int         seek(INT64 o, int whence);
-    virtual INT64       tell();
+    virtual int         seek(int64_t o, int whence);
+    virtual int64_t       tell();
     virtual char*       gets(char *s, int sz);
     virtual int         scanf_one(const char *fmt, void* val);
     virtual int         get_char()
@@ -151,8 +151,8 @@ class DllDef LibRaw_bigfile_datastream : public LibRaw_abstract_datastream
 
     virtual int         read(void * ptr,size_t size, size_t nmemb); 
     virtual int         eof();
-    virtual int         seek(INT64 o, int whence);
-    virtual INT64       tell();
+    virtual int         seek(int64_t o, int whence);
+    virtual int64_t       tell();
     virtual char*       gets(char *str, int sz);
     virtual int         scanf_one(const char *fmt, void*val);
     virtual const char *fname();

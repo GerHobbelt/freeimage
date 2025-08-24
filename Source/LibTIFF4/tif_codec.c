@@ -99,7 +99,7 @@ TIFFCodec _TIFFBuiltinCODECS[] = {
     { "SGILog",		COMPRESSION_SGILOG,	TIFFInitSGILog },
     { "SGILog24",	COMPRESSION_SGILOG24,	TIFFInitSGILog },
     { "LZMA",		COMPRESSION_LZMA,	TIFFInitLZMA },
-    { NULL,             0,                      NULL }
+    { nullptr,             0,                      nullptr }
 };
 
 static int
@@ -140,14 +140,14 @@ NotConfigured(TIFF* tif, int scheme)
  */
 
 int
-TIFFIsCODECConfigured(uint16 scheme)
+TIFFIsCODECConfigured(uint16_t scheme)
 {
 	const TIFFCodec* codec = TIFFFindCODEC(scheme);
 
-	if(codec == NULL) {
+	if(codec == nullptr) {
 		return 0;
 	}
-	if(codec->init == NULL) {
+	if(codec->init == nullptr) {
 		return 0;
 	}
 	if(codec->init != NotConfigured){

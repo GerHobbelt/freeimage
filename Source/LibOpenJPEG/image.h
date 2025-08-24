@@ -38,7 +38,7 @@ The functions in IMAGE.C have for goal to realize operations on images.
 /**
 Create an empty image
 @todo this function should be removed
-@return returns an empty image if successful, returns NULL otherwise
+@return returns an empty image if successful, returns nullptr otherwise
 */
 opj_image_t* opj_image_create0(void);
 

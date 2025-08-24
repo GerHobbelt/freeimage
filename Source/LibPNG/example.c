@@ -65,7 +65,7 @@ int check_if_png(char *file_name, FILE **fp)
    char buf[PNG_BYTES_TO_CHECK];
 
    /* Open the prospective PNG file. */
-   if ((*fp = fopen(file_name, "rb")) == NULL)
+   if ((*fp = fopen(file_name, "rb")) == nullptr)
       return 0;
 
    /* Read in some of the signature bytes */
@@ -94,7 +94,7 @@ void read_png(char *file_name)  /* We need to open the file */
    int bit_depth, color_type, interlace_type;
    FILE *fp;
 
-   if ((fp = fopen(file_name, "rb")) == NULL)
+   if ((fp = fopen(file_name, "rb")) == nullptr)
       return (ERROR);
 
 #else no_open_file /* prototype 2 */
@@ -108,14 +108,14 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
 
    /* Create and initialize the png_struct with the desired error handler
     * functions.  If you want to use the default stderr and longjump method,
-    * you can supply NULL for the last three parameters.  We also supply the
+    * you can supply nullptr for the last three parameters.  We also supply the
     * the compiler header file version, so that we know if the application
     * was compiled with a compatible version of the library.  REQUIRED
     */
    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
       png_voidp user_error_ptr, user_error_fn, user_warning_fn);
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
    {
       fclose(fp);
       return (ERROR);
@@ -123,10 +123,10 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
 
    /* Allocate/initialize the memory for image information.  REQUIRED. */
    info_ptr = png_create_info_struct(png_ptr);
-   if (info_ptr == NULL)
+   if (info_ptr == nullptr)
    {
       fclose(fp);
-      png_destroy_read_struct(&png_ptr, NULL, NULL);
+      png_destroy_read_struct(&png_ptr, nullptr, nullptr);
       return (ERROR);
    }
 
@@ -138,7 +138,7 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
    if (setjmp(png_jmpbuf(png_ptr)))
    {
       /* Free all of the memory associated with the png_ptr and info_ptr */
-      png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+      png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
       fclose(fp);
       /* If we get here, we had a problem reading the file */
       return (ERROR);
@@ -169,7 +169,7 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
     * adjustment), then you can read the entire image (including
     * pixels) into the info structure with this call:
     */
-   png_read_png(png_ptr, info_ptr, png_transforms, NULL);
+   png_read_png(png_ptr, info_ptr, png_transforms, nullptr);
 
 #else
    /* OK, you're doing it the hard way, with the lower-level functions */
@@ -180,7 +180,7 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
    png_read_info(png_ptr, info_ptr);
 
    png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type,
-       &interlace_type, NULL, NULL);
+       &interlace_type, nullptr, nullptr);
 
    /* Set up the data transformations you want.  Note that these are all
     * optional.  Only call them if you want/need them.  Many of the
@@ -252,7 +252,7 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
       screen_gamma = user-defined screen_gamma;
    }
    /* This is one way that applications share the same screen gamma value */
-   else if ((gamma_str = getenv("SCREEN_GAMMA")) != NULL)
+   else if ((gamma_str = getenv("SCREEN_GAMMA")) != nullptr)
    {
       screen_gamma = atof(gamma_str);
    }
@@ -299,12 +299,12 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
          png_color std_color_cube[MAX_SCREEN_COLORS];
 
          png_set_quantize(png_ptr, std_color_cube, MAX_SCREEN_COLORS,
-            MAX_SCREEN_COLORS, NULL, 0);
+            MAX_SCREEN_COLORS, nullptr, 0);
       }
       /* This reduces the image to the palette supplied in the file */
       else if (png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette))
       {
-         png_uint_16p histogram = NULL;
+         png_uint_16p histogram = nullptr;
 
          png_get_hIST(png_ptr, info_ptr, &histogram);
 
@@ -366,7 +366,7 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
 
    /* Clear the pointer array */
    for (row = 0; row < height; row++)
-      row_pointers[row] = NULL;
+      row_pointers[row] = nullptr;
 
    for (row = 0; row < height; row++)
       row_pointers[row] = png_malloc(png_ptr, png_get_rowbytes(png_ptr,
@@ -384,17 +384,17 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
 #ifdef single /* Read the image a single row at a time */
       for (y = 0; y < height; y++)
       {
-         png_read_rows(png_ptr, &row_pointers[y], NULL, 1);
+         png_read_rows(png_ptr, &row_pointers[y], nullptr, 1);
       }
 
 #else no_single /* Read the image several rows at a time */
       for (y = 0; y < height; y += number_of_rows)
       {
 #ifdef sparkle /* Read the image using the "sparkle" effect. */
-         png_read_rows(png_ptr, &row_pointers[y], NULL,
+         png_read_rows(png_ptr, &row_pointers[y], nullptr,
             number_of_rows);
 #else no_sparkle /* Read the image using the "rectangle" effect */
-         png_read_rows(png_ptr, NULL, &row_pointers[y],
+         png_read_rows(png_ptr, nullptr, &row_pointers[y],
             number_of_rows);
 #endif no_sparkle /* Use only one of these two methods */
       }
@@ -411,7 +411,7 @@ void read_png(FILE *fp, unsigned int sig_read)  /* File is already open */
    /* At this point you have read the entire image */
 
    /* Clean up after the read, and free any memory allocated - REQUIRED */
-   png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+   png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
    /* Close the file */
    fclose(fp);
@@ -427,37 +427,37 @@ initialize_png_reader(png_structp *png_ptr, png_infop *info_ptr)
 {
    /* Create and initialize the png_struct with the desired error handler
     * functions.  If you want to use the default stderr and longjump method,
-    * you can supply NULL for the last three parameters.  We also check that
+    * you can supply nullptr for the last three parameters.  We also check that
     * the library version is compatible in case we are using dynamically
     * linked libraries.
     */
    *png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
        png_voidp user_error_ptr, user_error_fn, user_warning_fn);
 
-   if (*png_ptr == NULL)
+   if (*png_ptr == nullptr)
    {
-      *info_ptr = NULL;
+      *info_ptr = nullptr;
       return (ERROR);
    }
 
    *info_ptr = png_create_info_struct(png_ptr);
 
-   if (*info_ptr == NULL)
+   if (*info_ptr == nullptr)
    {
-      png_destroy_read_struct(png_ptr, info_ptr, NULL);
+      png_destroy_read_struct(png_ptr, info_ptr, nullptr);
       return (ERROR);
    }
 
    if (setjmp(png_jmpbuf((*png_ptr))))
    {
-      png_destroy_read_struct(png_ptr, info_ptr, NULL);
+      png_destroy_read_struct(png_ptr, info_ptr, nullptr);
       return (ERROR);
    }
 
    /* This one's new.  You will need to provide all three
     * function callbacks, even if you aren't using them all.
-    * If you aren't using all functions, you can specify NULL
-    * parameters.  Even when all three functions are NULL,
+    * If you aren't using all functions, you can specify nullptr
+    * parameters.  Even when all three functions are nullptr,
     * you need to call png_set_progressive_read_fn().
     * These functions shouldn't be dependent on global or
     * static variables if you are decoding several images
@@ -479,7 +479,7 @@ process_data(png_structp *png_ptr, png_infop *info_ptr,
    if (setjmp(png_jmpbuf((*png_ptr))))
    {
       /* Free the png_ptr and info_ptr memory on error */
-      png_destroy_read_struct(png_ptr, info_ptr, NULL);
+      png_destroy_read_struct(png_ptr, info_ptr, nullptr);
       return (ERROR);
    }
 
@@ -520,10 +520,10 @@ row_callback(png_structp png_ptr, png_bytep new_row,
     * libpng called new_row that is to replace a corresponding row (of
     * the same data format) in a buffer allocated by your application.
     *
-    * The new row data pointer "new_row" may be NULL, indicating there is
+    * The new row data pointer "new_row" may be nullptr, indicating there is
     * no new data to be replaced (in cases of interlace loading).
     *
-    * If new_row is not NULL then you need to call
+    * If new_row is not nullptr then you need to call
     * png_progressive_combine_row() to replace the corresponding row as
     * shown below:
     */
@@ -537,7 +537,7 @@ row_callback(png_structp png_ptr, png_bytep new_row,
    /* If both rows are allocated then copy the new row
     * data to the corresponding row data.
     */
-   if ((old_row != NULL) && (new_row != NULL))
+   if ((old_row != nullptr) && (new_row != nullptr))
    png_progressive_combine_row(png_ptr, old_row, new_row);
 
    /*
@@ -545,10 +545,10 @@ row_callback(png_structp png_ptr, png_bytep new_row,
     * need the row_num and pass, but I'm supplying them because it
     * may make your life easier.
     *
-    * For the non-NULL rows of interlaced images, you must call
+    * For the non-nullptr rows of interlaced images, you must call
     * png_progressive_combine_row() passing in the new row and the
     * old row, as demonstrated above.  You can call this function for
-    * NULL rows (it will just return) and for non-interlaced images
+    * nullptr rows (it will just return) and for non-interlaced images
     * (it just does the png_memcpy for you) if it will make the code
     * easier.  Thus, you can just do this for all cases:
     */
@@ -588,19 +588,19 @@ void write_png(char *file_name /* , ... other image information ... */)
 
    /* Open the file */
    fp = fopen(file_name, "wb");
-   if (fp == NULL)
+   if (fp == nullptr)
       return (ERROR);
 
    /* Create and initialize the png_struct with the desired error handler
     * functions.  If you want to use the default stderr and longjump method,
-    * you can supply NULL for the last three parameters.  We also check that
+    * you can supply nullptr for the last three parameters.  We also check that
     * the library version is compatible with the one used at compile time,
     * in case we are using dynamically linked libraries.  REQUIRED.
     */
    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
       png_voidp user_error_ptr, user_error_fn, user_warning_fn);
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
    {
       fclose(fp);
       return (ERROR);
@@ -608,10 +608,10 @@ void write_png(char *file_name /* , ... other image information ... */)
 
    /* Allocate/initialize the image information data.  REQUIRED */
    info_ptr = png_create_info_struct(png_ptr);
-   if (info_ptr == NULL)
+   if (info_ptr == nullptr)
    {
       fclose(fp);
-      png_destroy_write_struct(&png_ptr,  NULL);
+      png_destroy_write_struct(&png_ptr,  nullptr);
       return (ERROR);
    }
 
@@ -646,7 +646,7 @@ void write_png(char *file_name /* , ... other image information ... */)
     * image info living in the structure.  You could "|" many
     * PNG_TRANSFORM flags into the png_transforms integer here.
     */
-   png_write_png(png_ptr, info_ptr, png_transforms, NULL);
+   png_write_png(png_ptr, info_ptr, png_transforms, nullptr);
 
 #else
    /* This is the hard way */
@@ -704,8 +704,8 @@ void write_png(char *file_name /* , ... other image information ... */)
       text_ptr[0].text = text0;
       text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
       text_ptr[0].itxt_length = 0;
-      text_ptr[0].lang = NULL;
-      text_ptr[0].lang_key = NULL;
+      text_ptr[0].lang = nullptr;
+      text_ptr[0].lang_key = nullptr;
 
       char key1[]="Author";
       char text1[]="Leonardo DaVinci";
@@ -713,8 +713,8 @@ void write_png(char *file_name /* , ... other image information ... */)
       text_ptr[1].text = text1;
       text_ptr[1].compression = PNG_TEXT_COMPRESSION_NONE;
       text_ptr[1].itxt_length = 0;
-      text_ptr[1].lang = NULL;
-      text_ptr[1].lang_key = NULL;
+      text_ptr[1].lang = nullptr;
+      text_ptr[1].lang_key = nullptr;
 
       char key2[]="Description";
       char text2[]="<long text>";
@@ -722,8 +722,8 @@ void write_png(char *file_name /* , ... other image information ... */)
       text_ptr[2].text = text2;
       text_ptr[2].compression = PNG_TEXT_COMPRESSION_zTXt;
       text_ptr[2].itxt_length = 0;
-      text_ptr[2].lang = NULL;
-      text_ptr[2].lang_key = NULL;
+      text_ptr[2].lang = nullptr;
+      text_ptr[2].lang_key = nullptr;
 
       png_set_text(write_ptr, write_info_ptr, text_ptr, 3);
    }
@@ -852,17 +852,17 @@ void write_png(char *file_name /* , ... other image information ... */)
     * of png_free().
     */
    png_free(png_ptr, palette);
-   palette = NULL;
+   palette = nullptr;
 
    /* Similarly, if you png_malloced any data that you passed in with
     * png_set_something(), such as a hist or trans array, free it here,
     * when you can be sure that libpng is through with it.
     */
    png_free(png_ptr, trans);
-   trans = NULL;
+   trans = nullptr;
    /* Whenever you use png_free() it is a good idea to set the pointer to
-    * NULL in case your application inadvertently tries to png_free() it
-    * again.  When png_free() sees a NULL it returns without action, thus
+    * nullptr in case your application inadvertently tries to png_free() it
+    * again.  When png_free() sees a nullptr it returns without action, thus
     * avoiding the double-free security problem.
     */
 

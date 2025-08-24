@@ -997,9 +997,9 @@
              (with -B command-line switch) to test new API.
 
            * Error handling callback functions now can be called with
-             NULL filename passed (if underlying data stream object
+             nullptr filename passed (if underlying data stream object
              does not know file name).
-             So, client error handling callbacks should work with NULL
+             So, client error handling callbacks should work with nullptr
              filename.
 
            * All client code should be recompiled

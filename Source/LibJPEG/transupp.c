@@ -1103,7 +1103,7 @@ jtransform_request_workspace (j_decompress_ptr srcinfo,
     }
     info->workspace_coef_arrays = coef_arrays;
   } else
-    info->workspace_coef_arrays = NULL;
+    info->workspace_coef_arrays = nullptr;
 
   return TRUE;
 }
@@ -1139,7 +1139,7 @@ transpose_critical_parameters (j_compress_ptr dstinfo)
   /* Transpose quantization tables */
   for (tblno = 0; tblno < NUM_QUANT_TBLS; tblno++) {
     qtblptr = dstinfo->quant_tbl_ptrs[tblno];
-    if (qtblptr != NULL) {
+    if (qtblptr != nullptr) {
       for (i = 0; i < DCTSIZE; i++) {
 	for (j = 0; j < i; j++) {
 	  qtemp = qtblptr->quantval[i*DCTSIZE+j];
@@ -1378,7 +1378,7 @@ jtransform_adjust_parameters (j_decompress_ptr srcinfo,
   }
 
   /* Adjust Exif properties */
-  if (srcinfo->marker_list != NULL &&
+  if (srcinfo->marker_list != nullptr &&
       srcinfo->marker_list->marker == JPEG_APP0+1 &&
       srcinfo->marker_list->data_length >= 6 &&
       GETJOCTET(srcinfo->marker_list->data[0]) == 0x45 &&
@@ -1399,7 +1399,7 @@ jtransform_adjust_parameters (j_decompress_ptr srcinfo,
   }
 
   /* Return the appropriate output data set */
-  if (info->workspace_coef_arrays != NULL)
+  if (info->workspace_coef_arrays != nullptr)
     return info->workspace_coef_arrays;
   return src_coef_arrays;
 }
@@ -1562,7 +1562,7 @@ jcopy_markers_execute (j_decompress_ptr srcinfo, j_compress_ptr dstinfo,
    * But to avoid confusion, we do not output JFIF and Adobe APP14 markers
    * if the encoder library already wrote one.
    */
-  for (marker = srcinfo->marker_list; marker != NULL; marker = marker->next) {
+  for (marker = srcinfo->marker_list; marker != nullptr; marker = marker->next) {
     if (dstinfo->write_JFIF_header &&
 	marker->marker == JPEG_APP0 &&
 	marker->data_length >= 5 &&

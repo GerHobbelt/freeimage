@@ -44,7 +44,7 @@
 
 static const char * const cdjpeg_message_table[] = {
 #include "cderror.h"
-  NULL
+  nullptr
 };
 
 
@@ -121,7 +121,7 @@ select_file_type (j_compress_ptr cinfo, FILE * infile)
     break;
   }
 
-  return NULL;			/* suppress compiler warnings */
+  return nullptr;			/* suppress compiler warnings */
 }
 
 
@@ -220,18 +220,18 @@ parse_switches (j_compress_ptr cinfo, int argc, char **argv,
   char * arg;
   boolean force_baseline;
   boolean simple_progressive;
-  char * qualityarg = NULL;	/* saves -quality parm if any */
-  char * qtablefile = NULL;	/* saves -qtables filename if any */
-  char * qslotsarg = NULL;	/* saves -qslots parm if any */
-  char * samplearg = NULL;	/* saves -sample parm if any */
-  char * scansarg = NULL;	/* saves -scans parm if any */
+  char * qualityarg = nullptr;	/* saves -quality parm if any */
+  char * qtablefile = nullptr;	/* saves -qtables filename if any */
+  char * qslotsarg = nullptr;	/* saves -qslots parm if any */
+  char * samplearg = nullptr;	/* saves -sample parm if any */
+  char * scansarg = nullptr;	/* saves -scans parm if any */
 
   /* Set up default JPEG parameters. */
 
   force_baseline = FALSE;	/* by default, allow 16-bit quantizers */
   simple_progressive = FALSE;
   is_targa = FALSE;
-  outfilename = NULL;
+  outfilename = nullptr;
   cinfo->err->trace_level = 0;
 
   /* Scan command line options, adjust parameters */
@@ -241,7 +241,7 @@ parse_switches (j_compress_ptr cinfo, int argc, char **argv,
     if (*arg != '-') {
       /* Not a switch, must be a file name argument */
       if (argn <= last_file_arg_seen) {
-	outfilename = NULL;	/* -outfile applies to just one input file */
+	outfilename = nullptr;	/* -outfile applies to just one input file */
 	continue;		/* ignore this name if previously processed */
       }
       break;			/* else done parsing switches */
@@ -458,19 +458,19 @@ parse_switches (j_compress_ptr cinfo, int argc, char **argv,
 
     /* Set quantization tables for selected quality. */
     /* Some or all may be overridden if -qtables is present. */
-    if (qualityarg != NULL)	/* process -quality if it was present */
+    if (qualityarg != nullptr)	/* process -quality if it was present */
       if (! set_quality_ratings(cinfo, qualityarg, force_baseline))
 	usage();
 
-    if (qtablefile != NULL)	/* process -qtables if it was present */
+    if (qtablefile != nullptr)	/* process -qtables if it was present */
       if (! read_quant_tables(cinfo, qtablefile, force_baseline))
 	usage();
 
-    if (qslotsarg != NULL)	/* process -qslots if it was present */
+    if (qslotsarg != nullptr)	/* process -qslots if it was present */
       if (! set_quant_slots(cinfo, qslotsarg))
 	usage();
 
-    if (samplearg != NULL)	/* process -sample if it was present */
+    if (samplearg != nullptr)	/* process -sample if it was present */
       if (! set_sample_factors(cinfo, samplearg))
 	usage();
 
@@ -480,7 +480,7 @@ parse_switches (j_compress_ptr cinfo, int argc, char **argv,
 #endif
 
 #ifdef C_MULTISCAN_FILES_SUPPORTED
-    if (scansarg != NULL)	/* process -scans if it was present */
+    if (scansarg != nullptr)	/* process -scans if it was present */
       if (! read_scan_script(cinfo, scansarg))
 	usage();
 #endif
@@ -514,7 +514,7 @@ main (int argc, char **argv)
 #endif
 
   progname = argv[0];
-  if (progname == NULL || progname[0] == 0)
+  if (progname == nullptr || progname[0] == 0)
     progname = "cjpeg";		/* in case C library doesn't provide it */
 
   /* Initialize the JPEG compression object with default error handling. */
@@ -549,7 +549,7 @@ main (int argc, char **argv)
 
 #ifdef TWO_FILE_COMMANDLINE
   /* Must have either -outfile switch or explicit output file name */
-  if (outfilename == NULL) {
+  if (outfilename == nullptr) {
     if (file_index != argc-2) {
       fprintf(stderr, "%s: must name one input and one output file\n",
 	      progname);
@@ -573,7 +573,7 @@ main (int argc, char **argv)
 
   /* Open the input file. */
   if (file_index < argc) {
-    if ((input_file = fopen(argv[file_index], READ_BINARY)) == NULL) {
+    if ((input_file = fopen(argv[file_index], READ_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open %s\n", progname, argv[file_index]);
       exit(EXIT_FAILURE);
     }
@@ -583,8 +583,8 @@ main (int argc, char **argv)
   }
 
   /* Open the output file. */
-  if (outfilename != NULL) {
-    if ((output_file = fopen(outfilename, WRITE_BINARY)) == NULL) {
+  if (outfilename != nullptr) {
+    if ((output_file = fopen(outfilename, WRITE_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open %s\n", progname, outfilename);
       exit(EXIT_FAILURE);
     }

@@ -283,7 +283,7 @@ static void
 swabHorAcc16(TIFF* tif, tidata_t cp0, tsize_t cc)
 {
 	tsize_t stride = PredictorState(tif)->stride;
-	uint16* wp = (uint16*) cp0;
+	uint16_t* wp = (uint16_t*) cp0;
 	tsize_t wc = cc / 2;
 
 	if (wc > stride) {
@@ -300,7 +300,7 @@ static void
 horAcc16(TIFF* tif, tidata_t cp0, tsize_t cc)
 {
 	tsize_t stride = PredictorState(tif)->stride;
-	uint16* wp = (uint16*) cp0;
+	uint16_t* wp = (uint16_t*) cp0;
 	tsize_t wc = cc / 2;
 
 	if (wc > stride) {
@@ -316,7 +316,7 @@ static void
 swabHorAcc32(TIFF* tif, tidata_t cp0, tsize_t cc)
 {
 	tsize_t stride = PredictorState(tif)->stride;
-	uint32* wp = (uint32*) cp0;
+	uint32_t* wp = (uint32_t*) cp0;
 	tsize_t wc = cc / 4;
 
 	if (wc > stride) {
@@ -333,7 +333,7 @@ static void
 horAcc32(TIFF* tif, tidata_t cp0, tsize_t cc)
 {
 	tsize_t stride = PredictorState(tif)->stride;
-	uint32* wp = (uint32*) cp0;
+	uint32_t* wp = (uint32_t*) cp0;
 	tsize_t wc = cc / 4;
 
 	if (wc > stride) {
@@ -352,11 +352,11 @@ static void
 fpAcc(TIFF* tif, tidata_t cp0, tsize_t cc)
 {
 	tsize_t stride = PredictorState(tif)->stride;
-	uint32 bps = tif->tif_dir.td_bitspersample / 8;
+	uint32_t bps = tif->tif_dir.td_bitspersample / 8;
 	tsize_t wc = cc / bps;
 	tsize_t count = cc;
-	uint8 *cp = (uint8 *) cp0;
-	uint8 *tmp = (uint8 *)_TIFFmalloc(cc);
+	uint8_t *cp = (uint8_t *) cp0;
+	uint8_t *tmp = (uint8_t *)_TIFFmalloc(cc);
 
 	if (!tmp)
 		return;
@@ -367,9 +367,9 @@ fpAcc(TIFF* tif, tidata_t cp0, tsize_t cc)
 	}
 
 	_TIFFmemcpy(tmp, cp0, cc);
-	cp = (uint8 *) cp0;
+	cp = (uint8_t *) cp0;
 	for (count = 0; count < wc; count++) {
-		uint32 byte;
+		uint32_t byte;
 		for (byte = 0; byte < bps; byte++) {
 #if WORDS_BIGENDIAN
 			cp[bps * count + byte] = tmp[byte * wc + count];
@@ -390,9 +390,9 @@ PredictorDecodeRow(TIFF* tif, tidata_t op0, tsize_t occ0, tsample_t s)
 {
 	TIFFPredictorState *sp = PredictorState(tif);
 
-	assert(sp != NULL);
-	assert(sp->decoderow != NULL);
-	assert(sp->decodepfunc != NULL);
+	assert(sp != nullptr);
+	assert(sp->decoderow != nullptr);
+	assert(sp->decodepfunc != nullptr);
 
 	if ((*sp->decoderow)(tif, op0, occ0, s)) {
 		(*sp->decodepfunc)(tif, op0, occ0);
@@ -413,13 +413,13 @@ PredictorDecodeTile(TIFF* tif, tidata_t op0, tsize_t occ0, tsample_t s)
 {
 	TIFFPredictorState *sp = PredictorState(tif);
 
-	assert(sp != NULL);
-	assert(sp->decodetile != NULL);
+	assert(sp != nullptr);
+	assert(sp->decodetile != nullptr);
 
 	if ((*sp->decodetile)(tif, op0, occ0, s)) {
 		tsize_t rowsize = sp->rowsize;
 		assert(rowsize > 0);
-		assert(sp->decodepfunc != NULL);
+		assert(sp->decodepfunc != nullptr);
 		while ((long)occ0 > 0) {
 			(*sp->decodepfunc)(tif, op0, (tsize_t) rowsize);
 			occ0 -= rowsize;
@@ -518,18 +518,18 @@ static void
 fpDiff(TIFF* tif, tidata_t cp0, tsize_t cc)
 {
 	tsize_t stride = PredictorState(tif)->stride;
-	uint32 bps = tif->tif_dir.td_bitspersample / 8;
+	uint32_t bps = tif->tif_dir.td_bitspersample / 8;
 	tsize_t wc = cc / bps;
 	tsize_t count;
-	uint8 *cp = (uint8 *) cp0;
-	uint8 *tmp = (uint8 *)_TIFFmalloc(cc);
+	uint8_t *cp = (uint8_t *) cp0;
+	uint8_t *tmp = (uint8_t *)_TIFFmalloc(cc);
 
 	if (!tmp)
 		return;
 
 	_TIFFmemcpy(tmp, cp0, cc);
 	for (count = 0; count < wc; count++) {
-		uint32 byte;
+		uint32_t byte;
 		for (byte = 0; byte < bps; byte++) {
 #if WORDS_BIGENDIAN
 			cp[byte * wc + count] =	tmp[bps * count + byte];
@@ -541,7 +541,7 @@ fpDiff(TIFF* tif, tidata_t cp0, tsize_t cc)
 	}
 	_TIFFfree(tmp);
 
-	cp = (uint8 *) cp0;
+	cp = (uint8_t *) cp0;
 	cp += cc - stride - 1;
 	for (count = cc; count > stride; count -= stride)
 		REPEAT4(stride, cp[stride] -= cp[0]; cp--)
@@ -552,9 +552,9 @@ PredictorEncodeRow(TIFF* tif, tidata_t bp, tsize_t cc, tsample_t s)
 {
 	TIFFPredictorState *sp = PredictorState(tif);
 
-	assert(sp != NULL);
-	assert(sp->encodepfunc != NULL);
-	assert(sp->encoderow != NULL);
+	assert(sp != nullptr);
+	assert(sp->encodepfunc != nullptr);
+	assert(sp->encoderow != nullptr);
 
 	/* XXX horizontal differencing alters user's data XXX */
 	(*sp->encodepfunc)(tif, bp, cc);
@@ -566,21 +566,21 @@ PredictorEncodeTile(TIFF* tif, tidata_t bp0, tsize_t cc0, tsample_t s)
 {
 	static const char module[] = "PredictorEncodeTile";
 	TIFFPredictorState *sp = PredictorState(tif);
-        uint8 *working_copy;
+        uint8_t *working_copy;
 	tsize_t cc = cc0, rowsize;
 	unsigned char* bp;
         int result_code;
 
-	assert(sp != NULL);
-	assert(sp->encodepfunc != NULL);
-	assert(sp->encodetile != NULL);
+	assert(sp != nullptr);
+	assert(sp->encodepfunc != nullptr);
+	assert(sp->encodetile != nullptr);
 
         /* 
          * Do predictor manipulation in a working buffer to avoid altering
          * the callers buffer. http://trac.osgeo.org/gdal/ticket/1965
          */
-        working_copy = (uint8*) _TIFFmalloc(cc0);
-        if( working_copy == NULL )
+        working_copy = (uint8_t*) _TIFFmalloc(cc0);
+        if( working_copy == nullptr )
         {
             TIFFErrorExt(tif->tif_clientdata, module, 
                          "Out of memory allocating %d byte temp buffer.",
@@ -617,12 +617,12 @@ PredictorVSetField(TIFF* tif, ttag_t tag, va_list ap)
 {
 	TIFFPredictorState *sp = PredictorState(tif);
 
-	assert(sp != NULL);
-	assert(sp->vsetparent != NULL);
+	assert(sp != nullptr);
+	assert(sp->vsetparent != nullptr);
 
 	switch (tag) {
 	case TIFFTAG_PREDICTOR:
-		sp->predictor = (uint16) va_arg(ap, int);
+		sp->predictor = (uint16_t) va_arg(ap, int);
 		TIFFSetFieldBit(tif, FIELD_PREDICTOR);
 		break;
 	default:
@@ -637,12 +637,12 @@ PredictorVGetField(TIFF* tif, ttag_t tag, va_list ap)
 {
 	TIFFPredictorState *sp = PredictorState(tif);
 
-	assert(sp != NULL);
-	assert(sp->vgetparent != NULL);
+	assert(sp != nullptr);
+	assert(sp->vgetparent != nullptr);
 
 	switch (tag) {
 	case TIFFTAG_PREDICTOR:
-		*va_arg(ap, uint16*) = sp->predictor;
+		*va_arg(ap, uint16_t*) = sp->predictor;
 		break;
 	default:
 		return (*sp->vgetparent)(tif, tag, ap);
@@ -705,8 +705,8 @@ TIFFPredictorInit(TIFF* tif)
 	tif->tif_setupencode = PredictorSetupEncode;
 
 	sp->predictor = 1;			/* default value */
-	sp->encodepfunc = NULL;			/* no predictor routine */
-	sp->decodepfunc = NULL;			/* no predictor routine */
+	sp->encodepfunc = nullptr;			/* no predictor routine */
+	sp->decodepfunc = nullptr;			/* no predictor routine */
 	return 1;
 }
 

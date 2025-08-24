@@ -245,7 +245,7 @@ _TIFFrealloc(tdata_t p, tsize_t s)
 	Ptr n = p;
 
 	SetPtrSize(p, (size_t) s);
-	if (MemError() && (n = NewPtr((size_t) s)) != NULL) {
+	if (MemError() && (n = NewPtr((size_t) s)) != nullptr) {
 		BlockMove(p, n, GetPtrSize(p));
 		DisposePtr(p);
 	}
@@ -255,7 +255,7 @@ _TIFFrealloc(tdata_t p, tsize_t s)
 static void
 appleWarningHandler(const char* module, const char* fmt, va_list ap)
 {
-	if (module != NULL)
+	if (module != nullptr)
 		fprintf(stderr, "%s: ", module);
 	fprintf(stderr, "Warning, ");
 	vfprintf(stderr, fmt, ap);
@@ -266,7 +266,7 @@ TIFFErrorHandler _TIFFwarningHandler = appleWarningHandler;
 static void
 appleErrorHandler(const char* module, const char* fmt, va_list ap)
 {
-	if (module != NULL)
+	if (module != nullptr)
 		fprintf(stderr, "%s: ", module);
 	vfprintf(stderr, fmt, ap);
 	fprintf(stderr, ".\n");

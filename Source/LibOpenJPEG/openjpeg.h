@@ -181,11 +181,11 @@ used for
 </ul>
 */
 typedef struct opj_event_mgr {
-	/** Error message callback if available, NULL otherwise */
+	/** Error message callback if available, nullptr otherwise */
 	opj_msg_callback error_handler;
-	/** Warning message callback if available, NULL otherwise */
+	/** Warning message callback if available, nullptr otherwise */
 	opj_msg_callback warning_handler;
-	/** Debug message callback if available, NULL otherwise */
+	/** Debug message callback if available, nullptr otherwise */
 	opj_msg_callback info_handler;
 } opj_event_mgr_t;
 
@@ -289,9 +289,9 @@ typedef struct opj_cparameters {
 	char infile[OPJ_PATH_LEN];
 	/** output file name */
 	char outfile[OPJ_PATH_LEN];
-	/** DEPRECATED. Index generation is now handeld with the opj_encode_with_info() function. Set to NULL */
+	/** DEPRECATED. Index generation is now handeld with the opj_encode_with_info() function. Set to nullptr */
 	int index_on;
-	/** DEPRECATED. Index generation is now handeld with the opj_encode_with_info() function. Set to NULL */
+	/** DEPRECATED. Index generation is now handeld with the opj_encode_with_info() function. Set to nullptr */
 	char index[OPJ_PATH_LEN];
 	/** subimage encoding: origin image offset in x direction */
 	int image_offset_x0;
@@ -742,7 +742,7 @@ Create an image
 @param numcmpts number of components
 @param cmptparms components parameters
 @param clrspc image color space
-@return returns a new image structure if successful, returns NULL otherwise
+@return returns a new image structure if successful, returns nullptr otherwise
 */
 OPJ_API opj_image_t* OPJ_CALLCONV opj_image_create(int numcmpts, opj_image_cmptparm_t *cmptparms, OPJ_COLOR_SPACE clrspc);
 
@@ -765,9 +765,9 @@ wrapped by the returned CIO handle.
 On writing, buffer parameters must be set to 0: a buffer will be allocated by the library 
 to contain encoded data. 
 @param cinfo Codec context info
-@param buffer Reading: buffer address. Writing: NULL
+@param buffer Reading: buffer address. Writing: nullptr
 @param length Reading: buffer length. Writing: 0
-@return Returns a CIO handle if successful, returns NULL otherwise
+@return Returns a CIO handle if successful, returns nullptr otherwise
 */
 OPJ_API opj_cio_t* OPJ_CALLCONV opj_cio_open(opj_common_ptr cinfo, unsigned char *buffer, int length);
 
@@ -806,7 +806,7 @@ OPJ_API opj_event_mgr_t* OPJ_CALLCONV opj_set_event_mgr(opj_common_ptr cinfo, op
 /**
 Creates a J2K/JPT/JP2 decompression structure
 @param format Decoder to select
-@return Returns a handle to a decompressor if successful, returns NULL otherwise
+@return Returns a handle to a decompressor if successful, returns nullptr otherwise
 */
 OPJ_API opj_dinfo_t* OPJ_CALLCONV opj_create_decompress(OPJ_CODEC_FORMAT format);
 /**
@@ -830,7 +830,7 @@ OPJ_API void OPJ_CALLCONV opj_setup_decoder(opj_dinfo_t *dinfo, opj_dparameters_
 Decode an image from a JPEG-2000 codestream 
 @param dinfo decompressor handle
 @param cio Input buffer stream
-@return Returns a decoded image if successful, returns NULL otherwise
+@return Returns a decoded image if successful, returns nullptr otherwise
 */
 OPJ_API opj_image_t* OPJ_CALLCONV opj_decode(opj_dinfo_t *dinfo, opj_cio_t *cio);
 
@@ -838,14 +838,14 @@ OPJ_API opj_image_t* OPJ_CALLCONV opj_decode(opj_dinfo_t *dinfo, opj_cio_t *cio)
 Decode an image from a JPEG-2000 codestream and extract the codestream information
 @param dinfo decompressor handle
 @param cio Input buffer stream
-@param cstr_info Codestream information structure if needed afterwards, NULL otherwise
-@return Returns a decoded image if successful, returns NULL otherwise
+@param cstr_info Codestream information structure if needed afterwards, nullptr otherwise
+@return Returns a decoded image if successful, returns nullptr otherwise
 */
 OPJ_API opj_image_t* OPJ_CALLCONV opj_decode_with_info(opj_dinfo_t *dinfo, opj_cio_t *cio, opj_codestream_info_t *cstr_info);
 /**
 Creates a J2K/JP2 compression structure
 @param format Coder to select
-@return Returns a handle to a compressor if successful, returns NULL otherwise
+@return Returns a handle to a compressor if successful, returns nullptr otherwise
 */
 OPJ_API opj_cinfo_t* OPJ_CALLCONV opj_create_compress(OPJ_CODEC_FORMAT format);
 /**
@@ -887,7 +887,7 @@ Encode an image into a JPEG-2000 codestream
 3@param cinfo compressor handle
 @param cio Output buffer stream
 @param image Image to encode
-@param index Depreacted -> Set to NULL. To extract index, used opj_encode_wci()
+@param index Depreacted -> Set to nullptr. To extract index, used opj_encode_wci()
 @return Returns true if successful, returns false otherwise
 */
 OPJ_API opj_bool OPJ_CALLCONV opj_encode(opj_cinfo_t *cinfo, opj_cio_t *cio, opj_image_t *image, char *index);
@@ -896,7 +896,7 @@ Encode an image into a JPEG-2000 codestream and extract the codestream informati
 @param cinfo compressor handle
 @param cio Output buffer stream
 @param image Image to encode
-@param cstr_info Codestream information structure if needed afterwards, NULL otherwise
+@param cstr_info Codestream information structure if needed afterwards, nullptr otherwise
 @return Returns true if successful, returns false otherwise
 */
 OPJ_API opj_bool OPJ_CALLCONV opj_encode_with_info(opj_cinfo_t *cinfo, opj_cio_t *cio, opj_image_t *image, opj_codestream_info_t *cstr_info);

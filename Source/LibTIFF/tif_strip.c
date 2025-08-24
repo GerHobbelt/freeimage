@@ -31,14 +31,14 @@
  */
 #include "tiffiop.h"
 
-static uint32
+static uint32_t
 summarize(TIFF* tif, size_t summand1, size_t summand2, const char* where)
 {
 	/*
-	 * XXX: We are using casting to uint32 here, bacause sizeof(size_t)
-	 * may be larger than sizeof(uint32) on 64-bit architectures.
+	 * XXX: We are using casting to uint32_t here, bacause sizeof(size_t)
+	 * may be larger than sizeof(uint32_t) on 64-bit architectures.
 	 */
-	uint32	bytes = summand1 + summand2;
+	uint32_t	bytes = summand1 + summand2;
 
 	if (bytes - summand1 != summand2) {
 		TIFFErrorExt(tif->tif_clientdata, tif->tif_name, "Integer overflow in %s", where);
@@ -48,10 +48,10 @@ summarize(TIFF* tif, size_t summand1, size_t summand2, const char* where)
 	return (bytes);
 }
 
-static uint32
+static uint32_t
 multiply(TIFF* tif, size_t nmemb, size_t elem_size, const char* where)
 {
-	uint32	bytes = nmemb * elem_size;
+	uint32_t	bytes = nmemb * elem_size;
 
 	if (elem_size && bytes / elem_size != nmemb) {
 		TIFFErrorExt(tif->tif_clientdata, tif->tif_name, "Integer overflow in %s", where);
@@ -65,7 +65,7 @@ multiply(TIFF* tif, size_t nmemb, size_t elem_size, const char* where)
  * Compute which strip a (row,sample) value is in.
  */
 tstrip_t
-TIFFComputeStrip(TIFF* tif, uint32 row, tsample_t sample)
+TIFFComputeStrip(TIFF* tif, uint32_t row, tsample_t sample)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 	tstrip_t strip;
@@ -92,7 +92,7 @@ TIFFNumberOfStrips(TIFF* tif)
 	TIFFDirectory *td = &tif->tif_dir;
 	tstrip_t nstrips;
 
-	nstrips = (td->td_rowsperstrip == (uint32) -1 ? 1 :
+	nstrips = (td->td_rowsperstrip == (uint32_t) -1 ? 1 :
 	     TIFFhowmany(td->td_imagelength, td->td_rowsperstrip));
 	if (td->td_planarconfig == PLANARCONFIG_SEPARATE)
 		nstrips = multiply(tif, nstrips, td->td_samplesperpixel,
@@ -104,11 +104,11 @@ TIFFNumberOfStrips(TIFF* tif)
  * Compute the # bytes in a variable height, row-aligned strip.
  */
 tsize_t
-TIFFVStripSize(TIFF* tif, uint32 nrows)
+TIFFVStripSize(TIFF* tif, uint32_t nrows)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 
-	if (nrows == (uint32) -1)
+	if (nrows == (uint32_t) -1)
 		nrows = td->td_imagelength;
 	if (td->td_planarconfig == PLANARCONFIG_CONTIG &&
 	    td->td_photometric == PHOTOMETRIC_YCBCR &&
@@ -121,7 +121,7 @@ TIFFVStripSize(TIFF* tif, uint32 nrows)
 		 * horizontal/vertical subsampling area include
 		 * YCbCr data for the extended image.
 		 */
-		uint16 ycbcrsubsampling[2];
+		uint16_t ycbcrsubsampling[2];
 		tsize_t w, scanline, samplingarea;
 
 		TIFFGetFieldDefaulted(tif, TIFFTAG_YCBCRSUBSAMPLING,
@@ -182,7 +182,7 @@ tsize_t
 TIFFStripSize(TIFF* tif)
 {
 	TIFFDirectory* td = &tif->tif_dir;
-	uint32 rps = td->td_rowsperstrip;
+	uint32_t rps = td->td_rowsperstrip;
 	if (rps > td->td_imagelength)
 		rps = td->td_imagelength;
 	return (TIFFVStripSize(tif, rps));
@@ -194,14 +194,14 @@ TIFFStripSize(TIFF* tif)
  * request is <1 then we choose a strip size according
  * to certain heuristics.
  */
-uint32
-TIFFDefaultStripSize(TIFF* tif, uint32 request)
+uint32_t
+TIFFDefaultStripSize(TIFF* tif, uint32_t request)
 {
 	return (*tif->tif_defstripsize)(tif, request);
 }
 
-uint32
-_TIFFDefaultStripSize(TIFF* tif, uint32 s)
+uint32_t
+_TIFFDefaultStripSize(TIFF* tif, uint32_t s)
 {
 	if ((int32) s < 1) {
 		/*
@@ -210,7 +210,7 @@ _TIFFDefaultStripSize(TIFF* tif, uint32 s)
 		 * STRIP_SIZE_DEFAULT bytes long.
 		 */
 		tsize_t scanline = TIFFScanlineSize(tif);
-		s = (uint32)STRIP_SIZE_DEFAULT / (scanline == 0 ? 1 : scanline);
+		s = (uint32_t)STRIP_SIZE_DEFAULT / (scanline == 0 ? 1 : scanline);
 		if (s == 0)		/* very wide images */
 			s = 1;
 	}
@@ -232,7 +232,7 @@ TIFFScanlineSize(TIFF* tif)
 	if (td->td_planarconfig == PLANARCONFIG_CONTIG) {
 		if (td->td_photometric == PHOTOMETRIC_YCBCR
 		    && !isUpSampled(tif)) {
-			uint16 ycbcrsubsampling[2];
+			uint16_t ycbcrsubsampling[2];
 
 			TIFFGetFieldDefaulted(tif, TIFFTAG_YCBCRSUBSAMPLING,
 					      ycbcrsubsampling + 0,
@@ -302,7 +302,7 @@ TIFFNewScanlineSize(TIFF* tif)
 	if (td->td_planarconfig == PLANARCONFIG_CONTIG) {
 		if (td->td_photometric == PHOTOMETRIC_YCBCR
 		    && !isUpSampled(tif)) {
-			uint16 ycbcrsubsampling[2];
+			uint16_t ycbcrsubsampling[2];
 
 			TIFFGetFieldDefaulted(tif, TIFFTAG_YCBCRSUBSAMPLING,
 					      ycbcrsubsampling + 0,

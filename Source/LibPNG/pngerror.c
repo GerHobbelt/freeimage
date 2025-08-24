@@ -40,7 +40,7 @@ png_error,(png_structp png_ptr, png_const_charp error_message),PNG_NORETURN)
 {
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
    char msg[16];
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       if (png_ptr->flags&
          (PNG_FLAG_STRIP_ERROR_NUMBERS|PNG_FLAG_STRIP_ERROR_TEXT))
@@ -78,7 +78,7 @@ png_error,(png_structp png_ptr, png_const_charp error_message),PNG_NORETURN)
      }
    }
 #endif
-   if (png_ptr != NULL && png_ptr->error_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->error_fn != nullptr)
       (*(png_ptr->error_fn))(png_ptr, error_message);
 
    /* If the custom handler doesn't exist, or if it returns,
@@ -89,12 +89,12 @@ png_error,(png_structp png_ptr, png_const_charp error_message),PNG_NORETURN)
 PNG_FUNCTION(void,PNGAPI
 png_err,(png_structp png_ptr),PNG_NORETURN)
 {
-   /* Prior to 1.5.2 the error_fn received a NULL pointer, expressed
+   /* Prior to 1.5.2 the error_fn received a nullptr pointer, expressed
     * erroneously as '\0', instead of the empty string "".  This was
     * apparently an error, introduced in libpng-1.2.20, and png_default_error
     * will crash in this case.
     */
-   if (png_ptr != NULL && png_ptr->error_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->error_fn != nullptr)
       (*(png_ptr->error_fn))(png_ptr, "");
 
    /* If the custom handler doesn't exist, or if it returns,
@@ -110,9 +110,9 @@ size_t
 png_safecat(png_charp buffer, size_t bufsize, size_t pos,
    png_const_charp string)
 {
-   if (buffer != NULL && pos < bufsize)
+   if (buffer != nullptr && pos < bufsize)
    {
-      if (string != NULL)
+      if (string != nullptr)
          while (*string != '\0' && pos < bufsize-1)
            buffer[pos++] = *string++;
 
@@ -214,7 +214,7 @@ void PNGAPI
 png_warning(png_structp png_ptr, png_const_charp warning_message)
 {
    int offset = 0;
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
    if (png_ptr->flags&
@@ -229,7 +229,7 @@ png_warning(png_structp png_ptr, png_const_charp warning_message)
          }
       }
    }
-   if (png_ptr != NULL && png_ptr->warning_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->warning_fn != nullptr)
       (*(png_ptr->warning_fn))(png_ptr, warning_message + offset);
    else
       png_default_warning(png_ptr, warning_message + offset);
@@ -300,7 +300,7 @@ png_formatted_warning(png_structp png_ptr, png_warning_parameters p,
       /* '@' at end of string is now just printed (previously it was skipped);
        * it is an error in the calling code to terminate the string with @.
        */
-      if (p != NULL && *message == '@' && message[1] != '\0')
+      if (p != nullptr && *message == '@' && message[1] != '\0')
       {
          int parameter_char = *++message; /* Consume the '@' */
          static const char valid_parameters[] = "123456789";
@@ -405,7 +405,7 @@ png_format_buffer(png_structp png_ptr, png_charp buffer, png_const_charp
       }
    }
 
-   if (error_message == NULL)
+   if (error_message == nullptr)
       buffer[iout] = '\0';
 
    else
@@ -430,7 +430,7 @@ png_chunk_error,(png_structp png_ptr, png_const_charp error_message),
    PNG_NORETURN)
 {
    char msg[18+PNG_MAX_ERROR_TEXT];
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       png_error(png_ptr, error_message);
 
    else
@@ -446,7 +446,7 @@ void PNGAPI
 png_chunk_warning(png_structp png_ptr, png_const_charp warning_message)
 {
    char msg[18+PNG_MAX_ERROR_TEXT];
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       png_warning(png_ptr, warning_message);
 
    else
@@ -482,7 +482,7 @@ png_fixed_error,(png_structp png_ptr, png_const_charp name),PNG_NORETURN)
    char msg[fixed_message_ln+PNG_MAX_ERROR_TEXT];
    png_memcpy(msg, fixed_message, fixed_message_ln);
    iin = 0;
-   if (name != NULL) while (iin < (PNG_MAX_ERROR_TEXT-1) && name[iin] != 0)
+   if (name != nullptr) while (iin < (PNG_MAX_ERROR_TEXT-1) && name[iin] != 0)
    {
       msg[fixed_message_ln + iin] = name[iin];
       ++iin;
@@ -501,8 +501,8 @@ jmp_buf* PNGAPI
 png_set_longjmp_fn(png_structp png_ptr, png_longjmp_ptr longjmp_fn,
     size_t jmp_buf_size)
 {
-   if (png_ptr == NULL || jmp_buf_size != png_sizeof(jmp_buf))
-      return NULL;
+   if (png_ptr == nullptr || jmp_buf_size != png_sizeof(jmp_buf))
+      return nullptr;
 
    png_ptr->longjmp_fn = longjmp_fn;
    return &png_ptr->longjmp_buffer;
@@ -511,7 +511,7 @@ png_set_longjmp_fn(png_structp png_ptr, png_longjmp_ptr longjmp_fn,
 
 /* This is the default error handling function.  Note that replacements for
  * this function MUST NOT RETURN, or the program will likely crash.  This
- * function is used by default, or if the program supplies NULL for the
+ * function is used by default, or if the program supplies nullptr for the
  * error function pointer in png_set_error_fn().
  */
 static PNG_FUNCTION(void /* PRIVATE */,
@@ -520,8 +520,8 @@ png_default_error,(png_structp png_ptr, png_const_charp error_message),
 {
 #ifdef PNG_CONSOLE_IO_SUPPORTED
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
-   /* Check on NULL only added in 1.5.4 */
-   if (error_message != NULL && *error_message == PNG_LITERAL_SHARP)
+   /* Check on nullptr only added in 1.5.4 */
+   if (error_message != nullptr && *error_message == PNG_LITERAL_SHARP)
    {
       /* Strip "#nnnn " from beginning of error message. */
       int offset;
@@ -643,7 +643,7 @@ void PNGAPI
 png_set_error_fn(png_structp png_ptr, png_voidp error_ptr,
     png_error_ptr error_fn, png_error_ptr warning_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->error_ptr = error_ptr;
@@ -663,8 +663,8 @@ png_set_error_fn(png_structp png_ptr, png_voidp error_ptr,
 png_voidp PNGAPI
 png_get_error_ptr(png_const_structp png_ptr)
 {
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
 
    return ((png_voidp)png_ptr->error_ptr);
 }
@@ -674,7 +674,7 @@ png_get_error_ptr(png_const_structp png_ptr)
 void PNGAPI
 png_set_strip_error_numbers(png_structp png_ptr, png_uint_32 strip_mode)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       png_ptr->flags &=
          ((~(PNG_FLAG_STRIP_ERROR_NUMBERS |

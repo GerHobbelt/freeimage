@@ -184,8 +184,8 @@ LibRaw:: LibRaw(unsigned int flags)
     ZERO(imgdata);
     ZERO(libraw_internal_data);
     ZERO(callbacks);
-    callbacks.mem_cb = (flags & LIBRAW_OPIONS_NO_MEMERR_CALLBACK) ? NULL:  &default_memory_callback;
-    callbacks.data_cb = (flags & LIBRAW_OPIONS_NO_DATAERR_CALLBACK)? NULL : &default_data_callback;
+    callbacks.mem_cb = (flags & LIBRAW_OPIONS_NO_MEMERR_CALLBACK) ? nullptr:  &default_memory_callback;
+    callbacks.data_cb = (flags & LIBRAW_OPIONS_NO_DATAERR_CALLBACK)? nullptr : &default_data_callback;
     memmove(&imgdata.params.aber,&aber,sizeof(aber));
     memmove(&imgdata.params.gamm,&gamm,sizeof(gamm));
     memmove(&imgdata.params.greybox,&greybox,sizeof(greybox));
@@ -263,10 +263,10 @@ void LibRaw:: recycle()
     if(libraw_internal_data.internal_data.input && libraw_internal_data.internal_data.input_internal) 
         { 
             delete libraw_internal_data.internal_data.input; 
-            libraw_internal_data.internal_data.input = NULL;
+            libraw_internal_data.internal_data.input = nullptr;
         }
     libraw_internal_data.internal_data.input_internal = 0;
-#define FREE(a) do { if(a) { free(a); a = NULL;} }while(0)
+#define FREE(a) do { if(a) { free(a); a = nullptr;} }while(0)
             
     FREE(imgdata.image); 
     FREE(imgdata.thumbnail.thumb);
@@ -562,14 +562,14 @@ void LibRaw:: merror (void *ptr, const char *where)
     if(callbacks.mem_cb)(*callbacks.mem_cb)(callbacks.memcb_data,
                                             libraw_internal_data.internal_data.input
                                             ?libraw_internal_data.internal_data.input->fname()
-                                            :NULL,
+                                            :nullptr,
                                             where);
     throw LIBRAW_EXCEPTION_ALLOC;
 }
 
 
 
-int LibRaw::open_file(const char *fname, INT64 max_buf_size)
+int LibRaw::open_file(const char *fname, int64_t max_buf_size)
 {
 #ifndef WIN32
     struct stat st;
@@ -1369,7 +1369,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
                 {
                     if(errcode) *errcode= LIBRAW_OUT_OF_ORDER_CALL;
                 }
-            return NULL;
+            return nullptr;
         }
 
     if (T.tformat == LIBRAW_THUMBNAIL_BITMAP)
@@ -1380,7 +1380,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
             if(!ret)
                 {
                     if(errcode) *errcode= ENOMEM;
-                    return NULL;
+                    return nullptr;
                 }
 
             memset(ret,0,sizeof(libraw_processed_image_t));
@@ -1408,7 +1408,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
             if(!ret)
                 {
                     if(errcode) *errcode= ENOMEM;
-                    return NULL;
+                    return nullptr;
                 }
 
             memset(ret,0,sizeof(libraw_processed_image_t));
@@ -1439,7 +1439,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
     else
         {
             if(errcode) *errcode= LIBRAW_UNSUPPORTED_THUMBNAIL;
-            return NULL;
+            return nullptr;
 
         }
 }
@@ -1558,7 +1558,7 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_image(int *errcode)
     if(!ret)
         {
                 if(errcode) *errcode= ENOMEM;
-                return NULL;
+                return nullptr;
         }
     memset(ret,0,sizeof(libraw_processed_image_t));
 
@@ -1604,7 +1604,7 @@ int LibRaw::dcraw_ppm_tiff_writer(const char *filename)
         libraw_internal_data.internal_data.output = f;
         write_ppm_tiff();
         SET_PROC_FLAG(LIBRAW_PROGRESS_FLIP);
-        libraw_internal_data.internal_data.output = NULL;
+        libraw_internal_data.internal_data.output = nullptr;
         fclose(f);
         return 0;
     }
@@ -2755,7 +2755,7 @@ static const char  *static_camera_list[] =
 "Sony SLT-A77V",
 "Sony XCD-SX910CR",
 "STV680 VGA",
-   NULL
+   nullptr
 };
 
 const char** LibRaw::cameraList() { return static_camera_list;}

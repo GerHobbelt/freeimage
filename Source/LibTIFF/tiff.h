@@ -55,30 +55,30 @@
 /*
  * Intrinsic data types required by the file format:
  *
- * 8-bit quantities	int8/uint8
- * 16-bit quantities	int16/uint16
- * 32-bit quantities	int32/uint32
+ * 8-bit quantities	int8/uint8_t
+ * 16-bit quantities	int16/uint16_t
+ * 32-bit quantities	int32/uint32_t
  * strings		unsigned char*
  */
 
 #ifndef HAVE_INT8
 typedef	signed char int8;	/* NB: non-ANSI compilers may not grok */
 #endif
-typedef	unsigned char uint8;
+typedef	unsigned char uint8_t;
 #ifndef HAVE_INT16
 typedef	short int16;
 #endif
-typedef	unsigned short uint16;	/* sizeof (uint16) must == 2 */
+typedef	unsigned short uint16_t;	/* sizeof (uint16_t) must == 2 */
 #if SIZEOF_INT == 4
 #ifndef HAVE_INT32
 typedef	int int32;
 #endif
-typedef	unsigned int uint32;	/* sizeof (uint32) must == 4 */
+typedef	unsigned int uint32_t;	/* sizeof (uint32_t) must == 4 */
 #elif SIZEOF_LONG == 4
 #ifndef HAVE_INT32
 typedef	long int32;
 #endif
-typedef	unsigned long uint32;	/* sizeof (uint32) must == 4 */
+typedef	unsigned long uint32_t;	/* sizeof (uint32_t) must == 4 */
 #endif
 
 /* For TIFFReassignTagToIgnore */
@@ -93,11 +93,11 @@ enum TIFFIgnoreSense /* IGNORE tag table */
  * TIFF header.
  */
 typedef	struct {
-	uint16	tiff_magic;	/* magic number (defines byte order) */
+	uint16_t	tiff_magic;	/* magic number (defines byte order) */
 #define TIFF_MAGIC_SIZE		2
-	uint16	tiff_version;	/* TIFF version number */
+	uint16_t	tiff_version;	/* TIFF version number */
 #define TIFF_VERSION_SIZE	2
-	uint32	tiff_diroff;	/* byte offset to first directory */
+	uint32_t	tiff_diroff;	/* byte offset to first directory */
 #define TIFF_DIROFFSET_SIZE	4
 } TIFFHeader;
 
@@ -114,10 +114,10 @@ typedef	struct {
  * left-justified in the offset field.
  */
 typedef	struct {
-	uint16		tdir_tag;	/* see below */
-	uint16		tdir_type;	/* data type; see below */
-	uint32		tdir_count;	/* number of items; length in spec */
-	uint32		tdir_offset;	/* byte offset to field data */
+	uint16_t		tdir_tag;	/* see below */
+	uint16_t		tdir_type;	/* data type; see below */
+	uint32_t		tdir_count;	/* number of items; length in spec */
+	uint32_t		tdir_offset;	/* byte offset to field data */
 } TIFFDirEntry;
 
 /*

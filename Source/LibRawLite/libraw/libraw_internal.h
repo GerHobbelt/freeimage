@@ -53,7 +53,7 @@ public:
     }getbits;
     struct 
     {
-         UINT64 bitbuf;
+         uint64_t bitbuf;
          int vbits;
 
     }ph1_bits;
@@ -95,8 +95,8 @@ typedef struct
     FILE        *output;
     int         input_internal;
     char        *meta_data;
-    INT64       profile_offset;
-    INT64       toffset;
+    int64_t       profile_offset;
+    int64_t       toffset;
 
 } internal_data_t;
 
@@ -121,8 +121,8 @@ typedef struct
     short       order; 
     ushort      sraw_mul[4],cr2_slice[3];
     unsigned    kodak_cbpp;
-    INT64       strip_offset, data_offset;
-    INT64       meta_offset;
+    int64_t       strip_offset, data_offset;
+    int64_t       meta_offset;
     unsigned    data_size;
     unsigned     meta_length;
     unsigned    thumb_misc;

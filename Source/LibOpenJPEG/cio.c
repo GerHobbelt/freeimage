@@ -34,9 +34,9 @@
 /* ----------------------------------------------------------------------- */
 
 opj_cio_t* OPJ_CALLCONV opj_cio_open(opj_common_ptr cinfo, unsigned char *buffer, int length) {
-	opj_cp_t *cp = NULL;
+	opj_cp_t *cp = nullptr;
 	opj_cio_t *cio = (opj_cio_t*)opj_malloc(sizeof(opj_cio_t));
-	if(!cio) return NULL;
+	if(!cio) return nullptr;
 	cio->cinfo = cinfo;
 	if(buffer && length) {
 		/* wrap a user buffer containing the encoded image */
@@ -56,19 +56,19 @@ opj_cio_t* OPJ_CALLCONV opj_cio_open(opj_common_ptr cinfo, unsigned char *buffer
 				break;
 			default:
 				opj_free(cio);
-				return NULL;
+				return nullptr;
 		}
 		cio->length = (unsigned int) (0.1625 * cp->img_size + 2000); /* 0.1625 = 1.3/8 and 2000 bytes as a minimum for headers */
 		cio->buffer = (unsigned char *)opj_malloc(cio->length);
 		if(!cio->buffer) {
 			opj_event_msg(cio->cinfo, EVT_ERROR, "Error allocating memory for compressed bitstream\n");
 			opj_free(cio);
-			return NULL;
+			return nullptr;
 		}
 	}
 	else {
 		opj_free(cio);
-		return NULL;
+		return nullptr;
 	}
 
 	/* Initialize byte IO */

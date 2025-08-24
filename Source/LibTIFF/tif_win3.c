@@ -130,7 +130,7 @@ TIFFOpen(const char* name, const char* mode)
 tdata_t
 _TIFFmalloc(tsize_t s)
 {
-	return (tdata_t) GlobalAllocPtr(GHND, (DWORD) s);
+	return (tdata_t) GlobalAllocPtr(GHND, (uint32_t) s);
 }
 
 void
@@ -142,7 +142,7 @@ _TIFFfree(tdata_t p)
 tdata_t
 _TIFFrealloc(tdata_t p, tsize_t s)
 {
-	return (tdata_t) GlobalReAllocPtr(p, (DWORD) s, GHND);
+	return (tdata_t) GlobalReAllocPtr(p, (uint32_t) s, GHND);
 }
 
 void
@@ -151,7 +151,7 @@ _TIFFmemset(tdata_t p, int v, tsize_t c)
 	char* pp = (char*) p;
 
 	while (c > 0) {
-		tsize_t chunk = 0x10000 - ((uint32) pp & 0xffff);/* What's left in segment */
+		tsize_t chunk = 0x10000 - ((uint32_t) pp & 0xffff);/* What's left in segment */
 		if (chunk > 0xff00)				/* No more than 0xff00 */
 			chunk = 0xff00;
 		if (chunk > c)					/* No more than needed */
@@ -180,8 +180,8 @@ _TIFFmemcmp(const tdata_t d, const tdata_t s, tsize_t c)
 	int result;
 
 	while (c > 0) {
-		chunks = 0x10000 - ((uint32) ss & 0xffff);	/* What's left in segment */
-		chunkd = 0x10000 - ((uint32) dd & 0xffff);	/* What's left in segment */
+		chunks = 0x10000 - ((uint32_t) ss & 0xffff);	/* What's left in segment */
+		chunkd = 0x10000 - ((uint32_t) dd & 0xffff);	/* What's left in segment */
 		chunk = c;					/* Get the largest of     */
 		if (chunk > chunks)				/*   c, chunks, chunkd,   */
 			chunk = chunks;				/*   0xff00               */
@@ -203,7 +203,7 @@ static void
 win3WarningHandler(const char* module, const char* fmt, va_list ap)
 {
 	char e[512] = { '\0' };
-	if (module != NULL)
+	if (module != nullptr)
 		strcat(strcpy(e, module), ":");
 	vsprintf(e+strlen(e), fmt, ap);
 	strcat(e, ".");
@@ -216,7 +216,7 @@ static void
 win3ErrorHandler(const char* module, const char* fmt, va_list ap)
 {
 	char e[512] = { '\0' };
-	if (module != NULL)
+	if (module != nullptr)
 		strcat(strcpy(e, module), ":");
 	vsprintf(e+strlen(e), fmt, ap);
 	strcat(e, ".");

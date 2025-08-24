@@ -2457,7 +2457,7 @@ MNG_EXT mng_retcode MNG_DECL mng_updatemngsimplicity (mng_handle        hHandle,
 #define MNG_INVSAMPLEDEPTH   (mng_retcode)1048 /* sampledepth out-of-range    */
 #define MNG_INVOFFSETSIZE    (mng_retcode)1049 /* invalid offset-size         */
 #define MNG_INVENTRYTYPE     (mng_retcode)1050 /* invalid entry-type          */
-#define MNG_ENDWITHNULL      (mng_retcode)1051 /* may not end with NULL       */
+#define MNG_ENDWITHNULL      (mng_retcode)1051 /* may not end with nullptr       */
 #define MNG_INVIMAGETYPE     (mng_retcode)1052 /* invalid image_type          */
 #define MNG_INVDELTATYPE     (mng_retcode)1053 /* invalid delta_type          */
 #define MNG_INVALIDINDEX     (mng_retcode)1054 /* index-value invalid         */
@@ -2499,9 +2499,9 @@ MNG_EXT mng_retcode MNG_DECL mng_updatemngsimplicity (mng_handle        hHandle,
 
 #define MNG_IMAGEFROZEN      (mng_retcode)8193 /* stopped displaying          */
 
-#define MNG_LCMS_NOHANDLE    1                 /* LCMS returned NULL handle   */
-#define MNG_LCMS_NOMEM       2                 /* LCMS returned NULL gammatab */
-#define MNG_LCMS_NOTRANS     3                 /* LCMS returned NULL transform*/
+#define MNG_LCMS_NOHANDLE    1                 /* LCMS returned nullptr handle   */
+#define MNG_LCMS_NOMEM       2                 /* LCMS returned nullptr gammatab */
+#define MNG_LCMS_NOTRANS     3                 /* LCMS returned nullptr transform*/
 
 /* ************************************************************************** */
 /* *                                                                        * */

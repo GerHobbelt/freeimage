@@ -486,7 +486,7 @@ mng_retcode mngjpeg_decompressdata (mng_datap  pData,
       pData->iJPEGtoskip -= iRemain;   /* skip all data in the buffer */
       iRemain = 0;                     /* and indicate this accordingly */
     }
-                                       /* the skip set current-pointer to NULL ! */
+                                       /* the skip set current-pointer to nullptr ! */
     pData->pJPEGcurrent = pData->pJPEGbuf;
   }
 
@@ -840,7 +840,7 @@ mng_retcode mngjpeg_decompressdata2 (mng_datap  pData,
       pData->iJPEGtoskip2 -= iRemain;  /* skip all data in the buffer */
       iRemain = 0;                     /* and indicate this accordingly */
     }
-                                       /* the skip set current-pointer to NULL ! */
+                                       /* the skip set current-pointer to nullptr ! */
     pData->pJPEGcurrent2 = pData->pJPEGbuf2;
   }
 

@@ -92,7 +92,7 @@ static BOOL
 LosslessTransform(const FilenameIO *filenameIO, FREE_IMAGE_JPEG_OPERATION operation, const char *crop, BOOL perfect) {
 	// We assume all-in-memory processing and can therefore use only a
 	// single file pointer for sequential input and output operation
-	FILE *fp = NULL;
+	FILE *fp = nullptr;
 
 	// check for UNICODE filenames - previous structure filling was done before
 	bool bUseUnicode = filenameIO && filenameIO->wsrc_file && filenameIO->wdst_file;
@@ -101,8 +101,8 @@ LosslessTransform(const FilenameIO *filenameIO, FREE_IMAGE_JPEG_OPERATION operat
 	jpeg_decompress_struct srcinfo;
 	jpeg_compress_struct dstinfo;
 	jpeg_error_mgr jsrcerr, jdsterr;
-	jvirt_barray_ptr *src_coef_arrays = NULL;
-	jvirt_barray_ptr *dst_coef_arrays = NULL;
+	jvirt_barray_ptr *src_coef_arrays = nullptr;
+	jvirt_barray_ptr *dst_coef_arrays = nullptr;
 	// Support for copying optional markers from source to destination file
 	JCOPY_OPTION copyoption;
 	// Image transformation options
@@ -170,7 +170,7 @@ LosslessTransform(const FilenameIO *filenameIO, FREE_IMAGE_JPEG_OPERATION operat
 		jpeg_create_compress(&dstinfo);
 
 		// crop option
-		if(crop != NULL) {
+		if(crop != nullptr) {
 			if(!jtransform_parse_crop_spec(&transfoptions, crop)) {
 				FreeImage_OutputMessageProc(FIF_JPEG, "Bogus crop argument %s", crop);
 				throw(1);
@@ -180,18 +180,18 @@ LosslessTransform(const FilenameIO *filenameIO, FREE_IMAGE_JPEG_OPERATION operat
 		// Open the input file
 		if(bUseUnicode) {
 #ifdef _WIN32
-			if((fp = _wfopen(filenameIO->wsrc_file, L"rb")) == NULL) {
+			if((fp = _wfopen(filenameIO->wsrc_file, L"rb")) == nullptr) {
 				FreeImage_OutputMessageProc(FIF_JPEG, "Cannot open input file for reading");
 			}
 #else
-			fp = NULL;
+			fp = nullptr;
 #endif // _WIN32
 		} else {
-			if((fp = fopen(filenameIO->src_file, "rb")) == NULL) {
+			if((fp = fopen(filenameIO->src_file, "rb")) == nullptr) {
 				FreeImage_OutputMessageProc(FIF_JPEG, "Cannot open %s for reading", filenameIO->src_file);
 			}
 		}
-		if(fp == NULL) {
+		if(fp == nullptr) {
 			jpeg_destroy_compress(&dstinfo);
 			jpeg_destroy_decompress(&srcinfo);
 			return FALSE;
@@ -237,18 +237,18 @@ LosslessTransform(const FilenameIO *filenameIO, FREE_IMAGE_JPEG_OPERATION operat
 		// Open the output file
 		if(bUseUnicode) {
 #ifdef _WIN32
-			if((fp = _wfopen(filenameIO->wdst_file, L"wb")) == NULL) {
+			if((fp = _wfopen(filenameIO->wdst_file, L"wb")) == nullptr) {
 				FreeImage_OutputMessageProc(FIF_JPEG, "Cannot open output file for writing");
 			}
 #else
-			fp = NULL;
+			fp = nullptr;
 #endif // _WIN32
 		} else {
-			if((fp = fopen(filenameIO->dst_file, "wb")) == NULL) {
+			if((fp = fopen(filenameIO->dst_file, "wb")) == nullptr) {
 				FreeImage_OutputMessageProc(FIF_JPEG, "Cannot open %s for writing", filenameIO->dst_file);
 			}
 		}
-		if(fp == NULL) {
+		if(fp == nullptr) {
 			throw(1);
 		}
 		
@@ -302,7 +302,7 @@ FreeImage_JPEGTransform(const char *src_file, const char *dst_file, FREE_IMAGE_J
 		filenameIO.dst_file = dst_file;
 
 		// perform the transformation
-		return LosslessTransform(&filenameIO, operation, NULL, perfect);
+		return LosslessTransform(&filenameIO, operation, nullptr, perfect);
 
 	} catch(const char *text) {
 		FreeImage_OutputMessageProc(FIF_JPEG, text);
@@ -362,7 +362,7 @@ FreeImage_JPEGTransformU(const wchar_t *src_file, const wchar_t *dst_file, FREE_
 		filenameIO.wdst_file = dst_file;
 
 		// perform the transformation
-		return LosslessTransform(&filenameIO, operation, NULL, perfect);
+		return LosslessTransform(&filenameIO, operation, nullptr, perfect);
 
 	} catch(const char *text) {
 		FreeImage_OutputMessageProc(FIF_JPEG, text);

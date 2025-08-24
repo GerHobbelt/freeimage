@@ -98,7 +98,7 @@ appreciated.
 A "png_get_copyright" function is available, for convenient use in "about"
 boxes and the like:
 
-   printf("%s",png_get_copyright(NULL));
+   printf("%s",png_get_copyright(nullptr));
 
 Also, the PNG logo (in PNG format, of course) is supplied in the
 files "pngbar.png" and "pngbar.jpg (88x31) and "pngnow.png" (98x31).

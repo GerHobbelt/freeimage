@@ -33,10 +33,10 @@
 #include "tif_predict.h"
 #include <math.h>
 
-uint32
-_TIFFMultiply32(TIFF* tif, uint32 first, uint32 second, const char* where)
+uint32_t
+_TIFFMultiply32(TIFF* tif, uint32_t first, uint32_t second, const char* where)
 {
-	uint32 bytes = first * second;
+	uint32_t bytes = first * second;
 
 	if (second && bytes / second != first) {
 		TIFFErrorExt(tif->tif_clientdata, where, "Integer overflow in %s", where);
@@ -63,7 +63,7 @@ void*
 _TIFFCheckRealloc(TIFF* tif, void* buffer,
 		  tmsize_t nmemb, tmsize_t elem_size, const char* what)
 {
-	void* cp = NULL;
+	void* cp = nullptr;
 	tmsize_t bytes = nmemb * elem_size;
 
 	/*
@@ -72,7 +72,7 @@ _TIFFCheckRealloc(TIFF* tif, void* buffer,
 	if (nmemb && elem_size && bytes / elem_size == nmemb)
 		cp = _TIFFrealloc(buffer, bytes);
 
-	if (cp == NULL) {
+	if (cp == nullptr) {
 		TIFFErrorExt(tif->tif_clientdata, tif->tif_name,
 			     "Failed to allocate memory for %s "
 			     "(%ld elements of %ld bytes each)",
@@ -85,13 +85,13 @@ _TIFFCheckRealloc(TIFF* tif, void* buffer,
 void*
 _TIFFCheckMalloc(TIFF* tif, tmsize_t nmemb, tmsize_t elem_size, const char* what)
 {
-	return _TIFFCheckRealloc(tif, NULL, nmemb, elem_size, what);  
+	return _TIFFCheckRealloc(tif, nullptr, nmemb, elem_size, what);  
 }
 
 static int
 TIFFDefaultTransferFunction(TIFFDirectory* td)
 {
-	uint16 **tf = td->td_transferfunction;
+	uint16_t **tf = td->td_transferfunction;
 	tmsize_t i, n, nbytes;
 
 	tf[0] = tf[1] = tf[2] = 0;
@@ -99,20 +99,20 @@ TIFFDefaultTransferFunction(TIFFDirectory* td)
 		return 0;
 
 	n = ((tmsize_t)1)<<td->td_bitspersample;
-	nbytes = n * sizeof (uint16);
-	if (!(tf[0] = (uint16 *)_TIFFmalloc(nbytes)))
+	nbytes = n * sizeof (uint16_t);
+	if (!(tf[0] = (uint16_t *)_TIFFmalloc(nbytes)))
 		return 0;
 	tf[0][0] = 0;
 	for (i = 1; i < n; i++) {
 		double t = (double)i/((double) n-1.);
-		tf[0][i] = (uint16)floor(65535.*pow(t, 2.2) + .5);
+		tf[0][i] = (uint16_t)floor(65535.*pow(t, 2.2) + .5);
 	}
 
 	if (td->td_samplesperpixel - td->td_extrasamples > 1) {
-		if (!(tf[1] = (uint16 *)_TIFFmalloc(nbytes)))
+		if (!(tf[1] = (uint16_t *)_TIFFmalloc(nbytes)))
 			goto bad;
 		_TIFFmemcpy(tf[1], tf[0], nbytes);
-		if (!(tf[2] = (uint16 *)_TIFFmalloc(nbytes)))
+		if (!(tf[2] = (uint16_t *)_TIFFmalloc(nbytes)))
 			goto bad;
 		_TIFFmemcpy(tf[2], tf[0], nbytes);
 	}
@@ -167,7 +167,7 @@ TIFFDefaultRefBlackWhite(TIFFDirectory* td)
  *	place in the library -- in TIFFDefaultDirectory.
  */
 int
-TIFFVGetFieldDefaulted(TIFF* tif, uint32 tag, va_list ap)
+TIFFVGetFieldDefaulted(TIFF* tif, uint32_t tag, va_list ap)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 
@@ -175,74 +175,74 @@ TIFFVGetFieldDefaulted(TIFF* tif, uint32 tag, va_list ap)
 		return (1);
 	switch (tag) {
 	case TIFFTAG_SUBFILETYPE:
-		*va_arg(ap, uint32 *) = td->td_subfiletype;
+		*va_arg(ap, uint32_t *) = td->td_subfiletype;
 		return (1);
 	case TIFFTAG_BITSPERSAMPLE:
-		*va_arg(ap, uint16 *) = td->td_bitspersample;
+		*va_arg(ap, uint16_t *) = td->td_bitspersample;
 		return (1);
 	case TIFFTAG_THRESHHOLDING:
-		*va_arg(ap, uint16 *) = td->td_threshholding;
+		*va_arg(ap, uint16_t *) = td->td_threshholding;
 		return (1);
 	case TIFFTAG_FILLORDER:
-		*va_arg(ap, uint16 *) = td->td_fillorder;
+		*va_arg(ap, uint16_t *) = td->td_fillorder;
 		return (1);
 	case TIFFTAG_ORIENTATION:
-		*va_arg(ap, uint16 *) = td->td_orientation;
+		*va_arg(ap, uint16_t *) = td->td_orientation;
 		return (1);
 	case TIFFTAG_SAMPLESPERPIXEL:
-		*va_arg(ap, uint16 *) = td->td_samplesperpixel;
+		*va_arg(ap, uint16_t *) = td->td_samplesperpixel;
 		return (1);
 	case TIFFTAG_ROWSPERSTRIP:
-		*va_arg(ap, uint32 *) = td->td_rowsperstrip;
+		*va_arg(ap, uint32_t *) = td->td_rowsperstrip;
 		return (1);
 	case TIFFTAG_MINSAMPLEVALUE:
-		*va_arg(ap, uint16 *) = td->td_minsamplevalue;
+		*va_arg(ap, uint16_t *) = td->td_minsamplevalue;
 		return (1);
 	case TIFFTAG_MAXSAMPLEVALUE:
-		*va_arg(ap, uint16 *) = td->td_maxsamplevalue;
+		*va_arg(ap, uint16_t *) = td->td_maxsamplevalue;
 		return (1);
 	case TIFFTAG_PLANARCONFIG:
-		*va_arg(ap, uint16 *) = td->td_planarconfig;
+		*va_arg(ap, uint16_t *) = td->td_planarconfig;
 		return (1);
 	case TIFFTAG_RESOLUTIONUNIT:
-		*va_arg(ap, uint16 *) = td->td_resolutionunit;
+		*va_arg(ap, uint16_t *) = td->td_resolutionunit;
 		return (1);
 	case TIFFTAG_PREDICTOR:
                 {
 			TIFFPredictorState* sp = (TIFFPredictorState*) tif->tif_data;
-			*va_arg(ap, uint16*) = (uint16) sp->predictor;
+			*va_arg(ap, uint16_t*) = (uint16_t) sp->predictor;
 			return 1;
                 }
 	case TIFFTAG_DOTRANGE:
-		*va_arg(ap, uint16 *) = 0;
-		*va_arg(ap, uint16 *) = (1<<td->td_bitspersample)-1;
+		*va_arg(ap, uint16_t *) = 0;
+		*va_arg(ap, uint16_t *) = (1<<td->td_bitspersample)-1;
 		return (1);
 	case TIFFTAG_INKSET:
-		*va_arg(ap, uint16 *) = INKSET_CMYK;
+		*va_arg(ap, uint16_t *) = INKSET_CMYK;
 		return 1;
 	case TIFFTAG_NUMBEROFINKS:
-		*va_arg(ap, uint16 *) = 4;
+		*va_arg(ap, uint16_t *) = 4;
 		return (1);
 	case TIFFTAG_EXTRASAMPLES:
-		*va_arg(ap, uint16 *) = td->td_extrasamples;
-		*va_arg(ap, uint16 **) = td->td_sampleinfo;
+		*va_arg(ap, uint16_t *) = td->td_extrasamples;
+		*va_arg(ap, uint16_t **) = td->td_sampleinfo;
 		return (1);
 	case TIFFTAG_MATTEING:
-		*va_arg(ap, uint16 *) =
+		*va_arg(ap, uint16_t *) =
 		    (td->td_extrasamples == 1 &&
 		     td->td_sampleinfo[0] == EXTRASAMPLE_ASSOCALPHA);
 		return (1);
 	case TIFFTAG_TILEDEPTH:
-		*va_arg(ap, uint32 *) = td->td_tiledepth;
+		*va_arg(ap, uint32_t *) = td->td_tiledepth;
 		return (1);
 	case TIFFTAG_DATATYPE:
-		*va_arg(ap, uint16 *) = td->td_sampleformat-1;
+		*va_arg(ap, uint16_t *) = td->td_sampleformat-1;
 		return (1);
 	case TIFFTAG_SAMPLEFORMAT:
-		*va_arg(ap, uint16 *) = td->td_sampleformat;
+		*va_arg(ap, uint16_t *) = td->td_sampleformat;
                 return(1);
 	case TIFFTAG_IMAGEDEPTH:
-		*va_arg(ap, uint32 *) = td->td_imagedepth;
+		*va_arg(ap, uint32_t *) = td->td_imagedepth;
 		return (1);
 	case TIFFTAG_YCBCRCOEFFICIENTS:
 		{
@@ -252,11 +252,11 @@ TIFFVGetFieldDefaulted(TIFF* tif, uint32 tag, va_list ap)
 			return 1;
 		}
 	case TIFFTAG_YCBCRSUBSAMPLING:
-		*va_arg(ap, uint16 *) = td->td_ycbcrsubsampling[0];
-		*va_arg(ap, uint16 *) = td->td_ycbcrsubsampling[1];
+		*va_arg(ap, uint16_t *) = td->td_ycbcrsubsampling[0];
+		*va_arg(ap, uint16_t *) = td->td_ycbcrsubsampling[1];
 		return (1);
 	case TIFFTAG_YCBCRPOSITIONING:
-		*va_arg(ap, uint16 *) = td->td_ycbcrpositioning;
+		*va_arg(ap, uint16_t *) = td->td_ycbcrpositioning;
 		return (1);
 	case TIFFTAG_WHITEPOINT:
 		{
@@ -276,10 +276,10 @@ TIFFVGetFieldDefaulted(TIFF* tif, uint32 tag, va_list ap)
 			TIFFErrorExt(tif->tif_clientdata, tif->tif_name, "No space for \"TransferFunction\" tag");
 			return (0);
 		}
-		*va_arg(ap, uint16 **) = td->td_transferfunction[0];
+		*va_arg(ap, uint16_t **) = td->td_transferfunction[0];
 		if (td->td_samplesperpixel - td->td_extrasamples > 1) {
-			*va_arg(ap, uint16 **) = td->td_transferfunction[1];
-			*va_arg(ap, uint16 **) = td->td_transferfunction[2];
+			*va_arg(ap, uint16_t **) = td->td_transferfunction[1];
+			*va_arg(ap, uint16_t **) = td->td_transferfunction[2];
 		}
 		return (1);
 	case TIFFTAG_REFERENCEBLACKWHITE:
@@ -296,7 +296,7 @@ TIFFVGetFieldDefaulted(TIFF* tif, uint32 tag, va_list ap)
  * value if the tag is not present in the directory.
  */
 int
-TIFFGetFieldDefaulted(TIFF* tif, uint32 tag, ...)
+TIFFGetFieldDefaulted(TIFF* tif, uint32_t tag, ...)
 {
 	int ok;
 	va_list ap;

@@ -94,8 +94,8 @@ NeXTDecode(TIFF* tif, tidata_t buf, tsize_t occ, tsample_t s)
 			break;
 		}
 		default: {
-			uint32 npixels = 0, grey;
-			uint32 imagewidth = tif->tif_dir.td_imagewidth;
+			uint32_t npixels = 0, grey;
+			uint32_t imagewidth = tif->tif_dir.td_imagewidth;
 
 			/*
 			 * The scanline is composed of a sequence of constant

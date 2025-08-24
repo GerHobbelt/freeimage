@@ -333,7 +333,7 @@ static void jp2_free_pclr(opj_jp2_color_t *color)
 
 	if(color->jp2_pclr->cmap) opj_free(color->jp2_pclr->cmap);
 
-    opj_free(color->jp2_pclr); color->jp2_pclr = NULL;
+    opj_free(color->jp2_pclr); color->jp2_pclr = nullptr;
 }
 
 static void free_color_data(opj_jp2_color_t *color)
@@ -385,7 +385,7 @@ static void jp2_apply_pclr(opj_jp2_color_t *color, opj_image_t *image, opj_commo
 
 	if(cmap[i].mtyp == 0) /* Direct use */
   {
-	old_comps[cmp].data = NULL; continue;
+	old_comps[cmp].data = nullptr; continue;
   }
 /* Palette mapping: */
 	new_comps[pcol].data = (int*)
@@ -459,7 +459,7 @@ static opj_bool jp2_read_pclr(opj_jp2_t *jp2, opj_cio_t *cio,
 	jp2_pclr->entries = entries;
 	jp2_pclr->nr_entries = nr_entries;
 	jp2_pclr->nr_channels = nr_channels;
-	jp2_pclr->cmap = NULL;
+	jp2_pclr->cmap = nullptr;
 
 	color->jp2_pclr = jp2_pclr;
 
@@ -492,7 +492,7 @@ static opj_bool jp2_read_cmap(opj_jp2_t *jp2, opj_cio_t *cio,
 	OPJ_ARG_NOT_USED(jp2);
 
 /* Need nr_channels: */
-	if(color->jp2_pclr == NULL) return OPJ_FALSE;
+	if(color->jp2_pclr == nullptr) return OPJ_FALSE;
 
 /* Part 1, I.5.3.5: 'There shall be at most one Component Mapping box
  * inside a JP2 Header box' :
@@ -546,7 +546,7 @@ static void jp2_apply_cdef(opj_image_t *image, opj_jp2_color_t *color)
    }
 	if(color->jp2_cdef->info) opj_free(color->jp2_cdef->info);
 
-	opj_free(color->jp2_cdef); color->jp2_cdef = NULL;
+	opj_free(color->jp2_cdef); color->jp2_cdef = nullptr;
 
 }/* jp2_apply_cdef() */
 
@@ -732,12 +732,12 @@ opj_image_t* opj_jp2_decode(opj_jp2_t *jp2, opj_cio_t *cio,
 	opj_codestream_info_t *cstr_info) 
 {
 	opj_common_ptr cinfo;
-	opj_image_t *image = NULL;
+	opj_image_t *image = nullptr;
 	opj_jp2_color_t color;
 
 	if(!jp2 || !cio) 
    {
-	return NULL;
+	return nullptr;
    }
 	memset(&color, 0, sizeof(opj_jp2_color_t));
 	cinfo = jp2->cinfo;
@@ -747,7 +747,7 @@ opj_image_t* opj_jp2_decode(opj_jp2_t *jp2, opj_cio_t *cio,
    {
 	free_color_data(&color);
 	opj_event_msg(cinfo, EVT_ERROR, "Failed to decode jp2 structure\n");
-	return NULL;
+	return nullptr;
    }
 
 /* J2K decoding */
@@ -757,7 +757,7 @@ opj_image_t* opj_jp2_decode(opj_jp2_t *jp2, opj_cio_t *cio,
    {
 	free_color_data(&color);
 	opj_event_msg(cinfo, EVT_ERROR, "Failed to decode J2K image\n");
-	return NULL;
+	return nullptr;
    }
    
     if (!jp2->ignore_pclr_cmap_cdef){
@@ -787,7 +787,7 @@ opj_image_t* opj_jp2_decode(opj_jp2_t *jp2, opj_cio_t *cio,
 	if(color.icc_profile_buf)
    {
 	image->icc_profile_buf = color.icc_profile_buf;
-	color.icc_profile_buf = NULL;
+	color.icc_profile_buf = nullptr;
 	image->icc_profile_len = color.icc_profile_len;
    }
    }
@@ -1046,9 +1046,9 @@ opj_jp2_t* jp2_create_decompress(opj_common_ptr cinfo) {
 		jp2->cinfo = cinfo;
 		/* create the J2K codec */
 		jp2->j2k = j2k_create_decompress(cinfo);
-		if(jp2->j2k == NULL) {
+		if(jp2->j2k == nullptr) {
 			jp2_destroy_decompress(jp2);
-			return NULL;
+			return nullptr;
 		}
 	}
 	return jp2;
@@ -1086,9 +1086,9 @@ opj_jp2_t* jp2_create_compress(opj_common_ptr cinfo) {
 		jp2->cinfo = cinfo;
 		/* create the J2K codec */
 		jp2->j2k = j2k_create_compress(cinfo);
-		if(jp2->j2k == NULL) {
+		if(jp2->j2k == nullptr) {
 			jp2_destroy_compress(jp2);
-			return NULL;
+			return nullptr;
 		}
 	}
 	return jp2;

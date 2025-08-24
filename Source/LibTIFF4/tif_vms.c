@@ -130,7 +130,7 @@ _tiffMapProc(thandle_t fd, tdata_t* pbase, toff_t* psize)
 	 * We cannot use a file descriptor, we
 	 * must open the file once more.
 	 */
-	if (getname((int)fd, name, 1) == NULL)
+	if (getname((int)fd, name, 1) == nullptr)
 		return(0);
 	/* prepare the FAB for a user file open */
 	fab = cc$rms_fab;
@@ -311,7 +311,7 @@ _TIFFmemcmp(const tdata_t p1, const tdata_t p2, tsize_t c)
 static void
 vmsWarningHandler(const char* module, const char* fmt, va_list ap)
 {
-	if (module != NULL)
+	if (module != nullptr)
 		fprintf(stderr, "%s: ", module);
 	fprintf(stderr, "Warning, ");
 	vfprintf(stderr, fmt, ap);
@@ -327,7 +327,7 @@ asm("_$$PsectAttributes_NOSHR$$_TIFFwarningHandler")
 static void
 vmsErrorHandler(const char* module, const char* fmt, va_list ap)
 {
-	if (module != NULL)
+	if (module != nullptr)
 		fprintf(stderr, "%s: ", module);
 	vfprintf(stderr, fmt, ap);
 	fprintf(stderr, ".\n");
@@ -379,7 +379,7 @@ typedef	union {
 	ieeedouble	ieee;
 	nativedouble	native;
 	char		b[8];
-	uint32		l[2];
+	uint32_t		l[2];
 	double		d;
 } double_t;
 
@@ -387,7 +387,7 @@ typedef	union {
 	ieeefloat	ieee;
 	nativefloat	native;
 	char		b[4];
-	uint32		l;
+	uint32_t		l;
 	float		f;
 } float_t;
 

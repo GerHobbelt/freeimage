@@ -37,7 +37,7 @@ Index: freeimage/Source/FreeImage/PluginPCX.cpp
  
 -		// allocate a new DIB
 +		// process the window
-+		const WORD *window = header.window;	// left, upper, right,lower pixel coord.
++		const uint16_t *window = header.window;	// left, upper, right,lower pixel coord.
 +		const int left		= window[0];
 +		const int top		= window[1];
 +		const int right		= window[2];
@@ -83,11 +83,11 @@ Index: freeimage/Source/FreeImage/PluginPCX.cpp
 @@ -426,19 +446,23 @@ Load(FreeImageIO *io, fi_handle handle,
  
  				if (palette_id == 0x0C) {
- 					BYTE *cmap = (BYTE*)malloc(768 * sizeof(BYTE));
+ 					uint8_t *cmap = (uint8_t*)malloc(768 * sizeof(uint8_t));
 -					io->read_proc(cmap, 768, 1, handle);
  
 -					pal = FreeImage_GetPalette(dib);
--					BYTE *pColormap = &cmap[0];
+-					uint8_t *pColormap = &cmap[0];
 +					if(cmap) {
 +						io->read_proc(cmap, 768, 1, handle);
  
@@ -97,7 +97,7 @@ Index: freeimage/Source/FreeImage/PluginPCX.cpp
 -						pal[i].rgbBlue  = pColormap[2];
 -						pColormap += 3;
 +						pal = FreeImage_GetPalette(dib);
-+						BYTE *pColormap = &cmap[0];
++						uint8_t *pColormap = &cmap[0];
 +
 +						for(int i = 0; i < 256; i++) {
 +							pal[i].rgbRed   = pColormap[0];
@@ -119,7 +119,7 @@ Index: freeimage/Source/FreeImage/PluginPCX.cpp
  		// length of raster line in bytes
 -		unsigned linelength = header.bytes_per_line * header.planes;
 +		const unsigned linelength = header.bytes_per_line * header.planes;
- 		// length of DIB line (rounded to DWORD) in bytes
+ 		// length of DIB line (rounded to uint32_t) in bytes
 -		unsigned pitch = FreeImage_GetPitch(dib);
 +		const unsigned pitch = FreeImage_GetPitch(dib);
  

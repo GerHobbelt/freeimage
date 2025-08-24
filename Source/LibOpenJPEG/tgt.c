@@ -40,16 +40,16 @@
 opj_tgt_tree_t *tgt_create(int numleafsh, int numleafsv) {
 	int nplh[32];
 	int nplv[32];
-	opj_tgt_node_t *node = NULL;
-	opj_tgt_node_t *parentnode = NULL;
-	opj_tgt_node_t *parentnode0 = NULL;
-	opj_tgt_tree_t *tree = NULL;
+	opj_tgt_node_t *node = nullptr;
+	opj_tgt_node_t *parentnode = nullptr;
+	opj_tgt_node_t *parentnode0 = nullptr;
+	opj_tgt_tree_t *tree = nullptr;
 	int i, j, k;
 	int numlvls;
 	int n;
 
 	tree = (opj_tgt_tree_t *) opj_malloc(sizeof(opj_tgt_tree_t));
-	if(!tree) return NULL;
+	if(!tree) return nullptr;
 	tree->numleafsh = numleafsh;
 	tree->numleafsv = numleafsv;
 
@@ -68,13 +68,13 @@ opj_tgt_tree_t *tgt_create(int numleafsh, int numleafsv) {
 	/* ADD */
 	if (tree->numnodes == 0) {
 		opj_free(tree);
-		return NULL;
+		return nullptr;
 	}
 
 	tree->nodes = (opj_tgt_node_t*) opj_calloc(tree->numnodes, sizeof(opj_tgt_node_t));
 	if(!tree->nodes) {
 		opj_free(tree);
-		return NULL;
+		return nullptr;
 	}
 
 	node = tree->nodes;
@@ -116,7 +116,7 @@ void tgt_destroy(opj_tgt_tree_t *tree) {
 void tgt_reset(opj_tgt_tree_t *tree) {
 	int i;
 
-	if (NULL == tree)
+	if (nullptr == tree)
 		return;
 	
 	for (i = 0; i < tree->numnodes; i++) {

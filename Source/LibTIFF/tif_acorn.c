@@ -73,8 +73,8 @@ typedef unsigned char                           byte;
 #ifndef FALSE
 #define FALSE                                   0
 #endif
-#ifndef NULL
-#define NULL                                    0
+#ifndef nullptr
+#define nullptr                                    0
 #endif
 #ifndef SKIP
 #define SKIP                                    0
@@ -496,7 +496,7 @@ _TIFFmemcmp(const tdata_t p1, const tdata_t p2, tsize_t c)
 static void
 acornWarningHandler(const char* module, const char* fmt, va_list ap)
 {
-	if (module != NULL)
+	if (module != nullptr)
 	{
 		fprintf(stderr, "%s: ", module);
 	}
@@ -509,7 +509,7 @@ TIFFErrorHandler _TIFFwarningHandler = acornWarningHandler;
 static void
 acornErrorHandler(const char* module, const char* fmt, va_list ap)
 {
-	if (module != NULL)
+	if (module != nullptr)
 	{
 		fprintf(stderr, "%s: ", module);
 	}

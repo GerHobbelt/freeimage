@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
 	gtk_signal_connect(GTK_OBJECT(window), "destroy",
-				GTK_SIGNAL_FUNC(destroy), NULL);
+				GTK_SIGNAL_FUNC(destroy), nullptr);
 
 	visual = gdk_visual_get_system();
 
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 //makes it upside down :(
 //	memcpy(image->mem, FreeImage_GetBits(dib), image->bpl * image->height);
 
-	BYTE *ptr = FreeImage_GetBits(dib);
+	uint8_t *ptr = FreeImage_GetBits(dib);
 
 	for (y = 0; y < image->height; y++) {
 		memcpy(image->mem + (y * image->bpl),
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 
 	FreeImage_Unload(dib);
 
-	imagebox = gtk_image_new_from_image(image, NULL);
+	imagebox = gtk_image_new_from_image(image, nullptr);
 	gtk_container_add(GTK_CONTAINER(window), imagebox);
 
 	gtk_widget_show(imagebox);

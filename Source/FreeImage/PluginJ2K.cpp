@@ -74,7 +74,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -84,8 +84,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE jpc_signature[] = { 0xFF, 0x4F };
-	BYTE signature[2] = { 0, 0 };
+	uint8_t jpc_signature[] = { 0xFF, 0x4F };
+	uint8_t signature[2] = { 0, 0 };
 
 	long tell = io->tell_proc(handle);
 	io->read_proc(signature, 1, sizeof(jpc_signature), handle);
@@ -117,7 +117,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 
 static void * DLL_CALLCONV
 Open(FreeImageIO *io, fi_handle handle, BOOL read) {
-	return NULL;
+	return nullptr;
 }
 
 static void DLL_CALLCONV
@@ -131,26 +131,26 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	if (handle) {
 		opj_dparameters_t parameters;	// decompression parameters 
 		opj_event_mgr_t event_mgr;		// event manager 
-		opj_image_t *image = NULL;		// decoded image 
+		opj_image_t *image = nullptr;		// decoded image 
 
-		BYTE *src = NULL; 
+		uint8_t *src = nullptr; 
 		long file_length;
 
-		opj_dinfo_t* dinfo = NULL;	// handle to a decompressor 
-		opj_cio_t *cio = NULL;
+		opj_dinfo_t* dinfo = nullptr;	// handle to a decompressor 
+		opj_cio_t *cio = nullptr;
 
-		FIBITMAP *dib = NULL;
+		FIBITMAP *dib = nullptr;
 
 		// check the file format
 		if(!Validate(io, handle)) {
-			return NULL;
+			return nullptr;
 		}
 
 		// configure the event callbacks
 		memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
 		event_mgr.error_handler = j2k_error_callback;
 		event_mgr.warning_handler = j2k_warning_callback;
-		event_mgr.info_handler = NULL;
+		event_mgr.info_handler = nullptr;
 
 		// set decoding parameters to default values 
 		opj_set_default_decoder_parameters(&parameters);
@@ -162,7 +162,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			io->seek_proc(handle, 0, SEEK_END);
 			file_length = io->tell_proc(handle) - start_pos;
 			io->seek_proc(handle, start_pos, SEEK_SET);
-			src = (BYTE*)malloc(file_length * sizeof(BYTE));
+			src = (uint8_t*)malloc(file_length * sizeof(uint8_t));
 			if(!src) {
 				throw FI_MSG_ERROR_MEMORY;
 			}
@@ -176,7 +176,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			dinfo = opj_create_decompress(CODEC_J2K);
 			
 			// catch events using our callbacks
-			opj_set_event_mgr((opj_common_ptr)dinfo, &event_mgr, NULL);			
+			opj_set_event_mgr((opj_common_ptr)dinfo, &event_mgr, nullptr);			
 
 			// setup the decoder decoding parameters using user parameters 
 			opj_setup_decoder(dinfo, &parameters);
@@ -192,11 +192,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			
 			// close the byte stream 
 			opj_cio_close(cio);
-			cio = NULL;
+			cio = nullptr;
 
 			// free the memory containing the code-stream 
 			free(src);
-			src = NULL;
+			src = nullptr;
 
 			// free the codec context
 			opj_destroy_decompress(dinfo);
@@ -221,11 +221,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			FreeImage_OutputMessageProc(s_format_id, text);
 
-			return NULL;
+			return nullptr;
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 static BOOL DLL_CALLCONV
@@ -234,15 +234,15 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		BOOL bSuccess;
 		opj_cparameters_t parameters;		// compression parameters 
 		opj_event_mgr_t event_mgr;			// event manager 
-		opj_image_t *image = NULL;			// image to encode
-		opj_cinfo_t* cinfo = NULL;			// codec context
-		opj_cio_t *cio = NULL;				// memory byte stream
+		opj_image_t *image = nullptr;			// image to encode
+		opj_cinfo_t* cinfo = nullptr;			// codec context
+		opj_cio_t *cio = nullptr;				// memory byte stream
 
 		// configure the event callbacks
 		memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
 		event_mgr.error_handler = j2k_error_callback;
 		event_mgr.warning_handler = j2k_warning_callback;
-		event_mgr.info_handler = NULL;
+		event_mgr.info_handler = nullptr;
 
 		// set encoding parameters to default values
 		opj_set_default_encoder_parameters(&parameters);
@@ -272,16 +272,16 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			cinfo = opj_create_compress(CODEC_J2K);
 
 			// catch events using our callbacks
-			opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, NULL);			
+			opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, nullptr);			
 
 			// setup the encoder parameters using the current image and using user parameters
 			opj_setup_encoder(cinfo, &parameters, image);
 
 			// open a byte stream for writing, allocate memory for all tiles
-			cio = opj_cio_open((opj_common_ptr)cinfo, NULL, 0);
+			cio = opj_cio_open((opj_common_ptr)cinfo, nullptr, 0);
 
 			// encode the image
-			bSuccess = opj_encode(cinfo, cio, image, NULL/*parameters.index*/);
+			bSuccess = opj_encode(cinfo, cio, image, nullptr/*parameters.index*/);
 			if (!bSuccess) {
 				throw "Failed to encode image";
 			}
@@ -327,13 +327,13 @@ InitJ2K(Plugin *plugin, int format_id) {
 	plugin->regexpr_proc = RegExpr;
 	plugin->open_proc = Open;
 	plugin->close_proc = Close;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

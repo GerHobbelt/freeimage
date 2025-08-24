@@ -79,14 +79,14 @@
 #define snprintf _snprintf
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
-typedef __int64 INT64;
-typedef unsigned __int64 UINT64;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
 #else
 #include <unistd.h>
 #include <utime.h>
 #include <netinet/in.h>
-typedef long long INT64;
-typedef unsigned long long UINT64;
+typedef long long int64_t;
+typedef unsigned long long uint64_t;
 #endif
 
 #ifdef LJPEG_DECODE
@@ -290,7 +290,7 @@ void CLASS derror()
     if (feof(ifp))
       fprintf (stderr,_("Unexpected end of file\n"));
     else
-      fprintf (stderr,_("Corrupt data near 0x%llx\n"), (INT64) ftello(ifp));
+      fprintf (stderr,_("Corrupt data near 0x%llx\n"), (int64_t) ftello(ifp));
   }
   data_error++;
 }
@@ -1510,7 +1510,7 @@ void CLASS phase_one_load_raw()
 
 unsigned CLASS ph1_bithuff (int nbits, ushort *huff)
 {
-  static UINT64 bitbuf=0;
+  static uint64_t bitbuf=0;
   static int vbits=0;
   unsigned c;
 
@@ -1698,7 +1698,7 @@ void CLASS imacon_full_load_raw()
 void CLASS packed_load_raw()
 {
   int vbits=0, bwide, pwide, rbits, bite, half, irow, row, col, val, i;
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
 
   if (raw_width * 8 >= width * tiff_bps)	/* Is raw_width in bytes? */
        pwide = (bwide = raw_width) * 8 / tiff_bps;
@@ -2256,7 +2256,7 @@ int CLASS kodak_65000_decode (short *out, int bsize)
 {
   uchar c, blen[768];
   ushort raw[6];
-  INT64 bitbuf=0;
+  int64_t bitbuf=0;
   int save, bits=0, i, j, len, diff;
 
   save = ftell(ifp);
@@ -2285,7 +2285,7 @@ int CLASS kodak_65000_decode (short *out, int bsize)
     len = blen[i];
     if (bits < len) {
       for (j=0; j < 32; j+=8)
-	bitbuf += (INT64) fgetc(ifp) << (bits+(j^8));
+	bitbuf += (int64_t) fgetc(ifp) << (bits+(j^8));
       bits += 32;
     }
     diff = bitbuf & (0xffff >> (16-len));
@@ -2811,7 +2811,7 @@ void CLASS foveon_load_camf()
     fread (meta_data, 1, meta_length, ifp);
     for (i=0; i < meta_length; i++) {
       high = (high * 1597 + 51749) % 244944;
-      wide = high * (INT64) 301593171 >> 24;
+      wide = high * (int64_t) 301593171 >> 24;
       meta_data[i] ^= ((((high << 8) - wide) >> 1) + wide) >> 17;
     }
   } else if (type == 4) {
@@ -6144,8 +6144,8 @@ void CLASS parse_cine()
   fseek (ifp, off_image, SEEK_SET);
   if (shot_select < is_raw)
     fseek (ifp, shot_select*8, SEEK_CUR);
-  data_offset  = (INT64) get4() + 8;
-  data_offset += (INT64) get4() << 32;
+  data_offset  = (int64_t) get4() + 8;
+  data_offset += (int64_t) get4() << 32;
 }
 
 void CLASS parse_redcine()
@@ -7027,7 +7027,7 @@ short CLASS guess_byte_order (int words)
 
 float CLASS find_green (int bps, int bite, int off0, int off1)
 {
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
   int vbits, col, i, c;
   ushort img[2][2064];
   double sum[]={0,0};

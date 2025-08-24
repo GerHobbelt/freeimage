@@ -74,7 +74,7 @@ Option Explicit
 ' as 1 whereas in VB True is -1 (all bits set). When a function is declared as 'Boolean'
 ' in VB, the return value (all 32 bits) of the called function is just used "as is" and
 ' maybe assigned to a VB boolean variable. A Boolean in VB is 'False' when the numeric
-' value is NULL (0) and 'True' in any other case. So, at a first glance, everything
+' value is nullptr (0) and 'True' in any other case. So, at a first glance, everything
 ' would be great since both numeric values -1 (VB True) and 1 (C/C++ TRUE) are actually
 ' 'True' in VB.
 ' But, if you have a VB variable (or a function returning a Boolean) with just some bits
@@ -82,7 +82,7 @@ Option Explicit
 ' case, if bTest is True, (Not bTest) is also True. The 'Not' operator just toggles all
 ' bits by XOR-ing the value with -1. So, the result is not so surprisingly any more:
 ' The C/C++ TRUE value is 0...0001. When all bits are XORed with 1, the result is
-' 1...1110 what is also not NULL (0) so this is still 'True' in VB.
+' 1...1110 what is also not nullptr (0) so this is still 'True' in VB.
 ' The resolution is to convert these return values into real VB Booleans in a wrapper
 ' function, one for each declared FreeImage function. Therefore each C/C++ BOOL
 ' function is declared Private as xxxInt(...). A Public Boolean wrapper function
@@ -5751,7 +5751,7 @@ Public Function FreeImage_RemoveTag(ByVal Bitmap As Long, _
    ' model specified in parameter 'Model' of the image 'Bitmap' will be removed.
    
    ' Removing a tag is actually done by calling FreeImage_SetMetadata() with
-   ' a NULL pointer for 'FITAG *tag' as described in the API documentation.
+   ' a nullptr pointer for 'FITAG *tag' as described in the API documentation.
    
    ' The function returns the boolean value returned from FreeImage_SetMetadata(),
    ' which is always TRUE when removing a tag in this fashion. So, this function's
@@ -5761,7 +5761,7 @@ Public Function FreeImage_RemoveTag(ByVal Bitmap As Long, _
    ' Up to version 3.9.1 of FreeImage, there seems to be a bug in removing an
    ' tag from an image's metadata model. Although the removed tag is not accessible
    ' through FreeImage_GetMetadata() any more, iterations with
-   ' Freeimage_FindFirst/NextMetadata() will still return this tag an a NULL
+   ' Freeimage_FindFirst/NextMetadata() will still return this tag an a nullptr
    ' pointer.
    
    ' This bug was reported on the Developers Forum. You can revisit the posting at:
@@ -8479,7 +8479,7 @@ Dim lpInfo As Long
    ' omitted, the bitmap currently selected into the given DC is used to create
    ' the DIB.
    
-   ' When 'hBitmap' is not missing but NULL (0), the function uses the DC's currently
+   ' When 'hBitmap' is not missing but nullptr (0), the function uses the DC's currently
    ' selected bitmap. This bitmap's handle is stored in the ('ByRef'!) 'hBitmap' parameter
    ' and so, is avaliable at the caller's site when the function returns.
    
@@ -8490,7 +8490,7 @@ Dim lpInfo As Long
    
    ' first, check whether we got a hBitmap or not
    If (hBitmap = 0) Then
-      ' if not, the parameter may be missing or is NULL so get the
+      ' if not, the parameter may be missing or is nullptr so get the
       ' DC's current bitmap
       hBitmap = GetCurrentObject(hDC, OBJ_BITMAP)
    End If
@@ -9483,7 +9483,7 @@ Dim bAlphaEqual As Boolean
    ' format and 'Tolerance' to specify the matching tolerance.
    
    ' The function returns the result of the mathematical substraction
-   ' ColorA - ColorB, so if both colors are equal, the function returns NULL (0)
+   ' ColorA - ColorB, so if both colors are equal, the function returns nullptr (0)
    ' and any other value if both colors are different. Alpha transparency is taken into
    ' account only if both colors are said to have an alpha transparency component by
    ' both parameters 'ColorTypeA' and 'ColorTypeB'. If at least one of both colors
@@ -9492,7 +9492,7 @@ Dim bAlphaEqual As Boolean
    
    ' The matching tolerance is applied to each color component (red, green, blue and
    ' alpha) separately. So, when 'Tolerance' contains a value greater than zero, the
-   ' function returns NULL (0) when either both colors are exactly the same or the
+   ' function returns nullptr (0) when either both colors are exactly the same or the
    ' differences of each corresponding color components are smaller or equal than
    ' the given tolerance value.
    
@@ -11492,9 +11492,9 @@ Dim lpArrayPtr As Long
       '         struct __tagVARIANT
       '             {
       '             VARTYPE vt;
-      '             WORD wReserved1;
-      '             WORD wReserved2;
-      '             WORD wReserved3;
+      '             uint16_t wReserved1;
+      '             uint16_t wReserved2;
+      '             uint16_t wReserved3;
       '             Union
       '                 {
       '                 [...]
@@ -11504,7 +11504,7 @@ Dim lpArrayPtr As Long
       '                 [...]
       
       ' the data element (SAFEARRAY) has an offset of 8, since VARTYPE
-      ' and WORD both have a length of 2 bytes; the pointer to the
+      ' and uint16_t both have a length of 2 bytes; the pointer to the
       ' VARIANTARG structure is the VarPtr of the Variant variable in VB
       
       ' getting the contents of the data element (in C/C++: *(data + 8))
@@ -12474,7 +12474,7 @@ Private Sub pSwap(ByVal lpSrc As Long, _
 
 Dim lpTmp As Long
 
-   ' This function swaps two DWORD memory blocks pointed to
+   ' This function swaps two uint32_t memory blocks pointed to
    ' by lpSrc and lpDst, whereby lpSrc and lpDst are actually
    ' no pointer types but contain the pointer's address.
    
@@ -12594,9 +12594,9 @@ Dim lDataPtr As Long
       '         struct __tagVARIANT
       '             {
       '             VARTYPE vt;
-      '             WORD wReserved1;
-      '             WORD wReserved2;
-      '             WORD wReserved3;
+      '             uint16_t wReserved1;
+      '             uint16_t wReserved2;
+      '             uint16_t wReserved3;
       '             Union
       '                 {
       '                 [...]
@@ -12606,7 +12606,7 @@ Dim lDataPtr As Long
       '                 [...]
       
       ' the data element (SAFEARRAY) has an offset of 8, since VARTYPE
-      ' and WORD both have a length of 2 bytes; the pointer to the
+      ' and uint16_t both have a length of 2 bytes; the pointer to the
       ' VARIANTARG structure is the VarPtr of the Variant variable in VB
       
       ' getting the contents of the data element (in C/C++: *(data + 8))

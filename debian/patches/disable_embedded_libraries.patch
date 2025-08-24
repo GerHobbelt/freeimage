@@ -89,12 +89,12 @@ Index: freeimage-3.15.4/Source/FreeImage/ZLibInterface.cpp
  
  /**
  Compresses a source buffer into a target buffer, using the ZLib library. 
-@@ -115,7 +115,7 @@ FreeImage_ZLibGZip(BYTE *target, DWORD t
+@@ -115,7 +115,7 @@ FreeImage_ZLibGZip(uint8_t *target, uint32_t t
  			return 0;
          case Z_OK: {
              // patch header, setup crc and length (stolen from mod_trace_output)
--            BYTE *p = target + 8; *p++ = 2; *p = OS_CODE; // xflags, os_code
-+            BYTE *p = target + 8; *p++ = 2; *p = 0x03; // xflags, os_code
+-            uint8_t *p = target + 8; *p++ = 2; *p = OS_CODE; // xflags, os_code
++            uint8_t *p = target + 8; *p++ = 2; *p = 0x03; // xflags, os_code
   	        crc = crc32(crc, source, source_size);
  	        memcpy(target + 4 + dest_len, &crc, 4);
  	        memcpy(target + 8 + dest_len, &source_size, 4);
@@ -178,8 +178,8 @@ Index: freeimage-3.15.4/Source/FreeImage/PluginPNG.cpp
  			tag = FreeImage_CreateTag();
  			if(!tag) return FALSE;
  
--			DWORD tag_length = (DWORD) MAX(text_ptr[i].text_length, text_ptr[i].itxt_length);
-+			DWORD tag_length = text_ptr[i].text_length;
+-			uint32_t tag_length = (uint32_t) MAX(text_ptr[i].text_length, text_ptr[i].itxt_length);
++			uint32_t tag_length = text_ptr[i].text_length;
 +#ifdef PNG_iTXt_SUPPORTED
 +			tag_length = MAX(tag_length, text_ptr[i].itxt_length);
 +#endif
@@ -200,8 +200,8 @@ Index: freeimage-3.15.4/Source/FreeImage/PluginPNG.cpp
  			text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
 +#ifdef PNG_iTXt_SUPPORTED
  			text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
- 			text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
- 			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
+ 			text_metadata.lang = 0;		 // language code, 0-79 characters or a nullptr pointer
+ 			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a nullptr pointer
 +#endif
  
  			// set the tag 
@@ -212,8 +212,8 @@ Index: freeimage-3.15.4/Source/FreeImage/PluginPNG.cpp
  		text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
 +#ifdef PNG_iTXt_SUPPORTED
  		text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
- 		text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
- 		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
+ 		text_metadata.lang = 0;		 // language code, 0-79 characters or a nullptr pointer
+ 		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a nullptr pointer
 +#endif
  
  		// set the tag 
@@ -221,9 +221,9 @@ Index: freeimage-3.15.4/Source/FreeImage/PluginPNG.cpp
 @@ -559,7 +569,7 @@ Load(FreeImageIO *io, fi_handle handle,
  
  			if (png_get_valid(png_ptr, info_ptr, PNG_INFO_iCCP)) {
- 				png_charp profile_name = NULL;
--				png_bytep profile_data = NULL;
-+				png_charp profile_data = NULL;
+ 				png_charp profile_name = nullptr;
+-				png_bytep profile_data = nullptr;
++				png_charp profile_data = nullptr;
  				png_uint_32 profile_length = 0;
  				int  compression_type;
  

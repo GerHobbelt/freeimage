@@ -27,5 +27,5 @@ Bug-Debian: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=735847
 +                                length = value_size * value_count;
 +                        }
  			FreeImage_SetTagType(fitag, FIDT_ASCII);
- 			FreeImage_SetTagLength(fitag, (DWORD)length);
- 			FreeImage_SetTagCount(fitag, (DWORD)length);
+ 			FreeImage_SetTagLength(fitag, (uint32_t)length);
+ 			FreeImage_SetTagCount(fitag, (uint32_t)length);

@@ -38,29 +38,29 @@ typedef	struct {
 	/* bit vector of fields that are set */
 	unsigned long	td_fieldsset[FIELD_SETLONGS];
 
-	uint32  td_imagewidth, td_imagelength, td_imagedepth;
-	uint32  td_tilewidth, td_tilelength, td_tiledepth;
-	uint32  td_subfiletype;
-	uint16  td_bitspersample;
-	uint16  td_sampleformat;
-	uint16  td_compression;
-	uint16  td_photometric;
-	uint16  td_threshholding;
-	uint16  td_fillorder;
-	uint16  td_orientation;
-	uint16  td_samplesperpixel;
-	uint32  td_rowsperstrip;
-	uint16  td_minsamplevalue, td_maxsamplevalue;
+	uint32_t  td_imagewidth, td_imagelength, td_imagedepth;
+	uint32_t  td_tilewidth, td_tilelength, td_tiledepth;
+	uint32_t  td_subfiletype;
+	uint16_t  td_bitspersample;
+	uint16_t  td_sampleformat;
+	uint16_t  td_compression;
+	uint16_t  td_photometric;
+	uint16_t  td_threshholding;
+	uint16_t  td_fillorder;
+	uint16_t  td_orientation;
+	uint16_t  td_samplesperpixel;
+	uint32_t  td_rowsperstrip;
+	uint16_t  td_minsamplevalue, td_maxsamplevalue;
 	double  td_sminsamplevalue, td_smaxsamplevalue;
 	float   td_xresolution, td_yresolution;
-	uint16  td_resolutionunit;
-	uint16  td_planarconfig;
+	uint16_t  td_resolutionunit;
+	uint16_t  td_planarconfig;
 	float   td_xposition, td_yposition;
-	uint16  td_pagenumber[2];
-	uint16* td_colormap[3];
-	uint16  td_halftonehints[2];
-	uint16  td_extrasamples;
-	uint16* td_sampleinfo;
+	uint16_t  td_pagenumber[2];
+	uint16_t* td_colormap[3];
+	uint16_t  td_halftonehints[2];
+	uint16_t  td_extrasamples;
+	uint16_t* td_sampleinfo;
 	/* even though the name is misleading, td_stripsperimage is the number
 	 * of striles (=strips or tiles) per plane, and td_nstrips the total
 	 * number of striles */
@@ -69,14 +69,14 @@ typedef	struct {
 	toff_t* td_stripoffset;
 	toff_t* td_stripbytecount;	 /* FIXME: it should be tsize_t array */
 	int     td_stripbytecountsorted; /* is the bytecount array sorted ascending? */
-	uint16  td_nsubifd;
-	uint32* td_subifd;
+	uint16_t  td_nsubifd;
+	uint32_t* td_subifd;
 	/* YCbCr parameters */
-	uint16  td_ycbcrsubsampling[2];
-	uint16  td_ycbcrpositioning;
+	uint16_t  td_ycbcrsubsampling[2];
+	uint16_t  td_ycbcrpositioning;
 	/* Colorimetry parameters */
 	float*	td_refblackwhite;
-	uint16* td_transferfunction[3];
+	uint16_t* td_transferfunction[3];
 	/* CMYK parameters */
 	int     td_inknameslen;
 	char*   td_inknames;
@@ -158,11 +158,11 @@ typedef	struct {
 #define	FIELD_LAST			(32*FIELD_SETLONGS-1)
 
 #define	TIFFExtractData(tif, type, v) \
-    ((uint32) ((tif)->tif_header.tiff_magic == TIFF_BIGENDIAN ? \
+    ((uint32_t) ((tif)->tif_header.tiff_magic == TIFF_BIGENDIAN ? \
         ((v) >> (tif)->tif_typeshift[type]) & (tif)->tif_typemask[type] : \
 	(v) & (tif)->tif_typemask[type]))
 #define	TIFFInsertData(tif, type, v) \
-    ((uint32) ((tif)->tif_header.tiff_magic == TIFF_BIGENDIAN ? \
+    ((uint32_t) ((tif)->tif_header.tiff_magic == TIFF_BIGENDIAN ? \
         ((v) & (tif)->tif_typemask[type]) << (tif)->tif_typeshift[type] : \
 	(v) & (tif)->tif_typemask[type]))
 

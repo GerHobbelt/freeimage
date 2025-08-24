@@ -53,8 +53,8 @@ TIFFFaxTabEnt WhiteTable[4096];
 TIFFFaxTabEnt BlackTable[8192];
 
 struct proto {
-    uint16 code;		/* right justified, lsb-first, zero filled */
-    uint16 val;		/* (pixel count)<<4 + code width  */
+    uint16_t code;		/* right justified, lsb-first, zero filled */
+    uint16_t val;		/* (pixel count)<<4 + code width  */
 };
 
 static struct proto Pass[] = {
@@ -409,7 +409,7 @@ main(int argc, char* argv[])
 	}
     outputfile = optind < argc ? argv[optind] : "g3states.h";
     fd = fopen(outputfile, "w");
-    if (fd == NULL) {
+    if (fd == nullptr) {
 	fprintf(stderr, "%s: %s: Cannot create output file.\n",
 	    argv[0], outputfile);
 	return (-2);

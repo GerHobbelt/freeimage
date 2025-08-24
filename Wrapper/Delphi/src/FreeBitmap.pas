@@ -267,7 +267,7 @@ type
     FHMem: PFIMEMORY;
   public
     // construction and destruction
-    constructor Create(Data: PByte = nil; SizeInBytes: DWORD = 0);
+    constructor Create(Data: PByte = nil; SizeInBytes: uint32_t = 0);
     destructor Destroy; override;
 
     function GetFileType: FREE_IMAGE_FORMAT;
@@ -275,7 +275,7 @@ type
     function Write(fif: FREE_IMAGE_FORMAT; dib: PFIBITMAP; Flag: Integer = 0): Boolean;
     function Tell: Longint;
     function Seek(Offset: Longint; Origin: Word): Boolean;
-    function Acquire(var Data: PByte; var SizeInBytes: DWORD): Boolean;
+    function Acquire(var Data: PByte; var SizeInBytes: uint32_t): Boolean;
     // overriden methods
     function IsValid: Boolean; override;
   end;
@@ -1633,7 +1633,7 @@ var
   bmih: PBitmapInfoHeader;
   Palette: PRGBQuad;
   Bits: PByte;
-  BitFields: array [0..2] of DWORD;
+  BitFields: array [0..2] of uint32_t;
   MaskSize: Longint;
   image_type: FREE_IMAGE_TYPE;
 begin
@@ -1662,7 +1662,7 @@ begin
   begin
     // take into account the color masks that specify the red, green and blue
     // components (16- and 32-bit)
-    MaskSize := 3 * SizeOf(DWORD);
+    MaskSize := 3 * SizeOf(uint32_t);
     CopyMemory(@BitFields[0], Bits, MaskSize);
     Inc(Bits, MaskSize);
   end;
@@ -1993,12 +1993,12 @@ end;
 { TFreeMemoryIO }
 
 function TFreeMemoryIO.Acquire(var Data: PByte;
-  var SizeInBytes: DWORD): Boolean;
+  var SizeInBytes: uint32_t): Boolean;
 begin
   Result := FreeImage_AcquireMemory(FHMem, Data, SizeInBytes);
 end;
 
-constructor TFreeMemoryIO.Create(Data: PByte; SizeInBytes: DWORD);
+constructor TFreeMemoryIO.Create(Data: PByte; SizeInBytes: uint32_t);
 begin
   inherited Create;
   FHMem := FreeImage_OpenMemory(Data, SizeInBytes);

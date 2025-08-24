@@ -162,9 +162,9 @@ struct logLuvState {
 	int                     encode_meth;    /* encoding method */
 	int                     pixel_size;     /* bytes per pixel */
 
-	uint8*                  tbuf;           /* translation buffer */
+	uint8_t*                  tbuf;           /* translation buffer */
 	tmsize_t                tbuflen;        /* buffer length */
-	void (*tfunc)(LogLuvState*, uint8*, tmsize_t);
+	void (*tfunc)(LogLuvState*, uint8_t*, tmsize_t);
 
 	TIFFVSetMethod          vgetparent;     /* super-class method */
 	TIFFVSetMethod          vsetparent;     /* super-class method */
@@ -181,7 +181,7 @@ struct logLuvState {
  * Decode a string of 16-bit gray pixels.
  */
 static int
-LogL16Decode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
+LogL16Decode(TIFF* tif, uint8_t* op, tmsize_t occ, uint16_t s)
 {
 	static const char module[] = "LogL16Decode";
 	LogLuvState* sp = DecoderState(tif);
@@ -195,7 +195,7 @@ LogL16Decode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
 	int rc;
 
 	assert(s == 0);
-	assert(sp != NULL);
+	assert(sp != nullptr);
 
 	npixels = occ / sp->pixel_size;
 
@@ -235,13 +235,13 @@ LogL16Decode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
 				     (unsigned long) tif->tif_row,
 				     (unsigned long long) (npixels - i));
 #endif
-			tif->tif_rawcp = (uint8*) bp;
+			tif->tif_rawcp = (uint8_t*) bp;
 			tif->tif_rawcc = cc;
 			return (0);
 		}
 	}
 	(*sp->tfunc)(sp, op, npixels);
-	tif->tif_rawcp = (uint8*) bp;
+	tif->tif_rawcp = (uint8_t*) bp;
 	tif->tif_rawcc = cc;
 	return (1);
 }
@@ -250,7 +250,7 @@ LogL16Decode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
  * Decode a string of 24-bit pixels.
  */
 static int
-LogLuvDecode24(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
+LogLuvDecode24(TIFF* tif, uint8_t* op, tmsize_t occ, uint16_t s)
 {
 	static const char module[] = "LogLuvDecode24";
 	LogLuvState* sp = DecoderState(tif);
@@ -258,20 +258,20 @@ LogLuvDecode24(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
 	tmsize_t i;
 	tmsize_t npixels;
 	unsigned char* bp;
-	uint32* tp;
+	uint32_t* tp;
 
 	assert(s == 0);
-	assert(sp != NULL);
+	assert(sp != nullptr);
 
 	npixels = occ / sp->pixel_size;
 
 	if (sp->user_datafmt == SGILOGDATAFMT_RAW)
-		tp = (uint32 *)op;
+		tp = (uint32_t *)op;
 	else {
 		assert(sp->tbuflen >= npixels);
-		tp = (uint32 *) sp->tbuf;
+		tp = (uint32_t *) sp->tbuf;
 	}
-	/* copy to array of uint32 */
+	/* copy to array of uint32_t */
 	bp = (unsigned char*) tif->tif_rawcp;
 	cc = tif->tif_rawcc;
 	for (i = 0; i < npixels && cc > 0; i++) {
@@ -279,7 +279,7 @@ LogLuvDecode24(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
 		bp += 3;
 		cc -= 3;
 	}
-	tif->tif_rawcp = (uint8*) bp;
+	tif->tif_rawcp = (uint8_t*) bp;
 	tif->tif_rawcc = cc;
 	if (i != npixels) {
 #if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
@@ -303,7 +303,7 @@ LogLuvDecode24(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
  * Decode a string of 32-bit pixels.
  */
 static int
-LogLuvDecode32(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
+LogLuvDecode32(TIFF* tif, uint8_t* op, tmsize_t occ, uint16_t s)
 {
 	static const char module[] = "LogLuvDecode32";
 	LogLuvState* sp;
@@ -311,22 +311,22 @@ LogLuvDecode32(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
 	tmsize_t i;
 	tmsize_t npixels;
 	unsigned char* bp;
-	uint32* tp;
-	uint32 b;
+	uint32_t* tp;
+	uint32_t b;
 	tmsize_t cc;
 	int rc;
 
 	assert(s == 0);
 	sp = DecoderState(tif);
-	assert(sp != NULL);
+	assert(sp != nullptr);
 
 	npixels = occ / sp->pixel_size;
 
 	if (sp->user_datafmt == SGILOGDATAFMT_RAW)
-		tp = (uint32*) op;
+		tp = (uint32_t*) op;
 	else {
 		assert(sp->tbuflen >= npixels);
-		tp = (uint32*) sp->tbuf;
+		tp = (uint32_t*) sp->tbuf;
 	}
 	_TIFFmemset((void*) tp, 0, npixels*sizeof (tp[0]));
 
@@ -337,14 +337,14 @@ LogLuvDecode32(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
 		for (i = 0; i < npixels && cc > 0; )
 			if (*bp >= 128) {		/* run */
 				rc = *bp++ + (2-128);
-				b = (uint32)*bp++ << shft;
+				b = (uint32_t)*bp++ << shft;
 				cc -= 2;                /* TODO: potential input buffer overrun when decoding corrupt or truncated data */
 				while (rc-- && i < npixels)
 					tp[i++] |= b;
 			} else {			/* non-run */
 				rc = *bp++;		/* nul is noop */
 				while (--cc && rc-- && i < npixels)
-					tp[i++] |= (uint32)*bp++ << shft;
+					tp[i++] |= (uint32_t)*bp++ << shft;
 			}
 		if (i != npixels) {
 #if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
@@ -358,13 +358,13 @@ LogLuvDecode32(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
 				     (unsigned long) tif->tif_row,
 				     (unsigned long long) (npixels - i));
 #endif
-			tif->tif_rawcp = (uint8*) bp;
+			tif->tif_rawcp = (uint8_t*) bp;
 			tif->tif_rawcc = cc;
 			return (0);
 		}
 	}
 	(*sp->tfunc)(sp, op, npixels);
-	tif->tif_rawcp = (uint8*) bp;
+	tif->tif_rawcp = (uint8_t*) bp;
 	tif->tif_rawcc = cc;
 	return (1);
 }
@@ -375,7 +375,7 @@ LogLuvDecode32(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
  * is row by row.
  */
 static int
-LogLuvDecodeStrip(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+LogLuvDecodeStrip(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	tmsize_t rowlen = TIFFScanlineSize(tif);
 
@@ -391,7 +391,7 @@ LogLuvDecodeStrip(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
  * is row by row.
  */
 static int
-LogLuvDecodeTile(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+LogLuvDecodeTile(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	tmsize_t rowlen = TIFFTileRowSize(tif);
 
@@ -405,14 +405,14 @@ LogLuvDecodeTile(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
  * Encode a row of 16-bit pixels.
  */
 static int
-LogL16Encode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+LogL16Encode(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	LogLuvState* sp = EncoderState(tif);
 	int shft;
 	tmsize_t i;
 	tmsize_t j;
 	tmsize_t npixels;
-	uint8* op;
+	uint8_t* op;
 	int16* tp;
 	int16 b;
 	tmsize_t occ;
@@ -420,7 +420,7 @@ LogL16Encode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
 	tmsize_t beg;
 
 	assert(s == 0);
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	npixels = cc / sp->pixel_size;
 
 	if (sp->user_datafmt == SGILOGDATAFMT_16BIT)
@@ -458,8 +458,8 @@ LogL16Encode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
 				j = i+1;
 				while ((tp[j++] & mask) == b)
 					if (j == beg) {
-						*op++ = (uint8)(128-2+j-i);
-						*op++ = (uint8)(b >> shft);
+						*op++ = (uint8_t)(128-2+j-i);
+						*op++ = (uint8_t)(b >> shft);
 						occ -= 2;
 						i = beg;
 						break;
@@ -475,15 +475,15 @@ LogL16Encode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
 					op = tif->tif_rawcp;
 					occ = tif->tif_rawdatasize - tif->tif_rawcc;
 				}
-				*op++ = (uint8) j; occ--;
+				*op++ = (uint8_t) j; occ--;
 				while (j--) {
-					*op++ = (uint8) (tp[i++] >> shft & 0xff);
+					*op++ = (uint8_t) (tp[i++] >> shft & 0xff);
 					occ--;
 				}
 			}
 			if (rc >= MINRUN) {		/* write out run */
-				*op++ = (uint8) (128-2+rc);
-				*op++ = (uint8) (tp[beg] >> shft & 0xff);
+				*op++ = (uint8_t) (128-2+rc);
+				*op++ = (uint8_t) (tp[beg] >> shft & 0xff);
 				occ -= 2;
 			} else
 				rc = 0;
@@ -498,23 +498,23 @@ LogL16Encode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
  * Encode a row of 24-bit pixels.
  */
 static int
-LogLuvEncode24(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+LogLuvEncode24(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	LogLuvState* sp = EncoderState(tif);
 	tmsize_t i;
 	tmsize_t npixels;
 	tmsize_t occ;
-	uint8* op;
-	uint32* tp;
+	uint8_t* op;
+	uint32_t* tp;
 
 	assert(s == 0);
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	npixels = cc / sp->pixel_size;
 
 	if (sp->user_datafmt == SGILOGDATAFMT_RAW)
-		tp = (uint32*) bp;
+		tp = (uint32_t*) bp;
 	else {
-		tp = (uint32*) sp->tbuf;
+		tp = (uint32_t*) sp->tbuf;
 		assert(sp->tbuflen >= npixels);
 		(*sp->tfunc)(sp, bp, npixels);
 	}
@@ -530,9 +530,9 @@ LogLuvEncode24(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
 			op = tif->tif_rawcp;
 			occ = tif->tif_rawdatasize - tif->tif_rawcc;
 		}
-		*op++ = (uint8)(*tp >> 16);
-		*op++ = (uint8)(*tp >> 8 & 0xff);
-		*op++ = (uint8)(*tp++ & 0xff);
+		*op++ = (uint8_t)(*tp >> 16);
+		*op++ = (uint8_t)(*tp >> 8 & 0xff);
+		*op++ = (uint8_t)(*tp++ & 0xff);
 		occ -= 3;
 	}
 	tif->tif_rawcp = op;
@@ -545,29 +545,29 @@ LogLuvEncode24(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
  * Encode a row of 32-bit pixels.
  */
 static int
-LogLuvEncode32(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+LogLuvEncode32(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	LogLuvState* sp = EncoderState(tif);
 	int shft;
 	tmsize_t i;
 	tmsize_t j;
 	tmsize_t npixels;
-	uint8* op;
-	uint32* tp;
-	uint32 b;
+	uint8_t* op;
+	uint32_t* tp;
+	uint32_t b;
 	tmsize_t occ;
 	int rc=0, mask;
 	tmsize_t beg;
 
 	assert(s == 0);
-	assert(sp != NULL);
+	assert(sp != nullptr);
 
 	npixels = cc / sp->pixel_size;
 
 	if (sp->user_datafmt == SGILOGDATAFMT_RAW)
-		tp = (uint32*) bp;
+		tp = (uint32_t*) bp;
 	else {
-		tp = (uint32*) sp->tbuf;
+		tp = (uint32_t*) sp->tbuf;
 		assert(sp->tbuflen >= npixels);
 		(*sp->tfunc)(sp, bp, npixels);
 	}
@@ -599,8 +599,8 @@ LogLuvEncode32(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
 				j = i+1;
 				while ((tp[j++] & mask) == b)
 					if (j == beg) {
-						*op++ = (uint8)(128-2+j-i);
-						*op++ = (uint8)(b >> shft);
+						*op++ = (uint8_t)(128-2+j-i);
+						*op++ = (uint8_t)(b >> shft);
 						occ -= 2;
 						i = beg;
 						break;
@@ -616,15 +616,15 @@ LogLuvEncode32(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
 					op = tif->tif_rawcp;
 					occ = tif->tif_rawdatasize - tif->tif_rawcc;
 				}
-				*op++ = (uint8) j; occ--;
+				*op++ = (uint8_t) j; occ--;
 				while (j--) {
-					*op++ = (uint8)(tp[i++] >> shft & 0xff);
+					*op++ = (uint8_t)(tp[i++] >> shft & 0xff);
 					occ--;
 				}
 			}
 			if (rc >= MINRUN) {		/* write out run */
-				*op++ = (uint8) (128-2+rc);
-				*op++ = (uint8)(tp[beg] >> shft & 0xff);
+				*op++ = (uint8_t) (128-2+rc);
+				*op++ = (uint8_t)(tp[beg] >> shft & 0xff);
 				occ -= 2;
 			} else
 				rc = 0;
@@ -640,7 +640,7 @@ LogLuvEncode32(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
  * avoid encoding runs across row boundaries.
  */
 static int
-LogLuvEncodeStrip(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+LogLuvEncodeStrip(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	tmsize_t rowlen = TIFFScanlineSize(tif);
 
@@ -655,7 +655,7 @@ LogLuvEncodeStrip(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
  * avoid encoding runs across row boundaries.
  */
 static int
-LogLuvEncodeTile(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+LogLuvEncodeTile(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	tmsize_t rowlen = TIFFTileRowSize(tif);
 
@@ -723,7 +723,7 @@ LogL16fromY(double Y, int em)	/* get 16-bit LogL from Y */
 }
 
 static void
-L16toY(LogLuvState* sp, uint8* op, tmsize_t n)
+L16toY(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
 	int16* l16 = (int16*) sp->tbuf;
 	float* yp = (float*) op;
@@ -733,19 +733,19 @@ L16toY(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-L16toGry(LogLuvState* sp, uint8* op, tmsize_t n)
+L16toGry(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
 	int16* l16 = (int16*) sp->tbuf;
-	uint8* gp = (uint8*) op;
+	uint8_t* gp = (uint8_t*) op;
 
 	while (n-- > 0) {
 		double Y = LogL16toY(*l16++);
-		*gp++ = (uint8) ((Y <= 0.) ? 0 : (Y >= 1.) ? 255 : (int)(256.*sqrt(Y)));
+		*gp++ = (uint8_t) ((Y <= 0.) ? 0 : (Y >= 1.) ? 255 : (int)(256.*sqrt(Y)));
 	}
 }
 
 static void
-L16fromY(LogLuvState* sp, uint8* op, tmsize_t n)
+L16fromY(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
 	int16* l16 = (int16*) sp->tbuf;
 	float* yp = (float*) op;
@@ -758,7 +758,7 @@ L16fromY(LogLuvState* sp, uint8* op, tmsize_t n)
 static
 #endif
 void
-XYZtoRGB24(float xyz[3], uint8 rgb[3])
+XYZtoRGB24(float xyz[3], uint8_t rgb[3])
 {
 	double	r, g, b;
 					/* assume CCIR-709 primaries */
@@ -767,9 +767,9 @@ XYZtoRGB24(float xyz[3], uint8 rgb[3])
 	b =  0.061*xyz[0] + -0.224*xyz[1] +  1.163*xyz[2];
 					/* assume 2.0 gamma for speed */
 	/* could use integer sqrt approx., but this is probably faster */
-	rgb[0] = (uint8)((r<=0.) ? 0 : (r >= 1.) ? 255 : (int)(256.*sqrt(r)));
-	rgb[1] = (uint8)((g<=0.) ? 0 : (g >= 1.) ? 255 : (int)(256.*sqrt(g)));
-	rgb[2] = (uint8)((b<=0.) ? 0 : (b >= 1.) ? 255 : (int)(256.*sqrt(b)));
+	rgb[0] = (uint8_t)((r<=0.) ? 0 : (r >= 1.) ? 255 : (int)(256.*sqrt(r)));
+	rgb[1] = (uint8_t)((g<=0.) ? 0 : (g >= 1.) ? 255 : (int)(256.*sqrt(g)));
+	rgb[2] = (uint8_t)((b<=0.) ? 0 : (b >= 1.) ? 255 : (int)(256.*sqrt(b)));
 }
 
 #if !LOGLUV_PUBLIC
@@ -912,7 +912,7 @@ uv_decode(double *up, double *vp, int c)	/* decode (u',v') index */
 static
 #endif
 void
-LogLuv24toXYZ(uint32 p, float XYZ[3])
+LogLuv24toXYZ(uint32_t p, float XYZ[3])
 {
 	int	Ce;
 	double	L, u, v, s, x, y;
@@ -939,7 +939,7 @@ LogLuv24toXYZ(uint32 p, float XYZ[3])
 #if !LOGLUV_PUBLIC
 static
 #endif
-uint32
+uint32_t
 LogLuv24fromXYZ(float XYZ[3], int em)
 {
 	int	Le, Ce;
@@ -963,9 +963,9 @@ LogLuv24fromXYZ(float XYZ[3], int em)
 }
 
 static void
-Luv24toXYZ(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv24toXYZ(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
 	float* xyz = (float*) op;
 
 	while (n-- > 0) {
@@ -976,9 +976,9 @@ Luv24toXYZ(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-Luv24toLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv24toLuv48(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
 	int16* luv3 = (int16*) op;
 
 	while (n-- > 0) {
@@ -996,10 +996,10 @@ Luv24toLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-Luv24toRGB(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv24toRGB(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
-	uint8* rgb = (uint8*) op;
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
+	uint8_t* rgb = (uint8_t*) op;
 
 	while (n-- > 0) {
 		float xyz[3];
@@ -1011,9 +1011,9 @@ Luv24toRGB(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-Luv24fromXYZ(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv24fromXYZ(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
 	float* xyz = (float*) op;
 
 	while (n-- > 0) {
@@ -1023,9 +1023,9 @@ Luv24fromXYZ(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-Luv24fromLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv24fromLuv48(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
 	int16* luv3 = (int16*) op;
 
 	while (n-- > 0) {
@@ -1044,7 +1044,7 @@ Luv24fromLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
 					sp->encode_meth);
 		if (Ce < 0)	/* never happens */
 			Ce = uv_encode(U_NEU, V_NEU, SGILOGENCODE_NODITHER);
-		*luv++ = (uint32)Le << 14 | Ce;
+		*luv++ = (uint32_t)Le << 14 | Ce;
 		luv3 += 3;
 	}
 }
@@ -1053,7 +1053,7 @@ Luv24fromLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
 static
 #endif
 void
-LogLuv32toXYZ(uint32 p, float XYZ[3])
+LogLuv32toXYZ(uint32_t p, float XYZ[3])
 {
 	double	L, u, v, s, x, y;
 					/* decode luminance */
@@ -1077,7 +1077,7 @@ LogLuv32toXYZ(uint32 p, float XYZ[3])
 #if !LOGLUV_PUBLIC
 static
 #endif
-uint32
+uint32_t
 LogLuv32fromXYZ(float XYZ[3], int em)
 {
 	unsigned int	Le, ue, ve;
@@ -1104,9 +1104,9 @@ LogLuv32fromXYZ(float XYZ[3], int em)
 }
 
 static void
-Luv32toXYZ(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv32toXYZ(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
 	float* xyz = (float*) op;
 
 	while (n-- > 0) {
@@ -1116,9 +1116,9 @@ Luv32toXYZ(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-Luv32toLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv32toLuv48(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
 	int16* luv3 = (int16*) op;
 
 	while (n-- > 0) {
@@ -1134,10 +1134,10 @@ Luv32toLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-Luv32toRGB(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv32toRGB(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
-	uint8* rgb = (uint8*) op;
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
+	uint8_t* rgb = (uint8_t*) op;
 
 	while (n-- > 0) {
 		float xyz[3];
@@ -1149,9 +1149,9 @@ Luv32toRGB(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-Luv32fromXYZ(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv32fromXYZ(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;  
+	uint32_t* luv = (uint32_t*) sp->tbuf;  
 	float* xyz = (float*) op;
 
 	while (n-- > 0) {
@@ -1161,22 +1161,22 @@ Luv32fromXYZ(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-Luv32fromLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
+Luv32fromLuv48(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
-	uint32* luv = (uint32*) sp->tbuf;
+	uint32_t* luv = (uint32_t*) sp->tbuf;
 	int16* luv3 = (int16*) op;
 
 	if (sp->encode_meth == SGILOGENCODE_NODITHER) {
 		while (n-- > 0) {
-			*luv++ = (uint32)luv3[0] << 16 |
-				(luv3[1]*(uint32)(UVSCALE+.5) >> 7 & 0xff00) |
-				(luv3[2]*(uint32)(UVSCALE+.5) >> 15 & 0xff);
+			*luv++ = (uint32_t)luv3[0] << 16 |
+				(luv3[1]*(uint32_t)(UVSCALE+.5) >> 7 & 0xff00) |
+				(luv3[2]*(uint32_t)(UVSCALE+.5) >> 15 & 0xff);
 			luv3 += 3;
 		}
 		return;
 	}
 	while (n-- > 0) {
-		*luv++ = (uint32)luv3[0] << 16 |
+		*luv++ = (uint32_t)luv3[0] << 16 |
 	(itrunc(luv3[1]*(UVSCALE/(1<<15)), sp->encode_meth) << 8 & 0xff00) |
 		(itrunc(luv3[2]*(UVSCALE/(1<<15)), sp->encode_meth) & 0xff);
 		luv3 += 3;
@@ -1184,7 +1184,7 @@ Luv32fromLuv48(LogLuvState* sp, uint8* op, tmsize_t n)
 }
 
 static void
-_logLuvNop(LogLuvState* sp, uint8* op, tmsize_t n)
+_logLuvNop(LogLuvState* sp, uint8_t* op, tmsize_t n)
 {
 	(void) sp; (void) op; (void) n;
 }
@@ -1226,7 +1226,7 @@ LogL16InitState(TIFF* tif)
 	TIFFDirectory *td = &tif->tif_dir;
 	LogLuvState* sp = DecoderState(tif);
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	assert(td->td_photometric == PHOTOMETRIC_LOGL);
 
 	/* for some reason, we can't do this in TIFFInitLogL16 */
@@ -1240,7 +1240,7 @@ LogL16InitState(TIFF* tif)
 		sp->pixel_size = sizeof (int16);
 		break;
 	case SGILOGDATAFMT_8BIT:
-		sp->pixel_size = sizeof (uint8);
+		sp->pixel_size = sizeof (uint8_t);
 		break;
 	default:
 		TIFFErrorExt(tif->tif_clientdata, module,
@@ -1252,7 +1252,7 @@ LogL16InitState(TIFF* tif)
         else
             sp->tbuflen = multiply_ms(td->td_imagewidth, td->td_rowsperstrip);
 	if (multiply_ms(sp->tbuflen, sizeof (int16)) == 0 ||
-	    (sp->tbuf = (uint8*) _TIFFmalloc(sp->tbuflen * sizeof (int16))) == NULL) {
+	    (sp->tbuf = (uint8_t*) _TIFFmalloc(sp->tbuflen * sizeof (int16))) == nullptr) {
 		TIFFErrorExt(tif->tif_clientdata, module, "No space for SGILog translation buffer");
 		return (0);
 	}
@@ -1318,7 +1318,7 @@ LogLuvInitState(TIFF* tif)
 	TIFFDirectory* td = &tif->tif_dir;
 	LogLuvState* sp = DecoderState(tif);
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	assert(td->td_photometric == PHOTOMETRIC_LOGLUV);
 
 	/* for some reason, we can't do this in TIFFInitLogLuv */
@@ -1337,10 +1337,10 @@ LogLuvInitState(TIFF* tif)
 		sp->pixel_size = 3*sizeof (int16);
 		break;
 	case SGILOGDATAFMT_RAW:
-		sp->pixel_size = sizeof (uint32);
+		sp->pixel_size = sizeof (uint32_t);
 		break;
 	case SGILOGDATAFMT_8BIT:
-		sp->pixel_size = 3*sizeof (uint8);
+		sp->pixel_size = 3*sizeof (uint8_t);
 		break;
 	default:
 		TIFFErrorExt(tif->tif_clientdata, module,
@@ -1351,8 +1351,8 @@ LogLuvInitState(TIFF* tif)
             sp->tbuflen = multiply_ms(td->td_tilewidth, td->td_tilelength);
         else
             sp->tbuflen = multiply_ms(td->td_imagewidth, td->td_rowsperstrip);
-	if (multiply_ms(sp->tbuflen, sizeof (uint32)) == 0 ||
-	    (sp->tbuf = (uint8*) _TIFFmalloc(sp->tbuflen * sizeof (uint32))) == NULL) {
+	if (multiply_ms(sp->tbuflen, sizeof (uint32_t)) == 0 ||
+	    (sp->tbuf = (uint8_t*) _TIFFmalloc(sp->tbuflen * sizeof (uint32_t))) == nullptr) {
 		TIFFErrorExt(tif->tif_clientdata, module, "No space for SGILog translation buffer");
 		return (0);
 	}
@@ -1528,13 +1528,13 @@ LogLuvCleanup(TIFF* tif)
 	if (sp->tbuf)
 		_TIFFfree(sp->tbuf);
 	_TIFFfree(sp);
-	tif->tif_data = NULL;
+	tif->tif_data = nullptr;
 
 	_TIFFSetDefaultCompressionState(tif);
 }
 
 static int
-LogLuvVSetField(TIFF* tif, uint32 tag, va_list ap)
+LogLuvVSetField(TIFF* tif, uint32_t tag, va_list ap)
 {
 	static const char module[] = "LogLuvVSetField";
 	LogLuvState* sp = DecoderState(tif);
@@ -1593,7 +1593,7 @@ LogLuvVSetField(TIFF* tif, uint32 tag, va_list ap)
 }
 
 static int
-LogLuvVGetField(TIFF* tif, uint32 tag, va_list ap)
+LogLuvVGetField(TIFF* tif, uint32_t tag, va_list ap)
 {
 	LogLuvState *sp = (LogLuvState *)tif->tif_data;
 
@@ -1607,8 +1607,8 @@ LogLuvVGetField(TIFF* tif, uint32 tag, va_list ap)
 }
 
 static const TIFFField LogLuvFields[] = {
-    { TIFFTAG_SGILOGDATAFMT, 0, 0, TIFF_SHORT, 0, TIFF_SETGET_INT, TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "SGILogDataFmt", NULL},
-    { TIFFTAG_SGILOGENCODE, 0, 0, TIFF_SHORT, 0, TIFF_SETGET_INT, TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "SGILogEncode", NULL}
+    { TIFFTAG_SGILOGDATAFMT, 0, 0, TIFF_SHORT, 0, TIFF_SETGET_INT, TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "SGILogDataFmt", nullptr},
+    { TIFFTAG_SGILOGENCODE, 0, 0, TIFF_SHORT, 0, TIFF_SETGET_INT, TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "SGILogEncode", nullptr}
 };
 
 int
@@ -1632,8 +1632,8 @@ TIFFInitSGILog(TIFF* tif, int scheme)
 	/*
 	 * Allocate state block so tag methods have storage to record values.
 	 */
-	tif->tif_data = (uint8*) _TIFFmalloc(sizeof (LogLuvState));
-	if (tif->tif_data == NULL)
+	tif->tif_data = (uint8_t*) _TIFFmalloc(sizeof (LogLuvState));
+	if (tif->tif_data == nullptr)
 		goto bad;
 	sp = (LogLuvState*) tif->tif_data;
 	_TIFFmemset((void*)sp, 0, sizeof (*sp));

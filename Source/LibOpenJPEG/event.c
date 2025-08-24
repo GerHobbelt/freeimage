@@ -79,15 +79,15 @@ opj_event_mgr_t* OPJ_CALLCONV opj_set_event_mgr(opj_common_ptr cinfo, opj_event_
 		return previous;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 opj_bool opj_event_msg(opj_common_ptr cinfo, int event_type, const char *fmt, ...) {
 #define MSG_SIZE 512 /* 512 bytes should be more than enough for a short message */
-	opj_msg_callback msg_handler = NULL;
+	opj_msg_callback msg_handler = nullptr;
 
 	opj_event_mgr_t *event_mgr = cinfo->event_mgr;
-	if(event_mgr != NULL) {
+	if(event_mgr != nullptr) {
 		switch(event_type) {
 			case EVT_ERROR:
 				msg_handler = event_mgr->error_handler;
@@ -101,14 +101,14 @@ opj_bool opj_event_msg(opj_common_ptr cinfo, int event_type, const char *fmt, ..
 			default:
 				break;
 		}
-		if(msg_handler == NULL) {
+		if(msg_handler == nullptr) {
 			return OPJ_FALSE;
 		}
 	} else {
 		return OPJ_FALSE;
 	}
 
-	if ((fmt != NULL) && (event_mgr != NULL)) {
+	if ((fmt != nullptr) && (event_mgr != nullptr)) {
 		va_list arg;
 		int str_length/*, i, j*/; /* UniPG */
 		char message[MSG_SIZE];

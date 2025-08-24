@@ -52,7 +52,7 @@ DllDef    const char          *libraw_strprogress(enum LibRaw_progress);
     /* LibRaw C API */
 DllDef    libraw_data_t       *libraw_init(unsigned int flags);
 DllDef    int                 libraw_open_file(libraw_data_t*, const char *);
-DllDef    int                 libraw_open_file_ex(libraw_data_t*, const char *, INT64 max_buff_sz);
+DllDef    int                 libraw_open_file_ex(libraw_data_t*, const char *, int64_t max_buff_sz);
 DllDef    int                 libraw_open_buffer(libraw_data_t*, void * buffer, size_t size);
 DllDef    int                 libraw_unpack(libraw_data_t*);
 DllDef    int                 libraw_unpack_thumb(libraw_data_t*);
@@ -99,7 +99,7 @@ class DllDef LibRaw
     LibRaw(unsigned int flags = LIBRAW_OPTIONS_NONE);
     
     libraw_output_params_t*     output_params_ptr() { return &imgdata.params;}
-    int                         open_file(const char *fname, INT64 max_buffered_sz=LIBRAW_USE_STREAMS_DATASTREAM_MAXSIZE);
+    int                         open_file(const char *fname, int64_t max_buffered_sz=LIBRAW_USE_STREAMS_DATASTREAM_MAXSIZE);
     int                         open_buffer(void *buffer, size_t size);
     int                         open_datastream(LibRaw_abstract_datastream *);
     int                         unpack(void);
@@ -129,8 +129,8 @@ class DllDef LibRaw
     int                         dcraw_thumb_writer(const char *fname);
     int                         dcraw_process(void);
     /* memory writers */
-    libraw_processed_image_t*   dcraw_make_mem_image(int *errcode=NULL);  
-    libraw_processed_image_t*   dcraw_make_mem_thumb(int *errcode=NULL);
+    libraw_processed_image_t*   dcraw_make_mem_image(int *errcode=nullptr);  
+    libraw_processed_image_t*   dcraw_make_mem_thumb(int *errcode=nullptr);
     static void                 dcraw_clear_mem(libraw_processed_image_t*);
     
     /* Additional calls for make_mem_image */

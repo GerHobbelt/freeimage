@@ -116,7 +116,7 @@ TIFFOpen(const char* name, const char* mode)
 
         ret = TIFFFdOpen(fd, name, mode);
 
-        if (ret == NULL) close(fd);
+        if (ret == nullptr) close(fd);
 
         return ret;
 }
@@ -167,7 +167,7 @@ _TIFFmemcmp(const tdata_t p1, const tdata_t p2, tsize_t c)
 static void
 msdosWarningHandler(const char* module, const char* fmt, va_list ap)
 {
-	if (module != NULL)
+	if (module != nullptr)
 		fprintf(stderr, "%s: ", module);
 	fprintf(stderr, "Warning, ");
 	vfprintf(stderr, fmt, ap);
@@ -178,7 +178,7 @@ TIFFErrorHandler _TIFFwarningHandler = msdosWarningHandler;
 static void
 msdosErrorHandler(const char* module, const char* fmt, va_list ap)
 {
-	if (module != NULL)
+	if (module != nullptr)
 		fprintf(stderr, "%s: ", module);
 	vfprintf(stderr, fmt, ap);
 	fprintf(stderr, ".\n");

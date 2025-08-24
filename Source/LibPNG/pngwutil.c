@@ -97,7 +97,7 @@ png_write_chunk_header(png_structp png_ptr, png_uint_32 chunk_name,
    png_debug2(0, "Writing %s chunk, length = %lu", buf, (unsigned long)length);
 #endif
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
 #ifdef PNG_IO_STATE_SUPPORTED
@@ -145,10 +145,10 @@ png_write_chunk_data(png_structp png_ptr, png_const_bytep data,
     png_size_t length)
 {
    /* Write the data, and run the CRC over it */
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
-   if (data != NULL && length > 0)
+   if (data != nullptr && length > 0)
    {
       png_write_data(png_ptr, data, length);
 
@@ -165,7 +165,7 @@ png_write_chunk_end(png_structp png_ptr)
 {
    png_byte buf[4];
 
-   if (png_ptr == NULL) return;
+   if (png_ptr == nullptr) return;
 
 #ifdef PNG_IO_STATE_SUPPORTED
    /* Inform the I/O callback that the chunk CRC is being written.
@@ -193,7 +193,7 @@ static void
 png_write_complete_chunk(png_structp png_ptr, png_uint_32 chunk_name,
    png_const_bytep data, png_size_t length)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* On 64 bit architectures 'length' may not fit in a png_uint_32. */
@@ -382,8 +382,8 @@ png_text_compress(png_structp png_ptr,
 
    comp->num_output_ptr = 0;
    comp->max_output_ptr = 0;
-   comp->output_ptr = NULL;
-   comp->input = NULL;
+   comp->output_ptr = nullptr;
+   comp->input = nullptr;
    comp->input_len = text_len;
 
    /* We may just want to pass the text right through */
@@ -436,7 +436,7 @@ png_text_compress(png_structp png_ptr,
       if (ret != Z_OK)
       {
          /* Error */
-         if (png_ptr->zstream.msg != NULL)
+         if (png_ptr->zstream.msg != nullptr)
             png_error(png_ptr, png_ptr->zstream.msg);
 
          else
@@ -453,7 +453,7 @@ png_text_compress(png_structp png_ptr,
 
             old_max = comp->max_output_ptr;
             comp->max_output_ptr = comp->num_output_ptr + 4;
-            if (comp->output_ptr != NULL)
+            if (comp->output_ptr != nullptr)
             {
                png_bytepp old_ptr;
 
@@ -509,7 +509,7 @@ png_text_compress(png_structp png_ptr,
 
                old_max = comp->max_output_ptr;
                comp->max_output_ptr = comp->num_output_ptr + 4;
-               if (comp->output_ptr != NULL)
+               if (comp->output_ptr != nullptr)
                {
                   png_bytepp old_ptr;
 
@@ -550,7 +550,7 @@ png_text_compress(png_structp png_ptr,
       else if (ret != Z_STREAM_END)
       {
          /* We got an error */
-         if (png_ptr->zstream.msg != NULL)
+         if (png_ptr->zstream.msg != nullptr)
             png_error(png_ptr, png_ptr->zstream.msg);
 
          else
@@ -1052,7 +1052,7 @@ png_write_IEND(png_structp png_ptr)
 {
    png_debug(1, "in png_write_IEND");
 
-   png_write_complete_chunk(png_ptr, png_IEND, NULL, (png_size_t)0);
+   png_write_complete_chunk(png_ptr, png_IEND, nullptr, (png_size_t)0);
    png_ptr->mode |= PNG_HAVE_IEND;
 }
 
@@ -1104,8 +1104,8 @@ png_write_iCCP(png_structp png_ptr, png_const_charp name, int compression_type,
 
    comp.num_output_ptr = 0;
    comp.max_output_ptr = 0;
-   comp.output_ptr = NULL;
-   comp.input = NULL;
+   comp.output_ptr = nullptr;
+   comp.input = nullptr;
    comp.input_len = 0;
 
    if ((name_len = png_check_keyword(png_ptr, name, &new_name)) == 0)
@@ -1114,7 +1114,7 @@ png_write_iCCP(png_structp png_ptr, png_const_charp name, int compression_type,
    if (compression_type != PNG_COMPRESSION_TYPE_BASE)
       png_warning(png_ptr, "Unknown compression type in iCCP chunk");
 
-   if (profile == NULL)
+   if (profile == nullptr)
       profile_len = 0;
 
    if (profile_len > 3)
@@ -1154,7 +1154,7 @@ png_write_iCCP(png_structp png_ptr, png_const_charp name, int compression_type,
       profile_len = png_text_compress(png_ptr, profile,
           (png_size_t)profile_len, PNG_COMPRESSION_TYPE_BASE, &comp);
 
-   /* Make sure we include the NULL after the name and the compression type */
+   /* Make sure we include the nullptr after the name and the compression type */
    png_write_chunk_header(png_ptr, png_iCCP,
        (png_uint_32)(name_len + profile_len + 2));
 
@@ -1193,7 +1193,7 @@ png_write_sPLT(png_structp png_ptr, png_const_sPLT_tp spalette)
    if ((name_len = png_check_keyword(png_ptr,spalette->name, &new_name))==0)
       return;
 
-   /* Make sure we include the NULL after the name */
+   /* Make sure we include the nullptr after the name */
    png_write_chunk_header(png_ptr, png_sPLT,
        (png_uint_32)(name_len + 2 + palette_size));
 
@@ -1532,9 +1532,9 @@ png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
 
    png_debug(1, "in png_check_keyword");
 
-   *new_key = NULL;
+   *new_key = nullptr;
 
-   if (key == NULL || (key_len = png_strlen(key)) == 0)
+   if (key == nullptr || (key_len = png_strlen(key)) == 0)
    {
       png_warning(png_ptr, "zero length keyword");
       return ((png_size_t)0);
@@ -1544,7 +1544,7 @@ png_check_keyword(png_structp png_ptr, png_const_charp key, png_charpp new_key)
 
    *new_key = (png_charp)png_malloc_warn(png_ptr, (png_uint_32)(key_len + 2));
 
-   if (*new_key == NULL)
+   if (*new_key == nullptr)
    {
       png_warning(png_ptr, "Out of memory while procesing keyword");
       return ((png_size_t)0);
@@ -1655,7 +1655,7 @@ png_write_tEXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
    if ((key_len = png_check_keyword(png_ptr, key, &new_key))==0)
       return;
 
-   if (text == NULL || *text == '\0')
+   if (text == nullptr || *text == '\0')
       text_len = 0;
 
    else
@@ -1697,8 +1697,8 @@ png_write_zTXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
 
    comp.num_output_ptr = 0;
    comp.max_output_ptr = 0;
-   comp.output_ptr = NULL;
-   comp.input = NULL;
+   comp.output_ptr = nullptr;
+   comp.input = nullptr;
    comp.input_len = 0;
 
    if ((key_len = png_check_keyword(png_ptr, key, &new_key)) == 0)
@@ -1707,7 +1707,7 @@ png_write_zTXt(png_structp png_ptr, png_const_charp key, png_const_charp text,
       return;
    }
 
-   if (text == NULL || *text == '\0' || compression==PNG_TEXT_COMPRESSION_NONE)
+   if (text == nullptr || *text == '\0' || compression==PNG_TEXT_COMPRESSION_NONE)
    {
       png_write_tEXt(png_ptr, new_key, text, (png_size_t)0);
       png_free(png_ptr, new_key);
@@ -1751,7 +1751,7 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
 {
    png_size_t lang_len, key_len, lang_key_len, text_len;
    png_charp new_lang;
-   png_charp new_key = NULL;
+   png_charp new_key = nullptr;
    png_byte cbuf[2];
    compression_state comp;
 
@@ -1759,8 +1759,8 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
 
    comp.num_output_ptr = 0;
    comp.max_output_ptr = 0;
-   comp.output_ptr = NULL;
-   comp.input = NULL;
+   comp.output_ptr = nullptr;
+   comp.input = nullptr;
 
    if ((key_len = png_check_keyword(png_ptr, key, &new_key)) == 0)
       return;
@@ -1768,17 +1768,17 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
    if ((lang_len = png_check_keyword(png_ptr, lang, &new_lang)) == 0)
    {
       png_warning(png_ptr, "Empty language field in iTXt chunk");
-      new_lang = NULL;
+      new_lang = nullptr;
       lang_len = 0;
    }
 
-   if (lang_key == NULL)
+   if (lang_key == nullptr)
       lang_key_len = 0;
 
    else
       lang_key_len = png_strlen(lang_key);
 
-   if (text == NULL)
+   if (text == nullptr)
       text_len = 0;
 
    else
@@ -2179,7 +2179,7 @@ png_write_finish_row(png_structp png_ptr)
       /* Reset the row above the image for the next pass */
       if (png_ptr->pass < 7)
       {
-         if (png_ptr->prev_row != NULL)
+         if (png_ptr->prev_row != nullptr)
             png_memset(png_ptr->prev_row, 0,
                 (png_size_t)(PNG_ROWBYTES(png_ptr->usr_channels*
                 png_ptr->usr_bit_depth, png_ptr->width)) + 1);
@@ -2210,7 +2210,7 @@ png_write_finish_row(png_structp png_ptr)
 
       else if (ret != Z_STREAM_END)
       {
-         if (png_ptr->zstream.msg != NULL)
+         if (png_ptr->zstream.msg != nullptr)
             png_error(png_ptr, png_ptr->zstream.msg);
 
          else
@@ -3138,7 +3138,7 @@ png_write_filtered_row(png_structp png_ptr, png_bytep filtered_row,
       /* Check for compression errors */
       if (ret != Z_OK)
       {
-         if (png_ptr->zstream.msg != NULL)
+         if (png_ptr->zstream.msg != nullptr)
             png_error(png_ptr, png_ptr->zstream.msg);
 
          else
@@ -3155,7 +3155,7 @@ png_write_filtered_row(png_structp png_ptr, png_bytep filtered_row,
    } while (avail > 0 || png_ptr->zstream.avail_in > 0);
 
    /* Swap the current and previous rows */
-   if (png_ptr->prev_row != NULL)
+   if (png_ptr->prev_row != nullptr)
    {
       png_bytep tptr;
 

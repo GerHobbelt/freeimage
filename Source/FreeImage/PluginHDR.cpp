@@ -82,14 +82,14 @@ typedef enum {
 
 static BOOL rgbe_Error(rgbe_error_code error_code, const char *msg);
 static BOOL rgbe_GetLine(FreeImageIO *io, fi_handle handle, char *buffer, int length);
-static inline void rgbe_FloatToRGBE(BYTE rgbe[4], FIRGBF *rgbf);
-static inline void rgbe_RGBEToFloat(FIRGBF *rgbf, BYTE rgbe[4]);
+static inline void rgbe_FloatToRGBE(uint8_t rgbe[4], FIRGBF *rgbf);
+static inline void rgbe_RGBEToFloat(FIRGBF *rgbf, uint8_t rgbe[4]);
 static BOOL rgbe_ReadHeader(FreeImageIO *io, fi_handle handle, unsigned *width, unsigned *height, rgbeHeaderInfo *header_info);
 static BOOL rgbe_WriteHeader(FreeImageIO *io, fi_handle handle, unsigned width, unsigned height, rgbeHeaderInfo *info);
 static BOOL rgbe_ReadPixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels);
 static BOOL rgbe_WritePixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels);
 static BOOL rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanline_width, unsigned num_scanlines);
-static BOOL rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, BYTE *data, int numbytes);
+static BOOL rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, uint8_t *data, int numbytes);
 static BOOL rgbe_WritePixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned scanline_width, unsigned num_scanlines);
 static BOOL rgbe_ReadMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info);
 static BOOL rgbe_WriteMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info);
@@ -141,7 +141,7 @@ Standard conversion from float pixels to rgbe pixels.
 Note: you can remove the "inline"s if your compiler complains about it 
 */
 static inline void 
-rgbe_FloatToRGBE(BYTE rgbe[4], FIRGBF *rgbf) {
+rgbe_FloatToRGBE(uint8_t rgbe[4], FIRGBF *rgbf) {
 	float v;
 	int e;
 
@@ -153,10 +153,10 @@ rgbe_FloatToRGBE(BYTE rgbe[4], FIRGBF *rgbf) {
 	}
 	else {
 		v = (float)(frexp(v, &e) * 256.0 / v);
-		rgbe[0] = (BYTE) (rgbf->red * v);
-		rgbe[1] = (BYTE) (rgbf->green * v);
-		rgbe[2] = (BYTE) (rgbf->blue * v);
-		rgbe[3] = (BYTE) (e + 128);
+		rgbe[0] = (uint8_t) (rgbf->red * v);
+		rgbe[1] = (uint8_t) (rgbf->green * v);
+		rgbe[2] = (uint8_t) (rgbf->blue * v);
+		rgbe[3] = (uint8_t) (e + 128);
 	}
 }
 
@@ -166,7 +166,7 @@ Note: Ward uses ldexp(col+0.5,exp-(128+8)).
 However we wanted pixels in the range [0,1] to map back into the range [0,1].
 */
 static inline void 
-rgbe_RGBEToFloat(FIRGBF *rgbf, BYTE rgbe[4]) {
+rgbe_RGBEToFloat(FIRGBF *rgbf, uint8_t rgbe[4]) {
 	if (rgbe[3]) {   // nonzero pixel
 		float f = (float)(ldexp(1.0, rgbe[3] - (int)(128+8)));
 		rgbf->red   = rgbe[0] * f;
@@ -197,7 +197,7 @@ rgbe_ReadHeader(FreeImageIO *io, fi_handle handle, unsigned *width, unsigned *he
 
 	// get the first line
 	if(!rgbe_GetLine(io, handle, buf, HDR_MAXLINE))
-		return rgbe_Error(rgbe_read_error, NULL);
+		return rgbe_Error(rgbe_read_error, nullptr);
 
 	// check the signature
 
@@ -218,7 +218,7 @@ rgbe_ReadHeader(FreeImageIO *io, fi_handle handle, unsigned *width, unsigned *he
 	for(;;) {
 		// get next line
 		if(!rgbe_GetLine(io, handle, buf, HDR_MAXLINE))
-			return rgbe_Error(rgbe_read_error, NULL);
+			return rgbe_Error(rgbe_read_error, nullptr);
 
 		if((buf[0] == 0) || (buf[0] == '\n')) {
 			// end of header so break out of loop
@@ -247,7 +247,7 @@ rgbe_ReadHeader(FreeImageIO *io, fi_handle handle, unsigned *width, unsigned *he
 
 	// get next line
 	if(!rgbe_GetLine(io, handle, buf, HDR_MAXLINE))
-		return rgbe_Error(rgbe_read_error, NULL);
+		return rgbe_Error(rgbe_read_error, nullptr);
 
 	// get the image width & height
 	if(sscanf(buf,"-Y %d +X %d", height, width) < 2) {
@@ -274,26 +274,26 @@ rgbe_WriteHeader(FreeImageIO *io, fi_handle handle, unsigned width, unsigned hei
 	// The #? is to identify file type, the programtype is optional
 	sprintf(buffer, "#?%s\n", programtype);
 	if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
-		return rgbe_Error(rgbe_write_error, NULL);
+		return rgbe_Error(rgbe_write_error, nullptr);
 	sprintf(buffer, "%s\n", info->comment);
 	if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
-		return rgbe_Error(rgbe_write_error, NULL);
+		return rgbe_Error(rgbe_write_error, nullptr);
 	sprintf(buffer, "FORMAT=32-bit_rle_rgbe\n");
 	if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
-		return rgbe_Error(rgbe_write_error, NULL);
+		return rgbe_Error(rgbe_write_error, nullptr);
 	if(info && (info->valid & RGBE_VALID_GAMMA)) {
 		sprintf(buffer, "GAMMA=%g\n", info->gamma);
 		if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
-			return rgbe_Error(rgbe_write_error, NULL);
+			return rgbe_Error(rgbe_write_error, nullptr);
 	}
 	if(info && (info->valid & RGBE_VALID_EXPOSURE)) {
 		sprintf(buffer,"EXPOSURE=%g\n", info->exposure);
 		if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
-			return rgbe_Error(rgbe_write_error, NULL);
+			return rgbe_Error(rgbe_write_error, nullptr);
 	}
 	sprintf(buffer, "\n-Y %d +X %d\n", height, width);
 	if(io->write_proc(buffer, 1, (unsigned int)strlen(buffer), handle) < 1)
-		return rgbe_Error(rgbe_write_error, NULL);
+		return rgbe_Error(rgbe_write_error, nullptr);
 
 	return TRUE;
 }
@@ -317,11 +317,11 @@ Simple read routine. Will not correctly handle run length encoding
 */
 static BOOL 
 rgbe_ReadPixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels) {
-  BYTE rgbe[4];
+  uint8_t rgbe[4];
 
   for(unsigned x = 0; x < numpixels; x++) {
 	if(io->read_proc(rgbe, 1, sizeof(rgbe), handle) < 1) {
-		return rgbe_Error(rgbe_read_error, NULL);
+		return rgbe_Error(rgbe_read_error, nullptr);
 	}
 	rgbe_RGBEToFloat(&data[x], rgbe);
   }
@@ -336,12 +336,12 @@ rgbe_ReadPixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpix
 */
 static BOOL 
 rgbe_WritePixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels) {
-  BYTE rgbe[4];
+  uint8_t rgbe[4];
 
   for(unsigned x = 0; x < numpixels; x++) {
 	  rgbe_FloatToRGBE(rgbe, &data[x]);
 	  if(io->write_proc(rgbe, sizeof(rgbe), 1, handle) < 1)
-		  return rgbe_Error(rgbe_write_error, NULL);
+		  return rgbe_Error(rgbe_write_error, nullptr);
   }
 
   return TRUE;
@@ -349,20 +349,20 @@ rgbe_WritePixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpi
 
 static BOOL 
 rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanline_width, unsigned num_scanlines) {
-	BYTE rgbe[4], *scanline_buffer, *ptr, *ptr_end;
+	uint8_t rgbe[4], *scanline_buffer, *ptr, *ptr_end;
 	int i, count;
-	BYTE buf[2];
+	uint8_t buf[2];
 	
 	if ((scanline_width < 8)||(scanline_width > 0x7fff)) {
 		// run length encoding is not allowed so read flat
 		return rgbe_ReadPixels(io, handle, data, scanline_width * num_scanlines);
 	}
-	scanline_buffer = NULL;
+	scanline_buffer = nullptr;
 	// read in each successive scanline 
 	while(num_scanlines > 0) {
 		if(io->read_proc(rgbe, 1, sizeof(rgbe), handle) < 1) {
 			free(scanline_buffer);
-			return rgbe_Error(rgbe_read_error,NULL);
+			return rgbe_Error(rgbe_read_error,nullptr);
 		}
 		if((rgbe[0] != 2) || (rgbe[1] != 2) || (rgbe[2] & 0x80)) {
 			// this file is not run length encoded
@@ -375,9 +375,9 @@ rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanlin
 			free(scanline_buffer);
 			return rgbe_Error(rgbe_format_error,"wrong scanline width");
 		}
-		if(scanline_buffer == NULL) {
-			scanline_buffer = (BYTE*)malloc(sizeof(BYTE) * 4 * scanline_width);
-			if(scanline_buffer == NULL) {
+		if(scanline_buffer == nullptr) {
+			scanline_buffer = (uint8_t*)malloc(sizeof(uint8_t) * 4 * scanline_width);
+			if(scanline_buffer == nullptr) {
 				return rgbe_Error(rgbe_memory_error, "unable to allocate buffer space");
 			}
 		}
@@ -387,9 +387,9 @@ rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanlin
 		for(i = 0; i < 4; i++) {
 			ptr_end = &scanline_buffer[(i+1)*scanline_width];
 			while(ptr < ptr_end) {
-				if(io->read_proc(buf, 1, 2 * sizeof(BYTE), handle) < 1) {
+				if(io->read_proc(buf, 1, 2 * sizeof(uint8_t), handle) < 1) {
 					free(scanline_buffer);
-					return rgbe_Error(rgbe_read_error, NULL);
+					return rgbe_Error(rgbe_read_error, nullptr);
 				}
 				if(buf[0] > 128) {
 					// a run of the same value
@@ -410,9 +410,9 @@ rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanlin
 					}
 					*ptr++ = buf[1];
 					if(--count > 0) {
-						if(io->read_proc(ptr, 1, sizeof(BYTE) * count, handle) < 1) {
+						if(io->read_proc(ptr, 1, sizeof(uint8_t) * count, handle) < 1) {
 							free(scanline_buffer);
-							return rgbe_Error(rgbe_read_error, NULL);
+							return rgbe_Error(rgbe_read_error, nullptr);
 						}
 						ptr += count;
 					}
@@ -445,10 +445,10 @@ rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanlin
  @return Returns TRUE if successful, returns FALSE otherwise
 */
 static BOOL 
-rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, BYTE *data, int numbytes) {
+rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, uint8_t *data, int numbytes) {
 	static const int MINRUNLENGTH = 4;
 	int cur, beg_run, run_count, old_run_count, nonrun_count;
-	BYTE buf[2];
+	uint8_t buf[2];
 	
 	cur = 0;
 	while(cur < numbytes) {
@@ -464,10 +464,10 @@ rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, BYTE *data, int numbytes)
 		}
 		// if data before next big run is a short run then write it as such 
 		if ((old_run_count > 1)&&(old_run_count == beg_run - cur)) {
-			buf[0] = (BYTE)(128 + old_run_count);   // write short run
+			buf[0] = (uint8_t)(128 + old_run_count);   // write short run
 			buf[1] = data[cur];
-			if(io->write_proc(buf, 2 * sizeof(BYTE), 1, handle) < 1)
-				return rgbe_Error(rgbe_write_error, NULL);
+			if(io->write_proc(buf, 2 * sizeof(uint8_t), 1, handle) < 1)
+				return rgbe_Error(rgbe_write_error, nullptr);
 			cur = beg_run;
 		}
 		// write out bytes until we reach the start of the next run 
@@ -475,19 +475,19 @@ rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, BYTE *data, int numbytes)
 			nonrun_count = beg_run - cur;
 			if (nonrun_count > 128) 
 				nonrun_count = 128;
-			buf[0] = (BYTE)nonrun_count;
+			buf[0] = (uint8_t)nonrun_count;
 			if(io->write_proc(buf, sizeof(buf[0]), 1, handle) < 1)
-				return rgbe_Error(rgbe_write_error,NULL);
+				return rgbe_Error(rgbe_write_error,nullptr);
 			if(io->write_proc(&data[cur], sizeof(data[0]) * nonrun_count, 1, handle) < 1)
-				return rgbe_Error(rgbe_write_error,NULL);
+				return rgbe_Error(rgbe_write_error,nullptr);
 			cur += nonrun_count;
 		}
 		// write out next run if one was found 
 		if (run_count >= MINRUNLENGTH) {
-			buf[0] = (BYTE)(128 + run_count);
+			buf[0] = (uint8_t)(128 + run_count);
 			buf[1] = data[beg_run];
 			if(io->write_proc(buf, sizeof(buf[0]) * 2, 1, handle) < 1)
-				return rgbe_Error(rgbe_write_error,NULL);
+				return rgbe_Error(rgbe_write_error,nullptr);
 			cur += run_count;
 		}
 	}
@@ -497,26 +497,26 @@ rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, BYTE *data, int numbytes)
 
 static BOOL 
 rgbe_WritePixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned scanline_width, unsigned num_scanlines) {
-	BYTE rgbe[4];
-	BYTE *buffer;
+	uint8_t rgbe[4];
+	uint8_t *buffer;
 	
 	if ((scanline_width < 8)||(scanline_width > 0x7fff)) {
 		// run length encoding is not allowed so write flat
 		return rgbe_WritePixels(io, handle, data, scanline_width * num_scanlines);
 	}
-	buffer = (BYTE*)malloc(sizeof(BYTE) * 4 * scanline_width);
-	if (buffer == NULL) {
+	buffer = (uint8_t*)malloc(sizeof(uint8_t) * 4 * scanline_width);
+	if (buffer == nullptr) {
 		// no buffer space so write flat 
 		return rgbe_WritePixels(io, handle, data, scanline_width * num_scanlines);
 	}
 	while(num_scanlines-- > 0) {
-		rgbe[0] = (BYTE)2;
-		rgbe[1] = (BYTE)2;
-		rgbe[2] = (BYTE)(scanline_width >> 8);
-		rgbe[3] = (BYTE)(scanline_width & 0xFF);
+		rgbe[0] = (uint8_t)2;
+		rgbe[1] = (uint8_t)2;
+		rgbe[2] = (uint8_t)(scanline_width >> 8);
+		rgbe[3] = (uint8_t)(scanline_width & 0xFF);
 		if(io->write_proc(rgbe, sizeof(rgbe), 1, handle) < 1) {
 			free(buffer);
-			return rgbe_Error(rgbe_write_error, NULL);
+			return rgbe_Error(rgbe_write_error, nullptr);
 		}
 		for(unsigned x = 0; x < scanline_width; x++) {
 			rgbe_FloatToRGBE(rgbe, data);
@@ -567,7 +567,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -577,8 +577,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE hdr_signature[] = { '#', '?' };
-	BYTE signature[] = { 0, 0 };
+	uint8_t hdr_signature[] = { '#', '?' };
+	uint8_t signature[] = { 0, 0 };
 
 	io->read_proc(signature, 1, 2, handle);
 
@@ -604,10 +604,10 @@ SupportsNoPixels() {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	if(!handle) {
-		return NULL;
+		return nullptr;
 	}
 
 	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
@@ -619,7 +619,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		// Read the header
 		if(rgbe_ReadHeader(io, handle, &width, &height, &header_info) == FALSE) {
-			return NULL;
+			return nullptr;
 		}
 
 		// allocate a RGBF image
@@ -642,13 +642,13 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			FIRGBF *scanline = (FIRGBF*)FreeImage_GetScanLine(dib, height - 1 - y);
 			if(!rgbe_ReadPixels_RLE(io, handle, scanline, width, 1)) {
 				FreeImage_Unload(dib);
-				return NULL;
+				return nullptr;
 			}
 		}
 
 	}
 	catch(const char *text) {
-		if(dib != NULL) {
+		if(dib != nullptr) {
 			FreeImage_Unload(dib);
 		}
 		FreeImage_OutputMessageProc(s_format_id, text);
@@ -706,16 +706,16 @@ InitHDR(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }

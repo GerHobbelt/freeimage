@@ -69,7 +69,7 @@ typedef struct opj_tgt_tree {
 Create a tag-tree
 @param numleafsh Width of the array of leafs of the tree
 @param numleafsv Height of the array of leafs of the tree
-@return Returns a new tag-tree if successful, returns NULL otherwise
+@return Returns a new tag-tree if successful, returns nullptr otherwise
 */
 opj_tgt_tree_t *tgt_create(int numleafsh, int numleafsv);
 /**

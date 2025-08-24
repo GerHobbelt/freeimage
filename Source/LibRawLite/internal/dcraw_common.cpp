@@ -879,7 +879,7 @@ void CLASS lossless_jpeg_load_raw()
 #endif
 
 #ifdef LIBRAW_LIBRARY_BUILD
-  LibRaw_byte_buffer *buf=NULL;
+  LibRaw_byte_buffer *buf=nullptr;
   if(data_size)
       buf = ifp->make_byte_buffer(data_size);
   LibRaw_bit_buffer bits;
@@ -1179,7 +1179,7 @@ void CLASS adobe_dng_load_raw_nc()
 
 #ifdef LIBRAW_LIBRARY_BUILD
   int dsz= raw_height*raw_width * tiff_samples * tiff_bps/8;
-  LibRaw_byte_buffer *buf = NULL;
+  LibRaw_byte_buffer *buf = nullptr;
   if (tiff_bps != 16)
       {
           buf = ifp->make_byte_buffer(dsz);
@@ -1794,7 +1794,7 @@ unsigned CLASS ph1_bithuff (int nbits, ushort *huff)
 #define bitbuf tls->ph1_bits.bitbuf
 #define vbits  tls->ph1_bits.vbits    
 #else
-  static UINT64 bitbuf=0;
+  static uint64_t bitbuf=0;
   static int vbits=0;
 #endif
   unsigned c;
@@ -2044,7 +2044,7 @@ void CLASS packed_load_raw()
 {
   int vbits=0, bwide, pwide, rbits, bite, half, irow, row, col, val, i;
   int zero=0;
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
 
   if (raw_width * 8 >= width * tiff_bps)	/* Is raw_width in bytes? */
        pwide = (bwide = raw_width) * 8 / tiff_bps;
@@ -2705,7 +2705,7 @@ int CLASS kodak_65000_decode (short *out, int bsize)
 {
   uchar c, blen[768];
   ushort raw[6];
-  INT64 bitbuf=0;
+  int64_t bitbuf=0;
   int save, bits=0, i, j, len, diff;
 
   save = ftell(ifp);
@@ -2734,7 +2734,7 @@ int CLASS kodak_65000_decode (short *out, int bsize)
     len = blen[i];
     if (bits < len) {
       for (j=0; j < 32; j+=8)
-	bitbuf += (INT64) fgetc(ifp) << (bits+(j^8));
+	bitbuf += (int64_t) fgetc(ifp) << (bits+(j^8));
       bits += 32;
     }
     diff = bitbuf & (0xffff >> (16-len));
@@ -2962,7 +2962,7 @@ void CLASS sony_arw_load_raw()
   for (n=i=0; i < 18; i++)
     FORC(32768 >> (tab[i] >> 8)) huff[n++] = tab[i];
 #ifdef LIBRAW_LIBRARY_BUILD
-  LibRaw_byte_buffer *buf=NULL;
+  LibRaw_byte_buffer *buf=nullptr;
   if(data_size)
       buf = ifp->make_byte_buffer(data_size);
   else
@@ -5928,7 +5928,7 @@ void CLASS apply_tiff()
         if (tiff_ifd[thm].bps <= 8)
           write_thumb = &CLASS ppm_thumb;
         else if (!strcmp(make,"Imacon"))
-            write_thumb = NULL; /* &CLASS ppm16_thumb; */
+            write_thumb = nullptr; /* &CLASS ppm16_thumb; */
         else
           thumb_load_raw = &CLASS kodak_thumb_load_raw;
 	break;
@@ -6117,7 +6117,7 @@ void CLASS parse_ciff (int offset, int length)
       fread (artist, 64, 1, ifp);
     if (type == 0x080a) {
       fread (make, 64, 1, ifp);
-      fseek (ifp, ((INT64)strlen(make)) - 63, SEEK_CUR);
+      fseek (ifp, ((int64_t)strlen(make)) - 63, SEEK_CUR);
       fread (model, 64, 1, ifp);
     }
     if (type == 0x1810) {
@@ -6530,8 +6530,8 @@ void CLASS parse_cine()
   fseek (ifp, off_image, SEEK_SET);
   if (shot_select < is_raw)
     fseek (ifp, shot_select*8, SEEK_CUR);
-  data_offset  = (INT64) get4() + 8;
-  data_offset += (INT64) get4() << 32;
+  data_offset  = (int64_t) get4() + 8;
+  data_offset += (int64_t) get4() << 32;
 }
 
 void CLASS parse_redcine()
@@ -7333,7 +7333,7 @@ short CLASS guess_byte_order (int words)
 
 float CLASS find_green (int bps, int bite, int off0, int off1)
 {
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
   int vbits, col, i, c;
   ushort img[2][2064];
   double sum[]={0,0};

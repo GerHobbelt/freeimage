@@ -558,13 +558,13 @@ static void j2k_read_siz(opj_j2k_t *j2k) {
 #endif /* USE_JPWL */
 
 	cp->tcps = (opj_tcp_t*) opj_calloc(cp->tw * cp->th, sizeof(opj_tcp_t));
-    if (cp->tcps == NULL)
+    if (cp->tcps == nullptr)
     {
         opj_event_msg(j2k->cinfo, EVT_ERROR, "Out of memory\n");
         return;
     }
 	cp->tileno = (int*) opj_malloc(cp->tw * cp->th * sizeof(int));
-    if (cp->tileno == NULL)
+    if (cp->tileno == nullptr)
     {
         opj_event_msg(j2k->cinfo, EVT_ERROR, "Out of memory\n");
         return;
@@ -592,8 +592,8 @@ static void j2k_read_siz(opj_j2k_t *j2k) {
 	
 	/* Initialization for PPM marker */
 	cp->ppm = 0;
-	cp->ppm_data = NULL;
-	cp->ppm_data_first = NULL;
+	cp->ppm_data = nullptr;
+	cp->ppm_data_first = nullptr;
 	cp->ppm_previous = 0;
 	cp->ppm_store = 0;
 
@@ -730,8 +730,8 @@ static void j2k_read_cox(opj_j2k_t *j2k, int compno) {
 }
 
 static void j2k_write_cod(opj_j2k_t *j2k) {
-	opj_cp_t *cp = NULL;
-	opj_tcp_t *tcp = NULL;
+	opj_cp_t *cp = nullptr;
+	opj_tcp_t *tcp = nullptr;
 	int lenp, len;
 
 	opj_cio_t *cio = j2k->cio;
@@ -1270,7 +1270,7 @@ static void j2k_write_sot(opj_j2k_t *j2k) {
 
 static void j2k_read_sot(opj_j2k_t *j2k) {
 	int len, tileno, totlen, partno, numparts, i;
-	opj_tcp_t *tcp = NULL;
+	opj_tcp_t *tcp = nullptr;
 	char status = 0;
 
 	opj_cp_t *cp = j2k->cp;
@@ -1407,8 +1407,8 @@ static void j2k_read_sot(opj_j2k_t *j2k) {
 		opj_tccp_t *tmp = tcp->tccps;
 		memcpy(tcp, j2k->default_tcp, sizeof(opj_tcp_t));
 		tcp->ppt = 0;
-		tcp->ppt_data = NULL;
-		tcp->ppt_data_first = NULL;
+		tcp->ppt_data = nullptr;
+		tcp->ppt_data_first = nullptr;
 		tcp->tccps = tmp;
 
 		for (i = 0; i < j2k->image->numcomps; i++) {
@@ -1421,8 +1421,8 @@ static void j2k_read_sot(opj_j2k_t *j2k) {
 static void j2k_write_sod(opj_j2k_t *j2k, void *tile_coder) {
 	int l, layno;
 	int totlen;
-	opj_tcp_t *tcp = NULL;
-	opj_codestream_info_t *cstr_info = NULL;
+	opj_tcp_t *tcp = nullptr;
+	opj_codestream_info_t *cstr_info = nullptr;
 	
 	opj_tcd_t *tcd = (opj_tcd_t*)tile_coder;	/* cast is needed because of conflicts in header inclusions */
 	opj_cp_t *cp = j2k->cp;
@@ -1493,7 +1493,7 @@ static void j2k_write_sod(opj_j2k_t *j2k, void *tile_coder) {
 
 static void j2k_read_sod(opj_j2k_t *j2k) {
 	int len, truncate = 0, i;
-	unsigned char *data = NULL, *data_ptr = NULL;
+	unsigned char *data = nullptr, *data_ptr = nullptr;
 
 	opj_cio_t *cio = j2k->cio;
 	int curtileno = j2k->curtileno;
@@ -1621,7 +1621,7 @@ static void j2k_read_eoc(opj_j2k_t *j2k) {
 				tileno = j2k->cp->tileno[i];
 				success = tcd_decode_tile(tcd, j2k->tile_data[tileno], j2k->tile_len[tileno], tileno, j2k->cstr_info);
 				opj_free(j2k->tile_data[tileno]);
-				j2k->tile_data[tileno] = NULL;
+				j2k->tile_data[tileno] = nullptr;
 				tcd_free_decode_tile(tcd, i);
 			}
 			else
@@ -1639,7 +1639,7 @@ static void j2k_read_eoc(opj_j2k_t *j2k) {
 		for (i = 0; i < j2k->cp->tileno_size; i++) {
 			tileno = j2k->cp->tileno[i];
 			opj_free(j2k->tile_data[tileno]);
-			j2k->tile_data[tileno] = NULL;
+			j2k->tile_data[tileno] = nullptr;
 		}
 	}	
 	if (j2k->state & J2K_STATE_ERR)
@@ -1775,16 +1775,16 @@ static opj_dec_mstabent_t *j2k_dec_mstab_lookup(int id) {
 opj_j2k_t* j2k_create_decompress(opj_common_ptr cinfo) {
 	opj_j2k_t *j2k = (opj_j2k_t*) opj_calloc(1, sizeof(opj_j2k_t));
 	if(!j2k)
-		return NULL;
+		return nullptr;
 
 	j2k->default_tcp = (opj_tcp_t*) opj_calloc(1, sizeof(opj_tcp_t));
 	if(!j2k->default_tcp) {
 		opj_free(j2k);
-		return NULL;
+		return nullptr;
 	}
 
 	j2k->cinfo = cinfo;
-	j2k->tile_data = NULL;
+	j2k->tile_data = nullptr;
 
 	return j2k;
 }
@@ -1792,50 +1792,50 @@ opj_j2k_t* j2k_create_decompress(opj_common_ptr cinfo) {
 void j2k_destroy_decompress(opj_j2k_t *j2k) {
 	int i = 0;
 
-	if(j2k->tile_len != NULL) {
+	if(j2k->tile_len != nullptr) {
 		opj_free(j2k->tile_len);
 	}
-	if(j2k->tile_data != NULL) {
-        if(j2k->cp != NULL) {
+	if(j2k->tile_data != nullptr) {
+        if(j2k->cp != nullptr) {
             for (i = 0; i < j2k->cp->tileno_size; i++) {
                 int tileno = j2k->cp->tileno[i];
                 opj_free(j2k->tile_data[tileno]);
-                j2k->tile_data[tileno] = NULL;
+                j2k->tile_data[tileno] = nullptr;
             }
         }
 
 		opj_free(j2k->tile_data);
 	}
-	if(j2k->default_tcp != NULL) {
+	if(j2k->default_tcp != nullptr) {
 		opj_tcp_t *default_tcp = j2k->default_tcp;
-		if(default_tcp->ppt_data_first != NULL) {
+		if(default_tcp->ppt_data_first != nullptr) {
 			opj_free(default_tcp->ppt_data_first);
 		}
-		if(j2k->default_tcp->tccps != NULL) {
+		if(j2k->default_tcp->tccps != nullptr) {
 			opj_free(j2k->default_tcp->tccps);
 		}
 		opj_free(j2k->default_tcp);
 	}
-	if(j2k->cp != NULL) {
+	if(j2k->cp != nullptr) {
 		opj_cp_t *cp = j2k->cp;
-		if(cp->tcps != NULL) {
+		if(cp->tcps != nullptr) {
 			for(i = 0; i < cp->tw * cp->th; i++) {
-				if(cp->tcps[i].ppt_data_first != NULL) {
+				if(cp->tcps[i].ppt_data_first != nullptr) {
 					opj_free(cp->tcps[i].ppt_data_first);
 				}
-				if(cp->tcps[i].tccps != NULL) {
+				if(cp->tcps[i].tccps != nullptr) {
 					opj_free(cp->tcps[i].tccps);
 				}
 			}
 			opj_free(cp->tcps);
 		}
-		if(cp->ppm_data_first != NULL) {
+		if(cp->ppm_data_first != nullptr) {
 			opj_free(cp->ppm_data_first);
 		}
-		if(cp->tileno != NULL) {
+		if(cp->tileno != nullptr) {
 			opj_free(cp->tileno);  
 		}
-		if(cp->comment != NULL) {
+		if(cp->comment != nullptr) {
 			opj_free(cp->comment);
 		}
 
@@ -1865,7 +1865,7 @@ void j2k_setup_decoder(opj_j2k_t *j2k, opj_dparameters_t *parameters) {
 }
 
 opj_image_t* j2k_decode(opj_j2k_t *j2k, opj_cio_t *cio, opj_codestream_info_t *cstr_info) {
-	opj_image_t *image = NULL;
+	opj_image_t *image = nullptr;
 
 	opj_common_ptr cinfo = j2k->cinfo;	
 
@@ -1952,7 +1952,7 @@ opj_image_t* j2k_decode(opj_j2k_t *j2k, opj_cio_t *cio, opj_codestream_info_t *c
 		if (j2k->state & J2K_STATE_ERR) 
         {
             opj_image_destroy(image);
-			return NULL;	
+			return nullptr;	
         }
 
 		if (j2k->state == J2K_STATE_MT) {
@@ -1977,7 +1977,7 @@ opj_image_t* j2k_decode(opj_j2k_t *j2k, opj_cio_t *cio, opj_codestream_info_t *c
 *
 */
 opj_image_t* j2k_decode_jpt_stream(opj_j2k_t *j2k, opj_cio_t *cio,  opj_codestream_info_t *cstr_info) {
-	opj_image_t *image = NULL;
+	opj_image_t *image = nullptr;
 	opj_jpt_msg_header_t header;
 	int position;
 	opj_common_ptr cinfo = j2k->cinfo;
@@ -2005,7 +2005,7 @@ opj_image_t* j2k_decode_jpt_stream(opj_j2k_t *j2k, opj_cio_t *cio,  opj_codestre
 	}
 	
 	for (;;) {
-		opj_dec_mstabent_t *e = NULL;
+		opj_dec_mstabent_t *e = nullptr;
 		int id;
 		
 		if (!cio_numbytesleft(cio)) {
@@ -2078,7 +2078,7 @@ void j2k_destroy_compress(opj_j2k_t *j2k) {
 	int tileno;
 
 	if(!j2k) return;
-	if(j2k->cp != NULL) {
+	if(j2k->cp != nullptr) {
 		opj_cp_t *cp = j2k->cp;
 
 		if(cp->comment) {
@@ -2099,7 +2099,7 @@ void j2k_destroy_compress(opj_j2k_t *j2k) {
 
 void j2k_setup_encoder(opj_j2k_t *j2k, opj_cparameters_t *parameters, opj_image_t *image) {
 	int i, j, tileno, numpocs_tile;
-	opj_cp_t *cp = NULL;
+	opj_cp_t *cp = nullptr;
 
 	if(!j2k || !parameters || ! image) {
 		return;
@@ -2357,9 +2357,9 @@ void j2k_setup_encoder(opj_j2k_t *j2k, opj_cparameters_t *parameters, opj_image_
 
 opj_bool j2k_encode(opj_j2k_t *j2k, opj_cio_t *cio, opj_image_t *image, opj_codestream_info_t *cstr_info) {
 	int tileno, compno;
-	opj_cp_t *cp = NULL;
+	opj_cp_t *cp = nullptr;
 
-	opj_tcd_t *tcd = NULL;	/* TCD component */
+	opj_tcd_t *tcd = nullptr;	/* TCD component */
 
 	j2k->cio = cio;	
 	j2k->image = image;
@@ -2411,7 +2411,7 @@ opj_bool j2k_encode(opj_j2k_t *j2k, opj_cio_t *cio, opj_image_t *image, opj_code
 		if (tcp->tccps[compno].roishift)
 			j2k_write_rgn(j2k, compno, 0);
 	}
-	if (cp->comment != NULL) {
+	if (cp->comment != nullptr) {
 		j2k_write_com(j2k);
 	}
 

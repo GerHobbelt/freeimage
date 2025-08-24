@@ -63,8 +63,8 @@ typedef struct {
 #define DecoderState(tif)       LState(tif)
 #define EncoderState(tif)       LState(tif)
 
-static int LZMAEncode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s);
-static int LZMADecode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s);
+static int LZMAEncode(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s);
+static int LZMADecode(TIFF* tif, uint8_t* op, tmsize_t occ, uint16_t s);
 
 static const char *
 LZMAStrerror(lzma_ret ret)
@@ -111,7 +111,7 @@ LZMASetupDecode(TIFF* tif)
 {
 	LZMAState* sp = DecoderState(tif);
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
         
         /* if we were last encoding, terminate this mode */
 	if (sp->state & LSTATE_INIT_ENCODE) {
@@ -127,14 +127,14 @@ LZMASetupDecode(TIFF* tif)
  * Setup state for decoding a strip.
  */
 static int
-LZMAPreDecode(TIFF* tif, uint16 s)
+LZMAPreDecode(TIFF* tif, uint16_t s)
 {
 	static const char module[] = "LZMAPreDecode";
 	LZMAState* sp = DecoderState(tif);
 	lzma_ret ret;
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
 
 	if( (sp->state & LSTATE_INIT_DECODE) == 0 )
             tif->tif_setupdecode(tif);
@@ -162,13 +162,13 @@ LZMAPreDecode(TIFF* tif, uint16 s)
 }
 
 static int
-LZMADecode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
+LZMADecode(TIFF* tif, uint8_t* op, tmsize_t occ, uint16_t s)
 {
 	static const char module[] = "LZMADecode";
 	LZMAState* sp = DecoderState(tif);
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	assert(sp->state == LSTATE_INIT_DECODE);
 
         sp->stream.next_in = tif->tif_rawcp;
@@ -220,7 +220,7 @@ LZMADecode(TIFF* tif, uint8* op, tmsize_t occ, uint16 s)
 		return 0;
 	}
 
-        tif->tif_rawcp = (uint8 *)sp->stream.next_in; /* cast away const */
+        tif->tif_rawcp = (uint8_t *)sp->stream.next_in; /* cast away const */
         tif->tif_rawcc = sp->stream.avail_in;
         
 	return 1;
@@ -231,7 +231,7 @@ LZMASetupEncode(TIFF* tif)
 {
 	LZMAState* sp = EncoderState(tif);
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	if (sp->state & LSTATE_INIT_DECODE) {
 		lzma_end(&sp->stream);
 		sp->state = 0;
@@ -245,13 +245,13 @@ LZMASetupEncode(TIFF* tif)
  * Reset encoding state at the start of a strip.
  */
 static int
-LZMAPreEncode(TIFF* tif, uint16 s)
+LZMAPreEncode(TIFF* tif, uint16_t s)
 {
 	static const char module[] = "LZMAPreEncode";
 	LZMAState *sp = EncoderState(tif);
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	if( sp->state != LSTATE_INIT_ENCODE )
             tif->tif_setupencode(tif);
 
@@ -269,12 +269,12 @@ LZMAPreEncode(TIFF* tif, uint16 s)
  * Encode a chunk of pixels.
  */
 static int
-LZMAEncode(TIFF* tif, uint8* bp, tmsize_t cc, uint16 s)
+LZMAEncode(TIFF* tif, uint8_t* bp, tmsize_t cc, uint16_t s)
 {
 	static const char module[] = "LZMAEncode";
 	LZMAState *sp = EncoderState(tif);
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	assert(sp->state == LSTATE_INIT_ENCODE);
 
 	(void) s;
@@ -354,13 +354,13 @@ LZMACleanup(TIFF* tif)
 		sp->state = 0;
 	}
 	_TIFFfree(sp);
-	tif->tif_data = NULL;
+	tif->tif_data = nullptr;
 
 	_TIFFSetDefaultCompressionState(tif);
 }
 
 static int
-LZMAVSetField(TIFF* tif, uint32 tag, va_list ap)
+LZMAVSetField(TIFF* tif, uint32_t tag, va_list ap)
 {
 	static const char module[] = "LZMAVSetField";
 	LZMAState* sp = LState(tif);
@@ -387,7 +387,7 @@ LZMAVSetField(TIFF* tif, uint32 tag, va_list ap)
 }
 
 static int
-LZMAVGetField(TIFF* tif, uint32 tag, va_list ap)
+LZMAVGetField(TIFF* tif, uint32_t tag, va_list ap)
 {
 	LZMAState* sp = LState(tif);
 
@@ -403,7 +403,7 @@ LZMAVGetField(TIFF* tif, uint32 tag, va_list ap)
 
 static const TIFFField lzmaFields[] = {
 	{ TIFFTAG_LZMAPRESET, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT, TIFF_SETGET_UNDEFINED,
-		FIELD_PSEUDO, TRUE, FALSE, "LZMA2 Compression Preset", NULL },
+		FIELD_PSEUDO, TRUE, FALSE, "LZMA2 Compression Preset", nullptr },
 };
 
 int
@@ -427,8 +427,8 @@ TIFFInitLZMA(TIFF* tif, int scheme)
 	/*
 	 * Allocate state block so tag methods have storage to record values.
 	 */
-	tif->tif_data = (uint8*) _TIFFmalloc(sizeof(LZMAState));
-	if (tif->tif_data == NULL)
+	tif->tif_data = (uint8_t*) _TIFFmalloc(sizeof(LZMAState));
+	if (tif->tif_data == nullptr)
 		goto bad;
 	sp = LState(tif);
 	memcpy(&sp->stream, &tmp_stream, sizeof(lzma_stream));
@@ -462,7 +462,7 @@ TIFFInitLZMA(TIFF* tif, int scheme)
 	sp->filters[1].options = &sp->opt_lzma;
 
 	sp->filters[2].id = LZMA_VLI_UNKNOWN;
-	sp->filters[2].options = NULL;
+	sp->filters[2].options = nullptr;
 
 	/*
 	 * Install codec methods.

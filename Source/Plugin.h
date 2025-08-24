@@ -41,7 +41,7 @@ struct Plugin;
 FI_STRUCT (PluginNode) {
 	/** FREE_IMAGE_FORMAT attached to this plugin */
 	int m_id;
-	/** Handle to a user plugin DLL (NULL for standard plugins) */
+	/** Handle to a user plugin DLL (nullptr for standard plugins) */
 	void *m_instance;
 	/** The actual plugin, holding the function pointers */
 	Plugin *m_plugin;
@@ -67,7 +67,7 @@ public :
 	PluginList();
 	~PluginList();
 
-	FREE_IMAGE_FORMAT AddNode(FI_InitProc proc, void *instance = NULL, const char *format = 0, const char *description = 0, const char *extension = 0, const char *regexpr = 0);
+	FREE_IMAGE_FORMAT AddNode(FI_InitProc proc, void *instance = nullptr, const char *format = 0, const char *description = 0, const char *extension = 0, const char *regexpr = 0);
 	PluginNode *FindNodeFromFormat(const char *format);
 	PluginNode *FindNodeFromMime(const char *mime);
 	PluginNode *FindNodeFromFIF(int node_id);

@@ -46,12 +46,12 @@
 #define WHITE   	((1<<2)-1)
 
 static int
-NeXTDecode(TIFF* tif, uint8* buf, tmsize_t occ, uint16 s)
+NeXTDecode(TIFF* tif, uint8_t* buf, tmsize_t occ, uint16_t s)
 {
 	static const char module[] = "NeXTDecode";
 	unsigned char *bp, *op;
 	tmsize_t cc;
-	uint8* row;
+	uint8_t* row;
 	tmsize_t scanline, n;
 
 	(void) s;
@@ -100,8 +100,8 @@ NeXTDecode(TIFF* tif, uint8* buf, tmsize_t occ, uint16 s)
 			break;
 		}
 		default: {
-			uint32 npixels = 0, grey;
-			uint32 imagewidth = tif->tif_dir.td_imagewidth;
+			uint32_t npixels = 0, grey;
+			uint32_t imagewidth = tif->tif_dir.td_imagewidth;
 
 			/*
 			 * The scanline is composed of a sequence of constant
@@ -111,7 +111,7 @@ NeXTDecode(TIFF* tif, uint8* buf, tmsize_t occ, uint16 s)
 			 */
 			op = row;
 			for (;;) {
-				grey = (uint32)((n>>6) & 0x3);
+				grey = (uint32_t)((n>>6) & 0x3);
 				n &= 0x3f;
 				/*
 				 * Ensure the run does not exceed the scanline
@@ -130,7 +130,7 @@ NeXTDecode(TIFF* tif, uint8* buf, tmsize_t occ, uint16 s)
 		}
 		}
 	}
-	tif->tif_rawcp = (uint8*) bp;
+	tif->tif_rawcp = (uint8_t*) bp;
 	tif->tif_rawcc = cc;
 	return (1);
 bad:

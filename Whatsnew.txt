@@ -23,8 +23,8 @@ October 27th, 2012 - 3.15.4
 * [Herve Drolon] fixed loading of JPEG with invalid IPTC marker
 * [Herve Drolon] changed default TIF RowsPerStrips to image height when saving as TIF G3 or TIF G4 (improved compression)
 * [Herve Drolon] improved the memory behavior of the RAW plugin (do not allocate huge variables on the stack)
-* [Herve Drolon] fixed FreeImage_AllocateT so that it returns NULL with images with a zero width and/or height
-* [Herve Drolon] replaced FIUINT64/FIINT64 with standard types UINT64/INT64
+* [Herve Drolon] fixed FreeImage_AllocateT so that it returns nullptr with images with a zero width and/or height
+* [Herve Drolon] replaced FIUINT64/FIINT64 with standard types uint64_t/int64_t
 * [Rustam Abdullaev] fixed PNG plugin with saving of transparent monochrome images
 * [Floris van den Berg] improved plugin registering when replacing an existing internal plugin with a new equivalent plugin
 * [Herve Drolon] fixed a crash when calling FreeImage_GetColorType on a 32-bit RGBA images loaded with the FIF_LOAD_NOPIXELS flag
@@ -172,7 +172,7 @@ August 9th, 2010 - 3.14.0
 * [phe02sf] fixed handling of bad Exif-GPS data in a Nikon D5000 image
 * [Atsuhiro Igarashi] fixed handling of last data block in PluginGIF::Save (sometimes it saves corrupted images)
 * [Christian Heimes] fixed saving of G3 & G4 compressed TIFF with 1bpp on 64bit Linux
-* [Herve Drolon] fixed long data type being 64-bit on Unix/Linux platforms (use LONG/DWORD instead of long/unsigned long)
+* [Herve Drolon] fixed long data type being 64-bit on Unix/Linux platforms (use int32_t/uint32_t instead of long/unsigned long)
 * [Herve Drolon] fixed a memory leak in FreeImage_DeletePage
 * [Herve Drolon] fixed the loading of RGBZ images in OpenEXR plugin
 * [Lucian Sabo] improved conversion from 1-, 4-, 8-bpp transparent images to 32-bpp
@@ -822,7 +822,7 @@ July 22th 2001 - 2.4.0
 * (Yours Detlev) fixed memory leak in FreeImage_GetFIFFromFilename
 * (Yours Detlev) fixed memory leak in the ICO plugin
 * (Yours Detlev) fixed memory leak in the PNG plugin
-* fixed potential NULL-pointer access bug in Plugin::AddNode
+* fixed potential nullptr-pointer access bug in Plugin::AddNode
 * fixed problems with linking the static lib
 - removed LBM plugin. Its functionality is placed in the IFF plugin now
 - removed FreeImage_GetFIFByIndex

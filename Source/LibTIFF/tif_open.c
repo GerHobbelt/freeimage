@@ -159,7 +159,7 @@ TIFFClientOpen(
 	if (m == -1)
 		goto bad2;
 	tif = (TIFF *)_TIFFmalloc(sizeof (TIFF) + strlen(name) + 1);
-	if (tif == NULL) {
+	if (tif == nullptr) {
 		TIFFErrorExt(clientdata, module, "%s: Out of memory (TIFF structure)", name);
 		goto bad2;
 	}
@@ -170,11 +170,11 @@ TIFFClientOpen(
 	tif->tif_curdir = (tdir_t) -1;		/* non-existent directory */
 	tif->tif_curoff = 0;
 	tif->tif_curstrip = (tstrip_t) -1;	/* invalid strip */
-	tif->tif_row = (uint32) -1;		/* read/write pre-increment */
+	tif->tif_row = (uint32_t) -1;		/* read/write pre-increment */
 	tif->tif_clientdata = clientdata;
 	if (!readproc || !writeproc || !seekproc || !closeproc || !sizeproc) {
 		TIFFErrorExt(clientdata, module,
-			  "One of the client procedures is NULL pointer.");
+			  "One of the client procedures is nullptr pointer.");
 		goto bad2;
 	}
 	tif->tif_readproc = readproc;
@@ -351,7 +351,7 @@ TIFFClientOpen(
 		if (!TIFFDefaultDirectory(tif))
 			goto bad;
 		tif->tif_diroff = 0;
-		tif->tif_dirlist = NULL;
+		tif->tif_dirlist = nullptr;
 		tif->tif_dirlistsize = 0;
 		tif->tif_dirnumber = 0;
 		return (tif);
@@ -553,7 +553,7 @@ TIFFIsTiled(TIFF* tif)
 /*
  * Return current row being read/written.
  */
-uint32
+uint32_t
 TIFFCurrentRow(TIFF* tif)
 {
 	return (tif->tif_row);

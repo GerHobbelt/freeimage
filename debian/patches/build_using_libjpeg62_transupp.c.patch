@@ -35,7 +35,7 @@
 +#define JCONFIG_INCLUDED	/* so that jpeglib.h doesn't do it again */
 +
 +/*
-+ * We need the NULL macro and size_t typedef.
++ * We need the nullptr macro and size_t typedef.
 + * On an ANSI-conforming system it is sufficient to include <stddef.h>.
 + * Otherwise, we get them from <stdlib.h> or <stdio.h>; we may have to
 + * pull in <sys/types.h> as well.
@@ -1261,7 +1261,7 @@
 +    }
 +    info->workspace_coef_arrays = coef_arrays;
 +  } else
-+    info->workspace_coef_arrays = NULL;
++    info->workspace_coef_arrays = nullptr;
 +
 +  return TRUE;
 +}
@@ -1299,7 +1299,7 @@
 +  /* Transpose quantization tables */
 +  for (tblno = 0; tblno < NUM_QUANT_TBLS; tblno++) {
 +    qtblptr = dstinfo->quant_tbl_ptrs[tblno];
-+    if (qtblptr != NULL) {
++    if (qtblptr != nullptr) {
 +      for (i = 0; i < DCTSIZE; i++) {
 +	for (j = 0; j < i; j++) {
 +	  qtemp = qtblptr->quantval[i*DCTSIZE+j];
@@ -1550,7 +1550,7 @@
 +  }
 +
 +  /* Adjust Exif properties */
-+  if (srcinfo->marker_list != NULL &&
++  if (srcinfo->marker_list != nullptr &&
 +      srcinfo->marker_list->marker == JPEG_APP0+1 &&
 +      srcinfo->marker_list->data_length >= 6 &&
 +      GETJOCTET(srcinfo->marker_list->data[0]) == 0x45 &&
@@ -1573,7 +1573,7 @@
 +  }
 +
 +  /* Return the appropriate output data set */
-+  if (info->workspace_coef_arrays != NULL)
++  if (info->workspace_coef_arrays != nullptr)
 +    return info->workspace_coef_arrays;
 +  return src_coef_arrays;
 +}
@@ -1736,7 +1736,7 @@
 +   * But to avoid confusion, we do not output JFIF and Adobe APP14 markers
 +   * if the encoder library already wrote one.
 +   */
-+  for (marker = srcinfo->marker_list; marker != NULL; marker = marker->next) {
++  for (marker = srcinfo->marker_list; marker != nullptr; marker = marker->next) {
 +    if (dstinfo->write_JFIF_header &&
 +	marker->marker == JPEG_APP0 &&
 +	marker->data_length >= 5 &&

@@ -90,7 +90,7 @@ ZIPSetupDecode(TIFF* tif)
 	ZIPState* sp = DecoderState(tif);
 	static const char module[] = "ZIPSetupDecode";
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
         
         /* if we were last encoding, terminate this mode */
 	if (sp->state & ZSTATE_INIT_ENCODE) {
@@ -116,7 +116,7 @@ ZIPPreDecode(TIFF* tif, tsample_t s)
 	ZIPState* sp = DecoderState(tif);
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
 
         if( (sp->state & ZSTATE_INIT_DECODE) == 0 )
             tif->tif_setupdecode( tif );
@@ -133,7 +133,7 @@ ZIPDecode(TIFF* tif, tidata_t op, tsize_t occ, tsample_t s)
 	static const char module[] = "ZIPDecode";
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
         assert(sp->state == ZSTATE_INIT_DECODE);
 
 	sp->stream.next_out = op;
@@ -171,7 +171,7 @@ ZIPSetupEncode(TIFF* tif)
 	ZIPState* sp = EncoderState(tif);
 	static const char module[] = "ZIPSetupEncode";
 
-	assert(sp != NULL);
+	assert(sp != nullptr);
 	if (sp->state & ZSTATE_INIT_DECODE) {
             inflateEnd(&sp->stream);
             sp->state = 0;
@@ -195,7 +195,7 @@ ZIPPreEncode(TIFF* tif, tsample_t s)
 	ZIPState *sp = EncoderState(tif);
 
 	(void) s;
-	assert(sp != NULL);
+	assert(sp != nullptr);
         if( sp->state != ZSTATE_INIT_ENCODE )
             tif->tif_setupencode( tif );
 
@@ -213,7 +213,7 @@ ZIPEncode(TIFF* tif, tidata_t bp, tsize_t cc, tsample_t s)
 	ZIPState *sp = EncoderState(tif);
 	static const char module[] = "ZIPEncode";
 
-        assert(sp != NULL);
+        assert(sp != nullptr);
         assert(sp->state == ZSTATE_INIT_ENCODE);
 
 	(void) s;
@@ -290,7 +290,7 @@ ZIPCleanup(TIFF* tif)
             sp->state = 0;
 	}
 	_TIFFfree(sp);
-	tif->tif_data = NULL;
+	tif->tif_data = nullptr;
 
 	_TIFFSetDefaultCompressionState(tif);
 }
@@ -362,12 +362,12 @@ TIFFInitZIP(TIFF* tif, int scheme)
 	 * Allocate state block so tag methods have storage to record values.
 	 */
 	tif->tif_data = (tidata_t) _TIFFmalloc(sizeof (ZIPState));
-	if (tif->tif_data == NULL)
+	if (tif->tif_data == nullptr)
 		goto bad;
 	sp = ZState(tif);
-	sp->stream.zalloc = NULL;
-	sp->stream.zfree = NULL;
-	sp->stream.opaque = NULL;
+	sp->stream.zalloc = nullptr;
+	sp->stream.zfree = nullptr;
+	sp->stream.opaque = nullptr;
 	sp->stream.data_type = Z_BINARY;
 
 	/*

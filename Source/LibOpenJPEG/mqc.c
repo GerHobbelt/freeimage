@@ -355,7 +355,7 @@ static INLINE void mqc_renormd(opj_mqc_t *const mqc) {
 opj_mqc_t* mqc_create(void) {
 	opj_mqc_t *mqc = (opj_mqc_t*)opj_malloc(sizeof(opj_mqc_t));
 #ifdef MQC_PERF_OPT
-	mqc->buffer = NULL;
+	mqc->buffer = nullptr;
 #endif
 	return mqc;
 }

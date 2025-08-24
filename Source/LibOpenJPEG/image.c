@@ -33,7 +33,7 @@ opj_image_t* opj_image_create0(void) {
 
 opj_image_t* OPJ_CALLCONV opj_image_create(int numcmpts, opj_image_cmptparm_t *cmptparms, OPJ_COLOR_SPACE clrspc) {
 	int compno;
-	opj_image_t *image = NULL;
+	opj_image_t *image = nullptr;
 
 	image = (opj_image_t*) opj_calloc(1, sizeof(opj_image_t));
 	if(image) {
@@ -44,7 +44,7 @@ opj_image_t* OPJ_CALLCONV opj_image_create(int numcmpts, opj_image_cmptparm_t *c
 		if(!image->comps) {
 			fprintf(stderr,"Unable to allocate memory for image.\n");
 			opj_image_destroy(image);
-			return NULL;
+			return nullptr;
 		}
 		/* create the individual image components */
 		for(compno = 0; compno < numcmpts; compno++) {
@@ -62,7 +62,7 @@ opj_image_t* OPJ_CALLCONV opj_image_create(int numcmpts, opj_image_cmptparm_t *c
 			if(!comp->data) {
 				fprintf(stderr,"Unable to allocate memory for image.\n");
 				opj_image_destroy(image);
-				return NULL;
+				return nullptr;
 			}
 		}
 	}
