@@ -585,7 +585,7 @@ void opj_j2k_setup_decoder(opj_j2k_t *j2k, opj_dparameters_t *parameters);
 /**
  * Creates a J2K compression structure
  *
- * @return Returns a handle to a J2K compressor if successful, returns NULL otherwise
+ * @return Returns a handle to a J2K compressor if successful, returns nullptr otherwise
 */
 opj_j2k_t* opj_j2k_create_compress(void);
 
@@ -708,7 +708,7 @@ OPJ_BOOL opj_j2k_set_decode_area(	opj_j2k_t *p_j2k,
 /**
  * Creates a J2K decompression structure.
  *
- * @return a handle to a J2K decompressor if successful, NULL otherwise.
+ * @return a handle to a J2K decompressor if successful, nullptr otherwise.
  */
 opj_j2k_t* opj_j2k_create_decompress(void);
 

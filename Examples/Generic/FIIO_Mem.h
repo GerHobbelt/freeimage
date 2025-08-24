@@ -23,7 +23,7 @@ typedef struct fiio_mem_handle_s {
 /* it is up to the user to create a fiio_mem_handle and init datalen and data
  * filelen will be pre-set to 0 by SaveToMem
  * curpos will be pre-set to 0 by SaveToMem and LoadFromMem
- * IMPORTANT: data should be set to NULL and datalen to 0,
+ * IMPORTANT: data should be set to nullptr and datalen to 0,
  *            unless the user wants to manually malloc a larger buffer
  */
 FIBITMAP *FreeImage_LoadFromMem(FREE_IMAGE_FORMAT fif, fiio_mem_handle *handle, int flags);
@@ -42,7 +42,7 @@ FIBITMAP *bitmap, *bitmap2;
 fiio_mem_handle fmh;
 
 //important initialization
-fmh.data = NULL;
+fmh.data = nullptr;
 fmh.datalen = 0;
 
 //load a regular file

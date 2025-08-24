@@ -707,7 +707,7 @@ OPJ_BOOL FUNCTION (     opj_tcd_t *p_tcd,                        \
                         fprintf(stderr, "Not enough memory to handle tile data\n");                                                                                                                               \
                         if (! new_data) {                           \
                                 opj_free(l_tilec->data);            \
-                                l_tilec->data = NULL;               \
+                                l_tilec->data = nullptr;               \
                                 l_tilec->data_size = 0;             \
                                 return OPJ_FALSE;                   \
                         }                                           \
@@ -733,7 +733,7 @@ OPJ_BOOL FUNCTION (     opj_tcd_t *p_tcd,                        \
                                 /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to tile resolutions\n");                                                                                         */  \
                                 fprintf(stderr, "Not enough memory to tile resolutions\n");                                                                                                                       \
                                 opj_free(l_tilec->resolutions);     \
-                                l_tilec->resolutions = NULL;        \
+                                l_tilec->resolutions = nullptr;        \
                                 l_tilec->resolutions_size = 0;      \
                                 return OPJ_FALSE;                   \
                         }                                           \
@@ -852,7 +852,7 @@ OPJ_BOOL FUNCTION (     opj_tcd_t *p_tcd,                        \
                                                 /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to handle band precints\n");                                                                    */   \
                                                 fprintf(stderr, "Not enough memory to handle band precints\n");                                                                                                   \
                                                 opj_free(l_band->precincts);                                                                                                                                      \
-                                                l_band->precincts = NULL;                                                                                                                                         \
+                                                l_band->precincts = nullptr;                                                                                                                                         \
                                                 l_band->precincts_data_size = 0;                                                                                                                                  \
                                                 return OPJ_FALSE;                                                                                                                                                 \
                                         }                                                                                                                                                                         \
@@ -911,7 +911,7 @@ OPJ_BOOL FUNCTION (     opj_tcd_t *p_tcd,                        \
                                                 TYPE *new_ELEMENT = (TYPE*) opj_realloc(l_current_precinct->cblks.ELEMENT, l_nb_code_blocks_size);                                                                \
                                                 if (! new_ELEMENT) {                                                                                                                                              \
                                                         opj_free(l_current_precinct->cblks.ELEMENT);                                                                                                              \
-                                                        l_current_precinct->cblks.ELEMENT = NULL;                                                                                                                 \
+                                                        l_current_precinct->cblks.ELEMENT = nullptr;                                                                                                                 \
                                                         l_current_precinct->block_size = 0;                                                                                                                       \
                                                         /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory for current precinct codeblock element\n");                                              */  \
                                                         fprintf(stderr, "Not enough memory for current precinct codeblock element\n");                                                                            \

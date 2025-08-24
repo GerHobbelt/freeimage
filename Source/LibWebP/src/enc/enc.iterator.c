@@ -84,7 +84,7 @@ void VP8IteratorInit(VP8Encoder* const enc, VP8EncIterator* const it) {
 
 int VP8IteratorProgress(const VP8EncIterator* const it, int delta) {
   VP8Encoder* const enc = it->enc_;
-  if (delta && enc->pic_->progress_hook != NULL) {
+  if (delta && enc->pic_->progress_hook != nullptr) {
     const int done = it->count_down0_ - it->count_down_;
     const int percent = (it->count_down0_ <= 0)
                       ? it->percent0_
@@ -140,7 +140,7 @@ void VP8IteratorImport(VP8EncIterator* const it, uint8_t* tmp_32) {
   ImportBlock(usrc, pic->uv_stride, it->yuv_in_ + U_OFF, uv_w, uv_h, 8);
   ImportBlock(vsrc, pic->uv_stride, it->yuv_in_ + V_OFF, uv_w, uv_h, 8);
 
-  if (tmp_32 == NULL) return;
+  if (tmp_32 == nullptr) return;
 
   // Import source (uncompressed) samples into boundary.
   if (x == 0) {

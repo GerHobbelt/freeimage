@@ -38,20 +38,20 @@ _tiffReadProc(thandle_t fd, void* buf, tmsize_t size)
 	/* tmsize_t is 64bit on 64bit systems, but the WinAPI ReadFile takes
 	 * 32bit sizes, so we loop through the data in suitable 32bit sized
 	 * chunks */
-	uint8* ma;
+	uint8_t* ma;
 	uint64 mb;
-	DWORD n;
-	DWORD o;
+	uint32_t n;
+	uint32_t o;
 	tmsize_t p;
-	ma=(uint8*)buf;
+	ma=(uint8_t*)buf;
 	mb=size;
 	p=0;
 	while (mb>0)
 	{
 		n=0x80000000UL;
 		if ((uint64)n>mb)
-			n=(DWORD)mb;
-		if (!ReadFile(fd,(LPVOID)ma,n,&o,NULL))
+			n=(uint32_t)mb;
+		if (!ReadFile(fd,(LPVOID)ma,n,&o,nullptr))
 			return(0);
 		ma+=o;
 		mb-=o;
@@ -68,20 +68,20 @@ _tiffWriteProc(thandle_t fd, void* buf, tmsize_t size)
 	/* tmsize_t is 64bit on 64bit systems, but the WinAPI WriteFile takes
 	 * 32bit sizes, so we loop through the data in suitable 32bit sized
 	 * chunks */
-	uint8* ma;
+	uint8_t* ma;
 	uint64 mb;
-	DWORD n;
-	DWORD o;
+	uint32_t n;
+	uint32_t o;
 	tmsize_t p;
-	ma=(uint8*)buf;
+	ma=(uint8_t*)buf;
 	mb=size;
 	p=0;
 	while (mb>0)
 	{
 		n=0x80000000UL;
 		if ((uint64)n>mb)
-			n=(DWORD)mb;
-		if (!WriteFile(fd,(LPVOID)ma,n,&o,NULL))
+			n=(uint32_t)mb;
+		if (!WriteFile(fd,(LPVOID)ma,n,&o,nullptr))
 			return(0);
 		ma+=o;
 		mb-=o;
@@ -96,7 +96,7 @@ static uint64
 _tiffSeekProc(thandle_t fd, uint64 off, int whence)
 {
 	LARGE_INTEGER offli;
-	DWORD dwMoveMethod;
+	uint32_t dwMoveMethod;
 	offli.QuadPart = off;
 	switch(whence)
 	{
@@ -167,12 +167,12 @@ _tiffMapProc(thandle_t fd, void** pbase, toff_t* psize)
 
 	/* By passing in 0 for the maximum file size, it specifies that we
 	   create a file mapping object for the full file size. */
-	hMapFile = CreateFileMapping(fd, NULL, PAGE_READONLY, 0, 0, NULL);
-	if (hMapFile == NULL)
+	hMapFile = CreateFileMapping(fd, nullptr, PAGE_READONLY, 0, 0, nullptr);
+	if (hMapFile == nullptr)
 		return (0);
 	*pbase = MapViewOfFile(hMapFile, FILE_MAP_READ, 0, 0, 0);
 	CloseHandle(hMapFile);
-	if (*pbase == NULL)
+	if (*pbase == nullptr)
 		return (0);
 	*psize = size;
 	return(1);
@@ -235,7 +235,7 @@ TIFFOpen(const char* name, const char* mode)
 	static const char module[] = "TIFFOpen";
 	thandle_t fd;
 	int m;
-	DWORD dwMode;
+	uint32_t dwMode;
 	TIFF* tif;
 
 	m = _TIFFgetMode(mode, module);
@@ -251,9 +251,9 @@ TIFFOpen(const char* name, const char* mode)
         
 	fd = (thandle_t)CreateFileA(name,
 		(m == O_RDONLY)?GENERIC_READ:(GENERIC_READ | GENERIC_WRITE),
-		FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, dwMode,
+		FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, dwMode,
 		(m == O_RDONLY)?FILE_ATTRIBUTE_READONLY:FILE_ATTRIBUTE_NORMAL,
-		NULL);
+		nullptr);
 	if (fd == INVALID_HANDLE_VALUE) {
 		TIFFErrorExt(0, module, "%s: Cannot open", name);
 		return ((TIFF *)0);
@@ -274,7 +274,7 @@ TIFFOpenW(const wchar_t* name, const char* mode)
 	static const char module[] = "TIFFOpenW";
 	thandle_t fd;
 	int m;
-	DWORD dwMode;
+	uint32_t dwMode;
 	int mbsize;
 	char *mbname;
 	TIFF *tif;
@@ -292,16 +292,16 @@ TIFFOpenW(const wchar_t* name, const char* mode)
 
 	fd = (thandle_t)CreateFileW(name,
 		(m == O_RDONLY)?GENERIC_READ:(GENERIC_READ|GENERIC_WRITE),
-		FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, dwMode,
+		FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, dwMode,
 		(m == O_RDONLY)?FILE_ATTRIBUTE_READONLY:FILE_ATTRIBUTE_NORMAL,
-		NULL);
+		nullptr);
 	if (fd == INVALID_HANDLE_VALUE) {
 		TIFFErrorExt(0, module, "%S: Cannot open", name);
 		return ((TIFF *)0);
 	}
 
-	mbname = NULL;
-	mbsize = WideCharToMultiByte(CP_ACP, 0, name, -1, NULL, 0, NULL, NULL);
+	mbname = nullptr;
+	mbsize = WideCharToMultiByte(CP_ACP, 0, name, -1, nullptr, 0, nullptr, nullptr);
 	if (mbsize > 0) {
 		mbname = (char *)_TIFFmalloc(mbsize);
 		if (!mbname) {
@@ -311,11 +311,11 @@ TIFFOpenW(const wchar_t* name, const char* mode)
 		}
 
 		WideCharToMultiByte(CP_ACP, 0, name, -1, mbname, mbsize,
-				    NULL, NULL);
+				    nullptr, nullptr);
 	}
 
 	tif = TIFFFdOpen((int)fd,
-			 (mbname != NULL) ? mbname : "<unknown>", mode);
+			 (mbname != nullptr) ? mbname : "<unknown>", mode);
 	if(!tif)
 		CloseHandle(fd);
 
@@ -330,7 +330,7 @@ void*
 _TIFFmalloc(tmsize_t s)
 {
         if (s == 0)
-                return ((void *) NULL);
+                return ((void *) nullptr);
 
 	return (malloc((size_t) s));
 }
@@ -379,11 +379,11 @@ Win32WarningHandler(const char* module, const char* fmt, va_list ap)
 	LPTSTR szTmp;
 	LPCTSTR szTitleText = "%s Warning";
 	LPCTSTR szDefaultModule = "LIBTIFF";
-	LPCTSTR szTmpModule = (module == NULL) ? szDefaultModule : module;
+	LPCTSTR szTmpModule = (module == nullptr) ? szDefaultModule : module;
         SIZE_T nBufSize = (strlen(szTmpModule) +
                         strlen(szTitleText) + strlen(fmt) + 256)*sizeof(char);
 
-	if ((szTitle = (LPTSTR)LocalAlloc(LMEM_FIXED, nBufSize)) == NULL)
+	if ((szTitle = (LPTSTR)LocalAlloc(LMEM_FIXED, nBufSize)) == nullptr)
 		return;
 	sprintf(szTitle, szTitleText, szTmpModule);
 	szTmp = szTitle + (strlen(szTitle)+2)*sizeof(char);
@@ -393,7 +393,7 @@ Win32WarningHandler(const char* module, const char* fmt, va_list ap)
 
 	return;
 #else
-	if (module != NULL)
+	if (module != nullptr)
 		fprintf(stderr, "%s: ", module);
 	fprintf(stderr, "Warning, ");
 	vfprintf(stderr, fmt, ap);
@@ -410,11 +410,11 @@ Win32ErrorHandler(const char* module, const char* fmt, va_list ap)
 	LPTSTR szTmp;
 	LPCTSTR szTitleText = "%s Error";
 	LPCTSTR szDefaultModule = "LIBTIFF";
-	LPCTSTR szTmpModule = (module == NULL) ? szDefaultModule : module;
+	LPCTSTR szTmpModule = (module == nullptr) ? szDefaultModule : module;
         SIZE_T nBufSize = (strlen(szTmpModule) +
                         strlen(szTitleText) + strlen(fmt) + 256)*sizeof(char);
 
-	if ((szTitle = (LPTSTR)LocalAlloc(LMEM_FIXED, nBufSize)) == NULL)
+	if ((szTitle = (LPTSTR)LocalAlloc(LMEM_FIXED, nBufSize)) == nullptr)
 		return;
 	sprintf(szTitle, szTitleText, szTmpModule);
 	szTmp = szTitle + (strlen(szTitle)+2)*sizeof(char);
@@ -423,7 +423,7 @@ Win32ErrorHandler(const char* module, const char* fmt, va_list ap)
 	LocalFree(szTitle);
 	return;
 #else
-	if (module != NULL)
+	if (module != nullptr)
 		fprintf(stderr, "%s: ", module);
 	vfprintf(stderr, fmt, ap);
 	fprintf(stderr, ".\n");

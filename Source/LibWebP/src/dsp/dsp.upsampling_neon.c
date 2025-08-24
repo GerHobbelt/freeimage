@@ -164,7 +164,7 @@ static const int16_t kCoeffs[4] = { kYScale, kVToR, kUToG, kVToG };
 #define CONVERT2RGB_8(FMT, XSTEP, top_y, bottom_y, uv,                  \
                       top_dst, bottom_dst, cur_x, len) {                \
   CONVERT8(FMT, XSTEP, len, top_y, uv, top_dst, cur_x)                  \
-  if (bottom_y != NULL) {                                               \
+  if (bottom_y != nullptr) {                                               \
     CONVERT8(FMT, XSTEP, len, bottom_y, (uv) + 32, bottom_dst, cur_x)   \
   }                                                                     \
 }
@@ -172,7 +172,7 @@ static const int16_t kCoeffs[4] = { kYScale, kVToR, kUToG, kVToG };
 #define CONVERT2RGB_1(FUNC, XSTEP, top_y, bottom_y, uv,                 \
                       top_dst, bottom_dst, cur_x, len) {                \
   CONVERT1(FUNC, XSTEP, len, top_y, uv, top_dst, cur_x);                \
-  if (bottom_y != NULL) {                                               \
+  if (bottom_y != nullptr) {                                               \
     CONVERT1(FUNC, XSTEP, len, bottom_y, (uv) + 32, bottom_dst, cur_x); \
   }                                                                     \
 }
@@ -201,13 +201,13 @@ static void FUNC_NAME(const uint8_t *top_y, const uint8_t *bottom_y,    \
   const uint8x8_t u128 = vdup_n_u8(128);                                \
                                                                         \
   /* Treat the first pixel in regular way */                            \
-  assert(top_y != NULL);                                                \
+  assert(top_y != nullptr);                                                \
   {                                                                     \
     const int u0 = (top_u[0] + u_diag) >> 1;                            \
     const int v0 = (top_v[0] + v_diag) >> 1;                            \
     VP8YuvTo ## FMT(top_y[0], u0, v0, top_dst);                         \
   }                                                                     \
-  if (bottom_y != NULL) {                                               \
+  if (bottom_y != nullptr) {                                               \
     const int u0 = (cur_u[0] + u_diag) >> 1;                            \
     const int v0 = (cur_v[0] + v_diag) >> 1;                            \
     VP8YuvTo ## FMT(bottom_y[0], u0, v0, bottom_dst);                   \

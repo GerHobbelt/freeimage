@@ -67,32 +67,32 @@ static const char *orientNames[] = {
 
 static void
 _TIFFPrintField(FILE* fd, const TIFFField *fip,
-		uint32 value_count, void *raw_data)
+		uint32_t value_count, void *raw_data)
 {
-	uint32 j;
+	uint32_t j;
 		
 	fprintf(fd, "  %s: ", fip->field_name);
 
 	for(j = 0; j < value_count; j++) {
 		if(fip->field_type == TIFF_BYTE)
-			fprintf(fd, "%u", ((uint8 *) raw_data)[j]);
+			fprintf(fd, "%u", ((uint8_t *) raw_data)[j]);
 		else if(fip->field_type == TIFF_UNDEFINED)
 			fprintf(fd, "0x%x",
 			    (unsigned int) ((unsigned char *) raw_data)[j]);
 		else if(fip->field_type == TIFF_SBYTE)
 			fprintf(fd, "%d", ((int8 *) raw_data)[j]);
 		else if(fip->field_type == TIFF_SHORT)
-			fprintf(fd, "%u", ((uint16 *) raw_data)[j]);
+			fprintf(fd, "%u", ((uint16_t *) raw_data)[j]);
 		else if(fip->field_type == TIFF_SSHORT)
 			fprintf(fd, "%d", ((int16 *) raw_data)[j]);
 		else if(fip->field_type == TIFF_LONG)
 			fprintf(fd, "%lu",
-			    (unsigned long)((uint32 *) raw_data)[j]);
+			    (unsigned long)((uint32_t *) raw_data)[j]);
 		else if(fip->field_type == TIFF_SLONG)
 			fprintf(fd, "%ld", (long)((int32 *) raw_data)[j]);
 		else if(fip->field_type == TIFF_IFD)
 			fprintf(fd, "0x%lx",
-				(unsigned long)((uint32 *) raw_data)[j]);
+				(unsigned long)((uint32_t *) raw_data)[j]);
 		else if(fip->field_type == TIFF_RATIONAL
 			|| fip->field_type == TIFF_SRATIONAL
 			|| fip->field_type == TIFF_FLOAT)
@@ -140,8 +140,8 @@ _TIFFPrintField(FILE* fd, const TIFFField *fip,
 }
 
 static int
-_TIFFPrettyPrintField(TIFF* tif, const TIFFField *fip, FILE* fd, uint32 tag,
-		      uint32 value_count, void *raw_data)
+_TIFFPrettyPrintField(TIFF* tif, const TIFFField *fip, FILE* fd, uint32_t tag,
+		      uint32_t value_count, void *raw_data)
 {
         (void) tif;
 
@@ -155,14 +155,14 @@ _TIFFPrettyPrintField(TIFF* tif, const TIFFField *fip, FILE* fd, uint32 tag,
 		case TIFFTAG_INKSET:
 			if (value_count == 2 && fip->field_type == TIFF_SHORT) {
 				fprintf(fd, "  Ink Set: ");
-				switch (*((uint16*)raw_data)) {
+				switch (*((uint16_t*)raw_data)) {
 				case INKSET_CMYK:
 					fprintf(fd, "CMYK\n");
 					break;
 				default:
 					fprintf(fd, "%u (0x%x)\n",
-						*((uint16*)raw_data),
-						*((uint16*)raw_data));
+						*((uint16_t*)raw_data),
+						*((uint16_t*)raw_data));
 					break;
 				}
 				return 1;
@@ -172,7 +172,7 @@ _TIFFPrettyPrintField(TIFF* tif, const TIFFField *fip, FILE* fd, uint32 tag,
 		case TIFFTAG_DOTRANGE:
 			if (value_count == 2 && fip->field_type == TIFF_SHORT) {
 				fprintf(fd, "  Dot Range: %u-%u\n",
-					((uint16*)raw_data)[0], ((uint16*)raw_data)[1]);
+					((uint16_t*)raw_data)[0], ((uint16_t*)raw_data)[1]);
 				return 1;
 			}
 			return 0;
@@ -187,7 +187,7 @@ _TIFFPrettyPrintField(TIFF* tif, const TIFFField *fip, FILE* fd, uint32 tag,
 
 		case TIFFTAG_XMLPACKET:
 		{
-			uint32 i;
+			uint32_t i;
 
 			fprintf(fd, "  XMLPacket (XMP Metadata):\n" );
 			for(i = 0; i < value_count; i++)
@@ -198,7 +198,7 @@ _TIFFPrettyPrintField(TIFF* tif, const TIFFField *fip, FILE* fd, uint32 tag,
 		case TIFFTAG_RICHTIFFIPTC:
 			/*
 			 * XXX: for some weird reason RichTIFFIPTC tag
-			 * defined as array of LONG values.
+			 * defined as array of int32_t values.
 			 */
 			fprintf(fd,
 			    "  RichTIFFIPTC Data: <present>, %lu bytes\n",
@@ -237,7 +237,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 	char *sep;
-	uint16 i;
+	uint16_t i;
 	long l, n;
 
 #if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
@@ -471,7 +471,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 		fprintf(fd, "  Samples/Pixel: %u\n", td->td_samplesperpixel);
 	if (TIFFFieldSet(tif,FIELD_ROWSPERSTRIP)) {
 		fprintf(fd, "  Rows/Strip: ");
-		if (td->td_rowsperstrip == (uint32) -1)
+		if (td->td_rowsperstrip == (uint32_t) -1)
 			fprintf(fd, "(infinite)\n");
 		else
 			fprintf(fd, "%lu\n", (unsigned long) td->td_rowsperstrip);
@@ -571,14 +571,14 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 
 		count = (short) TIFFGetTagListCount(tif);
 		for(i = 0; i < count; i++) {
-			uint32 tag = TIFFGetTagListEntry(tif, i);
+			uint32_t tag = TIFFGetTagListEntry(tif, i);
 			const TIFFField *fip;
-			uint32 value_count;
+			uint32_t value_count;
 			int mem_alloc = 0;
 			void *raw_data;
 
 			fip = TIFFFieldWithTag(tif, tag);
-			if(fip == NULL)
+			if(fip == nullptr)
 				continue;
 
 			if(fip->field_passcount) {
@@ -586,7 +586,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 					if(TIFFGetField(tif, tag, &value_count, &raw_data) != 1)
 						continue;
 				} else if (fip->field_readcount == TIFF_VARIABLE ) {
-					uint16 small_value_count;
+					uint16_t small_value_count;
 					if(TIFFGetField(tif, tag, &small_value_count, &raw_data) != 1)
 						continue;
 					value_count = small_value_count;
@@ -609,7 +609,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 					   handled this way ... likely best if we move it into
 					   the directory structure with an explicit field in 
 					   libtiff 4.1 and assign it a FIELD_ value */
-					static uint16 dotrange[2];
+					static uint16_t dotrange[2];
 					raw_data = dotrange;
 					TIFFGetField(tif, tag, dotrange+0, dotrange+1);
 				} else if (fip->field_type == TIFF_ASCII
@@ -652,7 +652,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
         
 	if ((flags & TIFFPRINT_STRIPS) &&
 	    TIFFFieldSet(tif,FIELD_STRIPOFFSETS)) {
-		uint32 s;
+		uint32_t s;
 
 		fprintf(fd, "  %lu %s:\n",
 		    (long) td->td_nstrips,

@@ -35,7 +35,7 @@ int WebPPictureInitInternal(WebPPicture* picture, int version) {
   if (WEBP_ABI_IS_INCOMPATIBLE(version, WEBP_ENCODER_ABI_VERSION)) {
     return 0;   // caller/system version mismatch!
   }
-  if (picture != NULL) {
+  if (picture != nullptr) {
     memset(picture, 0, sizeof(*picture));
     picture->writer = DummyWriter;
     WebPEncodingSetError(picture, VP8_ENC_OK);
@@ -46,14 +46,14 @@ int WebPPictureInitInternal(WebPPicture* picture, int version) {
 //------------------------------------------------------------------------------
 
 static void WebPPictureResetBufferARGB(WebPPicture* const picture) {
-  picture->memory_argb_ = NULL;
-  picture->argb = NULL;
+  picture->memory_argb_ = nullptr;
+  picture->argb = nullptr;
   picture->argb_stride = 0;
 }
 
 static void WebPPictureResetBufferYUVA(WebPPicture* const picture) {
-  picture->memory_ = NULL;
-  picture->y = picture->u = picture->v = picture->a = NULL;
+  picture->memory_ = nullptr;
+  picture->y = picture->u = picture->v = picture->a = nullptr;
   picture->y_stride = picture->uv_stride = 0;
   picture->a_stride = 0;
 }
@@ -67,7 +67,7 @@ int WebPPictureAllocARGB(WebPPicture* const picture, int width, int height) {
   void* memory;
   const uint64_t argb_size = (uint64_t)width * height;
 
-  assert(picture != NULL);
+  assert(picture != nullptr);
 
   WebPSafeFree(picture->memory_argb_);
   WebPPictureResetBufferARGB(picture);
@@ -77,7 +77,7 @@ int WebPPictureAllocARGB(WebPPicture* const picture, int width, int height) {
   }
   // allocate a new buffer.
   memory = WebPSafeMalloc(argb_size, sizeof(*picture->argb));
-  if (memory == NULL) {
+  if (memory == nullptr) {
     return WebPEncodingSetError(picture, VP8_ENC_ERROR_OUT_OF_MEMORY);
   }
   // TODO(skal): align plane to cache line?
@@ -98,7 +98,7 @@ int WebPPictureAllocYUVA(WebPPicture* const picture, int width, int height) {
   uint64_t y_size, uv_size, a_size, total_size;
   uint8_t* mem;
 
-  assert(picture != NULL);
+  assert(picture != nullptr);
 
   WebPSafeFree(picture->memory_);
   WebPPictureResetBufferYUVA(picture);
@@ -123,7 +123,7 @@ int WebPPictureAllocYUVA(WebPPicture* const picture, int width, int height) {
   }
   // allocate a new buffer.
   mem = (uint8_t*)WebPSafeMalloc(total_size, sizeof(*mem));
-  if (mem == NULL) {
+  if (mem == nullptr) {
     return WebPEncodingSetError(picture, VP8_ENC_ERROR_OUT_OF_MEMORY);
   }
 
@@ -151,7 +151,7 @@ int WebPPictureAllocYUVA(WebPPicture* const picture, int width, int height) {
 }
 
 int WebPPictureAlloc(WebPPicture* picture) {
-  if (picture != NULL) {
+  if (picture != nullptr) {
     const int width = picture->width;
     const int height = picture->height;
 
@@ -167,7 +167,7 @@ int WebPPictureAlloc(WebPPicture* picture) {
 }
 
 void WebPPictureFree(WebPPicture* picture) {
-  if (picture != NULL) {
+  if (picture != nullptr) {
     WebPSafeFree(picture->memory_);
     WebPSafeFree(picture->memory_argb_);
     WebPPictureResetBuffers(picture);
@@ -178,7 +178,7 @@ void WebPPictureFree(WebPPicture* picture) {
 // WebPMemoryWriter: Write-to-memory
 
 void WebPMemoryWriterInit(WebPMemoryWriter* writer) {
-  writer->mem = NULL;
+  writer->mem = nullptr;
   writer->size = 0;
   writer->max_size = 0;
 }
@@ -187,7 +187,7 @@ int WebPMemoryWrite(const uint8_t* data, size_t data_size,
                     const WebPPicture* picture) {
   WebPMemoryWriter* const w = (WebPMemoryWriter*)picture->custom_ptr;
   uint64_t next_size;
-  if (w == NULL) {
+  if (w == nullptr) {
     return 1;
   }
   next_size = (uint64_t)w->size + data_size;
@@ -197,7 +197,7 @@ int WebPMemoryWrite(const uint8_t* data, size_t data_size,
     if (next_max_size < next_size) next_max_size = next_size;
     if (next_max_size < 8192ULL) next_max_size = 8192ULL;
     new_mem = (uint8_t*)WebPSafeMalloc(next_max_size, 1);
-    if (new_mem == NULL) {
+    if (new_mem == nullptr) {
       return 0;
     }
     if (w->size > 0) {
@@ -216,9 +216,9 @@ int WebPMemoryWrite(const uint8_t* data, size_t data_size,
 }
 
 void WebPMemoryWriterClear(WebPMemoryWriter* writer) {
-  if (writer != NULL) {
+  if (writer != nullptr) {
     WebPSafeFree(writer->mem);
-    writer->mem = NULL;
+    writer->mem = nullptr;
     writer->size = 0;
     writer->max_size = 0;
   }
@@ -254,7 +254,7 @@ static size_t Encode(const uint8_t* rgba, int width, int height, int stride,
   WebPPictureFree(&pic);
   if (!ok) {
     WebPMemoryWriterClear(&wrt);
-    *output = NULL;
+    *output = nullptr;
     return 0;
   }
   *output = wrt.mem;

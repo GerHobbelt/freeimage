@@ -215,7 +215,7 @@ _jdos_write	endp
 ;
 ; void far jxms_getdriver (XMSDRIVER far *)
 ;
-; Get the address of the XMS driver, or NULL if not available
+; Get the address of the XMS driver, or nullptr if not available
 ;
 _jxms_getdriver	proc	far
 		push	bp			; linkage

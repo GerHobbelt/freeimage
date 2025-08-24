@@ -111,7 +111,7 @@ write_JPEG_file (char * filename, int quality)
    * VERY IMPORTANT: use "b" option to fopen() if you are on a machine that
    * requires it in order to write binary files.
    */
-  if ((outfile = fopen(filename, "wb")) == NULL) {
+  if ((outfile = fopen(filename, "wb")) == nullptr) {
     fprintf(stderr, "can't open %s\n", filename);
     exit(1);
   }
@@ -303,7 +303,7 @@ read_JPEG_file (char * filename)
    * requires it in order to read binary files.
    */
 
-  if ((infile = fopen(filename, "rb")) == NULL) {
+  if ((infile = fopen(filename, "rb")) == nullptr) {
     fprintf(stderr, "can't open %s\n", filename);
     return 0;
   }

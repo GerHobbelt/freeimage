@@ -48,7 +48,7 @@ bool TextureManager::LoadTexture(const char* filename, const unsigned int texID,
 	//pointer to the image, once loaded
 	FIBITMAP *dib(0);
 	//pointer to the image data
-	BYTE* bits(0);
+	uint8_t* bits(0);
 	//image width and height
 	unsigned int width(0), height(0);
 	//OpenGL's image ID to map to

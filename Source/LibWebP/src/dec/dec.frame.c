@@ -156,8 +156,8 @@ static const int kQuantToDitherAmp[DITHER_AMP_TAB_SIZE] = {
 
 void VP8InitDithering(const WebPDecoderOptions* const options,
                       VP8Decoder* const dec) {
-  assert(dec != NULL);
-  if (options != NULL) {
+  assert(dec != nullptr);
+  if (options != nullptr) {
     const int d = options->dithering_strength;
     const int max_amp = (1 << VP8_RANDOM_DITHER_FIX) - 1;
     const int f = (d < 0) ? 0 : (d > 100) ? max_amp : (d * max_amp / 100);
@@ -270,7 +270,7 @@ static int FinishRow(VP8Decoder* const dec, VP8Io* const io) {
     DitherRow(dec);
   }
 
-  if (io->put != NULL) {
+  if (io->put != nullptr) {
     int y_start = MACROBLOCK_VPOS(mb_y);
     int y_end = MACROBLOCK_VPOS(mb_y + 1);
     if (!is_first_row) {
@@ -290,12 +290,12 @@ static int FinishRow(VP8Decoder* const dec, VP8Io* const io) {
     if (y_end > io->crop_bottom) {
       y_end = io->crop_bottom;    // make sure we don't overflow on last row.
     }
-    io->a = NULL;
-    if (dec->alpha_data_ != NULL && y_start < y_end) {
+    io->a = nullptr;
+    if (dec->alpha_data_ != nullptr && y_start < y_end) {
       // TODO(skal): testing presence of alpha with dec->alpha_data_ is not a
       // good idea.
       io->a = VP8DecompressAlphaRows(dec, y_start, y_end - y_start);
-      if (io->a == NULL) {
+      if (io->a == nullptr) {
         return VP8SetError(dec, VP8_STATUS_BITSTREAM_ERROR,
                            "Could not decode alpha data.");
       }
@@ -307,7 +307,7 @@ static int FinishRow(VP8Decoder* const dec, VP8Io* const io) {
       io->y += dec->cache_y_stride_ * delta_y;
       io->u += dec->cache_uv_stride_ * (delta_y >> 1);
       io->v += dec->cache_uv_stride_ * (delta_y >> 1);
-      if (io->a != NULL) {
+      if (io->a != nullptr) {
         io->a += io->width * delta_y;
       }
     }
@@ -315,7 +315,7 @@ static int FinishRow(VP8Decoder* const dec, VP8Io* const io) {
       io->y += io->crop_left;
       io->u += io->crop_left >> 1;
       io->v += io->crop_left >> 1;
-      if (io->a != NULL) {
+      if (io->a != nullptr) {
         io->a += io->crop_left;
       }
       io->mb_y = y_start - io->crop_top;
@@ -391,7 +391,7 @@ int VP8ProcessRow(VP8Decoder* const dec, VP8Io* const io) {
 VP8StatusCode VP8EnterCritical(VP8Decoder* const dec, VP8Io* const io) {
   // Call setup() first. This may trigger additional decoding features on 'io'.
   // Note: Afterward, we must call teardown() no matter what.
-  if (io->setup != NULL && !io->setup(io)) {
+  if (io->setup != nullptr && !io->setup(io)) {
     VP8SetError(dec, VP8_STATUS_USER_ABORT, "Frame setup failed");
     return dec->status_;
   }
@@ -449,7 +449,7 @@ int VP8ExitCritical(VP8Decoder* const dec, VP8Io* const io) {
     ok = WebPGetWorkerInterface()->Sync(&dec->worker_);
   }
 
-  if (io->teardown != NULL) {
+  if (io->teardown != nullptr) {
     io->teardown(io);
   }
   return ok;
@@ -505,13 +505,13 @@ static int InitThreadContext(VP8Decoder* const dec) {
 int VP8GetThreadMethod(const WebPDecoderOptions* const options,
                        const WebPHeaderStructure* const headers,
                        int width, int height) {
-  if (options == NULL || options->use_threads == 0) {
+  if (options == nullptr || options->use_threads == 0) {
     return 0;
   }
   (void)headers;
   (void)width;
   (void)height;
-  assert(headers == NULL || !headers->is_lossless);
+  assert(headers == nullptr || !headers->is_lossless);
 #if defined(WEBP_USE_THREAD)
   if (width < MIN_WIDTH_FOR_THREADS) return 0;
   // TODO(skal): tune the heuristic further
@@ -548,7 +548,7 @@ static int AllocateMemory(VP8Decoder* const dec) {
                             + kFilterExtraRows[dec->filter_type_]) * 3 / 2;
   const size_t cache_size = top_size * cache_height;
   // alpha_size is the only one that scales as width x height.
-  const uint64_t alpha_size = (dec->alpha_data_ != NULL) ?
+  const uint64_t alpha_size = (dec->alpha_data_ != nullptr) ?
       (uint64_t)dec->pic_hdr_.width_ * dec->pic_hdr_.height_ : 0ULL;
   const uint64_t needed = (uint64_t)intra_pred_mode_size
                         + top_size + mb_info_size + f_info_size
@@ -561,7 +561,7 @@ static int AllocateMemory(VP8Decoder* const dec) {
     WebPSafeFree(dec->mem_);
     dec->mem_size_ = 0;
     dec->mem_ = WebPSafeMalloc(needed, sizeof(uint8_t));
-    if (dec->mem_ == NULL) {
+    if (dec->mem_ == nullptr) {
       return VP8SetError(dec, VP8_STATUS_OUT_OF_MEMORY,
                          "no memory during frame initialization.");
     }
@@ -579,7 +579,7 @@ static int AllocateMemory(VP8Decoder* const dec) {
   dec->mb_info_ = ((VP8MB*)mem) + 1;
   mem += mb_info_size;
 
-  dec->f_info_ = f_info_size ? (VP8FInfo*)mem : NULL;
+  dec->f_info_ = f_info_size ? (VP8FInfo*)mem : nullptr;
   mem += f_info_size;
   dec->thread_ctx_.id_ = 0;
   dec->thread_ctx_.f_info_ = dec->f_info_;
@@ -618,7 +618,7 @@ static int AllocateMemory(VP8Decoder* const dec) {
   mem += cache_size;
 
   // alpha plane
-  dec->alpha_plane_ = alpha_size ? (uint8_t*)mem : NULL;
+  dec->alpha_plane_ = alpha_size ? (uint8_t*)mem : nullptr;
   mem += alpha_size;
   assert(mem <= (uint8_t*)dec->mem_ + dec->mem_size_);
 
@@ -640,7 +640,7 @@ static void InitIo(VP8Decoder* const dec, VP8Io* io) {
   io->v = dec->cache_v_;
   io->y_stride = dec->cache_y_stride_;
   io->uv_stride = dec->cache_uv_stride_;
-  io->a = NULL;
+  io->a = nullptr;
 }
 
 int VP8InitFrame(VP8Decoder* const dec, VP8Io* io) {

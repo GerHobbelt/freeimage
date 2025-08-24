@@ -21,7 +21,7 @@
 
 #include "FreeImagePlus.h"
 
-fipMultiPage::fipMultiPage(BOOL keep_cache_in_memory) : _mpage(NULL), _bMemoryCache(keep_cache_in_memory) {
+fipMultiPage::fipMultiPage(BOOL keep_cache_in_memory) : _mpage(nullptr), _bMemoryCache(keep_cache_in_memory) {
 }
 
 fipMultiPage::~fipMultiPage() {
@@ -32,7 +32,7 @@ fipMultiPage::~fipMultiPage() {
 }
 
 BOOL fipMultiPage::isValid() const {
-	return (NULL != _mpage) ? TRUE : FALSE;
+	return (nullptr != _mpage) ? TRUE : FALSE;
 }
 
 BOOL fipMultiPage::open(const char* lpszPathName, BOOL create_new, BOOL read_only, int flags) {
@@ -42,7 +42,7 @@ BOOL fipMultiPage::open(const char* lpszPathName, BOOL create_new, BOOL read_onl
 	// open the stream
 	_mpage = FreeImage_OpenMultiBitmap(fif, lpszPathName, create_new, read_only, _bMemoryCache, flags);
 
-	return (NULL != _mpage ) ? TRUE : FALSE;
+	return (nullptr != _mpage ) ? TRUE : FALSE;
 }
 
 BOOL fipMultiPage::open(fipMemoryIO& memIO, int flags) {
@@ -52,7 +52,7 @@ BOOL fipMultiPage::open(fipMemoryIO& memIO, int flags) {
 	// open the stream
 	_mpage = memIO.loadMultiPage(fif, flags);
 
-	return (NULL != _mpage ) ? TRUE : FALSE;
+	return (nullptr != _mpage ) ? TRUE : FALSE;
 }
 
 BOOL fipMultiPage::open(FreeImageIO *io, fi_handle handle, int flags) {
@@ -62,7 +62,7 @@ BOOL fipMultiPage::open(FreeImageIO *io, fi_handle handle, int flags) {
 	// open the stream
 	_mpage = FreeImage_OpenMultiBitmapFromHandle(fif, io, handle, flags);
 
-	return (NULL != _mpage ) ? TRUE : FALSE;
+	return (nullptr != _mpage ) ? TRUE : FALSE;
 }
 
 BOOL fipMultiPage::close(int flags) {
@@ -70,7 +70,7 @@ BOOL fipMultiPage::close(int flags) {
 	if(_mpage) {
 		// close the stream
 		bSuccess = FreeImage_CloseMultiBitmap(_mpage, flags);
-		_mpage = NULL;
+		_mpage = nullptr;
 	}
 
 	return bSuccess;
@@ -121,7 +121,7 @@ BOOL fipMultiPage::movePage(int target, int source) {
 }
 
 FIBITMAP* fipMultiPage::lockPage(int page) {
-	return _mpage ? FreeImage_LockPage(_mpage, page) : NULL;
+	return _mpage ? FreeImage_LockPage(_mpage, page) : nullptr;
 }
 
 void fipMultiPage::unlockPage(fipImage& image, BOOL changed) {
@@ -129,7 +129,7 @@ void fipMultiPage::unlockPage(fipImage& image, BOOL changed) {
 		FreeImage_UnlockPage(_mpage, image, changed);
 		// clear the image so that it becomes invalid.
 		// this is possible because of the friend declaration
-		image._dib = NULL;
+		image._dib = nullptr;
 		image._bHasChanged = FALSE;
 	}
 }

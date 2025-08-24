@@ -25,25 +25,25 @@
 // Local test functions
 // ----------------------------------------------------------
 
-static void testBasicWrapper(BOOL copySource, BYTE *bits, FREE_IMAGE_TYPE type, int width, int height, int pitch, unsigned bpp) {
-	FIBITMAP *src = NULL;
-	FIBITMAP *clone = NULL;
-	FIBITMAP *dst = NULL;
+static void testBasicWrapper(BOOL copySource, uint8_t *bits, FREE_IMAGE_TYPE type, int width, int height, int pitch, unsigned bpp) {
+	FIBITMAP *src = nullptr;
+	FIBITMAP *clone = nullptr;
+	FIBITMAP *dst = nullptr;
 
 	// allocate a wrapper
 	src = FreeImage_ConvertFromRawBitsEx(copySource, bits, type, width, height, pitch, bpp, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, FALSE);
-	assert(src != NULL);
+	assert(src != nullptr);
 	
 	// test clone
 	clone = FreeImage_Clone(src);
-	assert(clone != NULL);
+	assert(clone != nullptr);
 
 	// test in-place processing
 	FreeImage_Invert(src);
 
 	// test processing
 	dst = FreeImage_ConvertToFloat(src);
-	assert(dst != NULL);
+	assert(dst != nullptr);
 
 	FreeImage_Unload(dst);
 	FreeImage_Unload(clone);
@@ -53,7 +53,7 @@ static void testBasicWrapper(BOOL copySource, BYTE *bits, FREE_IMAGE_TYPE type, 
 }
 
 static void testViewport(FIBITMAP *dib) {
-	FIBITMAP *src = NULL;
+	FIBITMAP *src = nullptr;
 	
 	// define a viewport as [vp_x, vp_y, vp_width, vp_height]
 	// (assume the image is larger than the viewport)
@@ -64,7 +64,7 @@ static void testViewport(FIBITMAP *dib) {
 	
 	// point the viewport data
 	unsigned bytes_per_pixel = FreeImage_GetLine(dib) / FreeImage_GetWidth(dib);
-	BYTE *data = FreeImage_GetBits(dib) + vp_y * FreeImage_GetPitch(dib) + vp_x * bytes_per_pixel;
+	uint8_t *data = FreeImage_GetBits(dib) + vp_y * FreeImage_GetPitch(dib) + vp_x * bytes_per_pixel;
 
 	// wrap a section (no copy)
 	src = FreeImage_ConvertFromRawBitsEx(FALSE/*copySource*/, data, FIT_BITMAP, vp_width, vp_height, FreeImage_GetPitch(dib), FreeImage_GetBPP(dib), FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
@@ -80,7 +80,7 @@ static void testViewport(FIBITMAP *dib) {
 // ----------------------------------------------------------
 
 void testWrappedBuffer(const char *lpszPathName, int flags) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	// simulate a user provided buffer
 	// -------------------------------
@@ -88,7 +88,7 @@ void testWrappedBuffer(const char *lpszPathName, int flags) {
 	// load the dib
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(lpszPathName);
 	dib = FreeImage_Load(fif, lpszPathName, flags); 
-	assert(dib != NULL);
+	assert(dib != nullptr);
 
 	// get data info
 	FREE_IMAGE_TYPE type = FreeImage_GetImageType(dib);
@@ -96,7 +96,7 @@ void testWrappedBuffer(const char *lpszPathName, int flags) {
 	unsigned height = FreeImage_GetHeight(dib);
 	unsigned pitch = FreeImage_GetPitch(dib);
 	unsigned bpp = FreeImage_GetBPP(dib);
-	BYTE *bits = FreeImage_GetBits(dib);
+	uint8_t *bits = FreeImage_GetBits(dib);
 
 	// test wrapped buffer manipulations
 	// -------------------------------

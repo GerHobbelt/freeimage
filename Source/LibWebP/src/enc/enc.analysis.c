@@ -33,7 +33,7 @@ static void SmoothSegmentMap(VP8Encoder* const enc) {
   uint8_t* const tmp = (uint8_t*)WebPSafeMalloc(w * h, sizeof(*tmp));
   assert((uint64_t)(w * h) == (uint64_t)w * h);   // no overflow, as per spec
 
-  if (tmp == NULL) return;
+  if (tmp == nullptr) return;
   for (y = 1; y < h - 1; ++y) {
     for (x = 1; x < w - 1; ++x) {
       int cnt[NUM_MB_SEGMENTS] = { 0 };

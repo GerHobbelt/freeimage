@@ -102,7 +102,7 @@ static int EmitFancyRGB(const VP8Io* const io, WebPDecParams* const p) {
 
   if (y == 0) {
     // First line is special cased. We mirror the u/v samples at boundary.
-    upsample(cur_y, NULL, cur_u, cur_v, cur_u, cur_v, dst, NULL, mb_w);
+    upsample(cur_y, nullptr, cur_u, cur_v, cur_u, cur_v, dst, nullptr, mb_w);
   } else {
     // We can finish the left-over line from previous call.
     upsample(p->tmp_y, cur_y, top_u, top_v, cur_u, cur_v,
@@ -134,8 +134,8 @@ static int EmitFancyRGB(const VP8Io* const io, WebPDecParams* const p) {
   } else {
     // Process the very last row of even-sized picture
     if (!(y_end & 1)) {
-      upsample(cur_y, NULL, cur_u, cur_v, cur_u, cur_v,
-               dst + buf->stride, NULL, mb_w);
+      upsample(cur_y, nullptr, cur_u, cur_v, cur_u, cur_v,
+               dst + buf->stride, nullptr, mb_w);
     }
   }
   return num_lines_out;
@@ -153,13 +153,13 @@ static int EmitAlphaYUV(const VP8Io* const io, WebPDecParams* const p) {
   uint8_t* dst = buf->a + io->mb_y * buf->a_stride;
   int j;
 
-  if (alpha != NULL) {
+  if (alpha != nullptr) {
     for (j = 0; j < mb_h; ++j) {
       memcpy(dst, alpha, mb_w * sizeof(*dst));
       alpha += io->width;
       dst += buf->a_stride;
     }
-  } else if (buf->a != NULL) {
+  } else if (buf->a != nullptr) {
     // the user requested alpha, but there is none, set it to opaque.
     for (j = 0; j < mb_h; ++j) {
       memset(dst, 0xff, mb_w * sizeof(*dst));
@@ -197,7 +197,7 @@ static int GetAlphaSourceRow(const VP8Io* const io,
 
 static int EmitAlphaRGB(const VP8Io* const io, WebPDecParams* const p) {
   const uint8_t* alpha = io->a;
-  if (alpha != NULL) {
+  if (alpha != nullptr) {
     const int mb_w = io->mb_w;
     const WEBP_CSP_MODE colorspace = p->output->colorspace;
     const int alpha_first =
@@ -221,7 +221,7 @@ static int EmitAlphaRGB(const VP8Io* const io, WebPDecParams* const p) {
 
 static int EmitAlphaRGBA4444(const VP8Io* const io, WebPDecParams* const p) {
   const uint8_t* alpha = io->a;
-  if (alpha != NULL) {
+  if (alpha != nullptr) {
     const int mb_w = io->mb_w;
     const WEBP_CSP_MODE colorspace = p->output->colorspace;
     const WebPRGBABuffer* const buf = &p->output->u.RGBA;
@@ -273,7 +273,7 @@ static int EmitRescaledYUV(const VP8Io* const io, WebPDecParams* const p) {
   const int uv_mb_h = (mb_h + 1) >> 1;
   WebPRescaler* const scaler = &p->scaler_y;
   int num_lines_out = 0;
-  if (WebPIsAlphaMode(p->output->colorspace) && io->a != NULL) {
+  if (WebPIsAlphaMode(p->output->colorspace) && io->a != nullptr) {
     // Before rescaling, we premultiply the luma directly into the io->y
     // internal buffer. This is OK since these samples are not used for
     // intra-prediction (the top samples are saved in cache_y_/u_/v_).
@@ -288,7 +288,7 @@ static int EmitRescaledYUV(const VP8Io* const io, WebPDecParams* const p) {
 }
 
 static int EmitRescaledAlphaYUV(const VP8Io* const io, WebPDecParams* const p) {
-  if (io->a != NULL) {
+  if (io->a != nullptr) {
     const WebPYUVABuffer* const buf = &p->output->u.YUVA;
     uint8_t* dst_y = buf->y + p->last_y * buf->y_stride;
     const uint8_t* src_a = buf->a + p->last_y * buf->a_stride;
@@ -320,7 +320,7 @@ static int InitYUVRescaler(const VP8Io* const io, WebPDecParams* const p) {
     tmp_size += work_size * sizeof(*work);
   }
   p->memory = WebPSafeCalloc(1ULL, tmp_size);
-  if (p->memory == NULL) {
+  if (p->memory == nullptr) {
     return 0;   // memory error
   }
   work = (int32_t*)p->memory;
@@ -466,7 +466,7 @@ static int ExportAlphaRGBA4444(WebPDecParams* const p, int y_pos) {
 }
 
 static int EmitRescaledAlphaRGB(const VP8Io* const io, WebPDecParams* const p) {
-  if (io->a != NULL) {
+  if (io->a != nullptr) {
     WebPRescaler* const scaler = &p->scaler_a;
     int j = 0;
     int pos = 0;
@@ -498,7 +498,7 @@ static int InitRGBRescaler(const VP8Io* const io, WebPDecParams* const p) {
   }
   total_size = tmp_size1 * sizeof(*work) + tmp_size2 * sizeof(*tmp);
   p->memory = WebPSafeCalloc(1ULL, total_size);
-  if (p->memory == NULL) {
+  if (p->memory == nullptr) {
     return 0;   // memory error
   }
   work = (int32_t*)p->memory;
@@ -544,10 +544,10 @@ static int CustomSetup(VP8Io* io) {
   const int is_rgb = WebPIsRGBMode(colorspace);
   const int is_alpha = WebPIsAlphaMode(colorspace);
 
-  p->memory = NULL;
-  p->emit = NULL;
-  p->emit_alpha = NULL;
-  p->emit_alpha_row = NULL;
+  p->memory = nullptr;
+  p->emit = nullptr;
+  p->emit_alpha = nullptr;
+  p->emit_alpha_row = nullptr;
   if (!WebPIoInitFromOptions(p->options, io, is_alpha ? MODE_YUV : MODE_YUVA)) {
     return 0;
   }
@@ -566,7 +566,7 @@ static int CustomSetup(VP8Io* io) {
 #ifdef FANCY_UPSAMPLING
         const int uv_width = (io->mb_w + 1) >> 1;
         p->memory = WebPSafeMalloc(1ULL, (size_t)(io->mb_w + 2 * uv_width));
-        if (p->memory == NULL) {
+        if (p->memory == nullptr) {
           return 0;   // memory error.
         }
         p->tmp_y = (uint8_t*)p->memory;
@@ -612,7 +612,7 @@ static int CustomPut(const VP8Io* io) {
     return 0;
   }
   num_lines_out = p->emit(io, p);
-  if (p->emit_alpha != NULL) {
+  if (p->emit_alpha != nullptr) {
     p->emit_alpha(io, p);
   }
   p->last_y += num_lines_out;
@@ -624,7 +624,7 @@ static int CustomPut(const VP8Io* io) {
 static void CustomTeardown(const VP8Io* io) {
   WebPDecParams* const p = (WebPDecParams*)io->opaque;
   WebPSafeFree(p->memory);
-  p->memory = NULL;
+  p->memory = nullptr;
 }
 
 //------------------------------------------------------------------------------

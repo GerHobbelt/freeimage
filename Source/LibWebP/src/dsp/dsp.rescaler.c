@@ -99,7 +99,7 @@ WEBP_TSAN_IGNORE_FUNCTION void WebPRescalerDspInit(void) {
 
   WebPRescalerImportRow = RescalerImportRowC;
   WebPRescalerExportRow = WebPRescalerExportRowC;
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_USE_MIPS32)
     if (VP8GetCPUInfo(kMIPS32)) {
       WebPRescalerDspInitMIPS32();
