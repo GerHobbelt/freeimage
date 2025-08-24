@@ -95,6 +95,25 @@ freeimage (3.18.0+ds2-3) unstable; urgency=medium
 
  -- Anton Gladky <gladk@debian.org>  Tue, 31 Dec 2019 20:58:58 +0100
 
+freeimage (3.18.0+ds2-1+deb10u2) buster-security; urgency=medium
+
+  * Non-maintainer upload by the LTS Security Team.
+  * CVE-2020-21427: fix buffer overflow in PluginBMP with upstream patches.
+  * CVE-2020-21428: fix buffer overflow in PluginDDS with upstream patch.
+  * CVE-2020-22524: fix buffer overflow in PluginPFM with upstream patch.
+
+ -- Anton Gladky <gladk@debian.org>  Fri, 24 Nov 2023 06:37:28 +0100
+
+freeimage (3.18.0+ds2-1+deb10u1) buster-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * CVE-2019-12213: stack exhaustion caused by unwanted recursion in
+    ReadThumbnail (Closes: #929597).
+  * CVE-2019-12211: heap buffer overflow caused by invalid memcpy in
+    PluginTIFF.
+
+ -- Hugo Lefeuvre <hle@debian.org>  Tue, 10 Dec 2019 16:34:27 +0100
+
 freeimage (3.18.0+ds2-1) unstable; urgency=medium
 
   * Upload into unstable.
