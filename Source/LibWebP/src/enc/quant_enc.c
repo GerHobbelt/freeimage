@@ -467,14 +467,14 @@ const uint16_t VP8I4ModeOffsets[NUM_BMODES] = {
 };
 
 void VP8MakeLuma16Preds(const VP8EncIterator* const it) {
-  const uint8_t* const left = it->x_ ? it->y_left_ : NULL;
-  const uint8_t* const top = it->y_ ? it->y_top_ : NULL;
+  const uint8_t* const left = it->x_ ? it->y_left_ : nullptr;
+  const uint8_t* const top = it->y_ ? it->y_top_ : nullptr;
   VP8EncPredLuma16(it->yuv_p_, left, top);
 }
 
 void VP8MakeChroma8Preds(const VP8EncIterator* const it) {
-  const uint8_t* const left = it->x_ ? it->u_left_ : NULL;
-  const uint8_t* const top = it->y_ ? it->uv_top_ : NULL;
+  const uint8_t* const left = it->x_ ? it->u_left_ : nullptr;
+  const uint8_t* const top = it->y_ ? it->uv_top_ : nullptr;
   VP8EncPredChroma8(it->yuv_p_, left, top);
 }
 
@@ -935,7 +935,7 @@ static int ReconstructUV(VP8EncIterator* const it, VP8ModeScore* const rd,
   for (n = 0; n < 8; n += 2) {
     VP8FTransform2(src + VP8ScanUV[n], ref + VP8ScanUV[n], tmp[n]);
   }
-  if (it->top_derr_ != NULL) CorrectDCValues(it, &dqm->uv_, tmp, rd);
+  if (it->top_derr_ != nullptr) CorrectDCValues(it, &dqm->uv_, tmp, rd);
 
   if (DO_TRELLIS_UV && it->do_trellis_) {
     int ch, x, y;
@@ -1192,7 +1192,7 @@ static void PickBestUV(VP8EncIterator* const it, VP8ModeScore* const rd) {
       CopyScore(&rd_best, &rd_uv);
       rd->mode_uv = mode;
       memcpy(rd->uv_levels, rd_uv.uv_levels, sizeof(rd->uv_levels));
-      if (it->top_derr_ != NULL) {
+      if (it->top_derr_ != nullptr) {
         memcpy(rd->derr, rd_uv.derr, sizeof(rd_uv.derr));
       }
       SwapPtr(&dst, &tmp_dst);
@@ -1203,7 +1203,7 @@ static void PickBestUV(VP8EncIterator* const it, VP8ModeScore* const rd) {
   if (dst != dst0) {   // copy 16x8 block if needed
     VP8Copy16x8(dst, dst0);
   }
-  if (it->top_derr_ != NULL) {  // store diffusion errors for next block
+  if (it->top_derr_ != nullptr) {  // store diffusion errors for next block
     StoreDiffusionErrors(it, rd);
   }
 }

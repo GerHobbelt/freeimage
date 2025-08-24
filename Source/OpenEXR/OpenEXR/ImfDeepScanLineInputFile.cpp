@@ -73,7 +73,7 @@ struct InSliceInfo
     double              fillValue;
 
     InSliceInfo (PixelType typeInFrameBuffer = HALF,
-                 char * base = NULL,
+                 char * base = nullptr,
                  PixelType typeInFile = HALF,
                  size_t xPointerStride = 0,
                  size_t yPointerStride = 0,
@@ -245,10 +245,10 @@ DeepScanLineInputFile::Data::Data (int numThreads):
         partNumber(-1),
         numThreads(numThreads),
         multiPartBackwardSupport(false),
-        multiPartFile(NULL),
+        multiPartFile(nullptr),
         memoryMapped(false),
         frameBufferValid(false),
-        _streamData(NULL),
+        _streamData(nullptr),
         _deleteStream(false)
 {
     //
@@ -1286,7 +1286,7 @@ DeepScanLineInputFile::setFrameBuffer (const DeepFrameBuffer &frameBuffer)
             //
 
             slices.push_back (new InSliceInfo (i.channel().type,
-                                               NULL,
+                                               nullptr,
                                                i.channel().type,
                                                0,
                                                0,
@@ -1581,7 +1581,7 @@ DeepScanLineInputFile::rawPixelData (int firstScanLine,
     pixelDataSize = totalSizeRequired;
     
     // was the block we were given big enough?
-    if(!big_enough || pixelData==NULL)
+    if(!big_enough || pixelData==nullptr)
     {        
         // special case: seek stream back to start if we are at the beginning (regular reading pixels assumes it doesn't need to seek
         // in single part files)
@@ -1641,7 +1641,7 @@ void DeepScanLineInputFile::readPixels (const char* rawPixelData,
     //
     
     
-    Compressor * decomp = NULL;
+    Compressor * decomp = nullptr;
     const char * uncompressed_data;
     Compressor::Format format = Compressor::XDR;
     if(packedDataSize <unpackedDataSize)
@@ -1847,7 +1847,7 @@ void DeepScanLineInputFile::readPixelSampleCounts (const char* rawPixelData,
     Xdr::size <unsigned int> ();
     
     
-    Compressor * decomp=NULL;
+    Compressor * decomp=nullptr;
     const char* readPtr;
     if (sampleCountTableDataSize < rawSampleCountTableSize)
     {

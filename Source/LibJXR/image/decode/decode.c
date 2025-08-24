@@ -54,12 +54,12 @@ static void CleanAH(CAdaptiveHuffman **ppAdHuff)
 {
     CAdaptiveHuffman *pAdHuff;
     
-    if (NULL != ppAdHuff) {
+    if (nullptr != ppAdHuff) {
         pAdHuff = *ppAdHuff;
-        if (NULL != pAdHuff) {
+        if (nullptr != pAdHuff) {
             free(pAdHuff);
         }
-        *ppAdHuff = NULL;
+        *ppAdHuff = nullptr;
     }
 }
 
@@ -82,14 +82,14 @@ static Int InitializeAH(CAdaptiveHuffman **ppAdHuff, Int iSym)
     Int iMemStatus = 0;
 
     CAdaptiveHuffman *pAdHuff = Allocate(iSym, DECODER);
-    if (pAdHuff == NULL) {
+    if (pAdHuff == nullptr) {
         iMemStatus = -1;    // out of memory
         goto ErrorExit;
     }
 
     //Adapt(pAdHuff, bFixedTables);
     //InitHuffman(pAdHuff->m_pHuffman);
-    //if (ICERR_OK != initHuff(pAdHuff->m_pHuffman, 1, pAdHuff->m_pTable, NULL)) {
+    //if (ICERR_OK != initHuff(pAdHuff->m_pHuffman, 1, pAdHuff->m_pTable, nullptr)) {
     //    goto ErrorExit;
     //}
     *ppAdHuff = pAdHuff;
@@ -99,7 +99,7 @@ ErrorExit:
     if (pAdHuff) {
         free(pAdHuff);
     }
-    *ppAdHuff = NULL;
+    *ppAdHuff = nullptr;
     if (-1 == iMemStatus) {
         printf("Insufficient memory to init decoder.\n");
     }
@@ -118,11 +118,11 @@ Int AllocateCodingContextDec(CWMImageStrCodec *pSC, Int iNumContexts)
     if (iNumContexts > MAX_TILES || iNumContexts < 1)  // only between 1 and MAX_TILES allowed
         return ICERR_ERROR;
 
-    if (pSC == NULL)
+    if (pSC == nullptr)
         return ICERR_ERROR;
 
     pSC->m_pCodingContext = malloc (iNumContexts * sizeof (CCodingContext));
-    if (pSC->m_pCodingContext == NULL) {
+    if (pSC->m_pCodingContext == nullptr) {
         pSC->cNumCodingContext = 0;
         return ICERR_ERROR;
     }

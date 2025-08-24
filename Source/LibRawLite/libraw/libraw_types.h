@@ -93,12 +93,12 @@ extern "C"
 #include "libraw_version.h"
 
 #ifdef _WIN32
-  typedef __int64 INT64;
-  typedef unsigned __int64 UINT64;
+  typedef __int64 int64_t;
+  typedef unsigned __int64 uint64_t;
 #else
 #include <stdint.h>
-	typedef int64_t INT64;
-	typedef uint64_t UINT64;
+	typedef int64_t int64_t;
+	typedef uint64_t uint64_t;
 #endif
 
   typedef unsigned char uchar;
@@ -137,7 +137,7 @@ extern "C"
                                   const char *where);
   typedef void (*exif_parser_callback)(void *context, int tag, int type,
                                        int len, unsigned int ord, void *ifp,
-                                       INT64 base);
+                                       int64_t base);
 
   typedef void (*data_callback)(void *data, const char *file, const int offset);
 
@@ -817,7 +817,7 @@ extern "C"
     ushort twidth, theight, tflip;
     unsigned tlength;
 	unsigned tmisc;
-	INT64 toffset;
+	int64_t toffset;
   }libraw_thumbnail_item_t;
 
   typedef struct

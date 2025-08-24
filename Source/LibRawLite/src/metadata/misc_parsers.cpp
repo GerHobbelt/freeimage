@@ -191,8 +191,8 @@ void LibRaw::parse_cine()
   fseek(ifp, off_image, SEEK_SET);
   if (shot_select < is_raw)
     fseek(ifp, shot_select * 8, SEEK_CUR);
-  data_offset = (INT64)get4() + 8;
-  data_offset += (INT64)get4() << 32;
+  data_offset = (int64_t)get4() + 8;
+  data_offset += (int64_t)get4() << 32;
 }
 
 void LibRaw::parse_qt(int end)

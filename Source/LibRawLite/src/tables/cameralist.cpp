@@ -1258,7 +1258,7 @@ static const char *static_camera_list[] = {
 	"Xiaoyi YIAC3 (YI 4k)",
 	"Zeiss ZX1",
 	"Zenit M",
-	NULL
+	nullptr
 };
 // clang-format on
 

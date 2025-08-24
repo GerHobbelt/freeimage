@@ -118,21 +118,21 @@ void LibRaw::parseAdobeRAFMakernote()
   int c;
 
 #define CHECKSPACE_ABS3(s1, s2, s3)                                                                                    \
-  if (INT64(s1) + INT64(s2) + INT64(s3) > INT64(PrivateMknLength))                                                     \
+  if (int64_t(s1) + int64_t(s2) + int64_t(s3) > int64_t(PrivateMknLength))                                                     \
   {                                                                                                                    \
     free(PrivateMknBuf);                                                                                               \
     return;                                                                                                            \
   }
 
 #define CHECKSPACE_ABS2(s1,s2)                                                                                         \
-  if (INT64(s1) + INT64(s2) > INT64(PrivateMknLength))                                                            \
+  if (int64_t(s1) + int64_t(s2) > int64_t(PrivateMknLength))                                                            \
   {                                                                                                                    \
     free(PrivateMknBuf);                                                                                               \
     return;                                                                                                            \
   }
 
 #define CHECKSPACE(s)                                                          \
-  if (INT64(posPrivateMknBuf) + INT64(s) > INT64(PrivateMknLength))            \
+  if (int64_t(posPrivateMknBuf) + int64_t(s) > int64_t(PrivateMknLength))            \
   {                                                                            \
     free(PrivateMknBuf);                                                       \
     return;                                                                    \
@@ -209,7 +209,7 @@ void LibRaw::parseAdobeRAFMakernote()
     PrivateOrder = sget2(PrivateMknBuf);
     unsigned s, l;
     s = ifd_start = sget4(PrivateMknBuf +2)+6;
-    CHECKSPACE(INT64(ifd_start)+4LL);
+    CHECKSPACE(int64_t(ifd_start)+4LL);
     l = ifd_len = sget4(PrivateMknBuf +ifd_start);
 	CHECKSPACE_ABS3(ifd_start, ifd_len, 4);
 
@@ -767,7 +767,7 @@ void LibRaw::parseAdobeRAFMakernote()
 
 		  if (wb_section_offset)
 		  {
-			  CHECKSPACE(INT64(wb_section_offset) + 12LL);
+			  CHECKSPACE(int64_t(wb_section_offset) + 12LL);
 		  }
 
           if (wb_section_offset &&
@@ -1124,7 +1124,7 @@ void LibRaw::parse_fuji_thumbnail(int offset)
     uchar buf[sizeof(xmpmarker)+1];
     int xmpsz = sizeof(xmpmarker); // we do not
 
-    INT64 pos = ftell(ifp);
+    int64_t pos = ftell(ifp);
     fseek(ifp, offset, SEEK_SET);
     ushort s_order = order;
     order = 0x4a4a; // JPEG is always in MM order
@@ -1136,7 +1136,7 @@ void LibRaw::parse_fuji_thumbnail(int offset)
           ushort tag = get2();
           if (tag != 0xFFE1 && tag != 0xFFE2) // allow APP1/APP2 only
             break;
-          INT64 tpos = ftell(ifp);
+          int64_t tpos = ftell(ifp);
           int len = get2();
           if (len > xmpsz + 2)
           {

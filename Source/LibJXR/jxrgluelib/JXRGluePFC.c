@@ -2212,10 +2212,10 @@ ERR PKFormatConverter_InitializeConvert(PKFormatConverter* pFC, const PKPixelFor
     //================================
     pFC->enPixelFormat = enPFTo;
 
-    if (pExt != NULL && IsEqualGUID(&enPFTo, &GUID_PKPixelFormat24bppRGB) &&
+    if (pExt != nullptr && IsEqualGUID(&enPFTo, &GUID_PKPixelFormat24bppRGB) &&
         0 == PKStrnicmp(pExt, ".bmp", strlen(pExt)))
         enPFTo = GUID_PKPixelFormat24bppBGR;
-    if (pExt != NULL && (0 == PKStrnicmp(pExt, ".tif", strlen(pExt)) || 0 == PKStrnicmp(pExt, ".tiff", strlen(pExt))))
+    if (pExt != nullptr && (0 == PKStrnicmp(pExt, ".tif", strlen(pExt)) || 0 == PKStrnicmp(pExt, ".tiff", strlen(pExt))))
     {
         if (IsEqualGUID(&enPFTo, &GUID_PKPixelFormat32bppBGRA))
             enPFTo = GUID_PKPixelFormat32bppRGBA;

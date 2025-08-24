@@ -80,7 +80,7 @@ void TIFFCleanup(TIFF *tif)
         for (i = 0; i < tif->tif_nfields; i++)
         {
             TIFFField *fld = tif->tif_fields[i];
-            if (fld->field_name != NULL)
+            if (fld->field_name != nullptr)
             {
                 if (fld->field_bit == FIELD_CUSTOM &&
                     /* caution: tif_fields[i] must not be the beginning of a
@@ -118,7 +118,7 @@ void TIFFCleanup(TIFF *tif)
                       (uint64_t)tif->tif_cur_cumulated_mem_alloc);
     }
 
-    _TIFFfreeExt(NULL, tif);
+    _TIFFfreeExt(nullptr, tif);
 }
 
 /************************************************************************/
@@ -130,12 +130,12 @@ void _TIFFCleanupIFDOffsetAndNumberMaps(TIFF *tif)
     if (tif->tif_map_dir_offset_to_number)
     {
         TIFFHashSetDestroy(tif->tif_map_dir_offset_to_number);
-        tif->tif_map_dir_offset_to_number = NULL;
+        tif->tif_map_dir_offset_to_number = nullptr;
     }
     if (tif->tif_map_dir_number_to_offset)
     {
         TIFFHashSetDestroy(tif->tif_map_dir_number_to_offset);
-        tif->tif_map_dir_number_to_offset = NULL;
+        tif->tif_map_dir_number_to_offset = nullptr;
     }
 }
 
@@ -155,7 +155,7 @@ void _TIFFCleanupIFDOffsetAndNumberMaps(TIFF *tif)
 
 void TIFFClose(TIFF *tif)
 {
-    if (tif != NULL)
+    if (tif != nullptr)
     {
         TIFFCloseProc closeproc = tif->tif_closeproc;
         thandle_t fd = tif->tif_clientdata;

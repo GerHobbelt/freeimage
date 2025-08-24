@@ -43,12 +43,12 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bottom_y,           \
   const int last_pixel_pair = (len - 1) >> 1;                                  \
   uint32_t tl_uv = LOAD_UV(top_u[0], top_v[0]);   /* top-left sample */        \
   uint32_t l_uv  = LOAD_UV(cur_u[0], cur_v[0]);   /* left-sample */            \
-  assert(top_y != NULL);                                                       \
+  assert(top_y != nullptr);                                                       \
   {                                                                            \
     const uint32_t uv0 = (3 * tl_uv + l_uv + 0x00020002u) >> 2;                \
     FUNC(top_y[0], uv0 & 0xff, (uv0 >> 16), top_dst);                          \
   }                                                                            \
-  if (bottom_y != NULL) {                                                      \
+  if (bottom_y != nullptr) {                                                      \
     const uint32_t uv0 = (3 * l_uv + tl_uv + 0x00020002u) >> 2;                \
     FUNC(bottom_y[0], uv0 & 0xff, (uv0 >> 16), bottom_dst);                    \
   }                                                                            \
@@ -67,7 +67,7 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bottom_y,           \
       FUNC(top_y[2 * x - 0], uv1 & 0xff, (uv1 >> 16),                          \
            top_dst + (2 * x - 0) * (XSTEP));                                   \
     }                                                                          \
-    if (bottom_y != NULL) {                                                    \
+    if (bottom_y != nullptr) {                                                    \
       const uint32_t uv0 = (diag_03 + l_uv) >> 1;                              \
       const uint32_t uv1 = (diag_12 + uv) >> 1;                                \
       FUNC(bottom_y[2 * x - 1], uv0 & 0xff, (uv0 >> 16),                       \
@@ -84,7 +84,7 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bottom_y,           \
       FUNC(top_y[len - 1], uv0 & 0xff, (uv0 >> 16),                            \
            top_dst + (len - 1) * (XSTEP));                                     \
     }                                                                          \
-    if (bottom_y != NULL) {                                                    \
+    if (bottom_y != nullptr) {                                                    \
       const uint32_t uv0 = (3 * l_uv + tl_uv + 0x00020002u) >> 2;              \
       FUNC(bottom_y[len - 1], uv0 & 0xff, (uv0 >> 16),                         \
            bottom_dst + (len - 1) * (XSTEP));                                  \
@@ -142,7 +142,7 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bot_y,              \
                       uint8_t* top_dst, uint8_t* bot_dst, int len) {           \
   const int half_len = len >> 1;                                               \
   int x;                                                                       \
-  assert(top_dst != NULL);                                                     \
+  assert(top_dst != nullptr);                                                     \
   {                                                                            \
     for (x = 0; x < half_len; ++x) {                                           \
       FUNC(top_y[2 * x + 0], top_u[x], top_v[x], top_dst + 8 * x + 0);         \
@@ -150,7 +150,7 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bot_y,              \
     }                                                                          \
     if (len & 1) FUNC(top_y[2 * x + 0], top_u[x], top_v[x], top_dst + 8 * x);  \
   }                                                                            \
-  if (bot_dst != NULL) {                                                       \
+  if (bot_dst != nullptr) {                                                       \
     for (x = 0; x < half_len; ++x) {                                           \
       FUNC(bot_y[2 * x + 0], bot_u[x], bot_v[x], bot_dst + 8 * x + 0);         \
       FUNC(bot_y[2 * x + 1], bot_u[x], bot_v[x], bot_dst + 8 * x + 4);         \
@@ -232,7 +232,7 @@ WEBP_DSP_INIT_FUNC(WebPInitYUV444Converters) {
   WebPYUV444Converters[MODE_Argb]      = WebPYuv444ToArgb_C;
   WebPYUV444Converters[MODE_rgbA_4444] = WebPYuv444ToRgba4444_C;
 
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_HAVE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       WebPInitYUV444ConvertersSSE2();
@@ -277,7 +277,7 @@ WEBP_DSP_INIT_FUNC(WebPInitUpsamplers) {
 #endif
 
   // If defined, use CPUInfo() to overwrite some pointers with faster versions.
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_HAVE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       WebPInitUpsamplersSSE2();
@@ -302,23 +302,23 @@ WEBP_DSP_INIT_FUNC(WebPInitUpsamplers) {
 
 #if defined(WEBP_HAVE_NEON)
   if (WEBP_NEON_OMIT_C_CODE ||
-      (VP8GetCPUInfo != NULL && VP8GetCPUInfo(kNEON))) {
+      (VP8GetCPUInfo != nullptr && VP8GetCPUInfo(kNEON))) {
     WebPInitUpsamplersNEON();
   }
 #endif
 
-  assert(WebPUpsamplers[MODE_RGBA] != NULL);
-  assert(WebPUpsamplers[MODE_BGRA] != NULL);
-  assert(WebPUpsamplers[MODE_rgbA] != NULL);
-  assert(WebPUpsamplers[MODE_bgrA] != NULL);
+  assert(WebPUpsamplers[MODE_RGBA] != nullptr);
+  assert(WebPUpsamplers[MODE_BGRA] != nullptr);
+  assert(WebPUpsamplers[MODE_rgbA] != nullptr);
+  assert(WebPUpsamplers[MODE_bgrA] != nullptr);
 #if !defined(WEBP_REDUCE_CSP) || !WEBP_NEON_OMIT_C_CODE
-  assert(WebPUpsamplers[MODE_RGB] != NULL);
-  assert(WebPUpsamplers[MODE_BGR] != NULL);
-  assert(WebPUpsamplers[MODE_ARGB] != NULL);
-  assert(WebPUpsamplers[MODE_RGBA_4444] != NULL);
-  assert(WebPUpsamplers[MODE_RGB_565] != NULL);
-  assert(WebPUpsamplers[MODE_Argb] != NULL);
-  assert(WebPUpsamplers[MODE_rgbA_4444] != NULL);
+  assert(WebPUpsamplers[MODE_RGB] != nullptr);
+  assert(WebPUpsamplers[MODE_BGR] != nullptr);
+  assert(WebPUpsamplers[MODE_ARGB] != nullptr);
+  assert(WebPUpsamplers[MODE_RGBA_4444] != nullptr);
+  assert(WebPUpsamplers[MODE_RGB_565] != nullptr);
+  assert(WebPUpsamplers[MODE_Argb] != nullptr);
+  assert(WebPUpsamplers[MODE_rgbA_4444] != nullptr);
 #endif
 
 #endif  // FANCY_UPSAMPLING

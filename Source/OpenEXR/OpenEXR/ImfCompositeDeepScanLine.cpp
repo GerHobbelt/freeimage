@@ -59,7 +59,7 @@ struct CompositeDeepScanLine::Data{
     Data();
 };
 
-CompositeDeepScanLine::Data::Data() : _zback(false) , _comp(NULL) {}
+CompositeDeepScanLine::Data::Data() : _zback(false) , _comp(nullptr) {}
 
 CompositeDeepScanLine::CompositeDeepScanLine() : _Data(new Data) {}
 

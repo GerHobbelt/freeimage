@@ -56,7 +56,7 @@
      
      unsigned tmisc: bit depth and channel count:  (color << 5) | bitsperpixel
  
-     INT64 toffset: Thumbnail data offset in file 
+     int64_t toffset: Thumbnail data offset in file 
 
   Notes:
     -  Only TIFF-based and CR3 files are parsed for thumbnail list, other formats will have
@@ -173,7 +173,7 @@
  
  * Fixed possible buffer overflow in Kodak C330 decoder
 
- * dcraw_process(): check for buffer allocation results to avoid NULL deref
+ * dcraw_process(): check for buffer allocation results to avoid nullptr deref
 
 2021-10-11  Alex Tutubalin <lexa@lexa.ru>
  * Camera support:
@@ -274,8 +274,8 @@
  
 2021-02-16  Alex Tutubalin <lexa@lexa.ru>
  * Additional fields in libraw_internal_data.unpacker_data:
-   - INT64: exif_offset: base offset of 1st EXIF IFD in file
-   - INT64: ifd0_offset: base offset of 1st TIFF IFD (IFD0) in file
+   - int64_t: exif_offset: base offset of 1st EXIF IFD in file
+   - int64_t: ifd0_offset: base offset of 1st TIFF IFD (IFD0) in file
    - unsigned cr3_exif_length, cr3_ifd0_lenght : CR3-specific length of
      exif and ifd0 sections.
 
@@ -421,7 +421,7 @@
      LibRaw_bigfile_buffered_datastream - for use with Win32 syscalls
     API changes:
     if LIBRAW_USE_DEPRECATED_IOSTREAMS_DATASTREAM is NOT defined, than 
-    LibRaw::open_file() and similar calls drops the last INT64 max_buffered_sz 
+    LibRaw::open_file() and similar calls drops the last int64_t max_buffered_sz 
     parameter which defines automatic selection between iostreams and 
     FILE* based datasteams.
 
@@ -998,7 +998,7 @@ Credit: Laurent Delosieres, Secunia Research at Flexera
 
 Secunia #79000:
 Credit: Laurent Delosieres, Secunia Research at Flexera
- * All legacy (RGB raw) image loaders checks for imgdata.image is not NULL
+ * All legacy (RGB raw) image loaders checks for imgdata.image is not nullptr
  * kodak_radc_load_raw: check image size before processing
  * legacy memory allocator: allocate max(widh,raw_width)*max(height,raw_height)
 
@@ -2454,9 +2454,9 @@ API changes:
              (with -B command-line switch) to test new API.
 
            * Error handling callback functions now can be called with
-             NULL filename passed (if underlying data stream object
+             nullptr filename passed (if underlying data stream object
              does not know file name).
-             So, client error handling callbacks should work with NULL
+             So, client error handling callbacks should work with nullptr
              filename.
 
            * All client code should be recompiled

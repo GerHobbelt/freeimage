@@ -81,7 +81,7 @@ typedef struct opj_mqc {
 /* ----------------------------------------------------------------------- */
 /**
 Create a new MQC handle 
-@return Returns a new MQC handle if successful, returns NULL otherwise
+@return Returns a new MQC handle if successful, returns nullptr otherwise
 */
 opj_mqc_t* opj_mqc_create(void);
 /**

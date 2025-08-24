@@ -24,12 +24,12 @@ void LibRaw::parse_exif_interop(int base)
 	unsigned entries, tag, type, len, save;
 	char value[4] = { 0,0,0,0 };
 	entries = get2();
-	INT64 fsize = ifp->size();
+	int64_t fsize = ifp->size();
 	while (entries--)
 	{
 		tiff_get(base, &tag, &type, &len, &save);
 
-		INT64 savepos = ftell(ifp);
+		int64_t savepos = ftell(ifp);
 		if (len > 8 && savepos + len > fsize * 2)
 		{
 			fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!
@@ -75,12 +75,12 @@ void LibRaw::parse_exif(int base)
   entries = get2();
   if (!strncmp(make, "Hasselblad", 10) && (tiff_nifds > 3) && (entries > 512))
     return;
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
   while (entries--)
   {
     tiff_get(base, &tag, &type, &len, &save);
 
-    INT64 savepos = ftell(ifp);
+    int64_t savepos = ftell(ifp);
     if (len > 8 && savepos + len > fsize * 2)
     {
       fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!
@@ -279,9 +279,9 @@ void LibRaw::parse_exif(int base)
                   cmatrix[l][c] = (float)atoi(pos);
                   num += cmatrix[c][l];
 #ifdef LIBRAW_WIN32_CALLS
-                  pos = strtok(NULL, ",");
+                  pos = strtok(nullptr, ",");
 #else
-                  pos = strtok_r(NULL, ",", &last);
+                  pos = strtok_r(nullptr, ",", &last);
 #endif
                   if (!pos)
                     goto end; // broken
@@ -335,7 +335,7 @@ void LibRaw::parse_gps_libraw(int base)
     return;
   if (entries > 0)
     imgdata.other.parsed_gps.gpsparsed = 1;
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
   while (entries--)
   {
     tiff_get(base, &tag, &type, &len, &save);
@@ -344,7 +344,7 @@ void LibRaw::parse_gps_libraw(int base)
       fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!
       continue;                   // no GPS tags are 1k or larger
     }
-    INT64 savepos = ftell(ifp);
+    int64_t savepos = ftell(ifp);
     if (len > 8 && savepos + len > fsize * 2)
     {
         fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!

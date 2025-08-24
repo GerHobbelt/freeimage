@@ -416,8 +416,8 @@ main (int argc, char **argv)
   int argn;
   char * arg;
   int keep_COM = 1;
-  char * comment_arg = NULL;
-  FILE * comment_file = NULL;
+  char * comment_arg = nullptr;
+  FILE * comment_file = nullptr;
   unsigned int comment_length = 0;
   int marker;
 
@@ -427,7 +427,7 @@ main (int argc, char **argv)
 #endif
 
   progname = argv[0];
-  if (progname == NULL || progname[0] == 0)
+  if (progname == nullptr || progname[0] == 0)
     progname = "wrjpgcom";	/* in case C library doesn't provide it */
 
   /* Parse switches, if any */
@@ -440,7 +440,7 @@ main (int argc, char **argv)
       keep_COM = 0;
     } else if (keymatch(arg, "cfile", 2)) {
       if (++argn >= argc) usage();
-      if ((comment_file = fopen(argv[argn], "r")) == NULL) {
+      if ((comment_file = fopen(argv[argn], "r")) == nullptr) {
 	fprintf(stderr, "%s: can't open %s\n", progname, argv[argn]);
 	exit(EXIT_FAILURE);
       }
@@ -452,7 +452,7 @@ main (int argc, char **argv)
        */
       if (comment_arg[0] == '"') {
 	comment_arg = (char *) malloc((size_t) MAX_COM_LENGTH);
-	if (comment_arg == NULL)
+	if (comment_arg == nullptr)
 	  ERREXIT("Insufficient memory");
 	if (strlen(argv[argn]+1) >= (size_t) MAX_COM_LENGTH) {
 	  fprintf(stderr, "Comment text may not exceed %u bytes\n",
@@ -488,17 +488,17 @@ main (int argc, char **argv)
   }
 
   /* Cannot use both -comment and -cfile. */
-  if (comment_arg != NULL && comment_file != NULL)
+  if (comment_arg != nullptr && comment_file != nullptr)
     usage();
   /* If there is neither -comment nor -cfile, we will read the comment text
    * from stdin; in this case there MUST be an input JPEG file name.
    */
-  if (comment_arg == NULL && comment_file == NULL && argn >= argc)
+  if (comment_arg == nullptr && comment_file == nullptr && argn >= argc)
     usage();
 
   /* Open the input file. */
   if (argn < argc) {
-    if ((infile = fopen(argv[argn], READ_BINARY)) == NULL) {
+    if ((infile = fopen(argv[argn], READ_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open %s\n", progname, argv[argn]);
       exit(EXIT_FAILURE);
     }
@@ -508,7 +508,7 @@ main (int argc, char **argv)
     setmode(fileno(stdin), O_BINARY);
 #endif
 #ifdef USE_FDOPEN		/* need to re-open in binary mode? */
-    if ((infile = fdopen(fileno(stdin), READ_BINARY)) == NULL) {
+    if ((infile = fdopen(fileno(stdin), READ_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open stdin\n", progname);
       exit(EXIT_FAILURE);
     }
@@ -525,7 +525,7 @@ main (int argc, char **argv)
 	    progname);
     usage();
   }
-  if ((outfile = fopen(argv[argn+1], WRITE_BINARY)) == NULL) {
+  if ((outfile = fopen(argv[argn+1], WRITE_BINARY)) == nullptr) {
     fprintf(stderr, "%s: can't open %s\n", progname, argv[argn+1]);
     exit(EXIT_FAILURE);
   }
@@ -540,7 +540,7 @@ main (int argc, char **argv)
   setmode(fileno(stdout), O_BINARY);
 #endif
 #ifdef USE_FDOPEN		/* need to re-open in binary mode? */
-  if ((outfile = fdopen(fileno(stdout), WRITE_BINARY)) == NULL) {
+  if ((outfile = fdopen(fileno(stdout), WRITE_BINARY)) == nullptr) {
     fprintf(stderr, "%s: can't open stdout\n", progname);
     exit(EXIT_FAILURE);
   }
@@ -550,15 +550,15 @@ main (int argc, char **argv)
 #endif /* TWO_FILE_COMMANDLINE */
 
   /* Collect comment text from comment_file or stdin, if necessary */
-  if (comment_arg == NULL) {
+  if (comment_arg == nullptr) {
     FILE * src_file;
     int c;
 
     comment_arg = (char *) malloc((size_t) MAX_COM_LENGTH);
-    if (comment_arg == NULL)
+    if (comment_arg == nullptr)
       ERREXIT("Insufficient memory");
     comment_length = 0;
-    src_file = (comment_file != NULL ? comment_file : stdin);
+    src_file = (comment_file != nullptr ? comment_file : stdin);
     while ((c = getc(src_file)) != EOF) {
       if (comment_length >= (unsigned int) MAX_COM_LENGTH) {
 	fprintf(stderr, "Comment text may not exceed %u bytes\n",
@@ -567,7 +567,7 @@ main (int argc, char **argv)
       }
       comment_arg[comment_length++] = (char) c;
     }
-    if (comment_file != NULL)
+    if (comment_file != nullptr)
       fclose(comment_file);
   }
 

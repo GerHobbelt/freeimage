@@ -241,7 +241,7 @@ struct DwaCompressor::Classifier
                                 " (truncated rule).");
             
         {
-            // maximum length of string plus one byte for terminating NULL
+            // maximum length of string plus one byte for terminating nullptr
             char suffix[Name::SIZE+1];
             memset (suffix, 0, Name::SIZE+1);
             Xdr::read<CharPtrIO> (ptr, std::min(size, Name::SIZE-1), suffix);
@@ -441,7 +441,7 @@ class DwaCompressor::LossyDctDecoder: public LossyDctDecoderBase
     //
     // toLinear is a half-float LUT to convert the encoded values 
     // back to linear light. If you want to skip this step, pass
-    // in NULL here.
+    // in nullptr here.
     //
 
     LossyDctDecoder
@@ -476,7 +476,7 @@ class DwaCompressor::LossyDctDecoderCsc: public LossyDctDecoderBase
     //
     // toLinear is a half-float LUT to convert the encoded values 
     // back to linear light. If you want to skip this step, pass
-    // in NULL here.
+    // in nullptr here.
     //
 
     LossyDctDecoderCsc

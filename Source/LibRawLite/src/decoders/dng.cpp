@@ -49,7 +49,7 @@ void LibRaw::adobe_copy_pixel(unsigned row, unsigned col, ushort **rp)
 void LibRaw::lossless_dng_load_raw()
 {
   unsigned trow = 0, tcol = 0, jwide, jrow, jcol, row, col, i, j;
-  INT64 save;
+  int64_t save;
   struct jhead jh;
   ushort *rp;
 
@@ -187,7 +187,7 @@ void LibRaw::lossy_dng_load_raw()
   JSAMPLE(*pixel)[3];
   unsigned sorder = order, ntags, opcode, deg, i, j, c;
   unsigned trow = 0, tcol = 0, row, col;
-  INT64 save = data_offset - 4;
+  int64_t save = data_offset - 4;
   ushort cur[3][256];
   double coeff[9], tot;
 

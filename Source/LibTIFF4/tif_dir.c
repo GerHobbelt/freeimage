@@ -50,7 +50,7 @@ static void setByteArray(TIFF *tif, void **vpp, const void *vp, size_t nmemb,
     }
     if (vp)
     {
-        tmsize_t bytes = _TIFFMultiplySSize(NULL, nmemb, elem_size, NULL);
+        tmsize_t bytes = _TIFFMultiplySSize(nullptr, nmemb, elem_size, nullptr);
         if (bytes)
             *vpp = (void *)_TIFFmallocExt(tif, bytes);
         if (*vpp)
@@ -59,7 +59,7 @@ static void setByteArray(TIFF *tif, void **vpp, const void *vp, size_t nmemb,
 }
 void _TIFFsetByteArray(void **vpp, const void *vp, uint32_t n)
 {
-    setByteArray(NULL, vpp, vp, n, 1);
+    setByteArray(nullptr, vpp, vp, n, 1);
 }
 void _TIFFsetByteArrayExt(TIFF *tif, void **vpp, const void *vp, uint32_t n)
 {
@@ -73,7 +73,7 @@ static void _TIFFsetNString(TIFF *tif, char **cpp, const char *cp, uint32_t n)
 
 void _TIFFsetShortArray(uint16_t **wpp, const uint16_t *wp, uint32_t n)
 {
-    setByteArray(NULL, (void **)wpp, wp, n, sizeof(uint16_t));
+    setByteArray(nullptr, (void **)wpp, wp, n, sizeof(uint16_t));
 }
 void _TIFFsetShortArrayExt(TIFF *tif, uint16_t **wpp, const uint16_t *wp,
                            uint32_t n)
@@ -83,7 +83,7 @@ void _TIFFsetShortArrayExt(TIFF *tif, uint16_t **wpp, const uint16_t *wp,
 
 void _TIFFsetLongArray(uint32_t **lpp, const uint32_t *lp, uint32_t n)
 {
-    setByteArray(NULL, (void **)lpp, lp, n, sizeof(uint32_t));
+    setByteArray(nullptr, (void **)lpp, lp, n, sizeof(uint32_t));
 }
 void _TIFFsetLongArrayExt(TIFF *tif, uint32_t **lpp, const uint32_t *lp,
                           uint32_t n)
@@ -99,7 +99,7 @@ static void _TIFFsetLong8Array(TIFF *tif, uint64_t **lpp, const uint64_t *lp,
 
 void _TIFFsetFloatArray(float **fpp, const float *fp, uint32_t n)
 {
-    setByteArray(NULL, (void **)fpp, fp, n, sizeof(float));
+    setByteArray(nullptr, (void **)fpp, fp, n, sizeof(float));
 }
 void _TIFFsetFloatArrayExt(TIFF *tif, float **fpp, const float *fp, uint32_t n)
 {
@@ -108,7 +108,7 @@ void _TIFFsetFloatArrayExt(TIFF *tif, float **fpp, const float *fp, uint32_t n)
 
 void _TIFFsetDoubleArray(double **dpp, const double *dp, uint32_t n)
 {
-    setByteArray(NULL, (void **)dpp, dp, n, sizeof(double));
+    setByteArray(nullptr, (void **)dpp, dp, n, sizeof(double));
 }
 void _TIFFsetDoubleArrayExt(TIFF *tif, double **dpp, const double *dp,
                             uint32_t n)
@@ -146,7 +146,7 @@ static int setExtraSamples(TIFF *tif, va_list ap, uint32_t *v)
     if ((uint16_t)*v > td->td_samplesperpixel)
         return 0;
     va = va_arg(ap, uint16_t *);
-    if (*v > 0 && va == NULL) /* typically missing param */
+    if (*v > 0 && va == nullptr) /* typically missing param */
         return 0;
     for (i = 0; i < *v; i++)
     {
@@ -165,7 +165,7 @@ static int setExtraSamples(TIFF *tif, va_list ap, uint32_t *v)
         }
     }
 
-    if (td->td_transferfunction[0] != NULL &&
+    if (td->td_transferfunction[0] != nullptr &&
         (td->td_samplesperpixel - *v > 1) &&
         !(td->td_samplesperpixel - td->td_extrasamples > 1))
     {
@@ -175,7 +175,7 @@ static int setExtraSamples(TIFF *tif, va_list ap, uint32_t *v)
                         "Canceling it");
         TIFFClrFieldBit(tif, FIELD_TRANSFERFUNCTION);
         _TIFFfreeExt(tif, td->td_transferfunction[0]);
-        td->td_transferfunction[0] = NULL;
+        td->td_transferfunction[0] = nullptr;
     }
 
     td->td_extrasamples = (uint16_t)*v;
@@ -228,7 +228,7 @@ static int _TIFFVSetField(TIFF *tif, uint32_t tag, va_list ap)
     char *s;
     const TIFFField *fip = TIFFFindField(tif, tag, TIFF_ANY);
     uint32_t standard_tag = tag;
-    if (fip == NULL) /* cannot happen since OkToChangeTag() already checks it */
+    if (fip == nullptr) /* cannot happen since OkToChangeTag() already checks it */
         return 0;
     /*
      * We want to force the custom code to be used for custom
@@ -325,7 +325,7 @@ static int _TIFFVSetField(TIFF *tif, uint32_t tag, va_list ap)
             if (v != td->td_samplesperpixel)
             {
                 /* See http://bugzilla.maptools.org/show_bug.cgi?id=2500 */
-                if (td->td_sminsamplevalue != NULL)
+                if (td->td_sminsamplevalue != nullptr)
                 {
                     TIFFWarningExtR(tif, module,
                                     "SamplesPerPixel tag value is changing, "
@@ -333,9 +333,9 @@ static int _TIFFVSetField(TIFF *tif, uint32_t tag, va_list ap)
                                     "different value. Canceling it");
                     TIFFClrFieldBit(tif, FIELD_SMINSAMPLEVALUE);
                     _TIFFfreeExt(tif, td->td_sminsamplevalue);
-                    td->td_sminsamplevalue = NULL;
+                    td->td_sminsamplevalue = nullptr;
                 }
-                if (td->td_smaxsamplevalue != NULL)
+                if (td->td_smaxsamplevalue != nullptr)
                 {
                     TIFFWarningExtR(tif, module,
                                     "SamplesPerPixel tag value is changing, "
@@ -343,12 +343,12 @@ static int _TIFFVSetField(TIFF *tif, uint32_t tag, va_list ap)
                                     "different value. Canceling it");
                     TIFFClrFieldBit(tif, FIELD_SMAXSAMPLEVALUE);
                     _TIFFfreeExt(tif, td->td_smaxsamplevalue);
-                    td->td_smaxsamplevalue = NULL;
+                    td->td_smaxsamplevalue = nullptr;
                 }
                 /* Test if 3 transfer functions instead of just one are now
                    needed See http://bugzilla.maptools.org/show_bug.cgi?id=2820
                  */
-                if (td->td_transferfunction[0] != NULL &&
+                if (td->td_transferfunction[0] != nullptr &&
                     (v - td->td_extrasamples > 1) &&
                     !(td->td_samplesperpixel - td->td_extrasamples > 1))
                 {
@@ -358,7 +358,7 @@ static int _TIFFVSetField(TIFF *tif, uint32_t tag, va_list ap)
                                     "different value. Canceling it");
                     TIFFClrFieldBit(tif, FIELD_TRANSFERFUNCTION);
                     _TIFFfreeExt(tif, td->td_transferfunction[0]);
-                    td->td_transferfunction[0] = NULL;
+                    td->td_transferfunction[0] = nullptr;
                 }
             }
             td->td_samplesperpixel = (uint16_t)v;
@@ -701,16 +701,16 @@ static int _TIFFVSetField(TIFF *tif, uint32_t tag, va_list ap)
             /*
              * Find the existing entry for this custom value.
              */
-            tv = NULL;
+            tv = nullptr;
             for (iCustom = 0; iCustom < td->td_customValueCount; iCustom++)
             {
                 if (td->td_customValues[iCustom].info->field_tag == tag)
                 {
                     tv = td->td_customValues + iCustom;
-                    if (tv->value != NULL)
+                    if (tv->value != nullptr)
                     {
                         _TIFFfreeExt(tif, tv->value);
-                        tv->value = NULL;
+                        tv->value = nullptr;
                     }
                     break;
                 }
@@ -719,7 +719,7 @@ static int _TIFFVSetField(TIFF *tif, uint32_t tag, va_list ap)
             /*
              * Grow the custom list if the entry was not found.
              */
-            if (tv == NULL)
+            if (tv == nullptr)
             {
                 TIFFTagValue *new_customValues;
 
@@ -741,7 +741,7 @@ static int _TIFFVSetField(TIFF *tif, uint32_t tag, va_list ap)
 
                 tv = td->td_customValues + (td->td_customValueCount - 1);
                 tv->info = fip;
-                tv->value = NULL;
+                tv->value = nullptr;
                 tv->count = 0;
             }
 
@@ -1065,7 +1065,7 @@ badvaluedouble:
 badvalueifd8long8:
 {
     /* Error message issued already above. */
-    TIFFTagValue *tv2 = NULL;
+    TIFFTagValue *tv2 = nullptr;
     int iCustom2, iC2;
     /* Find the existing entry for this custom value. */
     for (iCustom2 = 0; iCustom2 < td->td_customValueCount; iCustom2++)
@@ -1076,13 +1076,13 @@ badvalueifd8long8:
             break;
         }
     }
-    if (tv2 != NULL)
+    if (tv2 != nullptr)
     {
         /* Remove custom field from custom list */
-        if (tv2->value != NULL)
+        if (tv2->value != nullptr)
         {
             _TIFFfreeExt(tif, tv2->value);
-            tv2->value = NULL;
+            tv2->value = nullptr;
         }
         /* Shorten list and close gap in customValues list.
          * Re-allocation of td_customValues not necessary here. */
@@ -1169,7 +1169,7 @@ int TIFFUnsetField(TIFF *tif, uint32_t tag)
         TIFFClrFieldBit(tif, fip->field_bit);
     else
     {
-        TIFFTagValue *tv = NULL;
+        TIFFTagValue *tv = nullptr;
         int i;
 
         for (i = 0; i < td->td_customValueCount; i++)
@@ -1215,7 +1215,7 @@ static int _TIFFVGetField(TIFF *tif, uint32_t tag, va_list ap)
     int ret_val = 1;
     uint32_t standard_tag = tag;
     const TIFFField *fip = TIFFFindField(tif, tag, TIFF_ANY);
-    if (fip == NULL) /* cannot happen since TIFFGetField() already checks it */
+    if (fip == nullptr) /* cannot happen since TIFFGetField() already checks it */
         return 0;
 
     /*
@@ -1333,14 +1333,14 @@ static int _TIFFVGetField(TIFF *tif, uint32_t tag, va_list ap)
         case TIFFTAG_TILEOFFSETS:
             _TIFFFillStriles(tif);
             *va_arg(ap, const uint64_t **) = td->td_stripoffset_p;
-            if (td->td_stripoffset_p == NULL)
+            if (td->td_stripoffset_p == nullptr)
                 ret_val = 0;
             break;
         case TIFFTAG_STRIPBYTECOUNTS:
         case TIFFTAG_TILEBYTECOUNTS:
             _TIFFFillStriles(tif);
             *va_arg(ap, const uint64_t **) = td->td_stripbytecount_p;
-            if (td->td_stripbytecount_p == NULL)
+            if (td->td_stripbytecount_p == nullptr)
                 ret_val = 0;
             break;
         case TIFFTAG_MATTEING:
@@ -1404,8 +1404,8 @@ static int _TIFFVGetField(TIFF *tif, uint32_t tag, va_list ap)
             }
             else
             {
-                *va_arg(ap, const uint16_t **) = NULL;
-                *va_arg(ap, const uint16_t **) = NULL;
+                *va_arg(ap, const uint16_t **) = nullptr;
+                *va_arg(ap, const uint16_t **) = nullptr;
             }
             break;
         case TIFFTAG_REFERENCEBLACKWHITE:
@@ -1656,10 +1656,10 @@ void TIFFFreeDirectory(TIFF *tif)
     /* Reset some internal parameters for IFD data size checking. */
     tif->tif_dir.td_dirdatasize_read = 0;
     tif->tif_dir.td_dirdatasize_write = 0;
-    if (tif->tif_dir.td_dirdatasize_offsets != NULL)
+    if (tif->tif_dir.td_dirdatasize_offsets != nullptr)
     {
         _TIFFfreeExt(tif, tif->tif_dir.td_dirdatasize_offsets);
-        tif->tif_dir.td_dirdatasize_offsets = NULL;
+        tif->tif_dir.td_dirdatasize_offsets = nullptr;
         tif->tif_dir.td_dirdatasize_Noffsets = 0;
     }
 }
@@ -1668,7 +1668,7 @@ void TIFFFreeDirectory(TIFF *tif)
 /*
  * Client Tag extension support (from Niles Ritter).
  */
-static TIFFExtendProc _TIFFextender = (TIFFExtendProc)NULL;
+static TIFFExtendProc _TIFFextender = (TIFFExtendProc)nullptr;
 
 TIFFExtendProc TIFFSetTagExtender(TIFFExtendProc extender)
 {
@@ -1774,10 +1774,10 @@ int TIFFDefaultDirectory(TIFF *tif)
     td->td_ycbcrsubsampling[1] = 2;
     td->td_ycbcrpositioning = YCBCRPOSITION_CENTERED;
     tif->tif_postdecode = _TIFFNoPostDecode;
-    tif->tif_foundfield = NULL;
+    tif->tif_foundfield = nullptr;
     tif->tif_tagmethods.vsetfield = _TIFFVSetField;
     tif->tif_tagmethods.vgetfield = _TIFFVGetField;
-    tif->tif_tagmethods.printdir = NULL;
+    tif->tif_tagmethods.printdir = nullptr;
     /* additional default values */
     td->td_planarconfig = PLANARCONFIG_CONTIG;
     td->td_compression = COMPRESSION_NONE;
@@ -1788,7 +1788,7 @@ int TIFFDefaultDirectory(TIFF *tif)
      * TIFFGetFieldDefaulted(). */
     td->td_maxsamplevalue = 1; /* Default for td_bitspersample=1 */
     td->td_extrasamples = 0;
-    td->td_sampleinfo = NULL;
+    td->td_sampleinfo = nullptr;
 
     /*
      *  Give client code a chance to install their own
@@ -1807,7 +1807,7 @@ int TIFFDefaultDirectory(TIFF *tif)
         }
         _TIFFfreeExt(tif, tif->tif_fieldscompat);
         tif->tif_nfieldscompat = 0;
-        tif->tif_fieldscompat = NULL;
+        tif->tif_fieldscompat = nullptr;
     }
     if (_TIFFextender)
         (*_TIFFextender)(tif);
@@ -1877,7 +1877,7 @@ static int TIFFAdvanceDirectory(TIFF *tif, uint64_t *nextdiroff, uint64_t *off,
                 TIFFErrorExtR(tif, module, "Error fetching directory link");
                 return (0);
             }
-            if (off != NULL)
+            if (off != nullptr)
                 *off = (uint64_t)poffc;
             _TIFFmemcpy(&nextdir32, tif->tif_base + poffc, sizeof(uint32_t));
             if (tif->tif_flags & TIFF_SWAB)
@@ -1924,7 +1924,7 @@ static int TIFFAdvanceDirectory(TIFF *tif, uint64_t *nextdiroff, uint64_t *off,
                 TIFFErrorExtR(tif, module, "Error fetching directory link");
                 return (0);
             }
-            if (off != NULL)
+            if (off != nullptr)
                 *off = (uint64_t)poffc;
             _TIFFmemcpy(nextdiroff, tif->tif_base + poffc, sizeof(uint64_t));
             if (tif->tif_flags & TIFF_SWAB)
@@ -1946,7 +1946,7 @@ static int TIFFAdvanceDirectory(TIFF *tif, uint64_t *nextdiroff, uint64_t *off,
             }
             if (tif->tif_flags & TIFF_SWAB)
                 TIFFSwabShort(&dircount);
-            if (off != NULL)
+            if (off != nullptr)
                 *off = TIFFSeekFile(tif, dircount * 12, SEEK_CUR);
             else
                 (void)TIFFSeekFile(tif, dircount * 12, SEEK_CUR);
@@ -1979,7 +1979,7 @@ static int TIFFAdvanceDirectory(TIFF *tif, uint64_t *nextdiroff, uint64_t *off,
                 return (0);
             }
             dircount16 = (uint16_t)dircount64;
-            if (off != NULL)
+            if (off != nullptr)
                 *off = TIFFSeekFile(tif, dircount16 * 20, SEEK_CUR);
             else
                 (void)TIFFSeekFile(tif, dircount16 * 20, SEEK_CUR);
@@ -2028,7 +2028,7 @@ tdir_t TIFFNumberOfDirectories(TIFF *tif)
     nextdirnum = 0;
     n = 0;
     while (nextdiroff != 0 &&
-           TIFFAdvanceDirectory(tif, &nextdiroff, NULL, &nextdirnum))
+           TIFFAdvanceDirectory(tif, &nextdiroff, nullptr, &nextdirnum))
     {
         ++n;
     }
@@ -2092,7 +2092,7 @@ int TIFFSetDirectory(TIFF *tif, tdir_t dirn)
         tif->tif_setdirectory_force_absolute = FALSE;
 
         for (n = dirn; n > 0 && nextdiroff != 0; n--)
-            if (!TIFFAdvanceDirectory(tif, &nextdiroff, NULL, &nextdirnum))
+            if (!TIFFAdvanceDirectory(tif, &nextdiroff, nullptr, &nextdirnum))
                 return (0);
         /* If the n-th directory could not be reached (does not exist),
          * return here without touching anything further. */
@@ -2253,7 +2253,7 @@ int TIFFUnlinkDirectory(TIFF *tif, tdir_t dirn)
      * Advance to the directory to be unlinked and fetch
      * the offset of the directory that follows.
      */
-    if (!TIFFAdvanceDirectory(tif, &nextdir, NULL, &nextdirnum))
+    if (!TIFFAdvanceDirectory(tif, &nextdir, nullptr, &nextdirnum))
         return (0);
     /*
      * Go back and patch the link field of the preceding
@@ -2308,7 +2308,7 @@ int TIFFUnlinkDirectory(TIFF *tif, tdir_t dirn)
     if ((tif->tif_flags & TIFF_MYBUFFER) && tif->tif_rawdata)
     {
         _TIFFfreeExt(tif, tif->tif_rawdata);
-        tif->tif_rawdata = NULL;
+        tif->tif_rawdata = nullptr;
         tif->tif_rawcc = 0;
         tif->tif_rawdataoff = 0;
         tif->tif_rawdataloaded = 0;

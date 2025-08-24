@@ -96,13 +96,13 @@ extern "C"
   DllDef int libraw_open_file(libraw_data_t *, const char *);
 #ifndef LIBRAW_NO_IOSTREAMS_DATASTREAM
   DllDef int libraw_open_file_ex(libraw_data_t *, const char *,
-                                 INT64 max_buff_sz);
+                                 int64_t max_buff_sz);
 #endif
 #if defined(_WIN32) || defined(WIN32)
   DllDef int libraw_open_wfile(libraw_data_t *, const wchar_t *);
 #ifndef LIBRAW_NO_IOSTREAMS_DATASTREAM
   DllDef int libraw_open_wfile_ex(libraw_data_t *, const wchar_t *,
-                                  INT64 max_buff_sz);
+                                  int64_t max_buff_sz);
 #endif
 #endif
 
@@ -195,10 +195,10 @@ public:
   libraw_output_params_t *output_params_ptr() { return &imgdata.params; }
 #ifndef LIBRAW_NO_IOSTREAMS_DATASTREAM
   int open_file(const char *fname,
-                INT64 max_buffered_sz = LIBRAW_USE_STREAMS_DATASTREAM_MAXSIZE);
+                int64_t max_buffered_sz = LIBRAW_USE_STREAMS_DATASTREAM_MAXSIZE);
 #if defined(_WIN32) || defined(WIN32)
   int open_file(const wchar_t *fname,
-                INT64 max_buffered_sz = LIBRAW_USE_STREAMS_DATASTREAM_MAXSIZE);
+                int64_t max_buffered_sz = LIBRAW_USE_STREAMS_DATASTREAM_MAXSIZE);
 #endif
 #else
   int open_file(const char *fname);
@@ -221,7 +221,7 @@ public:
   int unpack(void);
   int unpack_thumb(void);
   int unpack_thumb_ex(int);
-  int thumbOK(INT64 maxsz = -1);
+  int thumbOK(int64_t maxsz = -1);
   int adjust_sizes_info_only(void);
   int subtract_black();
   int subtract_black_internal();
@@ -277,8 +277,8 @@ public:
   int is_floating_point();
   int have_fpdata();
   /* memory writers */
-  virtual libraw_processed_image_t *dcraw_make_mem_image(int *errcode = NULL);
-  virtual libraw_processed_image_t *dcraw_make_mem_thumb(int *errcode = NULL);
+  virtual libraw_processed_image_t *dcraw_make_mem_image(int *errcode = nullptr);
+  virtual libraw_processed_image_t *dcraw_make_mem_thumb(int *errcode = nullptr);
   static void dcraw_clear_mem(libraw_processed_image_t *);
 
   /* Additional calls for make_mem_image */
@@ -370,9 +370,9 @@ protected:
   /* Fujifilm compressed decoder public interface (to make parallel decoder) */
   virtual void
   fuji_decode_loop(struct fuji_compressed_params *common_info, int count,
-                   INT64 *offsets, unsigned *sizes, uchar *q_bases);
+                   int64_t *offsets, unsigned *sizes, uchar *q_bases);
   void fuji_decode_strip(struct fuji_compressed_params *info_common,
-                         int cur_block, INT64 raw_offset, unsigned size, uchar *q_bases);
+                         int cur_block, int64_t raw_offset, unsigned size, uchar *q_bases);
   /* CR3 decoder public interface to make parallel decoder */
   virtual void crxLoadDecodeLoop(void *, int);
   int crxDecodePlane(void *, uint32_t planeNumber);
@@ -421,7 +421,7 @@ protected:
   void write_thumb_ppm_tiff(FILE *);
 #ifdef USE_X3FTOOLS
   void x3f_thumb_loader();
-  INT64 x3f_thumb_size();
+  int64_t x3f_thumb_size();
 #endif
 
   int own_filtering_supported() { return 0; }

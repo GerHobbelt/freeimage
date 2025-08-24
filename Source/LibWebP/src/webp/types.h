@@ -53,7 +53,7 @@ typedef long long int int64_t;
 extern "C" {
 #endif
 
-// Allocates 'size' bytes of memory. Returns NULL upon error. Memory
+// Allocates 'size' bytes of memory. Returns nullptr upon error. Memory
 // must be deallocated by calling WebPFree(). This function is made available
 // by the core 'libwebp' library.
 WEBP_EXTERN void* WebPMalloc(size_t size);

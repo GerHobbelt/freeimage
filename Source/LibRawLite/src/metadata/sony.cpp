@@ -391,7 +391,7 @@ void LibRaw::setSonyBodyFeatures(unsigned long long id)
   }
 
   char *sbstr = strstr(software, " v");
-  if (sbstr != NULL)
+  if (sbstr != nullptr)
   {
     sbstr += 2;
     strcpy(imCommon.firmware, sbstr);
@@ -1310,7 +1310,7 @@ void LibRaw::parseSonyMakernotes(
       d = get2();
       if ((a) && (c == 1))
       {
-        fseek(ifp, INT64(d) - 8LL, SEEK_CUR);
+        fseek(ifp, int64_t(d) - 8LL, SEEK_CUR);
         table_buf = (uchar *)malloc(256);
         fread(table_buf, 256, 1, ifp);
         imgdata.shootinginfo.DriveMode = table_buf[1];
@@ -2006,8 +2006,8 @@ public:
 
     unsigned char *data() { return _data; }
 
-    int tiff_sget(unsigned save, INT64 *tag_offset,
-        unsigned *tag_id, unsigned *tag_type, INT64 *tag_dataoffset,
+    int tiff_sget(unsigned save, int64_t *tag_offset,
+        unsigned *tag_id, unsigned *tag_type, int64_t *tag_dataoffset,
         unsigned *tag_datalen, int *tag_dataunitlen)
     {
         if ((((*tag_offset) + 12) > _len) || (*tag_offset < 0)) { // abnormal, tag buffer overrun
@@ -2041,7 +2041,7 @@ void LibRaw::parseSonySR2(uchar *_cbuf_SR2, unsigned SR2SubIFDOffset,
 {
   unsigned c;
   unsigned entries, tag_id, tag_type, tag_datalen;
-  INT64 tag_offset, tag_dataoffset;
+  int64_t tag_offset, tag_dataoffset;
   int TagProcessed;
   int tag_dataunitlen;
   float num;
@@ -2183,18 +2183,18 @@ void LibRaw::parseSonySRF(unsigned len)
   if ((len > 0xfffff) || (len == 0))
     return;
 
-  INT64 save = ftell(ifp);
-  INT64 offset =  0x0310c0 - save; /* for non-DNG this value normally is 0x8ddc */
+  int64_t save = ftell(ifp);
+  int64_t offset =  0x0310c0 - save; /* for non-DNG this value normally is 0x8ddc */
   if (len < offset || offset < 0)
     return;
   try {
 
-      INT64 decrypt_len = offset >> 2; /* master key offset value is the next
+      int64_t decrypt_len = offset >> 2; /* master key offset value is the next
                                           un-encrypted metadata field after SRF0 */
 
       unsigned i, nWB;
       unsigned MasterKey, SRF2Key=0;
-      INT64 srf_offset, tag_offset, tag_dataoffset;
+      int64_t srf_offset, tag_offset, tag_dataoffset;
       int tag_dataunitlen;
       //uchar *srf_buf;
       ushort entries;

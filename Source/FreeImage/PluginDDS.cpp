@@ -56,7 +56,7 @@ Get the 16-bit format of an image
 @return Returns the 16-bit format or RGB_UNKNOWN
 */
 static inline DDSFormat16
-GetRGB16Format(DWORD dwRBitMask, DWORD dwGBitMask, DWORD dwBBitMask) {
+GetRGB16Format(uint32_t dwRBitMask, uint32_t dwGBitMask, uint32_t dwBBitMask) {
 	if ((dwRBitMask == FI16_444_RED_MASK) && (dwGBitMask == FI16_444_GREEN_MASK) && (dwBBitMask == FI16_444_BLUE_MASK)) {
 		return RGB444;
 	}
@@ -78,34 +78,34 @@ Convert a 16-bit RGB line to a 24-bit RGB line
 @param width_in_pixels Size of the line in pixels
 */
 static void 
-ConvertLine16To24(BYTE *target, const WORD *source, DDSFormat16 format, int width_in_pixels) {
+ConvertLine16To24(uint8_t *target, const uint16_t *source, DDSFormat16 format, int width_in_pixels) {
 
 	// convert from RGB 16-bit to RGB 24-bit
 	switch (format) {
 		case RGB444:
 			for (int cols = 0; cols < width_in_pixels; cols++) {
 				// extract source RGB444 pixel, set to 24-bit target
-				target[FI_RGBA_BLUE] = (BYTE)((((source[cols] & FI16_444_BLUE_MASK) >> FI16_444_BLUE_SHIFT) * 0xFF) / 0x0F);
-				target[FI_RGBA_GREEN] = (BYTE)((((source[cols] & FI16_444_GREEN_MASK) >> FI16_444_GREEN_SHIFT) * 0xFF) / 0x0F);
-				target[FI_RGBA_RED] = (BYTE)((((source[cols] & FI16_444_RED_MASK) >> FI16_444_RED_SHIFT) * 0xFF) / 0x0F);
+				target[FI_RGBA_BLUE] = (uint8_t)((((source[cols] & FI16_444_BLUE_MASK) >> FI16_444_BLUE_SHIFT) * 0xFF) / 0x0F);
+				target[FI_RGBA_GREEN] = (uint8_t)((((source[cols] & FI16_444_GREEN_MASK) >> FI16_444_GREEN_SHIFT) * 0xFF) / 0x0F);
+				target[FI_RGBA_RED] = (uint8_t)((((source[cols] & FI16_444_RED_MASK) >> FI16_444_RED_SHIFT) * 0xFF) / 0x0F);
 				target += 3;
 			}
 			break;
 
 		case RGB555:
 			for (int cols = 0; cols < width_in_pixels; cols++) {
-				target[FI_RGBA_RED] = (BYTE)((((source[cols] & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
-				target[FI_RGBA_GREEN] = (BYTE)((((source[cols] & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
-				target[FI_RGBA_BLUE] = (BYTE)((((source[cols] & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
+				target[FI_RGBA_RED] = (uint8_t)((((source[cols] & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
+				target[FI_RGBA_GREEN] = (uint8_t)((((source[cols] & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
+				target[FI_RGBA_BLUE] = (uint8_t)((((source[cols] & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
 				target += 3;
 			}
 			break;
 
 		case RGB565:
 			for (int cols = 0; cols < width_in_pixels; cols++) {
-				target[FI_RGBA_RED] = (BYTE)((((source[cols] & FI16_565_RED_MASK) >> FI16_565_RED_SHIFT) * 0xFF) / 0x1F);
-				target[FI_RGBA_GREEN] = (BYTE)((((source[cols] & FI16_565_GREEN_MASK) >> FI16_565_GREEN_SHIFT) * 0xFF) / 0x3F);
-				target[FI_RGBA_BLUE] = (BYTE)((((source[cols] & FI16_565_BLUE_MASK) >> FI16_565_BLUE_SHIFT) * 0xFF) / 0x1F);
+				target[FI_RGBA_RED] = (uint8_t)((((source[cols] & FI16_565_RED_MASK) >> FI16_565_RED_SHIFT) * 0xFF) / 0x1F);
+				target[FI_RGBA_GREEN] = (uint8_t)((((source[cols] & FI16_565_GREEN_MASK) >> FI16_565_GREEN_SHIFT) * 0xFF) / 0x3F);
+				target[FI_RGBA_BLUE] = (uint8_t)((((source[cols] & FI16_565_BLUE_MASK) >> FI16_565_BLUE_SHIFT) * 0xFF) / 0x1F);
 				target += 3;
 			}
 			break;
@@ -132,38 +132,38 @@ typedef struct tagDDPIXELFORMAT {
 	/**
 	Size of this structure (must be 32)
 	*/
-	DWORD dwSize;
+	uint32_t dwSize;
 	/**
 	Values which indicate what type of data is in the surface, see DDPF_*
 	*/
-	DWORD dwFlags;
+	uint32_t dwFlags;
 	/**
 	Four-character codes for specifying compressed or custom formats. Possible values include: DXT1, DXT2, DXT3, DXT4, or DXT5. 
 	A FourCC of DX10 indicates the prescense of the DDS_HEADER_DXT10 extended header, and the dxgiFormat member of that structure 
 	indicates the true format. When using a four-character code, dwFlags must include DDPF_FOURCC.
 	*/
-	DWORD dwFourCC;
+	uint32_t dwFourCC;
 	/**
     Number of bits in an RGB (possibly including alpha) format. Valid when dwFlags includes DDPF_RGB, DDPF_LUMINANCE, or DDPF_YUV.
 	*/
-	DWORD dwRGBBitCount;	//! Total number of bits for RGB formats
+	uint32_t dwRGBBitCount;	//! Total number of bits for RGB formats
 	/**
 	Red (or luminance or Y) mask for reading color data. For instance, given the A8R8G8B8 format, the red mask would be 0x00ff0000.
 	*/
-	DWORD dwRBitMask;
+	uint32_t dwRBitMask;
 	/**
 	Green (or U) mask for reading color data. For instance, given the A8R8G8B8 format, the green mask would be 0x0000ff00.
 	*/
-	DWORD dwGBitMask;
+	uint32_t dwGBitMask;
 	/**
 	Blue (or V) mask for reading color data. For instance, given the A8R8G8B8 format, the blue mask would be 0x000000ff.
 	*/
-	DWORD dwBBitMask;
+	uint32_t dwBBitMask;
 	/**
 	Alpha mask for reading alpha data. dwFlags must include DDPF_ALPHAPIXELS or DDPF_ALPHA. 
 	For instance, given the A8R8G8B8 format, the alpha mask would be 0xff000000.
 	*/
-	DWORD dwRGBAlphaBitMask;
+	uint32_t dwRGBAlphaBitMask;
 } DDPIXELFORMAT;
 
 /** DIRECTDRAW PIXELFORMAT FLAGS */
@@ -189,9 +189,9 @@ enum {
 };
 
 typedef struct tagDDCAPS2 {
-	DWORD dwCaps1;	//! zero or more of the DDSCAPS_* members
-	DWORD dwCaps2;	//! zero or more of the DDSCAPS2_* members
-	DWORD dwReserved[2];
+	uint32_t dwCaps1;	//! zero or more of the DDSCAPS_* members
+	uint32_t dwCaps2;	//! zero or more of the DDSCAPS2_* members
+	uint32_t dwReserved[2];
 } DDCAPS2;
 
 /**
@@ -232,30 +232,30 @@ DDS_HEADER structure
 */
 typedef struct tagDDSURFACEDESC2 {
 	/**	Size of structure. This member must be set to 124 */
-	DWORD dwSize;
+	uint32_t dwSize;
 	/** Combination of the DDSD_* flags */
-	DWORD dwFlags;
+	uint32_t dwFlags;
 	/**	Surface height (in pixels) */
-	DWORD dwHeight;
+	uint32_t dwHeight;
 	/**	Surface width (in pixels) */
-	DWORD dwWidth;
+	uint32_t dwWidth;
 	/**
 	The pitch or number of bytes per scan line in an uncompressed texture; 
 	the total number of bytes in the top level texture for a compressed texture. 
 	For information about how to compute the pitch, see the DDS File Layout section of the Programming Guide for DDS.
 	*/
-	DWORD dwPitchOrLinearSize;
+	uint32_t dwPitchOrLinearSize;
 	/**	Depth of a volume texture (in pixels), otherwise unused */
-	DWORD dwDepth;
+	uint32_t dwDepth;
 	/**	Number of mipmap levels, otherwise unused */
-	DWORD dwMipMapCount;
+	uint32_t dwMipMapCount;
 	/** Unused */
-	DWORD dwReserved1[11];
+	uint32_t dwReserved1[11];
 	/** The pixel format(see DDS_PIXELFORMAT). */
 	DDPIXELFORMAT ddspf;
 	/** Specifies the complexity of the surfaces stored. */
 	DDCAPS2 ddsCaps;
-	DWORD dwReserved2;
+	uint32_t dwReserved2;
 } DDSURFACEDESC2;
 
 /**
@@ -274,13 +274,13 @@ enum {
 };
 
 typedef struct tagDDSHEADER {
-	DWORD dwMagic;			//! FOURCC: "DDS "
+	uint32_t dwMagic;			//! FOURCC: "DDS "
 	DDSURFACEDESC2 surfaceDesc;
 } DDSHEADER;
 
 #define MAKEFOURCC(ch0, ch1, ch2, ch3) \
-	((DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8) |   \
-    ((DWORD)(BYTE)(ch2) << 16) | ((DWORD)(BYTE)(ch3) << 24 ))
+	((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) |   \
+    ((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24 ))
 
 #define FOURCC_DXT1	MAKEFOURCC('D','X','T','1')
 #define FOURCC_DXT2	MAKEFOURCC('D','X','T','2')
@@ -293,30 +293,30 @@ typedef struct tagDDSHEADER {
 // ----------------------------------------------------------
 
 typedef struct tagColor8888 {
-	BYTE b;
-	BYTE g;
-	BYTE r;
-	BYTE a;
+	uint8_t b;
+	uint8_t g;
+	uint8_t r;
+	uint8_t a;
 } Color8888;
 
 typedef struct tagColor565 {
-	WORD b : 5;
-	WORD g : 6;
-	WORD r : 5;
+	uint16_t b : 5;
+	uint16_t g : 6;
+	uint16_t r : 5;
 } Color565;
 
 typedef struct tagDXTColBlock {
 	Color565 colors[2];
-	BYTE row[4];
+	uint8_t row[4];
 } DXTColBlock;
 
 typedef struct tagDXTAlphaBlockExplicit {
-	WORD row[4];
+	uint16_t row[4];
 } DXTAlphaBlockExplicit;
 
 typedef struct tagDXTAlphaBlock3BitLinear {
-	BYTE alpha[2];
-	BYTE data[6];
+	uint8_t alpha[2];
+	uint8_t data[6];
 } DXTAlphaBlock3BitLinear;
 
 typedef struct tagDXT1Block {
@@ -376,31 +376,31 @@ GetBlockColors(const DXTColBlock *block, Color8888 colors[4], bool isDXT1) {
 	for (int i = 0; i < 2; i++)	{
 		colors[i].a = 0xFF;
 		/*
-		colors[i].r = (BYTE)(unsigned(block->colors[i].r) * 0xFF / 0x1F);
-		colors[i].g = (BYTE)(unsigned(block->colors[i].g) * 0xFF / 0x3F);
-		colors[i].b = (BYTE)(unsigned(block->colors[i].b) * 0xFF / 0x1F);
+		colors[i].r = (uint8_t)(unsigned(block->colors[i].r) * 0xFF / 0x1F);
+		colors[i].g = (uint8_t)(unsigned(block->colors[i].g) * 0xFF / 0x3F);
+		colors[i].b = (uint8_t)(unsigned(block->colors[i].b) * 0xFF / 0x1F);
 		*/
-		colors[i].r = (BYTE)((unsigned(block->colors[i].r) << 3U) | (unsigned(block->colors[i].r) >> 2U));
-		colors[i].g = (BYTE)((unsigned(block->colors[i].g) << 2U) | (unsigned(block->colors[i].g) >> 4U));
-		colors[i].b = (BYTE)((unsigned(block->colors[i].b) << 3U) | (unsigned(block->colors[i].b) >> 2U));
+		colors[i].r = (uint8_t)((unsigned(block->colors[i].r) << 3U) | (unsigned(block->colors[i].r) >> 2U));
+		colors[i].g = (uint8_t)((unsigned(block->colors[i].g) << 2U) | (unsigned(block->colors[i].g) >> 4U));
+		colors[i].b = (uint8_t)((unsigned(block->colors[i].b) << 3U) | (unsigned(block->colors[i].b) >> 2U));
 	}
 
-	const WORD *wCol = (WORD *)block->colors;
+	const uint16_t *wCol = (uint16_t *)block->colors;
 	if ((wCol[0] > wCol[1]) || !isDXT1) {
 		// 4 color block
 		for (unsigned i = 0; i < 2; i++)	{
 			colors[i + 2].a = 0xFF;
-			colors[i + 2].r = (BYTE)((unsigned(colors[0].r) * (2 - i) + unsigned(colors[1].r) * (1 + i)) / 3);
-			colors[i + 2].g = (BYTE)((unsigned(colors[0].g) * (2 - i) + unsigned(colors[1].g) * (1 + i)) / 3);
-			colors[i + 2].b = (BYTE)((unsigned(colors[0].b) * (2 - i) + unsigned(colors[1].b) * (1 + i)) / 3);
+			colors[i + 2].r = (uint8_t)((unsigned(colors[0].r) * (2 - i) + unsigned(colors[1].r) * (1 + i)) / 3);
+			colors[i + 2].g = (uint8_t)((unsigned(colors[0].g) * (2 - i) + unsigned(colors[1].g) * (1 + i)) / 3);
+			colors[i + 2].b = (uint8_t)((unsigned(colors[0].b) * (2 - i) + unsigned(colors[1].b) * (1 + i)) / 3);
 		}
 	}
 	else {
 		// 3 color block, number 4 is transparent
 		colors[2].a = 0xFF;
-		colors[2].r = (BYTE)((unsigned(colors[0].r) + unsigned(colors[1].r)) / 2);
-		colors[2].g = (BYTE)((unsigned(colors[0].g) + unsigned(colors[1].g)) / 2);
-		colors[2].b = (BYTE)((unsigned(colors[0].b) + unsigned(colors[1].b)) / 2);
+		colors[2].r = (uint8_t)((unsigned(colors[0].r) + unsigned(colors[1].r)) / 2);
+		colors[2].g = (uint8_t)((unsigned(colors[0].g) + unsigned(colors[1].g)) / 2);
+		colors[2].b = (uint8_t)((unsigned(colors[0].b) + unsigned(colors[1].b)) / 2);
 
 		colors[3].a = 0x00;
 		colors[3].g = 0x00;
@@ -443,7 +443,7 @@ protected:
 	unsigned m_colorRow;
 
 public:
-	void Setup(const BYTE *pBlock) {
+	void Setup(const uint8_t *pBlock) {
 		// get a pointer to the block
 		m_pBlock = (const typename DXT_INFO::Block *)pBlock;
 
@@ -495,7 +495,7 @@ public:
 	void GetColor(int x, Color8888 *color) {
 		base::GetColor(x, color);
 		const unsigned bits = (m_alphaRow >> (x * 4)) & 0xF;
-		color->a = (BYTE)((bits * 0xFF) / 0xF);
+		color->a = (uint8_t)((bits * 0xFF) / 0xF);
 	}
 };
 
@@ -510,7 +510,7 @@ protected:
 	int m_offset;
 
 public:
-	void Setup (const BYTE *pBlock) {
+	void Setup (const uint8_t *pBlock) {
 		base::Setup (pBlock);
 
 		const DXTAlphaBlock3BitLinear &block = m_pBlock->alpha;
@@ -536,7 +536,7 @@ public:
 		base::SetY(y);
 		const int i = y / 2;
 		const DXTAlphaBlock3BitLinear &block = m_pBlock->alpha;
-		const BYTE *data = &block.data[i * 3];
+		const uint8_t *data = &block.data[i * 3];
 		m_alphaBits = unsigned(data[0]) | (unsigned(data[1]) << 8) | (unsigned(data[2]) << 16);
 		m_offset = (y & 1) * 12;
 	}
@@ -548,15 +548,15 @@ public:
 	void GetColor(int x, Color8888 *color) {
 		base::GetColor(x, color);
 		unsigned bits = (m_alphaBits >> (x * 3 + m_offset)) & 7;
-		color->a = (BYTE)m_alphas[bits];
+		color->a = (uint8_t)m_alphas[bits];
 	}
 };
 
-template <class DECODER> void DecodeDXTBlock (BYTE *dstData, const BYTE *srcBlock, long dstPitch, int bw, int bh) {
+template <class DECODER> void DecodeDXTBlock (uint8_t *dstData, const uint8_t *srcBlock, long dstPitch, int bw, int bh) {
 	DECODER decoder;
 	decoder.Setup(srcBlock);
 	for (int y = 0; y < bh; y++) {
-		BYTE *dst = dstData - y * dstPitch;
+		uint8_t *dst = dstData - y * dstPitch;
 		// update scanline
 		decoder.SetY(y);
 		for (int x = 0; x < bw; x++) {
@@ -589,7 +589,7 @@ static int s_format_id;
 */
 static FIBITMAP *
 LoadRGB(const DDSURFACEDESC2 *desc, FreeImageIO *io, fi_handle handle) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 	DDSFormat16 format16 = RGB_UNKNOWN;	// for 16-bit formats
 
 	const DDPIXELFORMAT *ddspf = &(desc->ddspf);
@@ -610,8 +610,8 @@ LoadRGB(const DDSURFACEDESC2 *desc, FreeImageIO *io, fi_handle handle) {
 	else {
 		dib = FreeImage_Allocate(width, height, bpp, ddspf->dwRBitMask, ddspf->dwGBitMask, ddspf->dwBBitMask);
 	}
-	if (dib == NULL) {
-		return NULL;
+	if (dib == nullptr) {
+		return nullptr;
 	}
 
 	// read the file
@@ -622,22 +622,22 @@ LoadRGB(const DDSURFACEDESC2 *desc, FreeImageIO *io, fi_handle handle) {
 	const long delta = (long)filePitch - (long)line;
 
 	if (bpp == 16) {
-		BYTE *pixels = (BYTE*)malloc(line * sizeof(BYTE));
+		uint8_t *pixels = (uint8_t*)malloc(line * sizeof(uint8_t));
 		if (pixels) {
 			for (int y = 0; y < height; y++) {
-				BYTE *dst_bits = FreeImage_GetScanLine(dib, height - y - 1);
+				uint8_t *dst_bits = FreeImage_GetScanLine(dib, height - y - 1);
 				// get the 16-bit RGB pixels
 				io->read_proc(pixels, 1, line, handle);
 				io->seek_proc(handle, delta, SEEK_CUR);
 				// convert to 24-bit
-				ConvertLine16To24(dst_bits, (const WORD*)pixels, format16, width);
+				ConvertLine16To24(dst_bits, (const uint16_t*)pixels, format16, width);
 			}
 		}
 		free(pixels);
 	}
 	else {
 		for (int y = 0; y < height; y++) {
-			BYTE *pixels = FreeImage_GetScanLine(dib, height - y - 1);
+			uint8_t *pixels = FreeImage_GetScanLine(dib, height - y - 1);
 			io->read_proc(pixels, 1, line, handle);
 			io->seek_proc(handle, delta, SEEK_CUR);
 		}
@@ -648,7 +648,7 @@ LoadRGB(const DDSURFACEDESC2 *desc, FreeImageIO *io, fi_handle handle) {
 	const int bytespp = FreeImage_GetLine(dib) / width;
 
 	for (int y = 0; y < height; y++) {
-		BYTE *pixels = FreeImage_GetScanLine(dib, y);
+		uint8_t *pixels = FreeImage_GetScanLine(dib, y);
 		for (int x = 0; x < width; x++) {
 			INPLACESWAP(pixels[FI_RGBA_RED], pixels[FI_RGBA_BLUE]);
 			pixels += bytespp;
@@ -699,8 +699,8 @@ LoadDXT_Helper(FreeImageIO *io, fi_handle handle, FIBITMAP *dib, int width, int 
 		for (; y < height; y += 4) {
 			io->read_proc (input_buffer, sizeof(typename INFO::Block), inputLine, handle);
 			// TODO: probably need some endian work here
-			const BYTE *pbSrc = (BYTE *)input_buffer;
-			BYTE *pbDst = FreeImage_GetScanLine (dib, height - y - 1);
+			const uint8_t *pbSrc = (uint8_t *)input_buffer;
+			uint8_t *pbDst = FreeImage_GetScanLine (dib, height - y - 1);
 
 			if (width >= 4) {
 				for (int x = 0; x < width; x += 4) {
@@ -717,8 +717,8 @@ LoadDXT_Helper(FreeImageIO *io, fi_handle handle, FIBITMAP *dib, int width, int 
 	if (heightRest)	{
 		io->read_proc (input_buffer, sizeof (typename INFO::Block), inputLine, handle);
 		// TODO: probably need some endian work here
-		const BYTE *pbSrc = (BYTE *)input_buffer;
-		BYTE *pbDst = FreeImage_GetScanLine (dib, height - y - 1);
+		const uint8_t *pbSrc = (uint8_t *)input_buffer;
+		uint8_t *pbDst = FreeImage_GetScanLine (dib, height - y - 1);
 
 		if (width >= 4) {
 			for (int x = 0; x < width; x += 4) {
@@ -750,8 +750,8 @@ LoadDXT(int decoder_type, const DDSURFACEDESC2 *desc, FreeImageIO *io, fi_handle
 
 	// allocate a 32-bit dib
 	FIBITMAP *dib = FreeImage_Allocate(width, height, 32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
-	if (dib == NULL) {
-		return NULL;
+	if (dib == nullptr) {
+		return nullptr;
 	}
 
 	// select the right decoder, then decode the image
@@ -792,7 +792,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -831,7 +831,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 
 static void * DLL_CALLCONV
 Open(FreeImageIO *io, fi_handle handle, BOOL read) {
-	return NULL;
+	return nullptr;
 }
 
 static void DLL_CALLCONV
@@ -843,7 +843,7 @@ Close(FreeImageIO *io, fi_handle handle, void *data) {
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	DDSHEADER header;
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	memset(&header, 0, sizeof(header));
 	io->read_proc(&header, 1, sizeof(header), handle);
@@ -852,7 +852,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #endif
 	
 	// values which indicate what type of data is in the surface, see DDPF_*
-	const DWORD dwFlags = header.surfaceDesc.ddspf.dwFlags;
+	const uint32_t dwFlags = header.surfaceDesc.ddspf.dwFlags;
 
 	const DDSURFACEDESC2 *surfaceDesc = &(header.surfaceDesc);
 
@@ -899,13 +899,13 @@ InitDDS(Plugin *plugin, int format_id) {
 	plugin->regexpr_proc = RegExpr;
 	plugin->open_proc = Open;
 	plugin->close_proc = Close;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;	//Save;	// not implemented (yet?)
+	plugin->save_proc = nullptr;	//Save;	// not implemented (yet?)
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

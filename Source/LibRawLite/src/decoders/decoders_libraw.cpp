@@ -265,7 +265,7 @@ void LibRaw::nikon_load_striped_packed_raw()
 {
   int vbits = 0, bwide, rbits, bite, row, col, i;
 
-  UINT64 bitbuf = 0;
+  uint64_t bitbuf = 0;
   unsigned load_flags = 24; // libraw_internal_data.unpacker_data.load_flags;
   unsigned tiff_bps = libraw_internal_data.unpacker_data.tiff_bps;
 
@@ -821,7 +821,7 @@ void decode_S_type(int32_t out_width, uint32_t *img_input, ushort *outbuf /*, in
 struct p1_row_info_t
 {
 	unsigned row;
-	INT64 offset;
+	int64_t offset;
 	p1_row_info_t(): row(0),offset(0){}
 	p1_row_info_t(const p1_row_info_t& q): row(q.row),offset(q.offset){}
 	bool operator < (const p1_row_info_t & rhs) const { return offset < rhs.offset; }
@@ -836,12 +836,12 @@ void LibRaw::phase_one_load_raw_s()
 	for (unsigned row = 0; row < imgdata.sizes.raw_height; row++)
 	{
 		stripes[row].row = row;
-		stripes[row].offset = INT64(get4()) + libraw_internal_data.unpacker_data.data_offset;
+		stripes[row].offset = int64_t(get4()) + libraw_internal_data.unpacker_data.data_offset;
 	}
 	stripes[imgdata.sizes.raw_height].row = imgdata.sizes.raw_height;
-	stripes[imgdata.sizes.raw_height].offset = libraw_internal_data.unpacker_data.data_offset + INT64(libraw_internal_data.unpacker_data.data_size);
+	stripes[imgdata.sizes.raw_height].offset = libraw_internal_data.unpacker_data.data_offset + int64_t(libraw_internal_data.unpacker_data.data_size);
 	std::sort(stripes.begin(), stripes.end());
-	INT64 maxsz = imgdata.sizes.raw_width * 3 + 2; // theor max: 17 bytes per 8 pix + row header
+	int64_t maxsz = imgdata.sizes.raw_width * 3 + 2; // theor max: 17 bytes per 8 pix + row header
 	std::vector<uint8_t> datavec(maxsz);
 
 	for (unsigned row = 0; row < imgdata.sizes.raw_height; row++)
@@ -849,7 +849,7 @@ void LibRaw::phase_one_load_raw_s()
 		if (stripes[row].row >= imgdata.sizes.raw_height) continue; 
 		ushort *datap = imgdata.rawdata.raw_image + stripes[row].row * imgdata.sizes.raw_width;
 		libraw_internal_data.internal_data.input->seek(stripes[row].offset, SEEK_SET);
-		INT64 readsz = stripes[row + 1].offset - stripes[row].offset;
+		int64_t readsz = stripes[row + 1].offset - stripes[row].offset;
 		if (readsz > maxsz)
 			throw LIBRAW_EXCEPTION_IO_CORRUPT;
 

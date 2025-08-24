@@ -340,11 +340,11 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
     ERREXIT1(cinfo, JERR_NO_HUFF_TABLE, tblno);
   htbl =
     isDC ? cinfo->dc_huff_tbl_ptrs[tblno] : cinfo->ac_huff_tbl_ptrs[tblno];
-  if (htbl == NULL)
+  if (htbl == nullptr)
     htbl = jpeg_std_huff_table((j_common_ptr) cinfo, isDC, tblno);
 
   /* Allocate a workspace if we haven't already done so. */
-  if (*pdtbl == NULL)
+  if (*pdtbl == nullptr)
     *pdtbl = (d_derived_tbl *) (*cinfo->mem->alloc_small)
       ((j_common_ptr) cinfo, JPOOL_IMAGE, SIZEOF(d_derived_tbl));
   dtbl = *pdtbl;
@@ -1459,7 +1459,7 @@ start_pass_huff_decoder (j_decompress_ptr cinfo)
       /* Precalculate which table to use for each block */
       entropy->dc_cur_tbls[blkn] = entropy->dc_derived_tbls[compptr->dc_tbl_no];
       entropy->ac_cur_tbls[blkn] =	/* AC needs no table when not present */
-	cinfo->lim_Se ? entropy->ac_derived_tbls[compptr->ac_tbl_no] : NULL;
+	cinfo->lim_Se ? entropy->ac_derived_tbls[compptr->ac_tbl_no] : nullptr;
       /* Decide whether we really care about the coefficient values */
       if (compptr->component_needed) {
 	ci = compptr->DCT_v_scaled_size;
@@ -1548,12 +1548,12 @@ jinit_huff_decoder (j_decompress_ptr cinfo)
 
     /* Mark derived tables unallocated */
     for (i = 0; i < NUM_HUFF_TBLS; i++) {
-      entropy->derived_tbls[i] = NULL;
+      entropy->derived_tbls[i] = nullptr;
     }
   } else {
     /* Mark derived tables unallocated */
     for (i = 0; i < NUM_HUFF_TBLS; i++) {
-      entropy->dc_derived_tbls[i] = entropy->ac_derived_tbls[i] = NULL;
+      entropy->dc_derived_tbls[i] = entropy->ac_derived_tbls[i] = nullptr;
     }
   }
 }

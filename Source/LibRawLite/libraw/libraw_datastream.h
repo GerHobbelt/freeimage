@@ -88,9 +88,9 @@ public:
   virtual ~LibRaw_abstract_datastream(void) { }
   virtual int valid() = 0;
   virtual int read(void *, size_t, size_t) = 0;
-  virtual int seek(INT64, int) = 0;
-  virtual INT64 tell() = 0;
-  virtual INT64 size() = 0;
+  virtual int seek(int64_t, int) = 0;
+  virtual int64_t tell() = 0;
+  virtual int64_t size() = 0;
   virtual int get_char() = 0;
   virtual char *gets(char *, int) = 0;
   virtual int scanf_one(const char *, void *) = 0;
@@ -104,9 +104,9 @@ public:
    * OpenMP is not used */
   virtual int lock() { return 1; } /* success */
   virtual void unlock() {}
-  virtual const char *fname() { return NULL; };
+  virtual const char *fname() { return nullptr; };
 #ifdef LIBRAW_WIN32_UNICODEPATHS
-  virtual const wchar_t *wfname() { return NULL; };
+  virtual const wchar_t *wfname() { return nullptr; };
 #endif
 };
 
@@ -129,7 +129,7 @@ protected:
   std::unique_ptr<std::streambuf> f;
 #endif
   std::string filename;
-  INT64 _fsize;
+  int64_t _fsize;
 #ifdef LIBRAW_WIN32_UNICODEPATHS
   std::wstring wfilename;
 #endif
@@ -147,9 +147,9 @@ public:
   virtual int valid();
   virtual int read(void *ptr, size_t size, size_t nmemb);
   virtual int eof();
-  virtual int seek(INT64 o, int whence);
-  virtual INT64 tell();
-  virtual INT64 size() { return _fsize; }
+  virtual int seek(int64_t o, int whence);
+  virtual int64_t tell();
+  virtual int64_t size() { return _fsize; }
   virtual int get_char() {return f->sbumpc();}
   virtual char *gets(char *str, int sz);
   virtual int scanf_one(const char *fmt, void *val);
@@ -171,26 +171,26 @@ struct DllDef LibRaw_bufio_params
 class buffer_t : public std::vector<unsigned char>
 {
 public:
-    INT64 _bstart, _bend;
+    int64_t _bstart, _bend;
     buffer_t() : std::vector<unsigned char>(LibRaw_bufio_params::bufsize), _bstart(0), _bend(0) {}
-    int charOReof(INT64 _fpos)
+    int charOReof(int64_t _fpos)
     {
         if (_bstart < 0LL || _bend < 0LL || _bend < _bstart || _fpos < 0LL)  
             return -1;
-        if ((_bend - _bstart) > (INT64)size()) 
+        if ((_bend - _bstart) > (int64_t)size()) 
             return -1;
         if (_fpos >= _bstart && _fpos < _bend)
             return data()[_fpos - _bstart];
         return -1;
     }
-    bool contains(INT64 _fpos, INT64& contains)
+    bool contains(int64_t _fpos, int64_t& contains)
     {
         if (_bstart < 0LL || _bend < 0LL || _bend < _bstart || _fpos < 0LL)
         {
             contains = 0;
             return false;
         }
-        if ((_bend - _bstart) > (INT64)size())
+        if ((_bend - _bstart) > (int64_t)size())
         {
           contains = 0;
           return false;
@@ -221,9 +221,9 @@ public:
     virtual void buffering_off() { buffered = 0; }
     virtual int read(void *ptr, size_t size, size_t nmemb);
     virtual int eof();
-    virtual int seek(INT64 o, int whence);
-    virtual INT64 tell();
-    virtual INT64 size() { return _fsize; }
+    virtual int seek(int64_t o, int whence);
+    virtual int64_t tell();
+    virtual int64_t size() { return _fsize; }
     virtual char *gets(char *str, int sz);
     virtual int scanf_one(const char *fmt, void *val);
     virtual const char *fname();
@@ -244,12 +244,12 @@ public:
     }
 
 protected:
-    INT64   readAt(void *ptr, size_t size, INT64 off);
-    bool	fillBufferAt(int buf, INT64 off);
-    int		selectStringBuffer(INT64 len, INT64& contains);
+    int64_t   readAt(void *ptr, size_t size, int64_t off);
+    bool	fillBufferAt(int buf, int64_t off);
+    int		selectStringBuffer(int64_t len, int64_t& contains);
     HANDLE fhandle;
-    INT64 _fsize;
-    INT64 _fpos; /* current file position; current buffer start position */
+    int64_t _fsize;
+    int64_t _fpos; /* current file position; current buffer start position */
 #ifdef LIBRAW_WIN32_UNICODEPATHS
     std::wstring wfilename;
 #endif
@@ -272,9 +272,9 @@ public:
   virtual int jpeg_src(void *jpegdata);
   virtual int read(void *ptr, size_t sz, size_t nmemb);
   virtual int eof();
-  virtual int seek(INT64 o, int whence);
-  virtual INT64 tell();
-  virtual INT64 size() { return streamsize; }
+  virtual int seek(int64_t o, int whence);
+  virtual int64_t tell();
+  virtual int64_t size() { return streamsize; }
   virtual char *gets(char *s, int sz);
   virtual int scanf_one(const char *fmt, void *val);
   virtual int get_char()
@@ -303,9 +303,9 @@ public:
 
   virtual int read(void *ptr, size_t size, size_t nmemb);
   virtual int eof();
-  virtual int seek(INT64 o, int whence);
-  virtual INT64 tell();
-  virtual INT64 size() { return _fsize; }
+  virtual int seek(int64_t o, int whence);
+  virtual int64_t tell();
+  virtual int64_t size() { return _fsize; }
   virtual char *gets(char *str, int sz);
   virtual int scanf_one(const char *fmt, void *val);
   virtual const char *fname();
@@ -324,7 +324,7 @@ public:
 protected:
   FILE *f;
   std::string filename;
-  INT64 _fsize;
+  int64_t _fsize;
 #ifdef LIBRAW_WIN32_UNICODEPATHS
   std::wstring wfilename;
 #endif
@@ -341,7 +341,7 @@ public:
   LibRaw_windows_datastream(HANDLE hFile);
   /* dtor: unmap and close the mapping handle */
   virtual ~LibRaw_windows_datastream();
-  virtual INT64 size() { return cbView_; }
+  virtual int64_t size() { return cbView_; }
 
 protected:
   void Open(HANDLE hFile);
@@ -366,7 +366,7 @@ class libraw_dng_stream : public dng_stream
 {
 public:
   libraw_dng_stream(LibRaw_abstract_datastream *p)
-      : dng_stream((dng_abort_sniffer *)NULL, kBigBufferSize, 0),
+      : dng_stream((dng_abort_sniffer *)nullptr, kBigBufferSize, 0),
         parent_stream(p)
   {
     if (parent_stream)
@@ -387,7 +387,7 @@ public:
       return parent_stream->size();
     return 0;
   }
-  virtual void DoRead(void *data, uint32 count, uint64 offset)
+  virtual void DoRead(void *data, uint32_t count, uint64 offset)
   {
     if (parent_stream)
     {
@@ -400,7 +400,7 @@ private:
   libraw_dng_stream(const libraw_dng_stream &stream);
   libraw_dng_stream &operator=(const libraw_dng_stream &stream);
   LibRaw_abstract_datastream *parent_stream;
-  INT64 off;
+  int64_t off;
 };
 
 #endif

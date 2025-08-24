@@ -119,7 +119,7 @@ static int TIFFReadAndRealloc(TIFF *tif, tmsize_t size, tmsize_t rawdata_offset,
             }
             tif->tif_rawdata = new_rawdata;
         }
-        if (tif->tif_rawdata == NULL)
+        if (tif->tif_rawdata == nullptr)
         {
             /* should not happen in practice but helps CoverityScan */
             return 0;
@@ -557,10 +557,10 @@ tmsize_t TIFFReadEncodedStrip(TIFF *tif, uint32_t strip, void *buf,
 }
 
 /* Variant of TIFFReadEncodedStrip() that does
- * * if *buf == NULL, *buf = _TIFFmallocExt(tif, bufsizetoalloc) only after
+ * * if *buf == nullptr, *buf = _TIFFmallocExt(tif, bufsizetoalloc) only after
  * TIFFFillStrip() has succeeded. This avoid excessive memory allocation in case
  * of truncated file.
- * * calls regular TIFFReadEncodedStrip() if *buf != NULL
+ * * calls regular TIFFReadEncodedStrip() if *buf != nullptr
  */
 tmsize_t _TIFFReadEncodedStripAndAllocBuffer(TIFF *tif, uint32_t strip,
                                              void **buf,
@@ -570,7 +570,7 @@ tmsize_t _TIFFReadEncodedStripAndAllocBuffer(TIFF *tif, uint32_t strip,
     tmsize_t this_stripsize;
     uint16_t plane;
 
-    if (*buf != NULL)
+    if (*buf != nullptr)
     {
         return TIFFReadEncodedStrip(tif, strip, *buf, size_to_read);
     }
@@ -585,7 +585,7 @@ tmsize_t _TIFFReadEncodedStripAndAllocBuffer(TIFF *tif, uint32_t strip,
         return ((tmsize_t)(-1));
 
     *buf = _TIFFmallocExt(tif, bufsizetoalloc);
-    if (*buf == NULL)
+    if (*buf == nullptr)
     {
         TIFFErrorExtR(tif, TIFFFileName(tif), "No space for strip buffer");
         return ((tmsize_t)(-1));
@@ -824,7 +824,7 @@ int TIFFFillStrip(TIFF *tif, uint32_t strip)
             if ((tif->tif_flags & TIFF_MYBUFFER) && tif->tif_rawdata)
             {
                 _TIFFfreeExt(tif, tif->tif_rawdata);
-                tif->tif_rawdata = NULL;
+                tif->tif_rawdata = nullptr;
                 tif->tif_rawdatasize = 0;
             }
             tif->tif_flags &= ~TIFF_MYBUFFER;
@@ -871,7 +871,7 @@ int TIFFFillStrip(TIFF *tif, uint32_t strip)
             if (tif->tif_flags & TIFF_BUFFERMMAP)
             {
                 tif->tif_curstrip = NOSTRIP;
-                tif->tif_rawdata = NULL;
+                tif->tif_rawdata = nullptr;
                 tif->tif_rawdatasize = 0;
                 tif->tif_flags &= ~TIFF_BUFFERMMAP;
             }
@@ -979,10 +979,10 @@ tmsize_t TIFFReadEncodedTile(TIFF *tif, uint32_t tile, void *buf, tmsize_t size)
 }
 
 /* Variant of TIFFReadTile() that does
- * * if *buf == NULL, *buf = _TIFFmallocExt(tif, bufsizetoalloc) only after
+ * * if *buf == nullptr, *buf = _TIFFmallocExt(tif, bufsizetoalloc) only after
  * TIFFFillTile() has succeeded. This avoid excessive memory allocation in case
  * of truncated file.
- * * calls regular TIFFReadEncodedTile() if *buf != NULL
+ * * calls regular TIFFReadEncodedTile() if *buf != nullptr
  */
 tmsize_t _TIFFReadTileAndAllocBuffer(TIFF *tif, void **buf,
                                      tmsize_t bufsizetoalloc, uint32_t x,
@@ -996,10 +996,10 @@ tmsize_t _TIFFReadTileAndAllocBuffer(TIFF *tif, void **buf,
 }
 
 /* Variant of TIFFReadEncodedTile() that does
- * * if *buf == NULL, *buf = _TIFFmallocExt(tif, bufsizetoalloc) only after
+ * * if *buf == nullptr, *buf = _TIFFmallocExt(tif, bufsizetoalloc) only after
  * TIFFFillTile() has succeeded. This avoid excessive memory allocation in case
  * of truncated file.
- * * calls regular TIFFReadEncodedTile() if *buf != NULL
+ * * calls regular TIFFReadEncodedTile() if *buf != nullptr
  */
 tmsize_t _TIFFReadEncodedTileAndAllocBuffer(TIFF *tif, uint32_t tile,
                                             void **buf, tmsize_t bufsizetoalloc,
@@ -1009,7 +1009,7 @@ tmsize_t _TIFFReadEncodedTileAndAllocBuffer(TIFF *tif, uint32_t tile,
     TIFFDirectory *td = &tif->tif_dir;
     tmsize_t tilesize = tif->tif_tilesize;
 
-    if (*buf != NULL)
+    if (*buf != nullptr)
     {
         return TIFFReadEncodedTile(tif, tile, *buf, size_to_read);
     }
@@ -1070,7 +1070,7 @@ tmsize_t _TIFFReadEncodedTileAndAllocBuffer(TIFF *tif, uint32_t tile,
     }
 
     *buf = _TIFFmallocExt(tif, bufsizetoalloc);
-    if (*buf == NULL)
+    if (*buf == nullptr)
     {
         TIFFErrorExtR(tif, TIFFFileName(tif), "No space for tile buffer");
         return ((tmsize_t)(-1));
@@ -1259,7 +1259,7 @@ int TIFFFillTile(TIFF *tif, uint32_t tile)
             if ((tif->tif_flags & TIFF_MYBUFFER) && tif->tif_rawdata)
             {
                 _TIFFfreeExt(tif, tif->tif_rawdata);
-                tif->tif_rawdata = NULL;
+                tif->tif_rawdata = nullptr;
                 tif->tif_rawdatasize = 0;
             }
             tif->tif_flags &= ~TIFF_MYBUFFER;
@@ -1299,7 +1299,7 @@ int TIFFFillTile(TIFF *tif, uint32_t tile)
             if (tif->tif_flags & TIFF_BUFFERMMAP)
             {
                 tif->tif_curtile = NOTILE;
-                tif->tif_rawdata = NULL;
+                tif->tif_rawdata = nullptr;
                 tif->tif_rawdatasize = 0;
                 tif->tif_flags &= ~TIFF_BUFFERMMAP;
             }
@@ -1329,7 +1329,7 @@ int TIFFFillTile(TIFF *tif, uint32_t tile)
             tif->tif_rawdataoff = 0;
             tif->tif_rawdataloaded = bytecountm;
 
-            if (tif->tif_rawdata != NULL &&
+            if (tif->tif_rawdata != nullptr &&
                 !isFillOrder(tif, td->td_fillorder) &&
                 (tif->tif_flags & TIFF_NOBITREV) == 0)
                 TIFFReverseBits(tif->tif_rawdata, tif->tif_rawdataloaded);
@@ -1358,7 +1358,7 @@ int TIFFReadBufferSetup(TIFF *tif, void *bp, tmsize_t size)
     {
         if (tif->tif_flags & TIFF_MYBUFFER)
             _TIFFfreeExt(tif, tif->tif_rawdata);
-        tif->tif_rawdata = NULL;
+        tif->tif_rawdata = nullptr;
         tif->tif_rawdatasize = 0;
     }
     if (bp)
@@ -1381,7 +1381,7 @@ int TIFFReadBufferSetup(TIFF *tif, void *bp, tmsize_t size)
             (uint8_t *)_TIFFcallocExt(tif, 1, tif->tif_rawdatasize);
         tif->tif_flags |= TIFF_MYBUFFER;
     }
-    if (tif->tif_rawdata == NULL)
+    if (tif->tif_rawdata == nullptr)
     {
         TIFFErrorExtR(tif, module,
                       "No space for data buffer at scanline %" PRIu32,
@@ -1412,7 +1412,7 @@ static int TIFFStartStrip(TIFF *tif, uint32_t strip)
 
     if (tif->tif_flags & TIFF_NOREADRAW)
     {
-        tif->tif_rawcp = NULL;
+        tif->tif_rawcp = nullptr;
         tif->tif_rawcc = 0;
     }
     else
@@ -1476,7 +1476,7 @@ static int TIFFStartTile(TIFF *tif, uint32_t tile)
     tif->tif_flags &= ~TIFF_BUF4WRITE;
     if (tif->tif_flags & TIFF_NOREADRAW)
     {
-        tif->tif_rawcp = NULL;
+        tif->tif_rawcp = nullptr;
         tif->tif_rawcc = 0;
     }
     else

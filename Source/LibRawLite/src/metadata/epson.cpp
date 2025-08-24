@@ -22,7 +22,7 @@ void LibRaw::parseEpsonMakernote(int base, int uptag, unsigned dng_writer)
   unsigned entries, tag, type, len, save;
   short morder, sorder = order;
   ushort c;
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
 
   fseek(ifp, -2, SEEK_CUR);
 
@@ -35,7 +35,7 @@ void LibRaw::parseEpsonMakernote(int base, int uptag, unsigned dng_writer)
   {
     order = morder;
     tiff_get(base, &tag, &type, &len, &save);
-    INT64 pos = ifp->tell();
+    int64_t pos = ifp->tell();
     if (len > 8 && pos + len > 2 * fsize)
     {
       fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!

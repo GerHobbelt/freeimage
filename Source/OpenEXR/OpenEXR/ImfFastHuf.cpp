@@ -230,7 +230,7 @@ FastHufDecoder::FastHufDecoder
         if (mapping[codeLen] >= static_cast<uint64_t>(_numSymbols))
         {
             delete[] _idToSymbol;
-            _idToSymbol = NULL;
+            _idToSymbol = nullptr;
             throw IEX_NAMESPACE::InputExc ("Huffman decode error "
                                            "(Invalid symbol in header).");
         }
@@ -248,7 +248,7 @@ FastHufDecoder::FastHufDecoder
     }catch(...)
     {
             delete[] _idToSymbol;
-            _idToSymbol = NULL;
+            _idToSymbol = nullptr;
             throw;
     }
 }

@@ -806,7 +806,7 @@ WEBP_DSP_INIT_FUNC(VP8DspInit) {
   VP8DitherCombine8x8 = DitherCombine8x8_C;
 
   // If defined, use CPUInfo() to overwrite some pointers with faster versions.
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_HAVE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8DspInitSSE2();
@@ -836,52 +836,52 @@ WEBP_DSP_INIT_FUNC(VP8DspInit) {
 
 #if defined(WEBP_HAVE_NEON)
   if (WEBP_NEON_OMIT_C_CODE ||
-      (VP8GetCPUInfo != NULL && VP8GetCPUInfo(kNEON))) {
+      (VP8GetCPUInfo != nullptr && VP8GetCPUInfo(kNEON))) {
     VP8DspInitNEON();
   }
 #endif
 
-  assert(VP8TransformWHT != NULL);
-  assert(VP8Transform != NULL);
-  assert(VP8TransformDC != NULL);
-  assert(VP8TransformAC3 != NULL);
-  assert(VP8TransformUV != NULL);
-  assert(VP8TransformDCUV != NULL);
-  assert(VP8VFilter16 != NULL);
-  assert(VP8HFilter16 != NULL);
-  assert(VP8VFilter8 != NULL);
-  assert(VP8HFilter8 != NULL);
-  assert(VP8VFilter16i != NULL);
-  assert(VP8HFilter16i != NULL);
-  assert(VP8VFilter8i != NULL);
-  assert(VP8HFilter8i != NULL);
-  assert(VP8SimpleVFilter16 != NULL);
-  assert(VP8SimpleHFilter16 != NULL);
-  assert(VP8SimpleVFilter16i != NULL);
-  assert(VP8SimpleHFilter16i != NULL);
-  assert(VP8PredLuma4[0] != NULL);
-  assert(VP8PredLuma4[1] != NULL);
-  assert(VP8PredLuma4[2] != NULL);
-  assert(VP8PredLuma4[3] != NULL);
-  assert(VP8PredLuma4[4] != NULL);
-  assert(VP8PredLuma4[5] != NULL);
-  assert(VP8PredLuma4[6] != NULL);
-  assert(VP8PredLuma4[7] != NULL);
-  assert(VP8PredLuma4[8] != NULL);
-  assert(VP8PredLuma4[9] != NULL);
-  assert(VP8PredLuma16[0] != NULL);
-  assert(VP8PredLuma16[1] != NULL);
-  assert(VP8PredLuma16[2] != NULL);
-  assert(VP8PredLuma16[3] != NULL);
-  assert(VP8PredLuma16[4] != NULL);
-  assert(VP8PredLuma16[5] != NULL);
-  assert(VP8PredLuma16[6] != NULL);
-  assert(VP8PredChroma8[0] != NULL);
-  assert(VP8PredChroma8[1] != NULL);
-  assert(VP8PredChroma8[2] != NULL);
-  assert(VP8PredChroma8[3] != NULL);
-  assert(VP8PredChroma8[4] != NULL);
-  assert(VP8PredChroma8[5] != NULL);
-  assert(VP8PredChroma8[6] != NULL);
-  assert(VP8DitherCombine8x8 != NULL);
+  assert(VP8TransformWHT != nullptr);
+  assert(VP8Transform != nullptr);
+  assert(VP8TransformDC != nullptr);
+  assert(VP8TransformAC3 != nullptr);
+  assert(VP8TransformUV != nullptr);
+  assert(VP8TransformDCUV != nullptr);
+  assert(VP8VFilter16 != nullptr);
+  assert(VP8HFilter16 != nullptr);
+  assert(VP8VFilter8 != nullptr);
+  assert(VP8HFilter8 != nullptr);
+  assert(VP8VFilter16i != nullptr);
+  assert(VP8HFilter16i != nullptr);
+  assert(VP8VFilter8i != nullptr);
+  assert(VP8HFilter8i != nullptr);
+  assert(VP8SimpleVFilter16 != nullptr);
+  assert(VP8SimpleHFilter16 != nullptr);
+  assert(VP8SimpleVFilter16i != nullptr);
+  assert(VP8SimpleHFilter16i != nullptr);
+  assert(VP8PredLuma4[0] != nullptr);
+  assert(VP8PredLuma4[1] != nullptr);
+  assert(VP8PredLuma4[2] != nullptr);
+  assert(VP8PredLuma4[3] != nullptr);
+  assert(VP8PredLuma4[4] != nullptr);
+  assert(VP8PredLuma4[5] != nullptr);
+  assert(VP8PredLuma4[6] != nullptr);
+  assert(VP8PredLuma4[7] != nullptr);
+  assert(VP8PredLuma4[8] != nullptr);
+  assert(VP8PredLuma4[9] != nullptr);
+  assert(VP8PredLuma16[0] != nullptr);
+  assert(VP8PredLuma16[1] != nullptr);
+  assert(VP8PredLuma16[2] != nullptr);
+  assert(VP8PredLuma16[3] != nullptr);
+  assert(VP8PredLuma16[4] != nullptr);
+  assert(VP8PredLuma16[5] != nullptr);
+  assert(VP8PredLuma16[6] != nullptr);
+  assert(VP8PredChroma8[0] != nullptr);
+  assert(VP8PredChroma8[1] != nullptr);
+  assert(VP8PredChroma8[2] != nullptr);
+  assert(VP8PredChroma8[3] != nullptr);
+  assert(VP8PredChroma8[4] != nullptr);
+  assert(VP8PredChroma8[5] != nullptr);
+  assert(VP8PredChroma8[6] != nullptr);
+  assert(VP8DitherCombine8x8 != nullptr);
 }

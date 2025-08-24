@@ -163,24 +163,24 @@ static void _TIFFEmitErrorAboveMaxCumulatedMemAlloc(TIFF *tif,
 /** malloc() version that takes into account memory-specific open options */
 void *_TIFFmallocExt(TIFF *tif, tmsize_t s)
 {
-    if (tif != NULL && tif->tif_max_single_mem_alloc > 0 &&
+    if (tif != nullptr && tif->tif_max_single_mem_alloc > 0 &&
         s > tif->tif_max_single_mem_alloc)
     {
         _TIFFEmitErrorAboveMaxSingleMemAlloc(tif, "_TIFFmallocExt", s);
-        return NULL;
+        return nullptr;
     }
-    if (tif != NULL && tif->tif_max_cumulated_mem_alloc > 0)
+    if (tif != nullptr && tif->tif_max_cumulated_mem_alloc > 0)
     {
         if (s > tif->tif_max_cumulated_mem_alloc -
                     tif->tif_cur_cumulated_mem_alloc ||
             s > TIFF_TMSIZE_T_MAX - LEADING_AREA_TO_STORE_ALLOC_SIZE)
         {
             _TIFFEmitErrorAboveMaxCumulatedMemAlloc(tif, "_TIFFmallocExt", s);
-            return NULL;
+            return nullptr;
         }
         void *ptr = _TIFFmalloc(LEADING_AREA_TO_STORE_ALLOC_SIZE + s);
         if (!ptr)
-            return NULL;
+            return nullptr;
         tif->tif_cur_cumulated_mem_alloc += s;
         memcpy(ptr, &s, sizeof(s));
         return (char *)ptr + LEADING_AREA_TO_STORE_ALLOC_SIZE;
@@ -192,17 +192,17 @@ void *_TIFFmallocExt(TIFF *tif, tmsize_t s)
 void *_TIFFcallocExt(TIFF *tif, tmsize_t nmemb, tmsize_t siz)
 {
     if (nmemb <= 0 || siz <= 0 || nmemb > TIFF_TMSIZE_T_MAX / siz)
-        return NULL;
-    if (tif != NULL && tif->tif_max_single_mem_alloc > 0)
+        return nullptr;
+    if (tif != nullptr && tif->tif_max_single_mem_alloc > 0)
     {
         if (nmemb * siz > tif->tif_max_single_mem_alloc)
         {
             _TIFFEmitErrorAboveMaxSingleMemAlloc(tif, "_TIFFcallocExt",
                                                  nmemb * siz);
-            return NULL;
+            return nullptr;
         }
     }
-    if (tif != NULL && tif->tif_max_cumulated_mem_alloc > 0)
+    if (tif != nullptr && tif->tif_max_cumulated_mem_alloc > 0)
     {
         const tmsize_t s = nmemb * siz;
         if (s > tif->tif_max_cumulated_mem_alloc -
@@ -210,11 +210,11 @@ void *_TIFFcallocExt(TIFF *tif, tmsize_t nmemb, tmsize_t siz)
             s > TIFF_TMSIZE_T_MAX - LEADING_AREA_TO_STORE_ALLOC_SIZE)
         {
             _TIFFEmitErrorAboveMaxCumulatedMemAlloc(tif, "_TIFFcallocExt", s);
-            return NULL;
+            return nullptr;
         }
         void *ptr = _TIFFcalloc(LEADING_AREA_TO_STORE_ALLOC_SIZE + s, 1);
         if (!ptr)
-            return NULL;
+            return nullptr;
         tif->tif_cur_cumulated_mem_alloc += s;
         memcpy(ptr, &s, sizeof(s));
         return (char *)ptr + LEADING_AREA_TO_STORE_ALLOC_SIZE;
@@ -225,13 +225,13 @@ void *_TIFFcallocExt(TIFF *tif, tmsize_t nmemb, tmsize_t siz)
 /** realloc() version that takes into account memory-specific open options */
 void *_TIFFreallocExt(TIFF *tif, void *p, tmsize_t s)
 {
-    if (tif != NULL && tif->tif_max_single_mem_alloc > 0 &&
+    if (tif != nullptr && tif->tif_max_single_mem_alloc > 0 &&
         s > tif->tif_max_single_mem_alloc)
     {
         _TIFFEmitErrorAboveMaxSingleMemAlloc(tif, "_TIFFreallocExt", s);
-        return NULL;
+        return nullptr;
     }
-    if (tif != NULL && tif->tif_max_cumulated_mem_alloc > 0)
+    if (tif != nullptr && tif->tif_max_cumulated_mem_alloc > 0)
     {
         void *oldPtr = p;
         tmsize_t oldSize = 0;
@@ -248,12 +248,12 @@ void *_TIFFreallocExt(TIFF *tif, void *p, tmsize_t s)
         {
             _TIFFEmitErrorAboveMaxCumulatedMemAlloc(tif, "_TIFFreallocExt",
                                                     s - oldSize);
-            return NULL;
+            return nullptr;
         }
         void *newPtr =
             _TIFFrealloc(oldPtr, LEADING_AREA_TO_STORE_ALLOC_SIZE + s);
-        if (newPtr == NULL)
-            return NULL;
+        if (newPtr == nullptr)
+            return nullptr;
         tif->tif_cur_cumulated_mem_alloc -= oldSize;
         tif->tif_cur_cumulated_mem_alloc += s;
         memcpy(newPtr, &s, sizeof(s));
@@ -265,7 +265,7 @@ void *_TIFFreallocExt(TIFF *tif, void *p, tmsize_t s)
 /** free() version that takes into account memory-specific open options */
 void _TIFFfreeExt(TIFF *tif, void *p)
 {
-    if (p != NULL && tif != NULL && tif->tif_max_cumulated_mem_alloc > 0)
+    if (p != nullptr && tif != nullptr && tif->tif_max_cumulated_mem_alloc > 0)
     {
         void *oldPtr = (char *)p - LEADING_AREA_TO_STORE_ALLOC_SIZE;
         tmsize_t oldSize;
@@ -285,7 +285,7 @@ TIFF *TIFFClientOpen(const char *name, const char *mode, thandle_t clientdata,
 {
     return TIFFClientOpenExt(name, mode, clientdata, readproc, writeproc,
                              seekproc, closeproc, sizeproc, mapproc, unmapproc,
-                             NULL);
+                             nullptr);
 }
 
 TIFF *TIFFClientOpenExt(const char *name, const char *mode,
@@ -354,8 +354,8 @@ TIFF *TIFFClientOpenExt(const char *name, const char *mode,
                         (uint64_t)opts->max_cumulated_mem_alloc);
         goto bad2;
     }
-    tif = (TIFF *)_TIFFmallocExt(NULL, size_to_alloc);
-    if (tif == NULL)
+    tif = (TIFF *)_TIFFmallocExt(nullptr, size_to_alloc);
+    if (tif == nullptr)
     {
         _TIFFErrorEarly(opts, clientdata, module,
                         "%s: Out of memory (TIFF structure)", name);
@@ -390,8 +390,8 @@ TIFF *TIFFClientOpenExt(const char *name, const char *mode,
     if (!readproc || !writeproc || !seekproc || !closeproc || !sizeproc)
     {
         TIFFErrorExtR(tif, module,
-                      "One of the client procedures is NULL pointer.");
-        _TIFFfreeExt(NULL, tif);
+                      "One of the client procedures is nullptr pointer.");
+        _TIFFfreeExt(nullptr, tif);
         goto bad2;
     }
 

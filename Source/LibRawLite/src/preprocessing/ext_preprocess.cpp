@@ -24,7 +24,7 @@
  */
 void LibRaw::bad_pixels(const char *cfname)
 {
-  FILE *fp = NULL;
+  FILE *fp = nullptr;
   char *cp, line[128];
   int time, row, col, r, c, rad, tot, n;
 

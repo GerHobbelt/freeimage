@@ -105,7 +105,7 @@ static int TWebPEncode(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
     WebPState *sp = EncoderState(tif);
     (void)s;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(sp->state == LSTATE_INIT_ENCODE);
 
     if ((uint64_t)sp->buffer_offset + (uint64_t)cc > sp->buffer_size)
@@ -130,10 +130,10 @@ static int TWebPDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
 
     (void)s;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(sp->state == LSTATE_INIT_DECODE);
 
-    if (sp->psDecoder == NULL)
+    if (sp->psDecoder == nullptr)
     {
         TIFFDirectory *td = &tif->tif_dir;
         uint32_t buffer_size;
@@ -216,12 +216,12 @@ static int TWebPDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
             /* output buffer */
             decode_whole_strile = true;
         }
-        else if (sp->pBuffer == NULL || buffer_size > sp->buffer_size)
+        else if (sp->pBuffer == nullptr || buffer_size > sp->buffer_size)
         {
-            if (sp->pBuffer != NULL)
+            if (sp->pBuffer != nullptr)
             {
                 _TIFFfreeExt(tif, sp->pBuffer);
-                sp->pBuffer = NULL;
+                sp->pBuffer = nullptr;
             }
 
             sp->pBuffer = _TIFFmallocExt(tif, buffer_size);
@@ -255,7 +255,7 @@ static int TWebPDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
 
         sp->psDecoder = WebPINewDecoder(&sp->sDecBuffer);
 
-        if (sp->psDecoder == NULL)
+        if (sp->psDecoder == nullptr)
         {
             TIFFErrorExtR(tif, module, "Unable to allocate WebP decoder.");
             return 0;
@@ -292,9 +292,9 @@ static int TWebPDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
         uint8_t *buf;
 
         /* Returns the RGB/A image decoded so far */
-        buf = WebPIDecGetRGB(sp->psDecoder, &current_y, NULL, NULL, &stride);
+        buf = WebPIDecGetRGB(sp->psDecoder, &current_y, nullptr, nullptr, &stride);
 
-        if ((buf != NULL) &&
+        if ((buf != nullptr) &&
             (occ <= (tmsize_t)stride * (current_y - sp->last_y)))
         {
             const int numberOfExpectedLines =
@@ -321,11 +321,11 @@ static int TWebPDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
             if (decode_whole_strile)
             {
                 /* We can now free the decoder as we're completely done */
-                if (sp->psDecoder != NULL)
+                if (sp->psDecoder != nullptr)
                 {
                     WebPIDelete(sp->psDecoder);
                     WebPFreeDecBuffer(&sp->sDecBuffer);
-                    sp->psDecoder = NULL;
+                    sp->psDecoder = nullptr;
                 }
             }
             return 1;
@@ -363,7 +363,7 @@ static int TWebPSetupDecode(TIFF *tif)
     uint16_t sampleFormat = tif->tif_dir.td_sampleformat;
 
     WebPState *sp = DecoderState(tif);
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     sp->nSamples = tif->tif_dir.td_samplesperpixel;
 
@@ -395,10 +395,10 @@ static int TWebPSetupDecode(TIFF *tif)
     if (sp->state & LSTATE_INIT_ENCODE)
     {
         WebPPictureFree(&sp->sPicture);
-        if (sp->pBuffer != NULL)
+        if (sp->pBuffer != nullptr)
         {
             _TIFFfreeExt(tif, sp->pBuffer);
-            sp->pBuffer = NULL;
+            sp->pBuffer = nullptr;
         }
         sp->buffer_offset = 0;
         sp->state = 0;
@@ -419,7 +419,7 @@ static int TWebPPreDecode(TIFF *tif, uint16_t s)
     WebPState *sp = DecoderState(tif);
     TIFFDirectory *td = &tif->tif_dir;
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     if (isTiled(tif))
     {
@@ -444,11 +444,11 @@ static int TWebPPreDecode(TIFF *tif, uint16_t s)
     if ((sp->state & LSTATE_INIT_DECODE) == 0)
         tif->tif_setupdecode(tif);
 
-    if (sp->psDecoder != NULL)
+    if (sp->psDecoder != nullptr)
     {
         WebPIDelete(sp->psDecoder);
         WebPFreeDecBuffer(&sp->sDecBuffer);
-        sp->psDecoder = NULL;
+        sp->psDecoder = nullptr;
     }
 
     return 1;
@@ -461,7 +461,7 @@ static int TWebPSetupEncode(TIFF *tif)
     uint16_t sampleFormat = tif->tif_dir.td_sampleformat;
 
     WebPState *sp = EncoderState(tif);
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     sp->nSamples = tif->tif_dir.td_samplesperpixel;
 
@@ -493,7 +493,7 @@ static int TWebPSetupEncode(TIFF *tif)
     {
         WebPIDelete(sp->psDecoder);
         WebPFreeDecBuffer(&sp->sDecBuffer);
-        sp->psDecoder = NULL;
+        sp->psDecoder = nullptr;
         sp->last_y = 0;
         sp->state = 0;
     }
@@ -548,7 +548,7 @@ static int TWebPPreEncode(TIFF *tif, uint16_t s)
 
     (void)s;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     if (sp->state != LSTATE_INIT_ENCODE)
         tif->tif_setupencode(tif);
 
@@ -579,10 +579,10 @@ static int TWebPPreEncode(TIFF *tif, uint16_t s)
     /* given above check and that nSamples <= 4, buffer_size is <= 1 GB */
     sp->buffer_size = segment_width * segment_height * sp->nSamples;
 
-    if (sp->pBuffer != NULL)
+    if (sp->pBuffer != nullptr)
     {
         _TIFFfreeExt(tif, sp->pBuffer);
-        sp->pBuffer = NULL;
+        sp->pBuffer = nullptr;
     }
 
     sp->pBuffer = _TIFFmallocExt(tif, sp->buffer_size);
@@ -609,7 +609,7 @@ static int TWebPPostEncode(TIFF *tif)
     static const char module[] = "WebPPostEncode";
     int64_t stride;
     WebPState *sp = EncoderState(tif);
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     assert(sp->state == LSTATE_INIT_ENCODE);
 
@@ -636,7 +636,7 @@ static int TWebPPostEncode(TIFF *tif)
     {
 
 #if WEBP_ENCODER_ABI_VERSION >= 0x0100
-        const char *pszErrorMsg = NULL;
+        const char *pszErrorMsg = nullptr;
         switch (sp->sPicture.error_code)
         {
             case VP8_ENC_ERROR_OUT_OF_MEMORY:
@@ -646,7 +646,7 @@ static int TWebPPostEncode(TIFF *tif)
                 pszErrorMsg = "Out of memory while flushing bits";
                 break;
             case VP8_ENC_ERROR_NULL_PARAMETER:
-                pszErrorMsg = "A pointer parameter is NULL";
+                pszErrorMsg = "A pointer parameter is nullptr";
                 break;
             case VP8_ENC_ERROR_INVALID_CONFIGURATION:
                 pszErrorMsg = "Configuration is invalid";
@@ -684,7 +684,7 @@ static int TWebPPostEncode(TIFF *tif)
         return 0;
     }
 
-    sp->sPicture.custom_ptr = NULL;
+    sp->sPicture.custom_ptr = nullptr;
 
     if (!TIFFFlushData1(tif))
     {
@@ -709,22 +709,22 @@ static void TWebPCleanup(TIFF *tif)
         WebPPictureFree(&sp->sPicture);
     }
 
-    if (sp->psDecoder != NULL)
+    if (sp->psDecoder != nullptr)
     {
         WebPIDelete(sp->psDecoder);
         WebPFreeDecBuffer(&sp->sDecBuffer);
-        sp->psDecoder = NULL;
+        sp->psDecoder = nullptr;
         sp->last_y = 0;
     }
 
-    if (sp->pBuffer != NULL)
+    if (sp->pBuffer != nullptr)
     {
         _TIFFfreeExt(tif, sp->pBuffer);
-        sp->pBuffer = NULL;
+        sp->pBuffer = nullptr;
     }
 
     _TIFFfreeExt(tif, tif->tif_data);
-    tif->tif_data = NULL;
+    tif->tif_data = nullptr;
 
     _TIFFSetDefaultCompressionState(tif);
 }
@@ -799,13 +799,13 @@ static int TWebPVGetField(TIFF *tif, uint32_t tag, va_list ap)
 
 static const TIFFField TWebPFields[] = {
     {TIFFTAG_WEBP_LEVEL, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "WEBP quality", NULL},
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "WEBP quality", nullptr},
     {TIFFTAG_WEBP_LOSSLESS, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
      TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "WEBP lossless/lossy",
-     NULL},
+     nullptr},
     {TIFFTAG_WEBP_LOSSLESS_EXACT, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
      TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "WEBP exact lossless",
-     NULL},
+     nullptr},
 };
 
 int TIFFInitWebP(TIFF *tif, int scheme)
@@ -829,7 +829,7 @@ int TIFFInitWebP(TIFF *tif, int scheme)
      * Allocate state block so tag methods have storage to record values.
      */
     tif->tif_data = (uint8_t *)_TIFFmallocExt(tif, sizeof(WebPState));
-    if (tif->tif_data == NULL)
+    if (tif->tif_data == nullptr)
         goto bad;
     sp = LState(tif);
 
@@ -847,11 +847,11 @@ int TIFFInitWebP(TIFF *tif, int scheme)
     sp->lossless_exact = 1; /* exact lossless mode (if lossless enabled) */
     sp->state = 0;
     sp->nSamples = 0;
-    sp->psDecoder = NULL;
+    sp->psDecoder = nullptr;
     sp->last_y = 0;
 
     sp->buffer_offset = 0;
-    sp->pBuffer = NULL;
+    sp->pBuffer = nullptr;
 
     /*
      * Install codec methods.

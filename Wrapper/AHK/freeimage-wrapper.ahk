@@ -933,8 +933,8 @@ FreeImage_SetTagValue(fiTag, value) {
 }
 
 FreeImage_SetMetadata(hImage, fiTag, metaModel, key) {
-; If fiTag is NULL then the metadata is deleted.
-; If both key and fiTag are NULL then the metadata model is deleted.
+; If fiTag is nullptr then the metadata is deleted.
+; If both key and fiTag are nullptr then the metadata model is deleted.
 ; The function returns TRUE on success and returns FALSE otherwise.
 ; metaModel parameter can take integer values from -1 to 11. See below what
 ; these represent.

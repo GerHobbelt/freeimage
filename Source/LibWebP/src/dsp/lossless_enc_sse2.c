@@ -434,7 +434,7 @@ static void PredictorSub0_SSE2(const uint32_t* in, const uint32_t* upper,
     _mm_storeu_si128((__m128i*)&out[i], res);
   }
   if (i != num_pixels) {
-    VP8LPredictorsSub_C[0](in + i, NULL, num_pixels - i, out + i);
+    VP8LPredictorsSub_C[0](in + i, nullptr, num_pixels - i, out + i);
   }
   (void)upper;
 }

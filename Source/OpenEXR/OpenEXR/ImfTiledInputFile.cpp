@@ -246,7 +246,7 @@ TiledInputFile::Data::Data (int numThreads):
     numThreads(numThreads),
     multiPartFile(nullptr),
     memoryMapped(false),
-    _streamData(NULL),
+    _streamData(nullptr),
     _deleteStream(false)
 {
     //
@@ -734,7 +734,7 @@ newTileBufferTask
 TiledInputFile::TiledInputFile (const char fileName[], int numThreads):
     _data (new Data (numThreads))
 {
-    _data->_streamData=NULL;
+    _data->_streamData=nullptr;
     _data->_deleteStream=true;
     
     //

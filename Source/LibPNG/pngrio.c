@@ -33,11 +33,11 @@ png_read_data(png_structrp png_ptr, png_bytep data, size_t length)
 {
    png_debug1(4, "reading %d bytes", (int)length);
 
-   if (png_ptr->read_data_fn != NULL)
+   if (png_ptr->read_data_fn != nullptr)
       (*(png_ptr->read_data_fn))(png_ptr, data, length);
 
    else
-      png_error(png_ptr, "Call to NULL read function");
+      png_error(png_ptr, "Call to nullptr read function");
 }
 
 #ifdef PNG_STDIO_SUPPORTED
@@ -51,7 +51,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, size_t length)
 {
    size_t check;
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* fread() returns 0 on error, so it is OK to store this in a size_t
@@ -72,7 +72,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, size_t length)
  * png_ptr      - pointer to a png input data structure
  *
  * io_ptr       - pointer to user supplied structure containing info about
- *                the input functions.  May be NULL.
+ *                the input functions.  May be nullptr.
  *
  * read_data_fn - pointer to a new input function that takes as its
  *                arguments a pointer to a png_struct, a pointer to
@@ -80,20 +80,20 @@ png_default_read_data(png_structp png_ptr, png_bytep data, size_t length)
  *                unsigned int that is the number of bytes to be read.
  *                To exit and output any fatal error messages the new write
  *                function should call png_error(png_ptr, "Error msg").
- *                May be NULL, in which case libpng's default function will
+ *                May be nullptr, in which case libpng's default function will
  *                be used.
  */
 void PNGAPI
 png_set_read_fn(png_structrp png_ptr, png_voidp io_ptr,
     png_rw_ptr read_data_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->io_ptr = io_ptr;
 
 #ifdef PNG_STDIO_SUPPORTED
-   if (read_data_fn != NULL)
+   if (read_data_fn != nullptr)
       png_ptr->read_data_fn = read_data_fn;
 
    else
@@ -104,9 +104,9 @@ png_set_read_fn(png_structrp png_ptr, png_voidp io_ptr,
 
 #ifdef PNG_WRITE_SUPPORTED
    /* It is an error to write to a read device */
-   if (png_ptr->write_data_fn != NULL)
+   if (png_ptr->write_data_fn != nullptr)
    {
-      png_ptr->write_data_fn = NULL;
+      png_ptr->write_data_fn = nullptr;
       png_warning(png_ptr,
           "Can't set both read_data_fn and write_data_fn in the"
           " same structure");
@@ -114,7 +114,7 @@ png_set_read_fn(png_structrp png_ptr, png_voidp io_ptr,
 #endif
 
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
-   png_ptr->output_flush_fn = NULL;
+   png_ptr->output_flush_fn = nullptr;
 #endif
 }
 #endif /* READ */

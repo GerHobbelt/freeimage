@@ -22,8 +22,8 @@
 // Helpful macros.
 
 # define SANITY_CHECK(in, out)                                                 \
-  assert(in != NULL);                                                          \
-  assert(out != NULL);                                                         \
+  assert(in != nullptr);                                                          \
+  assert(out != nullptr);                                                         \
   assert(width > 0);                                                           \
   assert(height > 0);                                                          \
   assert(stride >= width);                                                     \
@@ -211,7 +211,7 @@ static void HorizontalUnfilter_NEON(const uint8_t* prev, const uint8_t* in,
   int i;
   const uint8x16_t zero = vdupq_n_u8(0);
   uint8x16_t last;
-  out[0] = in[0] + (prev == NULL ? 0 : prev[0]);
+  out[0] = in[0] + (prev == nullptr ? 0 : prev[0]);
   if (width <= 1) return;
   last = vsetq_lane_u8(out[0], zero, 0);
   for (i = 1; i + 16 <= width; i += 16) {
@@ -233,8 +233,8 @@ static void HorizontalUnfilter_NEON(const uint8_t* prev, const uint8_t* in,
 
 static void VerticalUnfilter_NEON(const uint8_t* prev, const uint8_t* in,
                                   uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter_NEON(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter_NEON(nullptr, in, out, width);
   } else {
     int i;
     assert(width >= 0);
@@ -295,8 +295,8 @@ static void GradientPredictInverse_NEON(const uint8_t* const in,
 
 static void GradientUnfilter_NEON(const uint8_t* prev, const uint8_t* in,
                                   uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter_NEON(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter_NEON(nullptr, in, out, width);
   } else {
     out[0] = in[0] + prev[0];  // predict from above
     GradientPredictInverse_NEON(in + 1, prev + 1, out + 1, width - 1);

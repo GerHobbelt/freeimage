@@ -43,7 +43,7 @@
 /**
 Skews a row horizontally (with filtered weights). 
 Limited to 45 degree skewing only. Filters two adjacent pixels.
-Parameter T can be BYTE, WORD of float. 
+Parameter T can be uint8_t, uint16_t of float. 
 @param src Pointer to source image to rotate
 @param dst Pointer to destination image
 @param row Row index
@@ -52,11 +52,11 @@ Parameter T can be BYTE, WORD of float.
 @param bkcolor Background color
 */
 template <class T> void 
-HorizontalSkewT(FIBITMAP *src, FIBITMAP *dst, int row, int iOffset, double weight, const void *bkcolor = NULL) {
-	INT64 iXPos;
+HorizontalSkewT(FIBITMAP *src, FIBITMAP *dst, int row, int iOffset, double weight, const void *bkcolor = nullptr) {
+	int64_t iXPos;
 
-	const INT64 src_width  = FreeImage_GetWidth(src);
-	const INT64 dst_width  = FreeImage_GetWidth(dst);
+	const int64_t src_width  = FreeImage_GetWidth(src);
+	const int64_t dst_width  = FreeImage_GetWidth(dst);
 
 	T pxlSrc[4], pxlLeft[4], pxlOldLeft[4];	// 4 = 4*sizeof(T) max
 	
@@ -69,19 +69,19 @@ HorizontalSkewT(FIBITMAP *src, FIBITMAP *dst, int row, int iOffset, double weigh
 	}
 
 	// calculate the number of bytes per pixel
-	const INT64 bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
+	const int64_t bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 	// calculate the number of samples per pixel
-	const INT64 samples = bytespp / sizeof(T);
+	const int64_t samples = bytespp / sizeof(T);
 
-	BYTE *src_bits = FreeImage_GetScanLine(src, row);
-	BYTE *dst_bits = FreeImage_GetScanLine(dst, row);
+	uint8_t *src_bits = FreeImage_GetScanLine(src, row);
+	uint8_t *dst_bits = FreeImage_GetScanLine(dst, row);
 
 	// fill gap left of skew with background
 	if(bkcolor) {
 		for(int k = 0; k < iOffset; k++) {
 			memcpy(&dst_bits[k * bytespp], bkcolor, bytespp);
 		}
-		AssignPixel((BYTE*)&pxlOldLeft[0], (BYTE*)bkcolor, bytespp);
+		AssignPixel((uint8_t*)&pxlOldLeft[0], (uint8_t*)bkcolor, bytespp);
 	} else {
 		if(iOffset > 0) {
 			memset(dst_bits, 0, iOffset * bytespp);
@@ -89,24 +89,24 @@ HorizontalSkewT(FIBITMAP *src, FIBITMAP *dst, int row, int iOffset, double weigh
 		memset(&pxlOldLeft[0], 0, bytespp);
 	}
 
-	for(INT64 i = 0; i < src_width; i++) {
+	for(int64_t i = 0; i < src_width; i++) {
 		// loop through row pixels
-		AssignPixel((BYTE*)&pxlSrc[0], (BYTE*)src_bits, bytespp);
+		AssignPixel((uint8_t*)&pxlSrc[0], (uint8_t*)src_bits, bytespp);
 		// calculate weights
-		for(INT64 j = 0; j < samples; j++) {
+		for(int64_t j = 0; j < samples; j++) {
 			pxlLeft[j] = static_cast<T>(pxlBkg[j] + (pxlSrc[j] - pxlBkg[j]) * weight + 0.5);
 		}
 		// check boundaries 
 		iXPos = i + iOffset;
 		if((iXPos >= 0) && (iXPos < (int)dst_width)) {
 			// update left over on source
-			for(INT64 j = 0; j < samples; j++) {
+			for(int64_t j = 0; j < samples; j++) {
 				pxlSrc[j] = pxlSrc[j] - (pxlLeft[j] - pxlOldLeft[j]);
 			}
-			AssignPixel((BYTE*)&dst_bits[iXPos*bytespp], (BYTE*)&pxlSrc[0], bytespp);
+			AssignPixel((uint8_t*)&dst_bits[iXPos*bytespp], (uint8_t*)&pxlSrc[0], bytespp);
 		}
 		// save leftover for next pixel in scan
-		AssignPixel((BYTE*)&pxlOldLeft[0], (BYTE*)&pxlLeft[0], bytespp);
+		AssignPixel((uint8_t*)&pxlOldLeft[0], (uint8_t*)&pxlLeft[0], bytespp);
 
 		// next pixel in scan
 		src_bits += bytespp;
@@ -119,12 +119,12 @@ HorizontalSkewT(FIBITMAP *src, FIBITMAP *dst, int row, int iOffset, double weigh
 		dst_bits = FreeImage_GetScanLine(dst, row) + iXPos * bytespp;
 
 		// If still in image bounds, put leftovers there
-		AssignPixel((BYTE*)dst_bits, (BYTE*)&pxlOldLeft[0], bytespp);
+		AssignPixel((uint8_t*)dst_bits, (uint8_t*)&pxlOldLeft[0], bytespp);
 
 		// clear to the right of the skewed line with background
 		dst_bits += bytespp;
 		if(bkcolor) {
-			for(INT64 i = 0; i < dst_width - iXPos - 1; i++) {
+			for(int64_t i = 0; i < dst_width - iXPos - 1; i++) {
 				memcpy(&dst_bits[i * bytespp], bkcolor, bytespp);
 			}
 		} else {
@@ -154,14 +154,14 @@ HorizontalSkew(FIBITMAP *src, FIBITMAP *dst, int row, int iOffset, double dWeigh
 				case 8:
 				case 24:
 				case 32:
-					HorizontalSkewT<BYTE>(src, dst, row, iOffset, dWeight, bkcolor);
+					HorizontalSkewT<uint8_t>(src, dst, row, iOffset, dWeight, bkcolor);
 				break;
 			}
 			break;
 		case FIT_UINT16:
 		case FIT_RGB16:
 		case FIT_RGBA16:
-			HorizontalSkewT<WORD>(src, dst, row, iOffset, dWeight, bkcolor);
+			HorizontalSkewT<uint16_t>(src, dst, row, iOffset, dWeight, bkcolor);
 			break;
 		case FIT_FLOAT:
 		case FIT_RGBF:
@@ -174,7 +174,7 @@ HorizontalSkew(FIBITMAP *src, FIBITMAP *dst, int row, int iOffset, double dWeigh
 /**
 Skews a column vertically (with filtered weights). 
 Limited to 45 degree skewing only. Filters two adjacent pixels.
-Parameter T can be BYTE, WORD of float. 
+Parameter T can be uint8_t, uint16_t of float. 
 @param src Pointer to source image to rotate
 @param dst Pointer to destination image
 @param col Column index
@@ -183,11 +183,11 @@ Parameter T can be BYTE, WORD of float.
 @param bkcolor Background color
 */
 template <class T> void 
-VerticalSkewT(FIBITMAP *src, FIBITMAP *dst, int col, int iOffset, double weight, const void *bkcolor = NULL) {
-	INT64 iYPos;
+VerticalSkewT(FIBITMAP *src, FIBITMAP *dst, int col, int iOffset, double weight, const void *bkcolor = nullptr) {
+	int64_t iYPos;
 
-	INT64 src_height = FreeImage_GetHeight(src);
-	INT64 dst_height = FreeImage_GetHeight(dst);
+	int64_t src_height = FreeImage_GetHeight(src);
+	int64_t dst_height = FreeImage_GetHeight(dst);
 
 	T pxlSrc[4], pxlLeft[4], pxlOldLeft[4];	// 4 = 4*sizeof(T) max
 
@@ -200,51 +200,51 @@ VerticalSkewT(FIBITMAP *src, FIBITMAP *dst, int col, int iOffset, double weight,
 	}
 
 	// calculate the number of bytes per pixel
-	const INT64 bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
+	const int64_t bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 	// calculate the number of samples per pixel
-	const INT64 samples = bytespp / sizeof(T);
+	const int64_t samples = bytespp / sizeof(T);
 
-	const INT64 src_pitch = FreeImage_GetPitch(src);
-	const INT64 dst_pitch = FreeImage_GetPitch(dst);
-	const INT64 index = col * bytespp;
+	const int64_t src_pitch = FreeImage_GetPitch(src);
+	const int64_t dst_pitch = FreeImage_GetPitch(dst);
+	const int64_t index = col * bytespp;
 
-	BYTE *src_bits = FreeImage_GetBits(src) + index;
-	BYTE *dst_bits = FreeImage_GetBits(dst) + index;
+	uint8_t *src_bits = FreeImage_GetBits(src) + index;
+	uint8_t *dst_bits = FreeImage_GetBits(dst) + index;
 
 	// fill gap above skew with background
 	if(bkcolor) {
-		for(INT64 k = 0; k < iOffset; k++) {
+		for(int64_t k = 0; k < iOffset; k++) {
 			memcpy(dst_bits, bkcolor, bytespp);
 			dst_bits += dst_pitch;
 		}
 		memcpy(&pxlOldLeft[0], bkcolor, bytespp);
 	} else {
-		for(INT64 k = 0; k < iOffset; k++) {
+		for(int64_t k = 0; k < iOffset; k++) {
 			memset(dst_bits, 0, bytespp);
 			dst_bits += dst_pitch;
 		}
 		memset(&pxlOldLeft[0], 0, bytespp);
 	}
 
-	for(INT64 i = 0; i < src_height; i++) {
+	for(int64_t i = 0; i < src_height; i++) {
 		// loop through column pixels
-		AssignPixel((BYTE*)(&pxlSrc[0]), src_bits, bytespp);
+		AssignPixel((uint8_t*)(&pxlSrc[0]), src_bits, bytespp);
 		// calculate weights
-		for(INT64 j = 0; j < samples; j++) {
+		for(int64_t j = 0; j < samples; j++) {
 			pxlLeft[j] = static_cast<T>(pxlBkg[j] + (pxlSrc[j] - pxlBkg[j]) * weight + 0.5);
 		}
 		// check boundaries
 		iYPos = i + iOffset;
 		if((iYPos >= 0) && (iYPos < (int)dst_height)) {
 			// update left over on source
-			for(INT64 j = 0; j < samples; j++) {
+			for(int64_t j = 0; j < samples; j++) {
 				pxlSrc[j] = pxlSrc[j] - (pxlLeft[j] - pxlOldLeft[j]);
 			}
 			dst_bits = FreeImage_GetScanLine(dst, iYPos) + index;
-			AssignPixel(dst_bits, (BYTE*)(&pxlSrc[0]), bytespp);
+			AssignPixel(dst_bits, (uint8_t*)(&pxlSrc[0]), bytespp);
 		}
 		// save leftover for next pixel in scan
-		AssignPixel((BYTE*)(&pxlOldLeft[0]), (BYTE*)(&pxlLeft[0]), bytespp);
+		AssignPixel((uint8_t*)(&pxlOldLeft[0]), (uint8_t*)(&pxlLeft[0]), bytespp);
 
 		// next pixel in scan
 		src_bits += src_pitch;
@@ -256,13 +256,13 @@ VerticalSkewT(FIBITMAP *src, FIBITMAP *dst, int col, int iOffset, double weight,
 		dst_bits = FreeImage_GetScanLine(dst, iYPos) + index;
 
 		// if still in image bounds, put leftovers there				
-		AssignPixel((BYTE*)(dst_bits), (BYTE*)(&pxlOldLeft[0]), bytespp);
+		AssignPixel((uint8_t*)(dst_bits), (uint8_t*)(&pxlOldLeft[0]), bytespp);
 
 		// clear below skewed line with background
 		if(bkcolor) {
 			while(++iYPos < (int)dst_height) {					
 				dst_bits += dst_pitch;
-				AssignPixel((BYTE*)(dst_bits), (BYTE*)(bkcolor), bytespp);
+				AssignPixel((uint8_t*)(dst_bits), (uint8_t*)(bkcolor), bytespp);
 			}
 		} else {
 			while(++iYPos < (int)dst_height) {					
@@ -293,14 +293,14 @@ VerticalSkew(FIBITMAP *src, FIBITMAP *dst, int col, int iOffset, double dWeight,
 				case 8:
 				case 24:
 				case 32:
-					VerticalSkewT<BYTE>(src, dst, col, iOffset, dWeight, bkcolor);
+					VerticalSkewT<uint8_t>(src, dst, col, iOffset, dWeight, bkcolor);
 					break;
 			}
 			break;
 			case FIT_UINT16:
 			case FIT_RGB16:
 			case FIT_RGBA16:
-				VerticalSkewT<WORD>(src, dst, col, iOffset, dWeight, bkcolor);
+				VerticalSkewT<uint16_t>(src, dst, col, iOffset, dWeight, bkcolor);
 				break;
 			case FIT_FLOAT:
 			case FIT_RGBF:
@@ -315,51 +315,51 @@ Rotates an image by 90 degrees (counter clockwise).
 Precise rotation, no filters required.<br>
 Code adapted from CxImage (http://www.xdp.it/cximage.htm)
 @param src Pointer to source image to rotate
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 Rotate90(FIBITMAP *src) {
 
 	const unsigned bpp = FreeImage_GetBPP(src);
 
-	const INT64 src_width  = FreeImage_GetWidth(src);
-	const INT64 src_height = FreeImage_GetHeight(src);	
-	const INT64 dst_width  = src_height;
-	const INT64 dst_height = src_width;
+	const int64_t src_width  = FreeImage_GetWidth(src);
+	const int64_t src_height = FreeImage_GetHeight(src);	
+	const int64_t dst_width  = src_height;
+	const int64_t dst_height = src_width;
 
 	FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(src);
 
 	// allocate and clear dst image
 	FIBITMAP *dst = FreeImage_AllocateT(image_type, dst_width, dst_height, bpp);
-	if(NULL == dst) return NULL;
+	if(nullptr == dst) return nullptr;
 
 	// get src and dst scan width
-	const INT64 src_pitch  = FreeImage_GetPitch(src);
-	const INT64 dst_pitch  = FreeImage_GetPitch(dst);
+	const int64_t src_pitch  = FreeImage_GetPitch(src);
+	const int64_t dst_pitch  = FreeImage_GetPitch(dst);
 
 	switch(image_type) {
 		case FIT_BITMAP:
 			if(bpp == 1) {
 				// speedy rotate for BW images
 
-				BYTE *bsrc  = FreeImage_GetBits(src); 
-				BYTE *bdest = FreeImage_GetBits(dst);
-				BYTE *dbitsmax = bdest + dst_height * dst_pitch - 1;
+				uint8_t *bsrc  = FreeImage_GetBits(src); 
+				uint8_t *bdest = FreeImage_GetBits(dst);
+				uint8_t *dbitsmax = bdest + dst_height * dst_pitch - 1;
 				#pragma omp parallel for schedule(dynamic) default(none)
-				for(INT64 y = 0; y < src_height; y++) {
+				for(int64_t y = 0; y < src_height; y++) {
 					// figure out the column we are going to be copying to
 					const div_t div_r = div((int)y, 8);
 					// set bit pos of src column byte
-					const BYTE bitpos = (BYTE)(128 >> div_r.rem);
-					BYTE *srcdisp = bsrc + y * src_pitch;
-					for(INT64 x = 0; x < src_pitch; x++) {
+					const uint8_t bitpos = (uint8_t)(128 >> div_r.rem);
+					uint8_t *srcdisp = bsrc + y * src_pitch;
+					for(int64_t x = 0; x < src_pitch; x++) {
 						// get source bits
-						BYTE *sbits = srcdisp + x;
+						uint8_t *sbits = srcdisp + x;
 						// get destination column
-						BYTE *nrow = bdest + (dst_height - 1 - (x * 8)) * dst_pitch + div_r.quot;
+						uint8_t *nrow = bdest + (dst_height - 1 - (x * 8)) * dst_pitch + div_r.quot;
 						for (int z = 0; z < 8; z++) {
 						   // get destination byte
-							BYTE *dbits = nrow - z * dst_pitch;
+							uint8_t *dbits = nrow - z * dst_pitch;
 							if ((dbits < bdest) || (dbits > dbitsmax)) break;
 							if (*sbits & (128 >> z)) *dbits |= bitpos;
 						}
@@ -375,26 +375,26 @@ Rotate90(FIBITMAP *src) {
 				// speed somehow, but once you drop out of CPU's cache, things will slow down drastically.
 				// For older CPUs with less cache, lower value would yield better results.
 
-				BYTE *bsrc  = FreeImage_GetBits(src);  // source pixels
-				BYTE *bdest = FreeImage_GetBits(dst);  // destination pixels
+				uint8_t *bsrc  = FreeImage_GetBits(src);  // source pixels
+				uint8_t *bdest = FreeImage_GetBits(dst);  // destination pixels
 
 				// calculate the number of bytes per pixel (1 for 8-bit, 3 for 24-bit or 4 for 32-bit)
-				const INT64 bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
+				const int64_t bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 				
 				// for all image blocks of RBLOCK*RBLOCK pixels
 				
 				// x-segment
 				#pragma omp parallel for schedule(dynamic) default(none)
-				for(INT64 xs = 0; xs < dst_width; xs += RBLOCK) {
+				for(int64_t xs = 0; xs < dst_width; xs += RBLOCK) {
 					// y-segment
-					for(INT64 ys = 0; ys < dst_height; ys += RBLOCK) {
-						for(INT64 y = ys; y < MIN(dst_height, ys + RBLOCK); y++) {    // do rotation
-							const INT64 y2 = dst_height - y - 1;
+					for(int64_t ys = 0; ys < dst_height; ys += RBLOCK) {
+						for(int64_t y = ys; y < MIN(dst_height, ys + RBLOCK); y++) {    // do rotation
+							const int64_t y2 = dst_height - y - 1;
 							// point to src pixel at (y2, xs)
-							BYTE *src_bits = bsrc + (xs * src_pitch) + (y2 * bytespp);
+							uint8_t *src_bits = bsrc + (xs * src_pitch) + (y2 * bytespp);
 							// point to dst pixel at (xs, y)
-							BYTE *dst_bits = bdest + (y * dst_pitch) + (xs * bytespp);
-							for(INT64 x = xs; x < MIN(dst_width, xs + RBLOCK); x++) {
+							uint8_t *dst_bits = bdest + (y * dst_pitch) + (xs * bytespp);
+							for(int64_t x = xs; x < MIN(dst_width, xs + RBLOCK); x++) {
 								// dst.SetPixel(x, y, src.GetPixel(y2, x));
 								AssignPixel(dst_bits, src_bits, bytespp);
 								dst_bits += bytespp;
@@ -412,16 +412,16 @@ Rotate90(FIBITMAP *src) {
 		case FIT_RGBF:
 		case FIT_RGBAF:
 		{
-			BYTE *bsrc  = FreeImage_GetBits(src);  // source pixels
-			BYTE *bdest = FreeImage_GetBits(dst);  // destination pixels
+			uint8_t *bsrc  = FreeImage_GetBits(src);  // source pixels
+			uint8_t *bdest = FreeImage_GetBits(dst);  // destination pixels
 
 			// calculate the number of bytes per pixel
-			const INT64 bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
+			const int64_t bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 			#pragma omp parallel for schedule(dynamic) default(none)
-			for(INT64 y = 0; y < dst_height; y++) {
-				BYTE *src_bits = bsrc + (src_width - 1 - y) * bytespp;
-				BYTE *dst_bits = bdest + (y * dst_pitch);
-				for(INT64 x = 0; x < dst_width; x++) {
+			for(int64_t y = 0; y < dst_height; y++) {
+				uint8_t *src_bits = bsrc + (src_width - 1 - y) * bytespp;
+				uint8_t *dst_bits = bdest + (y * dst_pitch);
+				for(int64_t x = 0; x < dst_width; x++) {
 					AssignPixel(dst_bits, src_bits, bytespp);
 					src_bits += src_pitch;
 					dst_bits += bytespp;
@@ -438,33 +438,33 @@ Rotate90(FIBITMAP *src) {
 Rotates an image by 180 degrees (counter clockwise). 
 Precise rotation, no filters required.
 @param src Pointer to source image to rotate
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 Rotate180(FIBITMAP *src) {
 	const int bpp = FreeImage_GetBPP(src);
-	const INT64 src_width  = FreeImage_GetWidth(src);
-	const INT64 src_height = FreeImage_GetHeight(src);
-	const INT64 dst_width  = src_width;
-	const INT64 dst_height = src_height;
+	const int64_t src_width  = FreeImage_GetWidth(src);
+	const int64_t src_height = FreeImage_GetHeight(src);
+	const int64_t dst_width  = src_width;
+	const int64_t dst_height = src_height;
 
 	FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(src);
 
 	FIBITMAP *dst = FreeImage_AllocateT(image_type, dst_width, dst_height, bpp);
-	if(NULL == dst) return NULL;
+	if(nullptr == dst) return nullptr;
 
 	switch(image_type) {
 		case FIT_BITMAP:
 			if(bpp == 1) {
 				#pragma omp parallel for schedule(dynamic) default(none)
-				for(INT64 y = 0; y < src_height; y++) {
-					BYTE *src_bits = FreeImage_GetScanLine(src, y);
-					BYTE *dst_bits = FreeImage_GetScanLine(dst, dst_height - y - 1);
-					for(INT64 x = 0; x < src_width; x++) {
+				for(int64_t y = 0; y < src_height; y++) {
+					uint8_t *src_bits = FreeImage_GetScanLine(src, y);
+					uint8_t *dst_bits = FreeImage_GetScanLine(dst, dst_height - y - 1);
+					for(int64_t x = 0; x < src_width; x++) {
 						// get bit at (x, y)
-						INT64 k = (src_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
+						int64_t k = (src_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
 						// set bit at (dst_width - x - 1, dst_height - y - 1)
-						INT64 pos = dst_width - x - 1;
+						int64_t pos = dst_width - x - 1;
 						k ? dst_bits[pos >> 3] |= (0x80 >> (pos & 0x7)) : dst_bits[pos >> 3] &= (0xFF7F >> (pos & 0x7));
 					}			
 				}
@@ -479,12 +479,12 @@ Rotate180(FIBITMAP *src) {
 		case FIT_RGBAF:
 		{
 			 // Calculate the number of bytes per pixel
-			const INT64 bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
+			const int64_t bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 			#pragma omp parallel for schedule(dynamic) default(none)
-			for(INT64 y = 0; y < src_height; y++) {
-				BYTE *src_bits = FreeImage_GetScanLine(src, y);
-				BYTE *dst_bits = FreeImage_GetScanLine(dst, dst_height - y - 1) + (dst_width - 1) * bytespp;
-				for(INT64 x = 0; x < src_width; x++) {
+			for(int64_t y = 0; y < src_height; y++) {
+				uint8_t *src_bits = FreeImage_GetScanLine(src, y);
+				uint8_t *dst_bits = FreeImage_GetScanLine(dst, dst_height - y - 1) + (dst_width - 1) * bytespp;
+				for(int64_t x = 0; x < src_width; x++) {
 					// get pixel at (x, y)
 					// set pixel at (dst_width - x - 1, dst_height - y - 1)
 					AssignPixel(dst_bits, src_bits, bytespp);
@@ -504,51 +504,51 @@ Rotates an image by 270 degrees (counter clockwise).
 Precise rotation, no filters required.<br>
 Code adapted from CxImage (http://www.xdp.it/cximage.htm)
 @param src Pointer to source image to rotate
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 Rotate270(FIBITMAP *src) {
 	const unsigned bpp = FreeImage_GetBPP(src);
 
-	const INT64 src_width  = FreeImage_GetWidth(src);
-	const INT64 src_height = FreeImage_GetHeight(src);	
-	const INT64 dst_width  = src_height;
-	const INT64 dst_height = src_width;
+	const int64_t src_width  = FreeImage_GetWidth(src);
+	const int64_t src_height = FreeImage_GetHeight(src);	
+	const int64_t dst_width  = src_height;
+	const int64_t dst_height = src_width;
 
 	FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(src);
 
 	// allocate and clear dst image
 	FIBITMAP *dst = FreeImage_AllocateT(image_type, dst_width, dst_height, bpp);
-	if(NULL == dst) return NULL;
+	if(nullptr == dst) return nullptr;
 
 	// get src and dst scan width
-	const INT64 src_pitch  = FreeImage_GetPitch(src);
-	const INT64 dst_pitch  = FreeImage_GetPitch(dst);
+	const int64_t src_pitch  = FreeImage_GetPitch(src);
+	const int64_t dst_pitch  = FreeImage_GetPitch(dst);
 	
 	switch(image_type) {
 		case FIT_BITMAP:
 			if(bpp == 1) {
 				// speedy rotate for BW images
 				
-				BYTE *bsrc  = FreeImage_GetBits(src); 
-				BYTE *bdest = FreeImage_GetBits(dst);
-				BYTE *dbitsmax = bdest + dst_height * dst_pitch - 1;
-				INT64 dlineup = 8 * dst_pitch - dst_width;
+				uint8_t *bsrc  = FreeImage_GetBits(src); 
+				uint8_t *bdest = FreeImage_GetBits(dst);
+				uint8_t *dbitsmax = bdest + dst_height * dst_pitch - 1;
+				int64_t dlineup = 8 * dst_pitch - dst_width;
 				#pragma omp parallel for schedule(dynamic) default(none)
-				for(INT64 y = 0; y < src_height; y++) {
+				for(int64_t y = 0; y < src_height; y++) {
 					// figure out the column we are going to be copying to
 					const div_t div_r = div((int)(y + dlineup), 8);
 					// set bit pos of src column byte
-					const BYTE bitpos = (BYTE)(1 << div_r.rem);
-					const BYTE *srcdisp = bsrc + y * src_pitch;
-					for(INT64 x = 0; x < src_pitch; x++) {
+					const uint8_t bitpos = (uint8_t)(1 << div_r.rem);
+					const uint8_t *srcdisp = bsrc + y * src_pitch;
+					for(int64_t x = 0; x < src_pitch; x++) {
 						// get source bits
-						const BYTE *sbits = srcdisp + x;
+						const uint8_t *sbits = srcdisp + x;
 						// get destination column
-						BYTE *nrow = bdest + (x * 8) * dst_pitch + dst_pitch - 1 - div_r.quot;
-						for(INT64 z = 0; z < 8; z++) {
+						uint8_t *nrow = bdest + (x * 8) * dst_pitch + dst_pitch - 1 - div_r.quot;
+						for(int64_t z = 0; z < 8; z++) {
 						   // get destination byte
-							BYTE *dbits = nrow + z * dst_pitch;
+							uint8_t *dbits = nrow + z * dst_pitch;
 							if ((dbits < bdest) || (dbits > dbitsmax)) break;
 							if (*sbits & (128 >> z)) *dbits |= bitpos;
 						}
@@ -564,26 +564,26 @@ Rotate270(FIBITMAP *src) {
 				// speed somehow, but once you drop out of CPU's cache, things will slow down drastically.
 				// For older CPUs with less cache, lower value would yield better results.
 
-				BYTE *bsrc  = FreeImage_GetBits(src);  // source pixels
-				BYTE *bdest = FreeImage_GetBits(dst);  // destination pixels
+				uint8_t *bsrc  = FreeImage_GetBits(src);  // source pixels
+				uint8_t *bdest = FreeImage_GetBits(dst);  // destination pixels
 
 				// Calculate the number of bytes per pixel (1 for 8-bit, 3 for 24-bit or 4 for 32-bit)
-				const INT64 bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
+				const int64_t bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 
 				// for all image blocks of RBLOCK*RBLOCK pixels
 
 				// x-segment
 				#pragma omp parallel for schedule(dynamic) default(none)
-				for(INT64 xs = 0; xs < dst_width; xs += RBLOCK) {
+				for(int64_t xs = 0; xs < dst_width; xs += RBLOCK) {
 					// y-segment
-					for(INT64 ys = 0; ys < dst_height; ys += RBLOCK) {
-						for(INT64 x = xs; x < MIN(dst_width, xs + RBLOCK); x++) {    // do rotation
-							INT64 x2 = dst_width - x - 1;
+					for(int64_t ys = 0; ys < dst_height; ys += RBLOCK) {
+						for(int64_t x = xs; x < MIN(dst_width, xs + RBLOCK); x++) {    // do rotation
+							int64_t x2 = dst_width - x - 1;
 							// point to src pixel at (ys, x2)
-							BYTE *src_bits = bsrc + (x2 * src_pitch) + (ys * bytespp);
+							uint8_t *src_bits = bsrc + (x2 * src_pitch) + (ys * bytespp);
 							// point to dst pixel at (x, ys)
-							BYTE *dst_bits = bdest + (ys * dst_pitch) + (x * bytespp);
-							for(INT64 y = ys; y < MIN(dst_height, ys + RBLOCK); y++) {
+							uint8_t *dst_bits = bdest + (ys * dst_pitch) + (x * bytespp);
+							for(int64_t y = ys; y < MIN(dst_height, ys + RBLOCK); y++) {
 								// dst.SetPixel(x, y, src.GetPixel(y, x2));
 								AssignPixel(dst_bits, src_bits, bytespp);
 								src_bits += bytespp;
@@ -601,16 +601,16 @@ Rotate270(FIBITMAP *src) {
 		case FIT_RGBF:
 		case FIT_RGBAF:
 		{
-			BYTE *bsrc  = FreeImage_GetBits(src);  // source pixels
-			BYTE *bdest = FreeImage_GetBits(dst);  // destination pixels
+			uint8_t *bsrc  = FreeImage_GetBits(src);  // source pixels
+			uint8_t *bdest = FreeImage_GetBits(dst);  // destination pixels
 
 			// calculate the number of bytes per pixel
-			const INT64 bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
+			const int64_t bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 			#pragma omp parallel for schedule(dynamic) default(none)
-			for(INT64 y = 0; y < dst_height; y++) {
-				BYTE *src_bits = bsrc + (src_height - 1) * src_pitch + y * bytespp;
-				BYTE *dst_bits = bdest + (y * dst_pitch);
-				for(INT64 x = 0; x < dst_width; x++) {
+			for(int64_t y = 0; y < dst_height; y++) {
+				uint8_t *src_bits = bsrc + (src_height - 1) * src_pitch + y * bytespp;
+				uint8_t *dst_bits = bdest + (y * dst_pitch);
+				for(int64_t x = 0; x < dst_width; x++) {
 					AssignPixel(dst_bits, src_bits, bytespp);
 					src_bits -= src_pitch;
 					dst_bits += bytespp;
@@ -628,13 +628,13 @@ Rotates an image by a given degree in range [-45 .. +45] (counter clockwise)
 using the 3-shear technique.
 @param src Pointer to source image to rotate
 @param dAngle Rotation angle
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 Rotate45(FIBITMAP *src, double dAngle, const void *bkcolor) {
 	const double ROTATE_PI = double(3.1415926535897932384626433832795);
 
-	INT64 u;
+	int64_t u;
 
 	const unsigned bpp = FreeImage_GetBPP(src);
 
@@ -642,22 +642,22 @@ Rotate45(FIBITMAP *src, double dAngle, const void *bkcolor) {
 	const double dSinE = sin(dRadAngle);
 	const double dTan = tan(dRadAngle / 2);
 
-	const INT64 src_width  = FreeImage_GetWidth(src);
-	const INT64 src_height = FreeImage_GetHeight(src);
+	const int64_t src_width  = FreeImage_GetWidth(src);
+	const int64_t src_height = FreeImage_GetHeight(src);
 
 	FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(src);
 
 	// Calc first shear (horizontal) destination image dimensions 
-	const INT64 width_1  = src_width + unsigned((double)src_height * fabs(dTan) + 0.5);
-	const INT64 height_1 = src_height; 
+	const int64_t width_1  = src_width + unsigned((double)src_height * fabs(dTan) + 0.5);
+	const int64_t height_1 = src_height; 
 
 	// Perform 1st shear (horizontal)
 	// ----------------------------------------------------------------------
 
 	// Allocate image for 1st shear
 	FIBITMAP *dst1 = FreeImage_AllocateT(image_type, width_1, height_1, bpp);
-	if(NULL == dst1) {
-		return NULL;
+	if(nullptr == dst1) {
+		return nullptr;
 	}
 	
 	for(u = 0; u < height_1; u++) {  
@@ -679,14 +679,14 @@ Rotate45(FIBITMAP *src, double dAngle, const void *bkcolor) {
 	// ----------------------------------------------------------------------
 
 	// Calc 2nd shear (vertical) destination image dimensions
-	const INT64 width_2  = width_1;
-	INT64 height_2 = unsigned((double)src_width * fabs(dSinE) + (double)src_height * cos(dRadAngle) + 0.5) + 1;
+	const int64_t width_2  = width_1;
+	int64_t height_2 = unsigned((double)src_width * fabs(dSinE) + (double)src_height * cos(dRadAngle) + 0.5) + 1;
 
 	// Allocate image for 2nd shear
 	FIBITMAP *dst2 = FreeImage_AllocateT(image_type, width_2, height_2, bpp);
-	if(NULL == dst2) {
+	if(nullptr == dst2) {
 		FreeImage_Unload(dst1);
-		return NULL;
+		return nullptr;
 	}
 
 	double dOffset;     // Variable skew offset
@@ -711,14 +711,14 @@ Rotate45(FIBITMAP *src, double dAngle, const void *bkcolor) {
 	FreeImage_Unload(dst1);
 
 	// Calc 3rd shear (horizontal) destination image dimensions
-	const INT64 width_3  = unsigned(double(src_height) * fabs(dSinE) + double(src_width) * cos(dRadAngle) + 0.5) + 1;
-	const INT64 height_3 = height_2;
+	const int64_t width_3  = unsigned(double(src_height) * fabs(dSinE) + double(src_width) * cos(dRadAngle) + 0.5) + 1;
+	const int64_t height_3 = height_2;
 
 	// Allocate image for 3rd shear
 	FIBITMAP *dst3 = FreeImage_AllocateT(image_type, width_3, height_3, bpp);
-	if(NULL == dst3) {
+	if(nullptr == dst3) {
 		FreeImage_Unload(dst2);
-		return NULL;
+		return nullptr;
 	}
 
 	if(dSinE >= 0) {
@@ -746,12 +746,12 @@ Angle is unlimited, except for 1-bit images (limited to integer multiples of 90 
 3-shears technique is used.
 @param src Pointer to source image to rotate
 @param dAngle Rotation angle
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 RotateAny(FIBITMAP *src, double dAngle, const void *bkcolor) {
-	if(NULL == src) {
-		return NULL;
+	if(nullptr == src) {
+		return nullptr;
 	}
 
 	FIBITMAP *image = src;
@@ -791,9 +791,9 @@ RotateAny(FIBITMAP *src, double dAngle, const void *bkcolor) {
 
 	// If we got here, angle is in (-45 .. +45]
 
-	if(NULL == image)	{
+	if(nullptr == image)	{
 		// Failed to allocate middle image
-		return NULL;
+		return nullptr;
 	}
 
 	if(0 == dAngle) {
@@ -822,7 +822,7 @@ RotateAny(FIBITMAP *src, double dAngle, const void *bkcolor) {
 
 FIBITMAP *DLL_CALLCONV 
 FreeImage_Rotate(FIBITMAP *dib, double angle, const void *bkcolor) {
-	if(!FreeImage_HasPixels(dib)) return NULL;
+	if(!FreeImage_HasPixels(dib)) return nullptr;
 
 	if(0 == angle) {
 		return FreeImage_Clone(dib);
@@ -839,7 +839,7 @@ FreeImage_Rotate(FIBITMAP *dib, double angle, const void *bkcolor) {
 				if(bpp == 1) {
 					// only rotate for integer multiples of 90 degree
 					if(fmod(angle, 90) != 0)
-						return NULL;
+						return nullptr;
 
 					// perform the rotation
 					FIBITMAP *dst = RotateAny(dib, angle, bkcolor);
@@ -906,9 +906,9 @@ FreeImage_Rotate(FIBITMAP *dib, double angle, const void *bkcolor) {
 		}
 
 	} catch(int) {
-		return NULL;
+		return nullptr;
 	}
 
-	return NULL;
+	return nullptr;
 }
 

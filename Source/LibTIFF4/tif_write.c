@@ -38,7 +38,7 @@
     (((tif)->tif_flags & TIFF_BEENWRITING) || TIFFWriteCheck((tif), 1, module))
 #define BUFFERCHECK(tif)                                                       \
     ((((tif)->tif_flags & TIFF_BUFFERSETUP) && tif->tif_rawdata) ||            \
-     TIFFWriteBufferSetup((tif), NULL, (tmsize_t)-1))
+     TIFFWriteBufferSetup((tif), nullptr, (tmsize_t)-1))
 
 static int TIFFGrowStrips(TIFF *tif, uint32_t delta, const char *module);
 static int TIFFAppendToStrip(TIFF *tif, uint32_t strip, uint8_t *data,
@@ -198,7 +198,7 @@ static int _TIFFReserveLargeEnoughWriteBuffer(TIFF *tif, uint32_t strip_or_tile)
         if (tif->tif_rawdatasize <= (tmsize_t)safe_buffer_size)
         {
             if (!(TIFFWriteBufferSetup(
-                    tif, NULL,
+                    tif, nullptr,
                     (tmsize_t)TIFFroundup_64(safe_buffer_size, 1024))))
                 return 0;
         }
@@ -577,7 +577,7 @@ int TIFFSetupStrips(TIFF *tif)
         tif, td->td_nstrips, sizeof(uint64_t), "for \"StripOffsets\" array");
     td->td_stripbytecount_p = (uint64_t *)_TIFFCheckMalloc(
         tif, td->td_nstrips, sizeof(uint64_t), "for \"StripByteCounts\" array");
-    if (td->td_stripoffset_p == NULL || td->td_stripbytecount_p == NULL)
+    if (td->td_stripoffset_p == nullptr || td->td_stripbytecount_p == nullptr)
         return (0);
     /*
      * Place data at the end-of-file
@@ -630,7 +630,7 @@ int TIFFWriteCheck(TIFF *tif, int tiles, const char *module)
                       "Must set \"ImageWidth\" before writing data");
         return (0);
     }
-    if (tif->tif_dir.td_stripoffset_p == NULL && !TIFFSetupStrips(tif))
+    if (tif->tif_dir.td_stripoffset_p == nullptr && !TIFFSetupStrips(tif))
     {
         tif->tif_dir.td_nstrips = 0;
         TIFFErrorExtR(tif, module, "No space for %s arrays",
@@ -680,7 +680,7 @@ int TIFFWriteBufferSetup(TIFF *tif, void *bp, tmsize_t size)
             _TIFFfreeExt(tif, tif->tif_rawdata);
             tif->tif_flags &= ~TIFF_MYBUFFER;
         }
-        tif->tif_rawdata = NULL;
+        tif->tif_rawdata = nullptr;
     }
     if (size == (tmsize_t)(-1))
     {
@@ -694,12 +694,12 @@ int TIFFWriteBufferSetup(TIFF *tif, void *bp, tmsize_t size)
          */
         if (size < 8 * 1024)
             size = 8 * 1024;
-        bp = NULL; /* NB: force malloc */
+        bp = nullptr; /* NB: force malloc */
     }
-    if (bp == NULL)
+    if (bp == nullptr)
     {
         bp = _TIFFmallocExt(tif, size);
-        if (bp == NULL)
+        if (bp == nullptr)
         {
             TIFFErrorExtR(tif, module, "No space for output buffer");
             return (0);
@@ -731,7 +731,7 @@ static int TIFFGrowStrips(TIFF *tif, uint32_t delta, const char *module)
     new_stripbytecount = (uint64_t *)_TIFFreallocExt(
         tif, td->td_stripbytecount_p,
         (td->td_nstrips + delta) * sizeof(uint64_t));
-    if (new_stripoffset == NULL || new_stripbytecount == NULL)
+    if (new_stripoffset == nullptr || new_stripbytecount == nullptr)
     {
         if (new_stripoffset)
             _TIFFfreeExt(tif, new_stripoffset);
@@ -853,7 +853,7 @@ static int TIFFAppendToStrip(TIFF *tif, uint32_t strip, uint8_t *data,
         }
 
         temp = _TIFFmallocExt(tif, tempSize);
-        if (temp == NULL)
+        if (temp == nullptr)
         {
             TIFFErrorExtR(tif, module, "No space for output buffer");
             return (0);

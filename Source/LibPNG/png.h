@@ -172,7 +172,7 @@
  * A "png_get_copyright" function is available, for convenient use in "about"
  * boxes and the like:
  *
- *    printf("%s", png_get_copyright(NULL));
+ *    printf("%s", png_get_copyright(nullptr));
  *
  * Also, the PNG logo (in PNG format, of course) is supplied in the
  * files "pngbar.png" and "pngbar.jpg (88x31) and "pngnow.png" (98x31).
@@ -371,7 +371,7 @@ extern "C" {
 /* Version information for C files, stored in png.c.  This had better match
  * the version above.
  */
-#define png_libpng_ver png_get_header_ver(NULL)
+#define png_libpng_ver png_get_header_ver(nullptr)
 
 /* This file is arranged in several sections:
  *
@@ -545,15 +545,15 @@ typedef png_sPLT_t * * png_sPLT_tpp;
 /* png_text holds the contents of a text/ztxt/itxt chunk in a PNG file,
  * and whether that contents is compressed or not.  The "key" field
  * points to a regular zero-terminated C string.  The "text" fields can be a
- * regular C string, an empty string, or a NULL pointer.
+ * regular C string, an empty string, or a nullptr pointer.
  * However, the structure returned by png_get_text() will always contain
  * the "text" field as a regular zero-terminated C string (possibly
- * empty), never a NULL pointer, so it can be safely used in printf() and
+ * empty), never a nullptr pointer, so it can be safely used in printf() and
  * other string-handling functions.  Note that the "itxt_length", "lang", and
  * "lang_key" members of the structure only exist when the library is built
  * with iTXt chunk support.  Prior to libpng-1.4.0 the library was built by
  * default without iTXt support. Also note that when iTXt *is* supported,
- * the "lang" and "lang_key" fields contain NULL pointers when the
+ * the "lang" and "lang_key" fields contain nullptr pointers when the
  * "compression" field contains * PNG_TEXT_COMPRESSION_NONE or
  * PNG_TEXT_COMPRESSION_zTXt. Note that the "compression value" is not the
  * same as what appears in the PNG tEXt/zTXt/iTXt chunk's "compression flag"
@@ -568,13 +568,13 @@ typedef struct png_text_struct
                               2: iTXt, deflate  */
    png_charp key;          /* keyword, 1-79 character description of "text" */
    png_charp text;         /* comment, may be an empty string (ie "")
-                              or a NULL pointer */
+                              or a nullptr pointer */
    size_t text_length;     /* length of the text string */
    size_t itxt_length;     /* length of the itxt string */
    png_charp lang;         /* language code, 0-79 characters
-                              or a NULL pointer */
+                              or a nullptr pointer */
    png_charp lang_key;     /* keyword translated UTF-8 string, 0 or more
-                              chars or a NULL pointer */
+                              chars or a nullptr pointer */
 } png_text;
 typedef png_text * png_textp;
 typedef const png_text * png_const_textp;
@@ -942,9 +942,9 @@ PNG_EXPORT(7, void, png_set_compression_buffer_size, (png_structrp png_ptr,
 #ifdef PNG_SETJMP_SUPPORTED
 /* This function returns the jmp_buf built in to *png_ptr.  It must be
  * supplied with an appropriate 'longjmp' function to use on that jmp_buf
- * unless the default error function is overridden in which case NULL is
+ * unless the default error function is overridden in which case nullptr is
  * acceptable.  The size of the jmp_buf is checked against the actual size
- * allocated by the library - the call will return NULL on a mismatch
+ * allocated by the library - the call will return nullptr on a mismatch
  * indicating an ABI mismatch.
  */
 PNG_EXPORT(8, jmp_buf*, png_set_longjmp_fn, (png_structrp png_ptr,
@@ -1564,7 +1564,7 @@ PNG_EXPORT(74, void, png_init_io, (png_structrp png_ptr, png_FILE_p fp));
  * supplied functions.  If no messages are to be printed you must still
  * write and use replacement functions. The replacement error_fn should
  * still do a longjmp to the last setjmp location if you are using this
- * method of error handling.  If error_fn or warning_fn is NULL, the
+ * method of error handling.  If error_fn or warning_fn is nullptr, the
  * default function will be used.
  */
 
@@ -1575,11 +1575,11 @@ PNG_EXPORT(75, void, png_set_error_fn, (png_structrp png_ptr,
 PNG_EXPORT(76, png_voidp, png_get_error_ptr, (png_const_structrp png_ptr));
 
 /* Replace the default data output functions with a user supplied one(s).
- * If buffered output is not used, then output_flush_fn can be set to NULL.
+ * If buffered output is not used, then output_flush_fn can be set to nullptr.
  * If PNG_WRITE_FLUSH_SUPPORTED is not defined at libpng compile time
- * output_flush_fn will be ignored (and thus can be NULL).
- * It is probably a mistake to use NULL for output_flush_fn if
- * write_data_fn is not also NULL unless you have built libpng with
+ * output_flush_fn will be ignored (and thus can be nullptr).
+ * It is probably a mistake to use nullptr for output_flush_fn if
+ * write_data_fn is not also nullptr unless you have built libpng with
  * PNG_WRITE_FLUSH_SUPPORTED undefined, because in this case libpng's
  * default flush function, which uses the standard *FILE structure, will
  * be used.
@@ -1705,7 +1705,7 @@ PNG_EXPORT(219, size_t, png_process_data_pause, (png_structrp, int save));
 PNG_EXPORT(220, png_uint_32, png_process_data_skip, (png_structrp));
 
 /* Function that combines rows.  'new_row' is a flag that should come from
- * the callback and be non-NULL if anything needs to be done; the library
+ * the callback and be non-nullptr if anything needs to be done; the library
  * stores its own version of the new data internally and ignores the passed
  * in value.
  */
@@ -2115,10 +2115,10 @@ PNG_EXPORT(162, int, png_get_text, (png_const_structrp png_ptr,
 #endif
 
 /* Note while png_set_text() will accept a structure whose text,
- * language, and  translated keywords are NULL pointers, the structure
+ * language, and  translated keywords are nullptr pointers, the structure
  * returned by png_get_text will always contain regular
  * zero-terminated C strings.  They might be empty strings but
- * they will never be NULL pointers.
+ * they will never be nullptr pointers.
  */
 
 #ifdef PNG_TEXT_SUPPORTED
@@ -2635,7 +2635,7 @@ PNG_EXPORT(243, int, png_get_palette_max, (png_const_structp png_ptr,
  * To read a PNG file using the simplified API:
  *
  * 1) Declare a 'png_image' structure (see below) on the stack, set the
- *    version field to PNG_IMAGE_VERSION and the 'opaque' pointer to NULL
+ *    version field to PNG_IMAGE_VERSION and the 'opaque' pointer to nullptr
  *    (this is REQUIRED, your program may crash if you don't do it.)
  * 2) Call the appropriate png_image_begin_read... function.
  * 3) Set the png_image 'format' member to the required sample format.
@@ -2671,7 +2671,7 @@ PNG_EXPORT(243, int, png_get_palette_max, (png_const_structp png_ptr,
 typedef struct png_control *png_controlp;
 typedef struct
 {
-   png_controlp opaque;    /* Initialize to NULL, free with png_image_free */
+   png_controlp opaque;    /* Initialize to nullptr, free with png_image_free */
    png_uint_32  version;   /* Set to PNG_IMAGE_VERSION */
    png_uint_32  width;     /* Image width in pixels (columns) */
    png_uint_32  height;    /* Image height in pixels (rows) */
@@ -2974,7 +2974,7 @@ typedef struct
  * ---------
  *
  * The png_image passed to the read APIs must have been initialized by setting
- * the png_controlp field 'opaque' to NULL (or, safer, memset the whole thing.)
+ * the png_controlp field 'opaque' to nullptr (or, safer, memset the whole thing.)
  */
 #ifdef PNG_STDIO_SUPPORTED
 PNG_EXPORT(234, int, png_image_begin_read_from_file, (png_imagep image,
@@ -3005,7 +3005,7 @@ PNG_EXPORT(237, int, png_image_finish_read, (png_imagep image,
     *
     * background need only be supplied if an alpha channel must be removed from
     * a png_byte format and the removal is to be done by compositing on a solid
-    * color; otherwise it may be NULL and any composition will be done directly
+    * color; otherwise it may be nullptr and any composition will be done directly
     * onto the buffer.  The value is an sRGB color to use for the background,
     * for grayscale output the green channel is used.
     *
@@ -3029,7 +3029,7 @@ PNG_EXPORT(237, int, png_image_finish_read, (png_imagep image,
 
 PNG_EXPORT(238, void, png_image_free, (png_imagep image));
    /* Free any data allocated by libpng in image->opaque, setting the pointer to
-    * NULL.  May be called at any time after the structure is initialized.
+    * nullptr.  May be called at any time after the structure is initialized.
     */
 #endif /* SIMPLIFIED_READ */
 
@@ -3041,7 +3041,7 @@ PNG_EXPORT(238, void, png_image_free, (png_imagep image));
  * initialize fields describing your image.
  *
  * version: must be set to PNG_IMAGE_VERSION
- * opaque: must be initialized to NULL
+ * opaque: must be initialized to nullptr
  * width: image width in pixels
  * height: image height in rows
  * format: the format of the data (image and color-map) you wish to write
@@ -3090,20 +3090,20 @@ PNG_EXPORT(245, int, png_image_write_to_memory, (png_imagep image, void *memory,
     * whole PNG data stream to *memory and updates *memory_bytes with the count
     * of bytes written.
     *
-    * 'memory' may be NULL.  In this case *memory_bytes is not read however on
+    * 'memory' may be nullptr.  In this case *memory_bytes is not read however on
     * success the number of bytes which would have been written will still be
     * stored in *memory_bytes.  On failure *memory_bytes will contain 0.
     *
-    * If 'memory' is not NULL it must point to memory[*memory_bytes] of
+    * If 'memory' is not nullptr it must point to memory[*memory_bytes] of
     * writeable memory.
     *
     * If the function returns success memory[*memory_bytes] (if 'memory' is not
-    * NULL) contains the written PNG data.  *memory_bytes will always be less
+    * nullptr) contains the written PNG data.  *memory_bytes will always be less
     * than or equal to the original value.
     *
     * If the function returns false and *memory_bytes was not changed an error
     * occurred during write.  If *memory_bytes was changed, or is not 0 if
-    * 'memory' was NULL, the write would have succeeded but for the memory
+    * 'memory' was nullptr, the write would have succeeded but for the memory
     * buffer being too small.  *memory_bytes contains the required number of
     * bytes and will be bigger that the original value.
     */

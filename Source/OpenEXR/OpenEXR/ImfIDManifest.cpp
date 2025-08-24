@@ -1041,7 +1041,7 @@ IDManifest::merge(const IDManifest& other)
 }
 
 
-CompressedIDManifest::CompressedIDManifest() : _compressedDataSize(0) ,  _uncompressedDataSize(0) , _data(NULL) {}
+CompressedIDManifest::CompressedIDManifest() : _compressedDataSize(0) ,  _uncompressedDataSize(0) , _data(nullptr) {}
 
 
 CompressedIDManifest::CompressedIDManifest(const CompressedIDManifest& other) 
@@ -1077,7 +1077,7 @@ CompressedIDManifest::~CompressedIDManifest()
     {        
         free(_data);
     }
-    _data = NULL;
+    _data = nullptr;
    _compressedDataSize=0;
 }
 

@@ -88,7 +88,7 @@ read_quant_tables (j_compress_ptr cinfo, char * filename, boolean force_baseline
   long val;
   unsigned int table[DCTSIZE2];
 
-  if ((fp = fopen(filename, "r")) == NULL) {
+  if ((fp = fopen(filename, "r")) == nullptr) {
     fprintf(stderr, "Can't open table file %s\n", filename);
     return FALSE;
   }
@@ -181,7 +181,7 @@ read_scan_script (j_compress_ptr cinfo, char * filename)
 #define MAX_SCANS  100		/* quite arbitrary limit */
   jpeg_scan_info scans[MAX_SCANS];
 
-  if ((fp = fopen(filename, "r")) == NULL) {
+  if ((fp = fopen(filename, "r")) == nullptr) {
     fprintf(stderr, "Can't open scan definition file %s\n", filename);
     return FALSE;
   }

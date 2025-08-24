@@ -617,12 +617,12 @@ void TIFFPrintDirectory(TIFF *tif, FILE *fd, long flags)
             const TIFFField *fip;
             uint32_t value_count;
             int mem_alloc = 0;
-            void *raw_data = NULL;
+            void *raw_data = nullptr;
             uint16_t dotrange[2]; /* must be kept in that scope and not moved in
                                      the below TIFFTAG_DOTRANGE specific case */
 
             fip = TIFFFieldWithTag(tif, tag);
-            if (fip == NULL)
+            if (fip == nullptr)
                 continue;
 
             if (fip->field_passcount)
@@ -695,7 +695,7 @@ void TIFFPrintDirectory(TIFF *tif, FILE *fd, long flags)
              * _TIFFPrettyPrintField() fall down and print it as
              * any other tag.
              */
-            if (raw_data != NULL &&
+            if (raw_data != nullptr &&
                 !_TIFFPrettyPrintField(tif, fip, fd, tag, value_count,
                                        raw_data))
                 _TIFFPrintField(fd, fip, value_count, raw_data);

@@ -54,7 +54,7 @@ static dng_ifd* search_single_ifd(const std::vector <dng_ifd *>& v, uint64 offse
 			}
 		}
     }
-    return NULL;
+    return nullptr;
 }
 
 static dng_ifd* search_for_ifd(const dng_info& info, uint64 offset, ushort w, ushort h, int& ifdIndex, dng_stream& stream)
@@ -230,13 +230,13 @@ int LibRaw::try_dngsdk()
             gpr_buffer_auto vc5_image_obj(allocator.Alloc, allocator.Free);
 
             gpr_read_image reader(&vc5_image_obj);
-            reader.Read(*host, *rawIFD, stream, *stage2.Get(), NULL, NULL);
+            reader.Read(*host, *rawIFD, stream, *stage2.Get(), nullptr, nullptr);
         }
         else
 #endif
         {
             dng_read_image reader;
-            reader.Read(*host, *rawIFD, stream, *stage2.Get(), NULL, NULL);
+            reader.Read(*host, *rawIFD, stream, *stage2.Get(), nullptr, nullptr);
         }
     }
 

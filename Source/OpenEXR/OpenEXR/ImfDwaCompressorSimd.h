@@ -879,7 +879,7 @@ dctInverse8x8_scalar (float *data)
 
     float alpha[4], beta[4], theta[4], gamma[4];
 
-    float *rowPtr = NULL;
+    float *rowPtr = nullptr;
 
     //
     // First pass - row wise.

@@ -60,19 +60,19 @@ void LibRaw::ciff_block_1030()
 void LibRaw::parse_ciff(int offset, int length, int depth)
 {
   int nrecs, c, type, len, wbi = -1;
-  INT64 save, tboff;
+  int64_t save, tboff;
   ushort key[] = {0x410, 0x45f3};
   ushort CanonColorInfo1_key;
   ushort Appendix_A = 0;
-  INT64 WB_table_offset = 0;
+  int64_t WB_table_offset = 0;
   int UseWBfromTable_as_AsShot = 1;
   int Got_AsShotWB = 0;
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
   if (metadata_blocks++ > LIBRAW_MAX_METADATA_BLOCKS)
     throw LIBRAW_EXCEPTION_IO_CORRUPT;
 
   fseek(ifp, offset + length - 4, SEEK_SET);
-  tboff = INT64(get4()) + offset;
+  tboff = int64_t(get4()) + offset;
   fseek(ifp, tboff, SEEK_SET);
   nrecs = get2();
   if (nrecs < 1)
@@ -87,7 +87,7 @@ void LibRaw::parse_ciff(int offset, int length, int depth)
   {
     type = get2();
     len = get4();
-    INT64 see = offset + get4();
+    int64_t see = offset + get4();
     save = ftell(ifp);
 
     /* the following tags are not sub-tables

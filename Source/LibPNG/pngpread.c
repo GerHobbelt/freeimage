@@ -36,7 +36,7 @@ void PNGAPI
 png_process_data(png_structrp png_ptr, png_inforp info_ptr,
     png_bytep buffer, size_t buffer_size)
 {
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
    png_push_restore_buffer(png_ptr, buffer, buffer_size);
@@ -50,7 +50,7 @@ png_process_data(png_structrp png_ptr, png_inforp info_ptr,
 size_t PNGAPI
 png_process_data_pause(png_structrp png_ptr, int save)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       /* It's easiest for the caller if we do the save; then the caller doesn't
        * have to supply the same data again:
@@ -93,7 +93,7 @@ png_process_data_skip(png_structrp png_ptr)
 void /* PRIVATE */
 png_process_some_data(png_structrp png_ptr, png_inforp info_ptr)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    switch (png_ptr->process_mode)
@@ -422,7 +422,7 @@ png_push_fill_buffer(png_structp png_ptr, png_bytep buffer, size_t length)
 {
    png_bytep ptr;
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    ptr = buffer;
@@ -496,7 +496,7 @@ png_push_save_buffer(png_structrp png_ptr)
       png_ptr->save_buffer = (png_bytep)png_malloc_warn(png_ptr,
           (size_t)new_max);
 
-      if (png_ptr->save_buffer == NULL)
+      if (png_ptr->save_buffer == nullptr)
       {
          png_free(png_ptr, old_buffer);
          png_error(png_ptr, "Insufficient memory for save_buffer");
@@ -628,7 +628,7 @@ png_process_IDAT_data(png_structrp png_ptr, png_bytep buffer,
     size_t buffer_length)
 {
    /* The caller checks for a non-zero buffer length. */
-   if (!(buffer_length > 0) || buffer == NULL)
+   if (!(buffer_length > 0) || buffer == nullptr)
       png_error(png_ptr, "No IDAT data (internal error)");
 
    /* This routine must process all the data it has been given
@@ -805,7 +805,7 @@ png_push_process_row(png_structrp png_ptr)
             {
                for (i = 0; i < 4 && png_ptr->pass == 2; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
+                  png_push_have_row(png_ptr, nullptr);
                   png_read_push_finish_row(png_ptr);
                }
             }
@@ -814,14 +814,14 @@ png_push_process_row(png_structrp png_ptr)
             {
                for (i = 0; i < 2 && png_ptr->pass == 4; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
+                  png_push_have_row(png_ptr, nullptr);
                   png_read_push_finish_row(png_ptr);
                }
             }
 
             if (png_ptr->pass == 6 && png_ptr->height <= 4)
             {
-                png_push_have_row(png_ptr, NULL);
+                png_push_have_row(png_ptr, nullptr);
                 png_read_push_finish_row(png_ptr);
             }
 
@@ -841,7 +841,7 @@ png_push_process_row(png_structrp png_ptr)
             {
                for (i = 0; i < 4 && png_ptr->pass == 2; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
+                  png_push_have_row(png_ptr, nullptr);
                   png_read_push_finish_row(png_ptr);
                }
             }
@@ -861,7 +861,7 @@ png_push_process_row(png_structrp png_ptr)
 
             for (i = 0; i < 4 && png_ptr->pass == 2; i++)
             {
-               png_push_have_row(png_ptr, NULL);
+               png_push_have_row(png_ptr, nullptr);
                png_read_push_finish_row(png_ptr);
             }
 
@@ -869,7 +869,7 @@ png_push_process_row(png_structrp png_ptr)
             {
                for (i = 0; i < 2 && png_ptr->pass == 4; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
+                  png_push_have_row(png_ptr, nullptr);
                   png_read_push_finish_row(png_ptr);
                }
             }
@@ -891,7 +891,7 @@ png_push_process_row(png_structrp png_ptr)
             {
                for (i = 0; i < 2 && png_ptr->pass == 4; i++)
                {
-                  png_push_have_row(png_ptr, NULL);
+                  png_push_have_row(png_ptr, nullptr);
                   png_read_push_finish_row(png_ptr);
                }
             }
@@ -911,13 +911,13 @@ png_push_process_row(png_structrp png_ptr)
 
             for (i = 0; i < 2 && png_ptr->pass == 4; i++)
             {
-               png_push_have_row(png_ptr, NULL);
+               png_push_have_row(png_ptr, nullptr);
                png_read_push_finish_row(png_ptr);
             }
 
             if (png_ptr->pass == 6) /* Pass 5 might be empty */
             {
-               png_push_have_row(png_ptr, NULL);
+               png_push_have_row(png_ptr, nullptr);
                png_read_push_finish_row(png_ptr);
             }
 
@@ -936,7 +936,7 @@ png_push_process_row(png_structrp png_ptr)
 
             if (png_ptr->pass == 6) /* Skip top generated row */
             {
-               png_push_have_row(png_ptr, NULL);
+               png_push_have_row(png_ptr, nullptr);
                png_read_push_finish_row(png_ptr);
             }
 
@@ -952,7 +952,7 @@ png_push_process_row(png_structrp png_ptr)
             if (png_ptr->pass != 6)
                break;
 
-            png_push_have_row(png_ptr, NULL);
+            png_push_have_row(png_ptr, nullptr);
             png_read_push_finish_row(png_ptr);
          }
       }
@@ -1034,21 +1034,21 @@ png_read_push_finish_row(png_structrp png_ptr)
 void /* PRIVATE */
 png_push_have_info(png_structrp png_ptr, png_inforp info_ptr)
 {
-   if (png_ptr->info_fn != NULL)
+   if (png_ptr->info_fn != nullptr)
       (*(png_ptr->info_fn))(png_ptr, info_ptr);
 }
 
 void /* PRIVATE */
 png_push_have_end(png_structrp png_ptr, png_inforp info_ptr)
 {
-   if (png_ptr->end_fn != NULL)
+   if (png_ptr->end_fn != nullptr)
       (*(png_ptr->end_fn))(png_ptr, info_ptr);
 }
 
 void /* PRIVATE */
 png_push_have_row(png_structrp png_ptr, png_bytep row)
 {
-   if (png_ptr->row_fn != NULL)
+   if (png_ptr->row_fn != nullptr)
       (*(png_ptr->row_fn))(png_ptr, row, png_ptr->row_number,
           (int)png_ptr->pass);
 }
@@ -1058,14 +1058,14 @@ void PNGAPI
 png_progressive_combine_row(png_const_structrp png_ptr, png_bytep old_row,
     png_const_bytep new_row)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
-   /* new_row is a flag here - if it is NULL then the app callback was called
+   /* new_row is a flag here - if it is nullptr then the app callback was called
     * from an empty row (see the calls to png_struct::row_fn below), otherwise
     * it must be png_ptr->row_buf+1
     */
-   if (new_row != NULL)
+   if (new_row != nullptr)
       png_combine_row(png_ptr, old_row, 1/*blocky display*/);
 }
 #endif /* READ_INTERLACING */
@@ -1075,7 +1075,7 @@ png_set_progressive_read_fn(png_structrp png_ptr, png_voidp progressive_ptr,
     png_progressive_info_ptr info_fn, png_progressive_row_ptr row_fn,
     png_progressive_end_ptr end_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->info_fn = info_fn;
@@ -1088,8 +1088,8 @@ png_set_progressive_read_fn(png_structrp png_ptr, png_voidp progressive_ptr,
 png_voidp PNGAPI
 png_get_progressive_ptr(png_const_structrp png_ptr)
 {
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 
    return png_ptr->io_ptr;
 }

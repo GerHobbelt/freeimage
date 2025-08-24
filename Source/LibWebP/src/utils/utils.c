@@ -65,7 +65,7 @@ struct MemBlock {
   MemBlock* next_;
 };
 
-static MemBlock* all_blocks = NULL;
+static MemBlock* all_blocks = nullptr;
 static size_t total_mem = 0;
 static size_t total_mem_allocated = 0;
 static size_t high_water_mark = 0;
@@ -81,7 +81,7 @@ static void PrintMemInfo(void) {
   fprintf(stderr, "total_mem: %u\n", (uint32_t)total_mem);
   fprintf(stderr, "total_mem allocated: %u\n", (uint32_t)total_mem_allocated);
   fprintf(stderr, "high-water mark: %u\n", (uint32_t)high_water_mark);
-  while (all_blocks != NULL) {
+  while (all_blocks != nullptr) {
     MemBlock* b = all_blocks;
     all_blocks = b->next_;
     free(b);
@@ -93,7 +93,7 @@ static void Increment(int* const v) {
 #if defined(MALLOC_FAIL_AT)
     {
       const char* const malloc_fail_at_str = getenv("MALLOC_FAIL_AT");
-      if (malloc_fail_at_str != NULL) {
+      if (malloc_fail_at_str != nullptr) {
         countdown_to_fail = atoi(malloc_fail_at_str);
       }
     }
@@ -104,7 +104,7 @@ static void Increment(int* const v) {
 #if MALLOC_LIMIT > 1
       mem_limit = (size_t)MALLOC_LIMIT;
 #endif
-      if (malloc_limit_str != NULL) {
+      if (malloc_limit_str != nullptr) {
         mem_limit = atoi(malloc_limit_str);
       }
     }
@@ -118,9 +118,9 @@ static void Increment(int* const v) {
 }
 
 static void AddMem(void* ptr, size_t size) {
-  if (ptr != NULL) {
+  if (ptr != nullptr) {
     MemBlock* const b = (MemBlock*)malloc(sizeof(*b));
-    if (b == NULL) abort();
+    if (b == nullptr) abort();
     b->next_ = all_blocks;
     all_blocks = b;
     b->ptr_ = ptr;
@@ -140,11 +140,11 @@ static void AddMem(void* ptr, size_t size) {
 }
 
 static void SubMem(void* ptr) {
-  if (ptr != NULL) {
+  if (ptr != nullptr) {
     MemBlock** b = &all_blocks;
     // Inefficient search, but that's just for debugging.
-    while (*b != NULL && (*b)->ptr_ != ptr) b = &(*b)->next_;
-    if (*b == NULL) {
+    while (*b != nullptr && (*b)->ptr_ != ptr) b = &(*b)->next_;
+    if (*b == nullptr) {
       fprintf(stderr, "Invalid pointer free! (%p)\n", ptr);
       abort();
     }
@@ -194,7 +194,7 @@ static int CheckSizeArgumentsOverflow(uint64_t nmemb, size_t size) {
 void* WebPSafeMalloc(uint64_t nmemb, size_t size) {
   void* ptr;
   Increment(&num_malloc_calls);
-  if (!CheckSizeArgumentsOverflow(nmemb, size)) return NULL;
+  if (!CheckSizeArgumentsOverflow(nmemb, size)) return nullptr;
   assert(nmemb * size > 0);
   ptr = malloc((size_t)(nmemb * size));
   AddMem(ptr, (size_t)(nmemb * size));
@@ -204,7 +204,7 @@ void* WebPSafeMalloc(uint64_t nmemb, size_t size) {
 void* WebPSafeCalloc(uint64_t nmemb, size_t size) {
   void* ptr;
   Increment(&num_calloc_calls);
-  if (!CheckSizeArgumentsOverflow(nmemb, size)) return NULL;
+  if (!CheckSizeArgumentsOverflow(nmemb, size)) return nullptr;
   assert(nmemb * size > 0);
   ptr = calloc((size_t)nmemb, size);
   AddMem(ptr, (size_t)(nmemb * size));
@@ -212,7 +212,7 @@ void* WebPSafeCalloc(uint64_t nmemb, size_t size) {
 }
 
 void WebPSafeFree(void* const ptr) {
-  if (ptr != NULL) {
+  if (ptr != nullptr) {
     Increment(&num_free_calls);
     SubMem(ptr);
   }
@@ -233,7 +233,7 @@ void WebPFree(void* ptr) {
 
 void WebPCopyPlane(const uint8_t* src, int src_stride,
                    uint8_t* dst, int dst_stride, int width, int height) {
-  assert(src != NULL && dst != NULL);
+  assert(src != nullptr && dst != nullptr);
   assert(abs(src_stride) >= width && abs(dst_stride) >= width);
   while (height-- > 0) {
     memcpy(dst, src, width);
@@ -243,7 +243,7 @@ void WebPCopyPlane(const uint8_t* src, int src_stride,
 }
 
 void WebPCopyPixels(const WebPPicture* const src, WebPPicture* const dst) {
-  assert(src != NULL && dst != NULL);
+  assert(src != nullptr && dst != nullptr);
   assert(src->width == dst->width && src->height == dst->height);
   assert(src->use_argb && dst->use_argb);
   WebPCopyPlane((uint8_t*)src->argb, 4 * src->argb_stride, (uint8_t*)dst->argb,
@@ -265,7 +265,7 @@ int WebPGetColorPalette(const WebPPicture* const pic, uint32_t* const palette) {
   const int width = pic->width;
   const int height = pic->height;
   uint32_t last_pix = ~argb[0];   // so we're sure that last_pix != argb[0]
-  assert(pic != NULL);
+  assert(pic != nullptr);
   assert(pic->use_argb);
 
   for (y = 0; y < height; ++y) {
@@ -297,7 +297,7 @@ int WebPGetColorPalette(const WebPPicture* const pic, uint32_t* const palette) {
     argb += pic->argb_stride;
   }
 
-  if (palette != NULL) {  // Fill the colors into palette.
+  if (palette != nullptr) {  // Fill the colors into palette.
     num_colors = 0;
     for (i = 0; i < COLOR_HASH_SIZE; ++i) {
       if (in_use[i]) {

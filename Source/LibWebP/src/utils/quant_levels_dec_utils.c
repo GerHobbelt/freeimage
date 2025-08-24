@@ -223,7 +223,7 @@ static int InitParams(uint8_t* const data, int width, int height, int stride,
   const size_t total_size = size_scratch_m + size_m + size_lut;
   uint8_t* mem = (uint8_t*)WebPSafeMalloc(1U, total_size);
 
-  if (mem == NULL) return 0;
+  if (mem == nullptr) return 0;
   p->mem_ = (void*)mem;
 
   p->start_ = (uint16_t*)mem;
@@ -264,7 +264,7 @@ int WebPDequantizeLevels(uint8_t* const data, int width, int height, int stride,
   int radius = 4 * strength / 100;
 
   if (strength < 0 || strength > 100) return 0;
-  if (data == NULL || width <= 0 || height <= 0) return 0;  // bad params
+  if (data == nullptr || width <= 0 || height <= 0) return 0;  // bad params
 
   // limit the filter size to not exceed the image dimensions
   if (2 * radius + 1 > width) radius = (width - 1) >> 1;

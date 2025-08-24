@@ -559,9 +559,9 @@ static int PredictorDecodeRow(TIFF *tif, uint8_t *op0, tmsize_t occ0,
 {
     TIFFPredictorState *sp = PredictorState(tif);
 
-    assert(sp != NULL);
-    assert(sp->decoderow != NULL);
-    assert(sp->decodepfunc != NULL);
+    assert(sp != nullptr);
+    assert(sp->decoderow != nullptr);
+    assert(sp->decodepfunc != nullptr);
 
     if ((*sp->decoderow)(tif, op0, occ0, s))
     {
@@ -583,8 +583,8 @@ static int PredictorDecodeTile(TIFF *tif, uint8_t *op0, tmsize_t occ0,
 {
     TIFFPredictorState *sp = PredictorState(tif);
 
-    assert(sp != NULL);
-    assert(sp->decodetile != NULL);
+    assert(sp != nullptr);
+    assert(sp->decodetile != nullptr);
 
     if ((*sp->decodetile)(tif, op0, occ0, s))
     {
@@ -596,7 +596,7 @@ static int PredictorDecodeTile(TIFF *tif, uint8_t *op0, tmsize_t occ0,
                           "occ0%rowsize != 0");
             return 0;
         }
-        assert(sp->decodepfunc != NULL);
+        assert(sp->decodepfunc != nullptr);
         while (occ0 > 0)
         {
             if (!(*sp->decodepfunc)(tif, op0, rowsize))
@@ -859,9 +859,9 @@ static int PredictorEncodeRow(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
 {
     TIFFPredictorState *sp = PredictorState(tif);
 
-    assert(sp != NULL);
-    assert(sp->encodepfunc != NULL);
-    assert(sp->encoderow != NULL);
+    assert(sp != nullptr);
+    assert(sp->encodepfunc != nullptr);
+    assert(sp->encoderow != nullptr);
 
     /* XXX horizontal differencing alters user's data XXX */
     if (!(*sp->encodepfunc)(tif, bp, cc))
@@ -879,16 +879,16 @@ static int PredictorEncodeTile(TIFF *tif, uint8_t *bp0, tmsize_t cc0,
     unsigned char *bp;
     int result_code;
 
-    assert(sp != NULL);
-    assert(sp->encodepfunc != NULL);
-    assert(sp->encodetile != NULL);
+    assert(sp != nullptr);
+    assert(sp->encodepfunc != nullptr);
+    assert(sp->encodetile != nullptr);
 
     /*
      * Do predictor manipulation in a working buffer to avoid altering
      * the callers buffer. http://trac.osgeo.org/gdal/ticket/1965
      */
     working_copy = (uint8_t *)_TIFFmallocExt(tif, cc0);
-    if (working_copy == NULL)
+    if (working_copy == nullptr)
     {
         TIFFErrorExtR(tif, module,
                       "Out of memory allocating %" PRId64 " byte temp buffer.",
@@ -923,15 +923,15 @@ static int PredictorEncodeTile(TIFF *tif, uint8_t *bp0, tmsize_t cc0,
 
 static const TIFFField predictFields[] = {
     {TIFFTAG_PREDICTOR, 1, 1, TIFF_SHORT, 0, TIFF_SETGET_UINT16,
-     TIFF_SETGET_UINT16, FIELD_PREDICTOR, FALSE, FALSE, "Predictor", NULL},
+     TIFF_SETGET_UINT16, FIELD_PREDICTOR, FALSE, FALSE, "Predictor", nullptr},
 };
 
 static int PredictorVSetField(TIFF *tif, uint32_t tag, va_list ap)
 {
     TIFFPredictorState *sp = PredictorState(tif);
 
-    assert(sp != NULL);
-    assert(sp->vsetparent != NULL);
+    assert(sp != nullptr);
+    assert(sp->vsetparent != nullptr);
 
     switch (tag)
     {
@@ -950,8 +950,8 @@ static int PredictorVGetField(TIFF *tif, uint32_t tag, va_list ap)
 {
     TIFFPredictorState *sp = PredictorState(tif);
 
-    assert(sp != NULL);
-    assert(sp->vgetparent != NULL);
+    assert(sp != nullptr);
+    assert(sp->vgetparent != nullptr);
 
     switch (tag)
     {
@@ -1025,8 +1025,8 @@ int TIFFPredictorInit(TIFF *tif)
     tif->tif_setupencode = PredictorSetupEncode;
 
     sp->predictor = 1;      /* default value */
-    sp->encodepfunc = NULL; /* no predictor routine */
-    sp->decodepfunc = NULL; /* no predictor routine */
+    sp->encodepfunc = nullptr; /* no predictor routine */
+    sp->decodepfunc = nullptr; /* no predictor routine */
     return 1;
 }
 

@@ -41,7 +41,7 @@ short LibRaw::guess_byte_order(int words)
 
 float LibRaw::find_green(int bps, int bite, int off0, int off1)
 {
-  UINT64 bitbuf = 0;
+  uint64_t bitbuf = 0;
   int vbits, col, i, c;
   ushort img[2][2064];
   double sum[] = {0, 0};

@@ -43,8 +43,8 @@ struct VP8Tokens {
 //------------------------------------------------------------------------------
 
 void VP8TBufferInit(VP8TBuffer* const b, int page_size) {
-  b->tokens_ = NULL;
-  b->pages_ = NULL;
+  b->tokens_ = nullptr;
+  b->pages_ = nullptr;
   b->last_page_ = &b->pages_;
   b->left_ = 0;
   b->page_size_ = (page_size < MIN_PAGE_SIZE) ? MIN_PAGE_SIZE : page_size;
@@ -52,9 +52,9 @@ void VP8TBufferInit(VP8TBuffer* const b, int page_size) {
 }
 
 void VP8TBufferClear(VP8TBuffer* const b) {
-  if (b != NULL) {
+  if (b != nullptr) {
     VP8Tokens* p = b->pages_;
-    while (p != NULL) {
+    while (p != nullptr) {
       VP8Tokens* const next = p->next_;
       WebPSafeFree(p);
       p = next;
@@ -64,16 +64,16 @@ void VP8TBufferClear(VP8TBuffer* const b) {
 }
 
 static int TBufferNewPage(VP8TBuffer* const b) {
-  VP8Tokens* page = NULL;
+  VP8Tokens* page = nullptr;
   if (!b->error_) {
     const size_t size = sizeof(*page) + b->page_size_ * sizeof(token_t);
     page = (VP8Tokens*)WebPSafeMalloc(1ULL, size);
   }
-  if (page == NULL) {
+  if (page == nullptr) {
     b->error_ = 1;
     return 0;
   }
-  page->next_ = NULL;
+  page->next_ = nullptr;
 
   *b->last_page_ = page;
   b->last_page_ = &page->next_;
@@ -201,9 +201,9 @@ int VP8EmitTokens(VP8TBuffer* const b, VP8BitWriter* const bw,
                   const uint8_t* const probas, int final_pass) {
   const VP8Tokens* p = b->pages_;
   assert(!b->error_);
-  while (p != NULL) {
+  while (p != nullptr) {
     const VP8Tokens* const next = p->next_;
-    const int N = (next == NULL) ? b->left_ : 0;
+    const int N = (next == nullptr) ? b->left_ : 0;
     int n = b->page_size_;
     const token_t* const tokens = TOKEN_DATA(p);
     while (n-- > N) {
@@ -218,7 +218,7 @@ int VP8EmitTokens(VP8TBuffer* const b, VP8BitWriter* const bw,
     if (final_pass) WebPSafeFree((void*)p);
     p = next;
   }
-  if (final_pass) b->pages_ = NULL;
+  if (final_pass) b->pages_ = nullptr;
   return 1;
 }
 
@@ -227,9 +227,9 @@ size_t VP8EstimateTokenSize(VP8TBuffer* const b, const uint8_t* const probas) {
   size_t size = 0;
   const VP8Tokens* p = b->pages_;
   assert(!b->error_);
-  while (p != NULL) {
+  while (p != nullptr) {
     const VP8Tokens* const next = p->next_;
-    const int N = (next == NULL) ? b->left_ : 0;
+    const int N = (next == nullptr) ? b->left_ : 0;
     int n = b->page_size_;
     const token_t* const tokens = TOKEN_DATA(p);
     while (n-- > N) {

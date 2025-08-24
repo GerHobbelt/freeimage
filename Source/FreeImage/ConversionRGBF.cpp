@@ -28,10 +28,10 @@
 
 FIBITMAP * DLL_CALLCONV
 FreeImage_ConvertToRGBF(FIBITMAP *dib) {
-	FIBITMAP *src = NULL;
-	FIBITMAP *dst = NULL;
+	FIBITMAP *src = nullptr;
+	FIBITMAP *dst = nullptr;
 
-	if(!FreeImage_HasPixels(dib)) return NULL;
+	if(!FreeImage_HasPixels(dib)) return nullptr;
 
 	const FREE_IMAGE_TYPE src_type = FreeImage_GetImageType(dib);
 
@@ -43,7 +43,7 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 			const FREE_IMAGE_COLOR_TYPE color_type = FreeImage_GetColorType(dib);
 			if((color_type != FIC_RGB) && (color_type != FIC_RGBALPHA)) {
 				src = FreeImage_ConvertTo24Bits(dib);
-				if(!src) return NULL;
+				if(!src) return nullptr;
 			} else {
 				src = dib;
 			}
@@ -74,7 +74,7 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 			return FreeImage_Clone(dib);
 			break;
 		default:
-			return NULL;
+			return nullptr;
 	}
 
 	// allocate dst image
@@ -87,7 +87,7 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 		if(src != dib) {
 			FreeImage_Unload(src);
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	// copy metadata from src to dst
@@ -104,11 +104,11 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 			// calculate the number of bytes per pixel (3 for 24-bit or 4 for 32-bit)
 			const unsigned bytespp = FreeImage_GetLine(src) / FreeImage_GetWidth(src);
 
-			const BYTE *src_bits = (BYTE*)FreeImage_GetBits(src);
-			BYTE *dst_bits = (BYTE*)FreeImage_GetBits(dst);
+			const uint8_t *src_bits = (uint8_t*)FreeImage_GetBits(src);
+			uint8_t *dst_bits = (uint8_t*)FreeImage_GetBits(dst);
 
 			for(unsigned y = 0; y < height; y++) {
-				const BYTE   *src_pixel = (BYTE*)src_bits;
+				const uint8_t   *src_pixel = (uint8_t*)src_bits;
 				FIRGBF *dst_pixel = (FIRGBF*)dst_bits;
 				for(unsigned x = 0; x < width; x++) {
 					// convert and scale to the range [0..1]
@@ -127,11 +127,11 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 
 		case FIT_UINT16:
 		{
-			const BYTE *src_bits = (BYTE*)FreeImage_GetBits(src);
-			BYTE *dst_bits = (BYTE*)FreeImage_GetBits(dst);
+			const uint8_t *src_bits = (uint8_t*)FreeImage_GetBits(src);
+			uint8_t *dst_bits = (uint8_t*)FreeImage_GetBits(dst);
 
 			for(unsigned y = 0; y < height; y++) {
-				const WORD *src_pixel = (WORD*)src_bits;
+				const uint16_t *src_pixel = (uint16_t*)src_bits;
 				FIRGBF *dst_pixel = (FIRGBF*)dst_bits;
 
 				for(unsigned x = 0; x < width; x++) {
@@ -149,8 +149,8 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 
 		case FIT_RGB16:
 		{
-			const BYTE *src_bits = (BYTE*)FreeImage_GetBits(src);
-			BYTE *dst_bits = (BYTE*)FreeImage_GetBits(dst);
+			const uint8_t *src_bits = (uint8_t*)FreeImage_GetBits(src);
+			uint8_t *dst_bits = (uint8_t*)FreeImage_GetBits(dst);
 
 			for(unsigned y = 0; y < height; y++) {
 				const FIRGB16 *src_pixel = (FIRGB16*) src_bits;
@@ -170,8 +170,8 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 
 		case FIT_RGBA16:
 		{
-			const BYTE *src_bits = (BYTE*)FreeImage_GetBits(src);
-			BYTE *dst_bits = (BYTE*)FreeImage_GetBits(dst);
+			const uint8_t *src_bits = (uint8_t*)FreeImage_GetBits(src);
+			uint8_t *dst_bits = (uint8_t*)FreeImage_GetBits(dst);
 
 			for(unsigned y = 0; y < height; y++) {
 				const FIRGBA16 *src_pixel = (FIRGBA16*) src_bits;
@@ -191,8 +191,8 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 
 		case FIT_FLOAT:
 		{
-			const BYTE *src_bits = (BYTE*)FreeImage_GetBits(src);
-			BYTE *dst_bits = (BYTE*)FreeImage_GetBits(dst);
+			const uint8_t *src_bits = (uint8_t*)FreeImage_GetBits(src);
+			uint8_t *dst_bits = (uint8_t*)FreeImage_GetBits(dst);
 
 			for(unsigned y = 0; y < height; y++) {
 				const float *src_pixel = (float*) src_bits;
@@ -214,8 +214,8 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 
 		case FIT_RGBAF:
 		{
-			const BYTE *src_bits = (BYTE*)FreeImage_GetBits(src);
-			BYTE *dst_bits = (BYTE*)FreeImage_GetBits(dst);
+			const uint8_t *src_bits = (uint8_t*)FreeImage_GetBits(src);
+			uint8_t *dst_bits = (uint8_t*)FreeImage_GetBits(dst);
 
 			for(unsigned y = 0; y < height; y++) {
 				const FIRGBAF *src_pixel = (FIRGBAF*) src_bits;

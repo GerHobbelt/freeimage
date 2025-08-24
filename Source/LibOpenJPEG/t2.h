@@ -109,7 +109,7 @@ OPJ_BOOL opj_t2_decode_packets(	opj_t2_t *t2,
  *
  * @param	p_image		Source or destination image
  * @param	p_cp		Image coding parameters.
- * @return		a new T2 handle if successful, NULL otherwise.
+ * @return		a new T2 handle if successful, nullptr otherwise.
 */
 opj_t2_t* opj_t2_create(opj_image_t *p_image, opj_cp_t *p_cp);
 

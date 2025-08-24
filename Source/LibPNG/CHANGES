@@ -159,7 +159,7 @@ Version 0.95 [March, 1997]
     input images without using it (not necessarily a good idea)
   Added "swap_alpha" transformation, which puts the alpha channel in front
     of the color bytes instead of after
-  Removed all implicit variable tests which assume NULL == 0 (I think)
+  Removed all implicit variable tests which assume nullptr == 0 (I think)
   Changed several variables to "png_size_t" to show 16/32-bit limitations
   Added new pCAL chunk read/write support
   Added experimental filter selection weighting (Greg Roelofs)
@@ -262,7 +262,7 @@ Version 0.99d [February 11, 1998]
   Revised libpng.3
   Version 99c "buffered" operations didn't work as intended.  Replaced them
     with png_memcpy_check() and png_memset_check().
-  Added many "if (png_ptr == NULL) return" to quell compiler warnings about
+  Added many "if (png_ptr == nullptr) return" to quell compiler warnings about
     unused png_ptr, mostly in pngget.c and pngset.c.
   Check for overlength tRNS chunk present when indexed-color PLTE is read.
   Cleaned up spelling errors in libpng.3/libpng.txt
@@ -377,7 +377,7 @@ Version 1.0.1c [May 11, 1998]
 Version 1.0.1d [May 24, 1998]
   Corrected several statements that used side effects illegally in pngrutil.c
     and pngtrans.c, that were introduced in version 1.0.1b
-  Revised png_read_rows() to avoid repeated if-testing for NULL (A Kleinert)
+  Revised png_read_rows() to avoid repeated if-testing for nullptr (A Kleinert)
   More corrections to example.c, use of row_pointers in png_write_image()
     and png_read_rows().
   Added pngdll.mak and pngdef.pas to scripts directory, contributed by
@@ -540,7 +540,7 @@ Version 1.0.4f [October 15, 1999]
     inadvertently trying to compile it.
   Changed png_get_header_version() from a function to a macro in png.h
   Added type casting mostly in pngrtran.c and pngwtran.c
-  Removed some pointless "ptr = NULL" in pngmem.c
+  Removed some pointless "ptr = nullptr" in pngmem.c
   Added a "contrib" directory containing the source code from Greg's book.
 
 Version 1.0.5 [October 15, 1999]
@@ -593,12 +593,12 @@ Version 1.0.5e [November 30, 1999]
     png_free_iCCP, png_free_pCAL, png_free_sPLT, png_free_text, png_get_iCCP,
     png_get_spalettes, png_set_iCCP, png_set_spalettes (Eric S. Raymond).
     NOTE: Applications that write text chunks MUST define png_text->lang
-    before calling png_set_text(). It must be set to NULL if you want to
+    before calling png_set_text(). It must be set to nullptr if you want to
     write tEXt or zTXt chunks.  If you want your application to be able to
     run with older versions of libpng, use
 
       #ifdef PNG_iTXt_SUPPORTED
-         png_text[i].lang = NULL;
+         png_text[i].lang = nullptr;
       #endif
 
   Changed png_get_oFFs() and png_set_oFFs() to use signed rather than unsigned
@@ -624,7 +624,7 @@ Version 1.0.5g [December 7, 1999]
 Version 1.0.5h [December 10, 1999]
   NOTE: regarding the note for version 1.0.5e, the following must also
     be included in your code:
-        png_text[i].translated_key = NULL;
+        png_text[i].translated_key = nullptr;
   Unknown chunk handling is now supported.
   Option to eliminate all floating point support was added.  Some new
     fixed-point functions such as png_set_gAMA_fixed() were added.
@@ -778,7 +778,7 @@ Version 1.0.6e [April 9, 2000]
 
 Version 1.0.6f [April 14, 2000]
   Revised png_set_iCCP() and png_set_rows() to avoid prematurely freeing data.
-  Add checks in png_set_text() for NULL members of the input text structure.
+  Add checks in png_set_text() for nullptr members of the input text structure.
   Revised libpng.txt/libpng.3.
   Removed superfluous prototype for png_set_iTXt from png.h
   Removed "else" from pngread.c, after png_error(), and changed "0" to "length".
@@ -867,12 +867,12 @@ Version 1.0.7beta15 [May 30, 2000]
     fewer error messages.
   Rearranged checks for Z_OK to check the most likely path first in pngpread.c
     and pngwutil.c.
-  Added checks in pngtest.c for png_create_*() returning NULL, and mentioned
+  Added checks in pngtest.c for png_create_*() returning nullptr, and mentioned
     in libpng.txt/libpng.3 the need for applications to check this.
   Changed names of png_default_*() functions in pngtest to pngtest_*().
   Changed return type of png_get_x|y_offset_*() from png_uint_32 to png_int_32.
   Fixed some bugs in the unused PNG_INCH_CONVERSIONS functions in pngget.c
-  Set each pointer to NULL after freeing it in png_free_data().
+  Set each pointer to nullptr after freeing it in png_free_data().
   Worked around a problem in pngconf.h; AIX's strings.h defines an "index"
     macro that conflicts with libpng's png_color_16.index. (Dimitri
     Papadapoulos)
@@ -1057,12 +1057,12 @@ Version 1.0.11beta2 [April 11, 2001]
   Updated scripts/pngos2.def
 
 Version 1.0.11beta3 [April 14, 2001]
-  Added checking the results of many instances of png_malloc() for NULL
+  Added checking the results of many instances of png_malloc() for nullptr
 
 Version 1.0.11beta4 [April 20, 2001]
-  Undid the changes from version 1.0.11beta3.  Added a check for NULL return
+  Undid the changes from version 1.0.11beta3.  Added a check for nullptr return
     from user's malloc_fn().
-  Removed some useless type casts of the NULL pointer.
+  Removed some useless type casts of the nullptr pointer.
   Added makefile.netbsd
 
 Version 1.0.11 [April 27, 2001]
@@ -1131,7 +1131,7 @@ Version 1.2.1beta1 [October 19, 2001]
   Revised example.c to provide more details about using row_callback().
 
 Version 1.2.1beta2 [October 25, 2001]
-  Added type cast to each NULL appearing in a function call, except for
+  Added type cast to each nullptr appearing in a function call, except for
     WINCE functions.
   Added makefile.so9.
 
@@ -1202,7 +1202,7 @@ Version 1.2.2beta5 [March 26, 2002]
   Added missing PNGAPI to several function definitions.
   Check for invalid bit_depth or color_type in png_get_IHDR(), and
     check for missing PLTE or IHDR in png_push_read_chunk() (Matthias Clasen).
-  Revised iTXt support to accept NULL for lang and lang_key.
+  Revised iTXt support to accept nullptr for lang and lang_key.
   Compute gamma for color components of background even when color_type is gray.
   Changed "()" to "{}" in scripts/libpng.pc.in.
   Revised makefiles to put png.h and pngconf.h only in $prefix/include/libpngNN
@@ -1400,7 +1400,7 @@ Version 1.2.6beta3 [July 18, 2004]
     inside the deflate stream (Cosmin).
   Fixed definition of isnonalpha(), in pngerror.c and pngrutil.c (Cosmin).
   Fixed handling of unknown chunks that come after IDAT (Cosmin).
-  Allowed png_error() and png_warning() to work even if png_ptr == NULL
+  Allowed png_error() and png_warning() to work even if png_ptr == nullptr
     (Cosmin).
   Replaced row_info->rowbytes with row_bytes in png_write_find_filter()
     (Cosmin).
@@ -1443,11 +1443,11 @@ Version 1.2.6beta4 [July 28, 2004]
   Added png_get_uint_31(png_ptr, buf) function.
   Added PNG_UINT_32_MAX macro.
   Renamed PNG_MAX_UINT to PNG_UINT_31_MAX.
-  Made png_zalloc() issue a png_warning and return NULL on potential
+  Made png_zalloc() issue a png_warning and return nullptr on potential
     overflow.
   Turn on PNG_NO_ZALLOC_ZERO by default in version 1.2.x
   Revised "clobber list" in pnggccrd.c so it will compile under gcc-3.4.
-  Revised Borland portion of png_malloc() to return NULL or issue
+  Revised Borland portion of png_malloc() to return nullptr or issue
     png_error() according to setting of PNG_FLAG_MALLOC_NULL_MEM_OK.
   Added PNG_NO_SEQUENTIAL_READ_SUPPORTED macro to conditionally remove
     sequential read support.
@@ -1457,7 +1457,7 @@ Version 1.2.6beta4 [July 28, 2004]
 
 Version 1.0.16rc1 and 1.2.6rc1 [August 4, 2004]
   Fixed buffer overflow vulnerability (CVE-2004-0597) in png_handle_tRNS().
-  Fixed NULL dereference vulnerability (CVE-2004-0598) in png_handle_iCCP().
+  Fixed nullptr dereference vulnerability (CVE-2004-0598) in png_handle_iCCP().
   Fixed integer overflow vulnerability (CVE-2004-0599) in png_read_png().
   Fixed some harmless bugs in png_handle_sBIT, etc, that would cause
     duplicate chunk types to go undetected.
@@ -1671,7 +1671,7 @@ Version 1.2.9beta8 [March 9, 2006]
 
 Version 1.2.9beta9 [March 10, 2006]
   Include "config.h" in pngconf.h when available.
-  Added some checks for NULL png_ptr or NULL info_ptr (timeless)
+  Added some checks for nullptr png_ptr or nullptr info_ptr (timeless)
 
 Version 1.2.9beta10 [March 20, 2006]
   Removed extra CR from contrib/visualpng/VisualPng.dsw (Cosmin)
@@ -1792,10 +1792,10 @@ Version 1.2.13beta1 [October 2, 2006]
 Version 1.0.21, 1.2.13 [November 14, 2006]
   Fix potential buffer overflow in sPLT chunk handler.
   Fix Makefile.am to not try to link to noexistent files.
-  Check all exported functions for NULL png_ptr.
+  Check all exported functions for nullptr png_ptr.
 
 Version 1.2.14beta1 [November 17, 2006]
-  Relocated three misplaced tests for NULL png_ptr.
+  Relocated three misplaced tests for nullptr png_ptr.
   Built Makefile.in with automake-1.9.6 instead of 1.9.2.
   Build configure with autoconf-2.60 instead of 2.59
 
@@ -1862,7 +1862,7 @@ Version 1.2.17beta1 [March 6, 2007]
   Deleted a redundant line from pngset.c.
 
 Version 1.2.17beta2 [April 26, 2007]
-  Relocated misplaced test for png_ptr == NULL in pngpread.c
+  Relocated misplaced test for png_ptr == nullptr in pngpread.c
   Change "==" to "&" for testing PNG_RGB_TO_GRAY_ERR & PNG_RGB_TO_GRAY_WARN
     flags.
   Changed remaining instances of PNG_ASSEMBLER_* to PNG_MMX_*
@@ -1901,7 +1901,7 @@ Version 1.2.19beta1 [May 18, 2007]
   Changed "const static" to "static PNG_CONST" everywhere, mostly undoing
     change of libpng-1.2.17beta2.  Changed other "const" to "PNG_CONST"
   Changed some handling of unused parameters, to avoid compiler warnings.
-    "if (unused == NULL) return;" becomes "unused = unused".
+    "if (unused == nullptr) return;" becomes "unused = unused".
 
 Version 1.2.19beta2 [May 18, 2007]
   Only use the valid bits of tRNS value in png_do_expand() (Brian Cartier)
@@ -2025,7 +2025,7 @@ Version 1.4.0beta11 [August 19, 2006]
   Added pngintrn.h to the Visual C++ projects (Cosmin).
   Removed scripts/list (Cosmin).
   Updated copyright year in scripts/pngwin.def (Cosmin).
-  Removed PNG_TYPECAST_NULL and used standard NULL consistently (Cosmin).
+  Removed PNG_TYPECAST_NULL and used standard nullptr consistently (Cosmin).
   Disallowed the user to redefine png_size_t, and enforced a consistent use
     of png_size_t across libpng (Cosmin).
   Changed the type of png_ptr->rowbytes, PNG_ROWBYTES() and friends
@@ -2061,10 +2061,10 @@ Version 1.4.0beta13 [November 10, 2006]
   Fix Makefile.am to not try to link to noexistent files.
 
 Version 1.4.0beta14 [November 15, 2006]
-  Check all exported functions for NULL png_ptr.
+  Check all exported functions for nullptr png_ptr.
 
 Version 1.4.0beta15 [November 17, 2006]
-  Relocated two misplaced tests for NULL png_ptr.
+  Relocated two misplaced tests for nullptr png_ptr.
   Built Makefile.in with automake-1.9.6 instead of 1.9.2.
   Build configure with autoconf-2.60 instead of 2.59
   Add "install: all" in Makefile.am so "configure; make install" will work.
@@ -2102,7 +2102,7 @@ Version 1.4.0beta22 [July 21, 2008]
   Change "purpose" and "buffer" to png_ptr->chunkdata to avoid memory leaking.
 
 Version 1.4.0beta23 [July 22, 2008]
-  Change "chunkdata = NULL" to "png_ptr->chunkdata = NULL" several places in
+  Change "chunkdata = nullptr" to "png_ptr->chunkdata = nullptr" several places in
     png_decompress_chunk().
 
 Version 1.4.0beta24 [July 25, 2008]
@@ -2188,7 +2188,7 @@ Version 1.4.0beta38 [November 22, 2008]
 
 Version 1.4.0beta39 [November 23, 2008]
   Revised png_warning() to write its message on standard output by default
-    when warning_fn is NULL.
+    when warning_fn is nullptr.
 
 Version 1.4.0beta40 [November 24, 2008]
   Eliminated png_check_cHRM().  Instead, always use png_check_cHRM_fixed().
@@ -2205,7 +2205,7 @@ Version 1.4.0beta42, 43 [December 1, 2008]
   Merge png_debug with version 1.2.34beta04.
 
 Version 1.4.0beta44 [December 6, 2008]
-  Removed redundant check for key==NULL before calling png_check_keyword()
+  Removed redundant check for key==nullptr before calling png_check_keyword()
     to ensure that new_key gets initialized and removed extra warning
     (Merge with version 1.2.34beta05 -- Arvan Pritchard).
 
@@ -2358,7 +2358,7 @@ Version 1.4.0beta69 [July 25, 2009]
   Added a prototype for png_64bit_product() in png.c
 
 Version 1.4.0beta70 [July 27, 2009]
-  Avoid a possible NULL dereference in debug build, in png_set_text_2().
+  Avoid a possible nullptr dereference in debug build, in png_set_text_2().
     (bug introduced in libpng-0.95, discovered by Evan Rouault)
 
 Version 1.4.0beta71 [July 29, 2009]
@@ -3700,7 +3700,7 @@ Version 1.5.7beta01 [November 4, 2011]
 Version 1.5.7beta02 [November 11, 2011]
   Check compression_type parameter in png_get_iCCP and remove spurious
     casts. The compression_type parameter is always assigned to, so must
-    be non-NULL. The cast of the profile length potentially truncated the
+    be non-nullptr. The cast of the profile length potentially truncated the
     value unnecessarily on a 16-bit int system, so the cast of the (byte)
     compression type to (int) is specified by ANSI-C anyway.
   Fixed FP division by zero in pngvalid.c; the 'test_pixel' code left
@@ -3827,7 +3827,7 @@ Version 1.6.0beta03 [December 22, 2011]
   Start-up code size improvements, error handler flexibility. These changes
     alter how the tricky allocation of the initial png_struct and png_info
     structures are handled. png_info is now handled in pretty much the same
-    way as everything else, except that the allocations handle NULL return
+    way as everything else, except that the allocations handle nullptr return
     silently.  png_struct is changed in a similar way on allocation and on
     deallocation a 'safety' error handler is put in place (which should never
     be required).  The error handler itself is changed to permit mismatches
@@ -4534,7 +4534,7 @@ Version 1.6.3beta02 [April 26, 2013]
 Version 1.6.3beta03 [April 30, 2013]
   Expanded manual paragraph about writing private chunks, particularly
     the need to call png_set_keep_unknown_chunks() when writing them.
-  Avoid dereferencing NULL pointer possibly returned from
+  Avoid dereferencing nullptr pointer possibly returned from
     png_create_write_struct() (Andrew Church).
 
 Version 1.6.3beta05 [May 9, 2013]
@@ -4753,9 +4753,9 @@ Version 1.6.8rc01 [December 12, 2013]
   Tidied up pngfix inits and fixed pngtest no-write builds.
 
 Version 1.6.8rc02 [December 14, 2013]
-  Handle zero-length PLTE chunk or NULL palette with png_error()
+  Handle zero-length PLTE chunk or nullptr palette with png_error()
     instead of png_chunk_report(), which by default issues a warning
-    rather than an error, leading to later reading from a NULL pointer
+    rather than an error, leading to later reading from a nullptr pointer
     (png_ptr->palette) in png_do_expand_palette(). This is CVE-2013-6954
     and VU#650142.  Libpng-1.6.1 through 1.6.7 are vulnerable.
     Libpng-1.6.0 and earlier do not have this bug.
@@ -4852,9 +4852,9 @@ Version 1.6.10beta02 [February 23, 2014]
     compile and link on Android by using /proc/cpuinfo, and the old linux code
     is in contrib/arm-neon/linux-auxv.c.  The new code avoids POSIX and Linux
     dependencies apart from opening /proc/cpuinfo and is C90 compliant.
-  Check for info_ptr == NULL early in png_read_end() so we don't need to
-    run all the png_handle_*() and depend on them to return if info_ptr == NULL.
-    This improves the performance of png_read_end(png_ptr, NULL) and makes
+  Check for info_ptr == nullptr early in png_read_end() so we don't need to
+    run all the png_handle_*() and depend on them to return if info_ptr == nullptr.
+    This improves the performance of png_read_end(png_ptr, nullptr) and makes
     it more robust against future programming errors.
   Check for __has_extension before using it in pngconf.h, to
     support older Clang versions (Jeremy Sequoia).
@@ -5047,7 +5047,7 @@ Version 1.6.14 [October 23, 2014]
 Version 1.6.15beta01 [October 29, 2014]
   Changed "if (!x)" to "if (x == 0)" and "if (x)" to "if (x != 0)"
   Simplified png_free_data().
-  Added missing "ptr = NULL" after some instances of png_free().
+  Added missing "ptr = nullptr" after some instances of png_free().
 
 Version 1.6.15beta02 [November 1, 2014]
   Changed remaining "if (!x)" to "if (x == 0)" and "if (x)" to "if (x != 0)"
@@ -5060,7 +5060,7 @@ Version 1.6.15beta04 [November 4, 2014]
     revision to configure.ac to support ARM on aarch64 instead (John Bowler).
 
 Version 1.6.15beta05 [November 5, 2014]
-  Use png_get_libpng_ver(NULL) instead of PNG_LIBPNG_VER_STRING in
+  Use png_get_libpng_ver(nullptr) instead of PNG_LIBPNG_VER_STRING in
     example.c, pngtest.c, and applications in the contrib directory.
   Fixed an out-of-range read in png_user_version_check() (Bug report from
     Qixue Xiao, CVE-2015-8540).
@@ -5082,7 +5082,7 @@ Version 1.6.15beta05 [November 5, 2014]
     warnings go away.
 
 Version 1.6.15beta06 [November 6, 2014]
-  Reverted use png_get_libpng_ver(NULL) instead of PNG_LIBPNG_VER_STRING
+  Reverted use png_get_libpng_ver(nullptr) instead of PNG_LIBPNG_VER_STRING
     in the manual, example.c, pngtest.c, and applications in the contrib
     directory.  It was incorrect advice.
 
@@ -5141,7 +5141,7 @@ Version 1.6.16 [December 22, 2014]
 Version 1.6.17beta01 [January 29, 2015]
   Removed duplicate PNG_SAFE_LIMITS_SUPPORTED handling from pngconf.h
   Corrected the width limit calculation in png_check_IHDR().
-  Removed user limits from pngfix. Also pass NULL pointers to
+  Removed user limits from pngfix. Also pass nullptr pointers to
     png_read_row to skip the unnecessary row de-interlace stuff.
   Added testing of png_set_packing() to pngvalid.c
   Regenerated configure scripts in the *.tar distributions with libtool-2.4.4
@@ -5170,7 +5170,7 @@ Version 1.6.17beta03 [February 17, 2015]
 
 Version 1.6.17beta04 [February 21, 2015]
   Added PNG_WRITE_CUSTOMIZE_COMPRESSION_SUPPORTED macro, on by default.
-  Allow user to call png_get_IHDR() with NULL arguments (Reuben Hawkins).
+  Allow user to call png_get_IHDR() with nullptr arguments (Reuben Hawkins).
   Rebuilt configure scripts with automake-1.15 and libtool-2.4.6
 
 Version 1.6.17beta05 [February 25, 2015]
@@ -5244,7 +5244,7 @@ Version 1.6.18beta04 [May 20, 2015]
   PNG_RELEASE_BUILD replaces tests where the code depended on the build base
     type and can be defined on the command line, allowing testing in beta
     builds (John Bowler).
-  Avoid Coverity issue 80858 (REVERSE NULL) in pngtest.c PNG_DEBUG builds.
+  Avoid Coverity issue 80858 (REVERSE nullptr) in pngtest.c PNG_DEBUG builds.
   Avoid a harmless potential integer overflow in png_XYZ_from_xy() (Bug
     report from Christopher Ferris).
 
@@ -5313,7 +5313,7 @@ Version 1.6.18 [July 23, 2015]
 Version 1.6.19beta01 [July 30, 2015]
   Updated obsolete information about the simplified API macros in the
     manual pages (Bug report by Arc Riley).
-  Avoid potentially dereferencing NULL info_ptr in png_info_init_3().
+  Avoid potentially dereferencing nullptr info_ptr in png_info_init_3().
   Rearranged png.h to put the major sections in the same order as
     in libpng17.
   Eliminated unused PNG_COST_SHIFT, PNG_WEIGHT_SHIFT, PNG_COST_FACTOR, and
@@ -5750,7 +5750,7 @@ Version 1.6.26rc01 [October 12, 2016]
   No changes.
 
 Version 1.6.26 [October 20, 2016]
-  Cosmetic change, "ptr != 0" to "ptr != NULL" in png.c and pngrutil.c
+  Cosmetic change, "ptr != 0" to "ptr != nullptr" in png.c and pngrutil.c
   Despammed email addresses (replaced "@" with " at ").
 
 Version 1.6.27beta01 [November 2, 2016]
@@ -5908,7 +5908,7 @@ Version 1.6.31 [July 27, 2017]
   No changes.
 
 Version 1.6.32beta01 [July 31, 2017]
-  Avoid possible NULL dereference in png_handle_eXIf when benign_errors
+  Avoid possible nullptr dereference in png_handle_eXIf when benign_errors
     are allowed. Avoid leaking the input buffer "eXIf_buf".
   Eliminated png_ptr->num_exif member from pngstruct.h and added num_exif
     to arguments for png_get_eXIf() and png_set_eXIf().
@@ -6054,7 +6054,7 @@ Version 1.6.35beta01 [March 6, 2018]
 
 Version 1.6.35beta02 [March 28, 2018]
   Make png_get_iCCP consistent with man page (allow compression-type argument
-  to be NULL, bug report by Lenard Szolnoki).
+  to be nullptr, bug report by Lenard Szolnoki).
 
 Version 1.6.35 [July 15, 2018]
   Replaced the remaining uses of png_size_t with size_t (Cosmin)

@@ -38,7 +38,7 @@ wstring WidenFilename (const char *filename)
 {
     wstring ret;
     int fnlen = static_cast<int>( strlen(filename) );
-    int len = MultiByteToWideChar(CP_UTF8, 0, filename, fnlen, NULL, 0 );
+    int len = MultiByteToWideChar(CP_UTF8, 0, filename, fnlen, nullptr, 0 );
     if (len > 0)
     {
         ret.resize(len);

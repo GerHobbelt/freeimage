@@ -203,7 +203,7 @@ void LibRaw::canon_load_raw()
 {
   ushort *pixel, *prow, *huff[2];
   int nblocks, lowbits, i, c, row, r, val;
-  INT64 save;
+  int64_t save;
   int block, diffbuf[64], leaf, len, diff, carry = 0, pnum = 0, base[2];
 
   crw_init_tables(tiff_compress, huff);
@@ -951,7 +951,7 @@ void LibRaw::nikon_yuv_load_raw()
   if (!image)
     throw LIBRAW_EXCEPTION_IO_CORRUPT;
   int row, col, yuv[4]={0,0,0,0}, rgb[3], b, c;
-  UINT64 bitbuf = 0;
+  uint64_t bitbuf = 0;
   float cmul[4];
   FORC4 { cmul[c] = cam_mul[c] > 0.001f ? cam_mul[c] : 1.f; }
   for (row = 0; row < raw_height; row++)
@@ -963,7 +963,7 @@ void LibRaw::nikon_yuv_load_raw()
       if (!(b = col & 1))
       {
         bitbuf = 0;
-        FORC(6) bitbuf |= (UINT64)fgetc(ifp) << c * 8;
+        FORC(6) bitbuf |= (uint64_t)fgetc(ifp) << c * 8;
         FORC(4) yuv[c] = (bitbuf >> c * 12 & 0xfff) - (c >> 1 << 11);
       }
       rgb[0] = yuv[b] + 1.370705 * yuv[3];

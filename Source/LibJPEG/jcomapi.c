@@ -32,7 +32,7 @@ jpeg_abort (j_common_ptr cinfo)
   int pool;
 
   /* Do nothing if called on a not-initialized or destroyed JPEG object. */
-  if (cinfo->mem == NULL)
+  if (cinfo->mem == nullptr)
     return;
 
   /* Releasing pools in reverse order might help avoid fragmentation
@@ -48,7 +48,7 @@ jpeg_abort (j_common_ptr cinfo)
     /* Try to keep application from accessing now-deleted marker list.
      * A bit kludgy to do it here, but this is the most central place.
      */
-    ((j_decompress_ptr) cinfo)->marker_list = NULL;
+    ((j_decompress_ptr) cinfo)->marker_list = nullptr;
   } else {
     cinfo->global_state = CSTATE_START;
   }
@@ -70,10 +70,10 @@ GLOBAL(void)
 jpeg_destroy (j_common_ptr cinfo)
 {
   /* We need only tell the memory manager to release everything. */
-  /* NB: mem pointer is NULL if memory mgr failed to initialize. */
-  if (cinfo->mem != NULL)
+  /* NB: mem pointer is nullptr if memory mgr failed to initialize. */
+  if (cinfo->mem != nullptr)
     (*cinfo->mem->self_destruct) (cinfo);
-  cinfo->mem = NULL;		/* be safe if jpeg_destroy is called twice */
+  cinfo->mem = nullptr;		/* be safe if jpeg_destroy is called twice */
   cinfo->global_state = 0;	/* mark it destroyed */
 }
 
@@ -213,10 +213,10 @@ jpeg_std_huff_table (j_common_ptr cinfo, boolean isDC, int tblno)
     break;
   default:
     ERREXIT1(cinfo, JERR_NO_HUFF_TABLE, tblno);
-    return NULL; /* avoid compiler warnings for uninitialized variables */
+    return nullptr; /* avoid compiler warnings for uninitialized variables */
   }
 
-  if (htblptr[tblno] == NULL)
+  if (htblptr[tblno] == nullptr)
     htblptr[tblno] = jpeg_alloc_huff_table(cinfo);
 
   htbl = htblptr[tblno];

@@ -65,7 +65,7 @@ IsVisualGreyscaleImage(FIBITMAP *dib) {
  @param color The color to be searched in the palette.
  @param options Options that affect the color search process.
  @param color_type A pointer, that optionally specifies the image's color type as
- returned by FreeImage_GetColorType. If invalid or NULL, this function determines the
+ returned by FreeImage_GetColorType. If invalid or nullptr, this function determines the
  color type with FreeImage_GetColorType.
  @return Returns the specified color's palette index, the color's rgbReserved member
  if option FI_COLOR_ALPHA_IS_INDEX was specified or -1, if the color was not found
@@ -95,7 +95,7 @@ GetPaletteIndex(FIBITMAP *dib, const RGBQUAD *color, int options, FREE_IMAGE_COL
 	
 	if (bpp == 8) {
 		FREE_IMAGE_COLOR_TYPE ct =
-			(color_type == NULL || *color_type < 0) ?
+			(color_type == nullptr || *color_type < 0) ?
 				FreeImage_GetColorType(dib) : *color_type;
 		if (ct == FIC_MINISBLACK) {
 			return GREY(color->rgbRed, color->rgbGreen, color->rgbBlue);
@@ -137,8 +137,8 @@ GetPaletteIndex(FIBITMAP *dib, const RGBQUAD *color, int options, FREE_IMAGE_COL
 	} else {
 		unsigned minimum = UINT_MAX;
 		unsigned ncolors = FreeImage_GetColorsUsed(dib);
-		BYTE *palette = (BYTE *)FreeImage_GetPalette(dib);
-		BYTE red, green, blue;
+		uint8_t *palette = (uint8_t *)FreeImage_GetPalette(dib);
+		uint8_t red, green, blue;
 		if (!IsVisualGreyscaleImage(dib)) {
 			red = color->rgbRed;
 			green = color->rgbGreen;
@@ -190,12 +190,12 @@ GetAlphaBlendedColor(const RGBQUAD *bgcolor, const RGBQUAD *fgcolor, RGBQUAD *bl
 		return FALSE;
 	}
 	
-	BYTE alpha = fgcolor->rgbReserved;
-	BYTE not_alpha = ~alpha;
+	uint8_t alpha = fgcolor->rgbReserved;
+	uint8_t not_alpha = ~alpha;
 	
-	blended->rgbRed = (BYTE)( ((WORD)fgcolor->rgbRed * alpha + not_alpha * (WORD)bgcolor->rgbRed)   >> 8 );
-	blended->rgbGreen = (BYTE)( ((WORD)fgcolor->rgbGreen * alpha + not_alpha * (WORD)bgcolor->rgbGreen) >> 8) ;
-	blended->rgbBlue = (BYTE)(((WORD)fgcolor->rgbBlue * alpha + not_alpha * (WORD)bgcolor->rgbBlue) >> 8);
+	blended->rgbRed = (uint8_t)( ((uint16_t)fgcolor->rgbRed * alpha + not_alpha * (uint16_t)bgcolor->rgbRed)   >> 8 );
+	blended->rgbGreen = (uint8_t)( ((uint16_t)fgcolor->rgbGreen * alpha + not_alpha * (uint16_t)bgcolor->rgbGreen) >> 8) ;
+	blended->rgbBlue = (uint8_t)(((uint16_t)fgcolor->rgbBlue * alpha + not_alpha * (uint16_t)bgcolor->rgbBlue) >> 8);
 	blended->rgbReserved = 0xFF;
 
 	return TRUE;
@@ -210,7 +210,7 @@ GetAlphaBlendedColor(const RGBQUAD *bgcolor, const RGBQUAD *fgcolor, RGBQUAD *bl
  @param options Options that affect the color search process for palletized images.
  @param applyAlpha For 32-bits RGBA, sets the alpha channel to specified value.
  @return Returns TRUE on success, FALSE otherwise. This function fails if any of
- the dib and color is NULL or the provided image is not a FIT_BITMAP image.
+ the dib and color is nullptr or the provided image is not a FIT_BITMAP image.
  */
 static BOOL
 FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options, int applyAlpha) {
@@ -231,8 +231,8 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options, int apply
 	FREE_IMAGE_COLOR_TYPE color_type = FreeImage_GetColorType(dib);
 	
 	// get a pointer to the first scanline (bottom line)
-	BYTE *src_bits = FreeImage_GetScanLine(dib, 0);
-	BYTE *dst_bits = src_bits;	
+	uint8_t *src_bits = FreeImage_GetScanLine(dib, 0);
+	uint8_t *dst_bits = src_bits;	
 	
 	BOOL supports_alpha = ((bpp >= 24) || ((bpp == 8) && (color_type != FIC_PALETTE)));
 	
@@ -314,9 +314,9 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options, int apply
 			break;
 		}
 		case 16: {
-			WORD wcolor = RGBQUAD_TO_WORD(dib, color_intl);
+			uint16_t wcolor = RGBQUAD_TO_WORD(dib, color_intl);
 			for (unsigned x = 0; x < width; x++) {
-				((WORD *)dst_bits)[x] = wcolor;
+				((uint16_t *)dst_bits)[x] = wcolor;
 			}
 			break;
 		}
@@ -411,7 +411,7 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options, int apply
                                     rgbReserved member are used and for 1-bit images, only
                                     the least significant bit (LSB) is used.
 
- This function fails if any of dib and color is NULL.
+ This function fails if any of dib and color is nullptr.
 
  @param dib The image to be filled.
  @param color A pointer to the color value to be used for filling the image. The
@@ -420,7 +420,7 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options, int apply
  @param options Options that affect the color search process for palletized images.
  @param applyAlpha For 32-bits RGBA, sets the alpha channel to specified value.
  @return Returns TRUE on success, FALSE otherwise. This function fails if any of
- dib and color is NULL.
+ dib and color is nullptr.
  */
 BOOL DLL_CALLCONV
 FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options, int applyAlpha) {
@@ -440,8 +440,8 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options, int appl
 	
 	// first, construct the first scanline (bottom line)
 	unsigned bytespp = (FreeImage_GetBPP(dib) / 8);
-	BYTE *src_bits = FreeImage_GetScanLine(dib, 0);
-	BYTE *dst_bits = src_bits;
+	uint8_t *src_bits = FreeImage_GetScanLine(dib, 0);
+	uint8_t *dst_bits = src_bits;
 	for (unsigned x = 0; x < FreeImage_GetWidth(dib); x++) {
 		memcpy(dst_bits, color, bytespp);
 		dst_bits += bytespp;
@@ -474,7 +474,7 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options, int appl
  The palette specified through parameter palette is only copied to the newly created
  image, if its image type is FIT_BITMAP and the desired bit depth is smaller than or equal
  to 8 bits per pixel. In other words, the palette parameter is only taken into account for
- palletized images. However, if the preceding conditions match and if palette is not NULL,
+ palletized images. However, if the preceding conditions match and if palette is not nullptr,
  the memory pointed to by the palette pointer is assumed to be at least as large as size
  of a fully populated palette for the desired bit depth. So, for an 8-bit image, this size
  is 256 x sizeof(RGBQUAD), for an 4-bit image it is 16 x sizeof(RGBQUAD) and it is
@@ -482,7 +482,7 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options, int appl
  partial palettes.
 
  However, specifying a palette is not necessarily needed, even for palletized images. This
- function is capable of implicitly creating a palette, if parameter palette is NULL. If the
+ function is capable of implicitly creating a palette, if parameter palette is nullptr. If the
  specified background color is a greyscale value (red = green = blue) or if option
  FI_COLOR_ALPHA_IS_INDEX is specified, a greyscale palette is created. For a 1-bit image, only
  if the specified background color is either black or white, a monochrome palette, consisting
@@ -496,7 +496,7 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options, int appl
  member. The image is then filled with this palette index.
 
  This function returns a newly created image as function FreeImage_AllocateT does, if both
- parameters color and palette are NULL. If only color is NULL, the palette pointed to by
+ parameters color and palette are nullptr. If only color is nullptr, the palette pointed to by
  parameter palette is initially set for the new image, if a palletized image of type
  FIT_BITMAP is created. However, in the latter case, this function returns an image, whose
  pixels are all initialized with zeros so, the image will be filled with the color of the
@@ -513,7 +513,7 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options, int appl
  @param red_mask Specifies the bits used to store the red components of a pixel.
  @param green_mask Specifies the bits used to store the green components of a pixel.
  @param blue_mask Specifies the bits used to store the blue components of a pixel.
- @return Returns a pointer to a newly allocated image on success, NULL otherwise.
+ @return Returns a pointer to a newly allocated image on success, nullptr otherwise.
  */
 FIBITMAP * DLL_CALLCONV
 FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, const void *color, int options, const RGBQUAD *palette, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
@@ -527,7 +527,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 		return bitmap;
 	}
 
-	if (bitmap != NULL) {
+	if (bitmap != nullptr) {
 		
 		// Only fill the new bitmap if the specified color
 		// differs from "black", that is not all bytes of the
@@ -540,7 +540,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 				unsigned *upal = (unsigned *)FreeImage_GetPalette(bitmap);
 				RGBQUAD rgbq = RGBQUAD();
 
-				if (palette != NULL) {
+				if (palette != nullptr) {
 					// clone the specified palette
 					memcpy(FreeImage_GetPalette(bitmap), palette, 2 * sizeof(RGBQUAD));
 				} else if (options & FI_COLOR_ALPHA_IS_INDEX) {
@@ -560,7 +560,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 						// Otherwise inject the specified color into the so far
 						// black-only palette. We use color->rgbReserved as the
 						// desired palette index.
-						BYTE index = ((RGBQUAD *)color)->rgbReserved & 0x01;
+						uint8_t index = ((RGBQUAD *)color)->rgbReserved & 0x01;
 						upal[index] = *urgb & 0x00FFFFFF;  
 					}
 					options |= FI_COLOR_ALPHA_IS_INDEX;
@@ -575,7 +575,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 				RGBQUAD *pal = FreeImage_GetPalette(bitmap);
 				RGBQUAD rgbq = RGBQUAD();
 				
-				if (palette != NULL) {
+				if (palette != nullptr) {
 					// clone the specified palette
 					memcpy(pal, palette, 16 * sizeof(RGBQUAD));
 				} else if (options & FI_COLOR_ALPHA_IS_INDEX) {
@@ -591,7 +591,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 						// Otherwise inject the specified color into the so far
 						// black-only palette. We use color->rgbReserved as the
 						// desired palette index.
-						BYTE index = (rgb->rgbReserved & 0x0F);
+						uint8_t index = (rgb->rgbReserved & 0x0F);
 						((unsigned *)pal)[index] = *((unsigned *)rgb) & 0x00FFFFFF;
 					}
 					options |= FI_COLOR_ALPHA_IS_INDEX;
@@ -606,7 +606,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 				RGBQUAD *pal = FreeImage_GetPalette(bitmap);
 				RGBQUAD rgbq;
 
-				if (palette != NULL) {
+				if (palette != nullptr) {
 					// clone the specified palette
 					memcpy(pal, palette, 256 * sizeof(RGBQUAD));
 				} else if (options & FI_COLOR_ALPHA_IS_INDEX) {
@@ -622,7 +622,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 						// Otherwise inject the specified color into the so far
 						// black-only palette. We use color->rgbReserved as the
 						// desired palette index.
-						BYTE index = rgb->rgbReserved;
+						uint8_t index = rgb->rgbReserved;
 						((unsigned *)pal)[index] = *((unsigned *)rgb) & 0x00FFFFFF;  
 					}
 					options |= FI_COLOR_ALPHA_IS_INDEX;
@@ -632,8 +632,8 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 				break;
 			}
 			case 16: {
-				WORD wcolor = (type == FIT_BITMAP) ?
-					RGBQUAD_TO_WORD(bitmap, ((RGBQUAD *)color)) : *((WORD *)color);
+				uint16_t wcolor = (type == FIT_BITMAP) ?
+					RGBQUAD_TO_WORD(bitmap, ((RGBQUAD *)color)) : *((uint16_t *)color);
 				if (wcolor != 0) {
 					FreeImage_FillBackground(bitmap, color, options);
 				}
@@ -642,7 +642,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
 			default: {
 				int bytespp = bpp / 8;
 				for (int i = 0; i < bytespp; i++) {
-					if (((BYTE *)color)[i] != 0) {
+					if (((uint8_t *)color)[i] != 0) {
 						FreeImage_FillBackground(bitmap, color, options);
 						break;
 					}
@@ -669,14 +669,14 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
  The palette specified through parameter palette is only copied to the newly created
  image, if the desired bit depth is smaller than or equal to 8 bits per pixel. In other words,
  the palette parameter is only taken into account for palletized images. However, if the
- image to be created is a palletized image and if palette is not NULL, the memory pointed to
+ image to be created is a palletized image and if palette is not nullptr, the memory pointed to
  by the palette pointer is assumed to be at least as large as size of a fully populated
  palette for the desired bit depth. So, for an 8-bit image, this size is 256 x sizeof(RGBQUAD),
  for an 4-bit image it is 16 x sizeof(RGBQUAD) and it is 2 x sizeof(RGBQUAD) for a 1-bit
  image. In other words, this function does not support partial palettes.
 
  However, specifying a palette is not necessarily needed, even for palletized images. This
- function is capable of implicitly creating a palette, if parameter palette is NULL. If the
+ function is capable of implicitly creating a palette, if parameter palette is nullptr. If the
  specified background color is a greyscale value (red = green = blue) or if option
  FI_COLOR_ALPHA_IS_INDEX is specified, a greyscale palette is created. For a 1-bit image, only
  if the specified background color is either black or white, a monochrome palette, consisting
@@ -690,7 +690,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
  member. The image is then filled with this palette index.
 
  This function returns a newly created image as function FreeImage_Allocate does, if both
- parameters color and palette are NULL. If only color is NULL, the palette pointed to by
+ parameters color and palette are nullptr. If only color is nullptr, the palette pointed to by
  parameter palette is initially set for the new image, if a palletized image of type
  FIT_BITMAP is created. However, in the latter case, this function returns an image, whose
  pixels are all initialized with zeros so, the image will be filled with the color of the
@@ -705,7 +705,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
  @param red_mask Specifies the bits used to store the red components of a pixel.
  @param green_mask Specifies the bits used to store the green components of a pixel.
  @param blue_mask Specifies the bits used to store the blue components of a pixel.
- @return Returns a pointer to a newly allocated image on success, NULL otherwise.
+ @return Returns a pointer to a newly allocated image on success, nullptr otherwise.
  */
 FIBITMAP * DLL_CALLCONV
 FreeImage_AllocateEx(int width, int height, int bpp, const RGBQUAD *color, int options, const RGBQUAD *palette, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
@@ -728,7 +728,7 @@ FreeImage_AllocateEx(int width, int height, int bpp, const RGBQUAD *color, int o
  right and bottom to value equal to or smaller than zero, my easily be substituted by a call
  to function FreeImage_Copy. Both these cases produce a new image, which is guaranteed not to
  be larger than the input image. Thus, since the specified color is not needed in these cases,
- the pointer color may be NULL.
+ the pointer color may be nullptr.
 
  Both parameters color and options work according to function FreeImage_FillBackground. So,
  please refer to the documentation of FreeImage_FillBackground to learn more about parameters
@@ -756,9 +756,9 @@ FreeImage_AllocateEx(int width, int height, int bpp, const RGBQUAD *color, int o
  // cut off the 40 leftmost pixel columns
  dib3 = FreeImage_EnlargeCanvas(dib, -40, 0, 30, 0, &c, FI_COLOR_IS_RGB_COLOR);
 
- This function fails if either the input image is NULL or the pointer to the color is
- NULL, while at least on of left, top, right and bottom is greater than zero. This
- function also returns NULL, if the new image's size will be negative in either x- or
+ This function fails if either the input image is nullptr or the pointer to the color is
+ nullptr, while at least on of left, top, right and bottom is greater than zero. This
+ function also returns nullptr, if the new image's size will be negative in either x- or
  y-direction.
 
  @param dib The image to be enlarged or shrunken.
@@ -773,15 +773,15 @@ FreeImage_AllocateEx(int width, int height, int bpp, const RGBQUAD *color, int o
  @param color The color, the enlarged sides of the image should be filled with.
  @param options Options that affect the color search process for palletized images.
  @return Returns a pointer to a newly allocated enlarged or shrunken image on success,
- NULL otherwise. This function fails if either the input image is NULL or the pointer to the
- color is NULL, while at least on of left, top, right and bottom is greater than zero. This
- function also returns NULL, if the new image's size will be negative in either x- or
+ nullptr otherwise. This function fails if either the input image is nullptr or the pointer to the
+ color is nullptr, while at least on of left, top, right and bottom is greater than zero. This
+ function also returns nullptr, if the new image's size will be negative in either x- or
  y-direction.
  */
 FIBITMAP * DLL_CALLCONV
 FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom, const void *color, int options) {
 
-	if(!FreeImage_HasPixels(src)) return NULL;
+	if(!FreeImage_HasPixels(src)) return nullptr;
 
 	// Just return a clone of the image, if left, top, right and bottom are
 	// all zero.
@@ -794,7 +794,7 @@ FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom,
 
 	// Relay on FreeImage_Copy, if all parameters left, top, right and
 	// bottom are smaller than or equal zero. The color pointer may be
-	// NULL in this case.
+	// nullptr in this case.
 	if ((left <= 0) && (right <= 0) && (top <= 0) && (bottom <= 0)) {
 		return FreeImage_Copy(src, -left, -top,	width + right, height + bottom);
 	}
@@ -802,12 +802,12 @@ FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom,
 	// From here, we need a valid color, since the image will be enlarged on
 	// at least one side. So, fail if we don't have a valid color pointer.
 	if (!color) {
-		return NULL;
+		return nullptr;
 	}
 
 	if (((left < 0) && (-left >= width)) || ((right < 0) && (-right >= width)) ||
 		((top < 0) && (-top >= height)) || ((bottom < 0) && (-bottom >= height))) {
-		return NULL;
+		return nullptr;
 	}
 
 	unsigned newWidth = width + left + right;
@@ -824,7 +824,7 @@ FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom,
 		FreeImage_GetBlueMask(src));
 
 	if (!dst) {
-		return NULL;
+		return nullptr;
 	}
 
 	if ((type == FIT_BITMAP) && (bpp <= 4)) {
@@ -836,7 +836,7 @@ FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom,
 		
 		if (!copy) {
 			FreeImage_Unload(dst);
-			return NULL;
+			return nullptr;
 		}
 
 		if (!FreeImage_Paste(dst, copy,
@@ -844,7 +844,7 @@ FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom,
 				((top <= 0) ? 0 : top), 256)) {
 			FreeImage_Unload(copy);
 			FreeImage_Unload(dst);
-			return NULL;
+			return nullptr;
 		}
 
 		FreeImage_Unload(copy);
@@ -852,8 +852,8 @@ FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom,
 	} else {
 
 		int bytespp = bpp / 8;
-		BYTE *srcPtr = FreeImage_GetScanLine(src, height - 1 - ((top >= 0) ? 0 : -top));
-		BYTE *dstPtr = FreeImage_GetScanLine(dst, newHeight - 1 - ((top <= 0) ? 0 : top));
+		uint8_t *srcPtr = FreeImage_GetScanLine(src, height - 1 - ((top >= 0) ? 0 : -top));
+		uint8_t *dstPtr = FreeImage_GetScanLine(dst, newHeight - 1 - ((top <= 0) ? 0 : top));
 
 		unsigned srcPitch = FreeImage_GetPitch(src);
 		unsigned dstPitch = FreeImage_GetPitch(dst);

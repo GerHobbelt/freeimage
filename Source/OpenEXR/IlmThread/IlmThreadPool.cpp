@@ -492,7 +492,7 @@ TaskGroup::Data::removeTask ()
 //
 
 ThreadPool::Data::Data ():
-    provUsers (0), provider (NULL)
+    provUsers (0), provider (nullptr)
 {
     // empty
 }

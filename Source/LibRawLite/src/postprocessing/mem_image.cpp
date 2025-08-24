@@ -30,21 +30,21 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_thumb(int *errcode)
       if (errcode)
         *errcode = LIBRAW_OUT_OF_ORDER_CALL;
     }
-    return NULL;
+    return nullptr;
   }
 
   if (T.tlength < 64u)
   {
       if (errcode)
           *errcode = EINVAL;
-      return NULL;
+      return nullptr;
   }
 
-  if (INT64(T.tlength) > 1024ULL * 1024ULL * LIBRAW_MAX_THUMBNAIL_MB)
+  if (int64_t(T.tlength) > 1024ULL * 1024ULL * LIBRAW_MAX_THUMBNAIL_MB)
   {
       if (errcode)
           *errcode = LIBRAW_TOO_BIG;
-      return NULL;
+      return nullptr;
   }
 
   if (T.tformat == LIBRAW_THUMBNAIL_BITMAP)
@@ -56,7 +56,7 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_thumb(int *errcode)
     {
       if (errcode)
         *errcode = ENOMEM;
-      return NULL;
+      return nullptr;
     }
 
     memset(ret, 0, sizeof(libraw_processed_image_t));
@@ -90,7 +90,7 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_thumb(int *errcode)
     {
       if (errcode)
         *errcode = ENOMEM;
-      return NULL;
+      return nullptr;
     }
 
     memset(ret, 0, sizeof(libraw_processed_image_t));
@@ -123,7 +123,7 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_thumb(int *errcode)
   {
     if (errcode)
       *errcode = LIBRAW_UNSUPPORTED_THUMBNAIL;
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -269,7 +269,7 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_image(int *errcode)
   {
     if (errcode)
       *errcode = ENOMEM;
-    return NULL;
+    return nullptr;
   }
   memset(ret, 0, sizeof(libraw_processed_image_t));
 

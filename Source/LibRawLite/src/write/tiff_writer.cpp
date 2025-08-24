@@ -27,7 +27,7 @@ int LibRaw::dcraw_ppm_tiff_writer(const char *filename)
 
   if (!filename)
     return ENOENT;
-  FILE *f = NULL;
+  FILE *f = nullptr;
   if (!strcmp(filename, "-"))
   {
 #ifdef LIBRAW_WIN32_CALLS
@@ -52,7 +52,7 @@ int LibRaw::dcraw_ppm_tiff_writer(const char *filename)
     libraw_internal_data.internal_data.output = f;
     write_ppm_tiff();
     SET_PROC_FLAG(LIBRAW_PROGRESS_FLIP);
-    libraw_internal_data.internal_data.output = NULL;
+    libraw_internal_data.internal_data.output = nullptr;
     if (strcmp(filename, "-"))
       fclose(f);
     return 0;

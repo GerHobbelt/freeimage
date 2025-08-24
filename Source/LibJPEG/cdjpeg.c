@@ -34,8 +34,8 @@ static j_common_ptr sig_cinfo;
 void				/* must be global for Manx C */
 signal_catcher (int signum)
 {
-  if (sig_cinfo != NULL) {
-    if (sig_cinfo->err != NULL) /* turn off trace output */
+  if (sig_cinfo != nullptr) {
+    if (sig_cinfo->err != nullptr) /* turn off trace output */
       sig_cinfo->err->trace_level = 0;
     jpeg_destroy(sig_cinfo);	/* clean up memory allocation & temp files */
   }
@@ -154,7 +154,7 @@ read_stdin (void)
   setmode(fileno(stdin), O_BINARY);
 #endif
 #ifdef USE_FDOPEN		/* need to re-open in binary mode? */
-  if ((input_file = fdopen(fileno(stdin), READ_BINARY)) == NULL) {
+  if ((input_file = fdopen(fileno(stdin), READ_BINARY)) == nullptr) {
     fprintf(stderr, "Cannot reopen stdin\n");
     exit(EXIT_FAILURE);
   }
@@ -172,7 +172,7 @@ write_stdout (void)
   setmode(fileno(stdout), O_BINARY);
 #endif
 #ifdef USE_FDOPEN		/* need to re-open in binary mode? */
-  if ((output_file = fdopen(fileno(stdout), WRITE_BINARY)) == NULL) {
+  if ((output_file = fdopen(fileno(stdout), WRITE_BINARY)) == nullptr) {
     fprintf(stderr, "Cannot reopen stdout\n");
     exit(EXIT_FAILURE);
   }

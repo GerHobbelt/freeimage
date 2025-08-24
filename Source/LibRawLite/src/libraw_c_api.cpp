@@ -36,7 +36,7 @@ extern "C"
     }
     catch (const std::bad_alloc& )
     {
-      return NULL;
+      return nullptr;
     }
     return &(ret->imgdata);
   }
@@ -53,7 +53,7 @@ extern "C"
   const char *libraw_unpack_function_name(libraw_data_t *lr)
   {
     if (!lr)
-      return "NULL parameter passed";
+      return "nullptr parameter passed";
     LibRaw *ip = (LibRaw *)lr->parent_class;
     return ip->unpack_function_name();
   }
@@ -77,26 +77,26 @@ extern "C"
   libraw_iparams_t *libraw_get_iparams(libraw_data_t *lr)
   {
     if (!lr)
-      return NULL;
+      return nullptr;
     return &(lr->idata);
   }
 
   libraw_lensinfo_t *libraw_get_lensinfo(libraw_data_t *lr)
   {
     if (!lr)
-      return NULL;
+      return nullptr;
     return &(lr->lens);
   }
 
   libraw_imgother_t *libraw_get_imgother(libraw_data_t *lr)
   {
     if (!lr)
-      return NULL;
+      return nullptr;
     return &(lr->other);
   }
 
 #ifndef LIBRAW_NO_IOSTREAMS_DATASTREAM
-  int libraw_open_file_ex(libraw_data_t *lr, const char *file, INT64 sz)
+  int libraw_open_file_ex(libraw_data_t *lr, const char *file, int64_t sz)
   {
     if (!lr)
       return EINVAL;
@@ -115,7 +115,7 @@ extern "C"
   }
 
 #ifndef LIBRAW_NO_IOSTREAMS_DATASTREAM
-  int libraw_open_wfile_ex(libraw_data_t *lr, const wchar_t *file, INT64 sz)
+  int libraw_open_wfile_ex(libraw_data_t *lr, const wchar_t *file, int64_t sz)
   {
     if (!lr)
       return EINVAL;
@@ -251,7 +251,7 @@ extern "C"
     {
       if (errc)
         *errc = EINVAL;
-      return NULL;
+      return nullptr;
     }
     LibRaw *ip = (LibRaw *)lr->parent_class;
     return ip->dcraw_make_mem_image(errc);
@@ -263,7 +263,7 @@ extern "C"
     {
       if (errc)
         *errc = EINVAL;
-      return NULL;
+      return nullptr;
     }
     LibRaw *ip = (LibRaw *)lr->parent_class;
     return ip->dcraw_make_mem_thumb(errc);

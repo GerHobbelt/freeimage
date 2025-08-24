@@ -737,7 +737,7 @@ OutputFile::OutputFile
     }
 }
 
-OutputFile::OutputFile(const OutputPartData* part) : _data(NULL)
+OutputFile::OutputFile(const OutputPartData* part) : _data(nullptr)
 {
     try
     {

@@ -356,7 +356,7 @@ static INLINE void opj_mqc_renormd(opj_mqc_t *const mqc) {
 opj_mqc_t* opj_mqc_create(void) {
 	opj_mqc_t *mqc = (opj_mqc_t*)opj_malloc(sizeof(opj_mqc_t));
 #ifdef MQC_PERF_OPT
-	mqc->buffer = NULL;
+	mqc->buffer = nullptr;
 #endif
 	return mqc;
 }
@@ -528,7 +528,7 @@ OPJ_BOOL opj_mqc_init_dec(opj_mqc_t *mqc, OPJ_BYTE *bp, OPJ_UINT32 len) {
         void* new_buffer = opj_realloc(mqc->buffer, (len + 1) * sizeof(OPJ_UINT32));
         if (! new_buffer) {
             opj_free(mqc->buffer);
-            mqc->buffer = NULL;
+            mqc->buffer = nullptr;
             return OPJ_FALSE;
         }
         mqc->buffer = new_buffer;

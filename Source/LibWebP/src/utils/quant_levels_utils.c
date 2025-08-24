@@ -35,7 +35,7 @@ int QuantizeLevels(uint8_t* const data, int width, int height,
   double last_err = 1.e38, err = 0.;
   const double err_threshold = ERROR_THRESHOLD * data_size;
 
-  if (data == NULL) {
+  if (data == nullptr) {
     return 0;
   }
 
@@ -133,7 +133,7 @@ int QuantizeLevels(uint8_t* const data, int width, int height,
   }
  End:
   // Store sum of squared error if needed.
-  if (sse != NULL) *sse = (uint64_t)err;
+  if (sse != nullptr) *sse = (uint64_t)err;
 
   return 1;
 }

@@ -44,7 +44,7 @@
 // Returns true if alpha[] has non-0xff values.
 static int CheckNonOpaque(const uint8_t* alpha, int width, int height,
                           int x_step, int y_step) {
-  if (alpha == NULL) return 0;
+  if (alpha == nullptr) return 0;
   WebPInitAlphaProcessing();
   if (x_step == 1) {
     for (; height-- > 0; alpha += y_step) {
@@ -60,7 +60,7 @@ static int CheckNonOpaque(const uint8_t* alpha, int width, int height,
 
 // Checking for the presence of non-opaque alpha.
 int WebPPictureHasTransparency(const WebPPicture* picture) {
-  if (picture == NULL) return 0;
+  if (picture == nullptr) return 0;
   if (picture->use_argb) {
     const int alpha_offset = ALPHA_OFFSET;
     return CheckNonOpaque((const uint8_t*)picture->argb + alpha_offset,
@@ -141,17 +141,17 @@ static WEBP_INLINE int LinearToGamma(uint32_t base_value, int shift) {
 // RGB -> YUV conversion
 
 static int RGBToY(int r, int g, int b, VP8Random* const rg) {
-  return (rg == NULL) ? VP8RGBToY(r, g, b, YUV_HALF)
+  return (rg == nullptr) ? VP8RGBToY(r, g, b, YUV_HALF)
                       : VP8RGBToY(r, g, b, VP8RandomBits(rg, YUV_FIX));
 }
 
 static int RGBToU(int r, int g, int b, VP8Random* const rg) {
-  return (rg == NULL) ? VP8RGBToU(r, g, b, YUV_HALF << 2)
+  return (rg == nullptr) ? VP8RGBToU(r, g, b, YUV_HALF << 2)
                       : VP8RGBToU(r, g, b, VP8RandomBits(rg, YUV_FIX + 2));
 }
 
 static int RGBToV(int r, int g, int b, VP8Random* const rg) {
-  return (rg == NULL) ? VP8RGBToV(r, g, b, YUV_HALF << 2)
+  return (rg == nullptr) ? VP8RGBToV(r, g, b, YUV_HALF << 2)
                       : VP8RGBToV(r, g, b, VP8RandomBits(rg, YUV_FIX + 2));
 }
 
@@ -471,10 +471,10 @@ static int PreprocessARGB(const uint8_t* r_ptr,
   const uint64_t diff_y_threshold = (uint64_t)(3.0 * w * h);
   int ok;
 
-  if (best_y_base == NULL || best_uv_base == NULL ||
-      target_y_base == NULL || target_uv_base == NULL ||
-      best_rgb_y == NULL || best_rgb_uv == NULL ||
-      tmp_buffer == NULL) {
+  if (best_y_base == nullptr || best_uv_base == nullptr ||
+      target_y_base == nullptr || target_uv_base == nullptr ||
+      best_rgb_y == nullptr || best_rgb_uv == nullptr ||
+      tmp_buffer == nullptr) {
     ok = WebPEncodingSetError(picture, VP8_ENC_ERROR_OUT_OF_MEMORY);
     goto End;
   }
@@ -894,7 +894,7 @@ static int ImportYUVAFromRGBA(const uint8_t* r_ptr,
     uint8_t* dst_a = picture->a;
 
     VP8Random base_rg;
-    VP8Random* rg = NULL;
+    VP8Random* rg = nullptr;
     if (dithering > 0.) {
       VP8InitRandom(&base_rg, dithering);
       rg = &base_rg;
@@ -903,7 +903,7 @@ static int ImportYUVAFromRGBA(const uint8_t* r_ptr,
     WebPInitConvertARGBToYUV();
     InitGammaTables();
 
-    if (tmp_rgb == NULL) return 0;  // malloc error
+    if (tmp_rgb == nullptr) return 0;  // malloc error
 
     // Downsample Y/U/V planes, two rows at a time
     for (y = 0; y < (height >> 1); ++y) {
@@ -938,7 +938,7 @@ static int ImportYUVAFromRGBA(const uint8_t* r_ptr,
         AccumulateRGBA(r_ptr, g_ptr, b_ptr, a_ptr, rgb_stride, tmp_rgb, width);
       }
       // Convert to U/V
-      if (rg == NULL) {
+      if (rg == nullptr) {
         WebPConvertRGBA32ToUV(tmp_rgb, dst_u, dst_v, uv_width);
       } else {
         ConvertRowsToUV(tmp_rgb, dst_u, dst_v, uv_width, rg);
@@ -973,7 +973,7 @@ static int ImportYUVAFromRGBA(const uint8_t* r_ptr,
         AccumulateRGBA(r_ptr, g_ptr, b_ptr, a_ptr, /* rgb_stride = */ 0,
                        tmp_rgb, width);
       }
-      if (rg == NULL) {
+      if (rg == nullptr) {
         WebPConvertRGBA32ToUV(tmp_rgb, dst_u, dst_v, uv_width);
       } else {
         ConvertRowsToUV(tmp_rgb, dst_u, dst_v, uv_width, rg);
@@ -994,8 +994,8 @@ static int ImportYUVAFromRGBA(const uint8_t* r_ptr,
 
 static int PictureARGBToYUVA(WebPPicture* picture, WebPEncCSP colorspace,
                              float dithering, int use_iterative_conversion) {
-  if (picture == NULL) return 0;
-  if (picture->argb == NULL) {
+  if (picture == nullptr) return 0;
+  if (picture->argb == nullptr) {
     return WebPEncodingSetError(picture, VP8_ENC_ERROR_NULL_PARAMETER);
   } else if ((colorspace & WEBP_CSP_UV_MASK) != WEBP_YUV420) {
     return WebPEncodingSetError(picture, VP8_ENC_ERROR_INVALID_CONFIGURATION);
@@ -1033,11 +1033,11 @@ int WebPPictureSmartARGBToYUVA(WebPPicture* picture) {
 // call for YUVA -> ARGB conversion
 
 int WebPPictureYUVAToARGB(WebPPicture* picture) {
-  if (picture == NULL) return 0;
-  if (picture->y == NULL || picture->u == NULL || picture->v == NULL) {
+  if (picture == nullptr) return 0;
+  if (picture->y == nullptr || picture->u == nullptr || picture->v == nullptr) {
     return WebPEncodingSetError(picture, VP8_ENC_ERROR_NULL_PARAMETER);
   }
-  if ((picture->colorspace & WEBP_CSP_ALPHA_BIT) && picture->a == NULL) {
+  if ((picture->colorspace & WEBP_CSP_ALPHA_BIT) && picture->a == nullptr) {
     return WebPEncodingSetError(picture, VP8_ENC_ERROR_NULL_PARAMETER);
   }
   if ((picture->colorspace & WEBP_CSP_UV_MASK) != WEBP_YUV420) {
@@ -1059,7 +1059,7 @@ int WebPPictureYUVAToARGB(WebPPicture* picture) {
         WebPGetLinePairConverter(ALPHA_OFFSET > 0);
 
     // First row, with replicated top samples.
-    upsample(cur_y, NULL, cur_u, cur_v, cur_u, cur_v, dst, NULL, width);
+    upsample(cur_y, nullptr, cur_u, cur_v, cur_u, cur_v, dst, nullptr, width);
     cur_y += picture->y_stride;
     dst += argb_stride;
     // Center rows.
@@ -1075,7 +1075,7 @@ int WebPPictureYUVAToARGB(WebPPicture* picture) {
     }
     // Last row (if needed), with replicated bottom samples.
     if (height > 1 && !(height & 1)) {
-      upsample(cur_y, NULL, cur_u, cur_v, cur_u, cur_v, dst, NULL, width);
+      upsample(cur_y, nullptr, cur_u, cur_v, cur_u, cur_v, dst, nullptr, width);
     }
     // Insert alpha values if needed, in replacement for the default 0xff ones.
     if (picture->colorspace & WEBP_CSP_ALPHA_BIT) {
@@ -1107,7 +1107,7 @@ static int Import(WebPPicture* const picture,
   const int height = picture->height;
 
   if (!picture->use_argb) {
-    const uint8_t* a_ptr = import_alpha ? rgb + 3 : NULL;
+    const uint8_t* a_ptr = import_alpha ? rgb + 3 : nullptr;
     return ImportYUVAFromRGBA(r_ptr, g_ptr, b_ptr, a_ptr, step, rgb_stride,
                               0.f /* no dithering */, 0, picture);
   }
@@ -1164,14 +1164,14 @@ static int Import(WebPPicture* const picture,
 
 int WebPPictureImportBGR(WebPPicture* picture,
                          const uint8_t* rgb, int rgb_stride) {
-  return (picture != NULL && rgb != NULL)
+  return (picture != nullptr && rgb != nullptr)
              ? Import(picture, rgb, rgb_stride, 3, 1, 0)
              : 0;
 }
 
 int WebPPictureImportBGRA(WebPPicture* picture,
                           const uint8_t* rgba, int rgba_stride) {
-  return (picture != NULL && rgba != NULL)
+  return (picture != nullptr && rgba != nullptr)
              ? Import(picture, rgba, rgba_stride, 4, 1, 1)
              : 0;
 }
@@ -1179,7 +1179,7 @@ int WebPPictureImportBGRA(WebPPicture* picture,
 
 int WebPPictureImportBGRX(WebPPicture* picture,
                           const uint8_t* rgba, int rgba_stride) {
-  return (picture != NULL && rgba != NULL)
+  return (picture != nullptr && rgba != nullptr)
              ? Import(picture, rgba, rgba_stride, 4, 1, 0)
              : 0;
 }
@@ -1188,21 +1188,21 @@ int WebPPictureImportBGRX(WebPPicture* picture,
 
 int WebPPictureImportRGB(WebPPicture* picture,
                          const uint8_t* rgb, int rgb_stride) {
-  return (picture != NULL && rgb != NULL)
+  return (picture != nullptr && rgb != nullptr)
              ? Import(picture, rgb, rgb_stride, 3, 0, 0)
              : 0;
 }
 
 int WebPPictureImportRGBA(WebPPicture* picture,
                           const uint8_t* rgba, int rgba_stride) {
-  return (picture != NULL && rgba != NULL)
+  return (picture != nullptr && rgba != nullptr)
              ? Import(picture, rgba, rgba_stride, 4, 0, 1)
              : 0;
 }
 
 int WebPPictureImportRGBX(WebPPicture* picture,
                           const uint8_t* rgba, int rgba_stride) {
-  return (picture != NULL && rgba != NULL)
+  return (picture != nullptr && rgba != nullptr)
              ? Import(picture, rgba, rgba_stride, 4, 0, 0)
              : 0;
 }

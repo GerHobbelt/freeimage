@@ -24,8 +24,8 @@
 // Helpful macro.
 
 # define SANITY_CHECK(in, out)                                                 \
-  assert((in) != NULL);                                                        \
-  assert((out) != NULL);                                                       \
+  assert((in) != nullptr);                                                        \
+  assert((out) != nullptr);                                                       \
   assert(width > 0);                                                           \
   assert(height > 0);                                                          \
   assert(stride >= width);                                                     \
@@ -224,7 +224,7 @@ static void HorizontalUnfilter_SSE2(const uint8_t* prev, const uint8_t* in,
                                     uint8_t* out, int width) {
   int i;
   __m128i last;
-  out[0] = (uint8_t)(in[0] + (prev == NULL ? 0 : prev[0]));
+  out[0] = (uint8_t)(in[0] + (prev == nullptr ? 0 : prev[0]));
   if (width <= 1) return;
   last = _mm_set_epi32(0, 0, 0, out[0]);
   for (i = 1; i + 8 <= width; i += 8) {
@@ -244,8 +244,8 @@ static void HorizontalUnfilter_SSE2(const uint8_t* prev, const uint8_t* in,
 
 static void VerticalUnfilter_SSE2(const uint8_t* prev, const uint8_t* in,
                                   uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter_SSE2(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter_SSE2(nullptr, in, out, width);
   } else {
     int i;
     const int max_pos = width & ~31;
@@ -305,8 +305,8 @@ static void GradientPredictInverse_SSE2(const uint8_t* const in,
 
 static void GradientUnfilter_SSE2(const uint8_t* prev, const uint8_t* in,
                                   uint8_t* out, int width) {
-  if (prev == NULL) {
-    HorizontalUnfilter_SSE2(NULL, in, out, width);
+  if (prev == nullptr) {
+    HorizontalUnfilter_SSE2(nullptr, in, out, width);
   } else {
     out[0] = (uint8_t)(in[0] + prev[0]);  // predict from above
     GradientPredictInverse_SSE2(in + 1, prev + 1, out + 1, width - 1);
