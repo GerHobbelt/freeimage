@@ -47,7 +47,7 @@ The result stored in str is appended with a null character.
 @param n Maximum number of characters to read 
 @param io Pointer to the FreeImageIO structure
 @param handle Handle to the stream
-@return Returns str. NULL is returned to indicate an error or an end-of-file condition.
+@return Returns str. nullptr is returned to indicate an error or an end-of-file condition.
 */
 static char* 
 readLine(char *str, int n, FreeImageIO *io, fi_handle handle) {
@@ -83,7 +83,7 @@ Read an XBM file into a buffer
 @param widthP (return value) Pointer to the bitmap width
 @param heightP (return value) Pointer to the bitmap height
 @param dataP (return value) Pointer to the bitmap buffer
-@return Returns NULL if OK, returns an error message otherwise
+@return Returns nullptr if OK, returns an error message otherwise
 */
 static const char* 
 readXBMFile(FreeImageIO *io, fi_handle handle, int *widthP, int *heightP, std::unique_ptr<void, decltype(&free)> &dataP) {
@@ -95,12 +95,12 @@ readXBMFile(FreeImageIO *io, fi_handle handle, int *widthP, int *heightP, std::u
 	int v, padding;
 	int c1, c2, value1, value2;
 	int hex_table[256];
-	FIBOOL found_declaration;
+	BOOL found_declaration;
 	/* in scanning through the bitmap file, we have found the first
 	 line of the C declaration of the array (the "static char ..."
 	 or whatever line)
 	 */
-	FIBOOL eof;	// we've encountered end of file while searching file
+	BOOL eof;	// we've encountered end of file while searching file
 
 	*widthP = *heightP = -1;
 
@@ -289,7 +289,7 @@ MimeType() {
 	return "image/x-xbitmap";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	char magic[8];
 	if (readLine(magic, 7, io, handle)) {
@@ -299,12 +299,12 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return FALSE;
 }

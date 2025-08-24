@@ -24,7 +24,7 @@
 
 // --------------------------------------------------------------------------
 
-static FIBOOL 
+static BOOL 
 extractPagesFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream) {
 	char filename[256];
 	// open the multipage bitmap stream as read-only
@@ -75,7 +75,7 @@ void testLoadMultiBitmapFromMemory(const char *lpszPathName) {
 				FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromMemory(hmem, 0);
 
 				// extract pages 
-				FIBOOL bSuccess = extractPagesFromMemory(fif, hmem);
+				BOOL bSuccess = extractPagesFromMemory(fif, hmem);
 				assert(bSuccess);
 		
 				// close the stream
@@ -90,12 +90,12 @@ void testLoadMultiBitmapFromMemory(const char *lpszPathName) {
 
 // --------------------------------------------------------------------------
 
-FIBOOL testSaveMultiBitmapToMemory(const char *input, const char *output, int output_flag) {
-	FIBOOL bSuccess;
+BOOL testSaveMultiBitmapToMemory(const char *input, const char *output, int output_flag) {
+	BOOL bSuccess;
 
-	FIBOOL bCreateNew = FALSE;
-	FIBOOL bReadOnly = TRUE;
-	FIBOOL bMemoryCache = TRUE;
+	BOOL bCreateNew = FALSE;
+	BOOL bReadOnly = TRUE;
+	BOOL bMemoryCache = TRUE;
 
 	// Open src file (read-only, use memory cache)
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(input);
@@ -113,7 +113,7 @@ FIBOOL testSaveMultiBitmapToMemory(const char *input, const char *output, int ou
 		FreeImage_CloseMultiBitmap(src, 0);
 
 		// get the buffer from the memory stream
-		uint8_t *mem_buffer = NULL;
+		uint8_t *mem_buffer = nullptr;
 		uint32_t size_in_bytes = 0;
 
 		bSuccess = FreeImage_AcquireMemory(dst_memory, &mem_buffer, &size_in_bytes);
@@ -137,7 +137,7 @@ FIBOOL testSaveMultiBitmapToMemory(const char *input, const char *output, int ou
 
 // --------------------------------------------------------------------------
 
-static FIBOOL  
+static BOOL  
 loadBuffer(const char *lpszPathName, uint8_t **buffer, uint32_t *length) {
 	struct stat file_info;
 	int result;
@@ -161,10 +161,10 @@ loadBuffer(const char *lpszPathName, uint8_t **buffer, uint32_t *length) {
 	return FALSE;
 }
 
-FIBOOL testMemoryStreamMultiPageOpenSave(const char *lpszPathName, char *output, int input_flag, int output_flag) {
-	FIBOOL bSuccess = FALSE;
+BOOL testMemoryStreamMultiPageOpenSave(const char *lpszPathName, char *output, int input_flag, int output_flag) {
+	BOOL bSuccess = FALSE;
 
-	uint8_t *buffer = NULL;
+	uint8_t *buffer = nullptr;
 	uint32_t buffer_size = 0;
 
 	// load source stream as a buffer, i.e. 
@@ -222,10 +222,10 @@ FIBOOL testMemoryStreamMultiPageOpenSave(const char *lpszPathName, char *output,
 
 		// at this point, the input buffer is no longer needed
 		// !!! user is responsible for freeing the initial source buffer !!!
-		free(buffer); buffer = NULL;
+		free(buffer); buffer = nullptr;
 		
 		// get the dst buffer from the memory stream
-		uint8_t *dst_buffer = NULL;
+		uint8_t *dst_buffer = nullptr;
 		uint32_t size_in_bytes = 0;
 		
 		FreeImage_AcquireMemory(dst_stream, &dst_buffer, &size_in_bytes);
@@ -253,7 +253,7 @@ FIBOOL testMemoryStreamMultiPageOpenSave(const char *lpszPathName, char *output,
 // --------------------------------------------------------------------------
 
 void testMultiPageMemory(const char *lpszPathName) {
-	FIBOOL bSuccess;
+	BOOL bSuccess;
 
 	printf("testMultiPageMemory ...\n");
 	

@@ -100,7 +100,7 @@ warning_handler(png_structp png_ptr, const char *warning) {
 // Metadata routines
 // ==========================================================
 
-static FIBOOL 
+static BOOL 
 ReadMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 	// XMP keyword
 	const char *g_png_xmp_keyword = "XML:com.adobe.xmp";
@@ -160,14 +160,14 @@ ReadMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 	return TRUE;
 }
 
-static FIBOOL 
+static BOOL 
 WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 	// XMP keyword
 	const char *g_png_xmp_keyword = "XML:com.adobe.xmp";
 
 	FITAG *tag{};
 	FIMETADATA *mdhandle{};
-	FIBOOL bResult = TRUE;
+	BOOL bResult = TRUE;
 
 	png_text text_metadata;
 	png_time mod_time;
@@ -184,8 +184,8 @@ WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 			text_metadata.text = (char*)FreeImage_GetTagValue(tag);	// comment, may be an empty string (ie "")
 			text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
 			text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
-			text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
-			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
+			text_metadata.lang = 0;		 // language code, 0-79 characters or a nullptr pointer
+			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a nullptr pointer
 
 			// set the tag 
 			png_set_text(png_ptr, info_ptr, &text_metadata, 1);
@@ -206,8 +206,8 @@ WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 		text_metadata.text = (char*)FreeImage_GetTagValue(tag);	// comment, may be an empty string (ie "")
 		text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
 		text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
-		text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
-		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
+		text_metadata.lang = 0;		 // language code, 0-79 characters or a nullptr pointer
+		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a nullptr pointer
 
 		// set the tag 
 		png_set_text(png_ptr, info_ptr, &text_metadata, 1);
@@ -263,7 +263,7 @@ MimeType() {
 	return "image/png";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t png_signature[8] = { 137, 80, 78, 71, 13, 10, 26, 10 };
 	uint8_t signature[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -273,7 +273,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return (memcmp(png_signature, signature, 8) == 0);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 			(depth == 1) ||
@@ -284,7 +284,7 @@ SupportsExportDepth(int depth) {
 		);
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (
 		(type == FIT_BITMAP) ||
@@ -294,12 +294,12 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 	);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsICCProfiles() {
 	return TRUE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -316,7 +316,7 @@ Set conversion instructions as needed.
 @return Returns TRUE if successful, returns FALSE otherwise
 @see png_read_update_info
 */
-static FIBOOL 
+static BOOL 
 ConfigureDecoder(png_structp png_ptr, png_infop info_ptr, int flags, FREE_IMAGE_TYPE *output_image_type) {
 	// get original image info
 	const int color_type = png_get_color_type(png_ptr, info_ptr);
@@ -326,7 +326,7 @@ ConfigureDecoder(png_structp png_ptr, png_infop info_ptr, int flags, FREE_IMAGE_
 	FREE_IMAGE_TYPE image_type = FIT_BITMAP;	// assume standard image type
 
 	// check for transparency table or single transparent color
-	FIBOOL bIsTransparent = png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS) == PNG_INFO_tRNS ? TRUE : FALSE;
+	BOOL bIsTransparent = png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS) == PNG_INFO_tRNS ? TRUE : FALSE;
 
 	// check allowed combinations of colour type and bit depth
 	// then get converted FreeImage type
@@ -506,7 +506,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	fio.s_io = io;
     
 	if (handle) {
-		FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 		try {		
 			// check to see if the file is in fact a PNG file
@@ -767,11 +767,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 // --------------------------------------------------------------------------
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	png_colorp palette{};
 	png_uint_32 width, height;
-	FIBOOL has_alpha_channel = FALSE;
+	BOOL has_alpha_channel = FALSE;
 
 	FIRGBA8 *pal;					// pointer to dib palette
 	int bit_depth, pixel_depth;		// pixel_depth = bit_depth * channels
@@ -833,7 +833,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			height = FreeImage_GetHeight(dib);
 			pixel_depth = FreeImage_GetBPP(dib);
 
-			FIBOOL bInterlaced = FALSE;
+			BOOL bInterlaced = FALSE;
 			if ((flags & PNG_INTERLACED) == PNG_INTERLACED) {
 				interlace_type = PNG_INTERLACE_ADAM7;
 				bInterlaced = TRUE;
@@ -867,7 +867,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			}
 
 			// check for transparent images
-			FIBOOL bIsTransparent = 
+			BOOL bIsTransparent = 
 				(image_type == FIT_BITMAP) && FreeImage_IsTransparent(dib) && (FreeImage_GetTransparencyCount(dib) > 0) ? TRUE : FALSE;
 
 			switch (FreeImage_GetColorType(dib)) {

@@ -43,7 +43,7 @@
 /**
 Get a line from a ASCII io stream
 */
-static FIBOOL 
+static BOOL 
 pfm_get_line(FreeImageIO *io, fi_handle handle, char *buffer, int length) {
 	int i;
 	memset(buffer, 0, length);
@@ -63,7 +63,7 @@ Get an integer value from the actual position pointed by handle
 static int
 pfm_get_int(FreeImageIO *io, fi_handle handle) {
     char c = 0;
-	FIBOOL bFirstChar;
+	BOOL bFirstChar;
 
     // skip forward to start of next number
 
@@ -157,7 +157,7 @@ MimeType() {
 	return "image/x-portable-floatmap";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t pfm_id1[] = { 0x50, 0x46 };
 	const uint8_t pfm_id2[] = { 0x50, 0x66 };
@@ -174,12 +174,12 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (
 		(type == FIT_FLOAT) ||
@@ -187,7 +187,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 	);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -203,7 +203,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		return nullptr;
 	}
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	try {
 		FREE_IMAGE_TYPE image_type = FIT_UNKNOWN;
@@ -232,7 +232,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		unsigned height = (unsigned) pfm_get_int(io, handle);
 		float scalefactor = 1;
 
-		FIBOOL bResult = pfm_get_line(io, handle, line_buffer, PFM_MAXLINE);
+		BOOL bResult = pfm_get_line(io, handle, line_buffer, PFM_MAXLINE);
 		if (bResult) {
 			bResult = (sscanf(line_buffer, "%f", &scalefactor) == 1) ? TRUE : FALSE;
 		}
@@ -319,7 +319,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	return nullptr;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	if (!dib || !handle) return FALSE;
 

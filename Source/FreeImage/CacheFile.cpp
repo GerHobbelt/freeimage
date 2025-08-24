@@ -44,8 +44,8 @@ CacheFile::~CacheFile() {
   close();
 }
 
-FIBOOL
-CacheFile::open(const std::string& filename, FIBOOL keep_in_memory) {
+BOOL
+CacheFile::open(const std::string& filename, BOOL keep_in_memory) {
 
   assert(!m_file);
 
@@ -166,7 +166,7 @@ CacheFile::lockBlock(int nr) {
 	return nullptr;
 }
 
-FIBOOL
+BOOL
 CacheFile::unlockBlock(int nr) {
 	if (m_current_block) {
 		m_current_block = nullptr;
@@ -175,7 +175,7 @@ CacheFile::unlockBlock(int nr) {
 	return FALSE;
 }
 
-FIBOOL
+BOOL
 CacheFile::deleteBlock(int nr) {
 	if (!m_current_block) {
 		PageMapIt it = m_page_map.find(nr);
@@ -196,7 +196,7 @@ CacheFile::deleteBlock(int nr) {
 	return FALSE;
 }
 
-FIBOOL
+BOOL
 CacheFile::readFile(uint8_t *data, int nr, int size) {
 	if ((data) && (size > 0)) {
 		int s = 0;

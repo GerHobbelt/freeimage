@@ -59,11 +59,11 @@ Int AllocateCodingContextEnc(CWMImageStrCodec *pSC, Int iNumContexts, Int iTrimF
     if (iNumContexts < 1 || iNumContexts > MAX_TILES)  // only between 1 and 256 allowed
         return ICERR_ERROR;
 
-    if (pSC == NULL)
+    if (pSC == nullptr)
         return ICERR_ERROR;
 
     pSC->m_pCodingContext = malloc (iNumContexts * sizeof (CCodingContext));
-    if (pSC->m_pCodingContext == NULL) {
+    if (pSC->m_pCodingContext == nullptr) {
         pSC->cNumCodingContext = 0;
         return ICERR_ERROR;
     }
@@ -79,17 +79,17 @@ Int AllocateCodingContextEnc(CWMImageStrCodec *pSC, Int iNumContexts, Int iTrimF
 
         /** allocate adaptive Huffman encoder **/    
         pContext->m_pAdaptHuffCBPCY = Allocate (iCBPSize, ENCODER);
-        if(pContext->m_pAdaptHuffCBPCY == NULL) {
+        if(pContext->m_pAdaptHuffCBPCY == nullptr) {
             return ICERR_ERROR;
         }
         pContext->m_pAdaptHuffCBPCY1 = Allocate(5, ENCODER);
-        if(pContext->m_pAdaptHuffCBPCY1 == NULL){
+        if(pContext->m_pAdaptHuffCBPCY1 == nullptr){
             return ICERR_ERROR;
         }
 
         for(k = 0; k < NUMVLCTABLES; k ++){
             pContext->m_pAHexpt[k] = Allocate(aAlphabet[k], ENCODER);
-            if(pContext->m_pAHexpt[k] == NULL){
+            if(pContext->m_pAHexpt[k] == nullptr){
                 return ICERR_ERROR;
             }
         }

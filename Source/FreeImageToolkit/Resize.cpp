@@ -34,16 +34,16 @@ images. However, the outgoing boolean is properly maintained for palletized imag
 as well as for any non-RGB image type, like FIT_UINTxx and FIT_DOUBLE, for example.
 @param dib A pointer to a FreeImage bitmap to calculate the extended color type for
 @param bIsGreyscale A pointer to a boolean, that receives TRUE, if the specified bitmap
-is greyscale, that is, it consists of grey colors only. This parameter can be NULL.
+is greyscale, that is, it consists of grey colors only. This parameter can be nullptr.
 @return the color type of the specified bitmap
 */
 static FREE_IMAGE_COLOR_TYPE
-GetExtendedColorType(FIBITMAP *dib, FIBOOL *bIsGreyscale) {
+GetExtendedColorType(FIBITMAP *dib, BOOL *bIsGreyscale) {
 	const unsigned bpp = FreeImage_GetBPP(dib);
 	const unsigned size = CalculateUsedPaletteEntries(bpp);
 	const FIRGBA8 * const pal = FreeImage_GetPalette(dib);
 	FREE_IMAGE_COLOR_TYPE color_type = FIC_MINISBLACK;
-	FIBOOL bIsGrey = TRUE;
+	BOOL bIsGrey = TRUE;
 
 	switch (bpp) {
 		case 1:
@@ -112,8 +112,8 @@ contains the bitmap's transparency information in the rgbReserved member
 of the palette's FIRGBA8 elements.
 @param dib A pointer to a FreeImage bitmap to create the RGBA palette from.
 @param buffer A pointer to the buffer to store the RGBA palette.
-@return A pointer to the newly created RGBA palette or NULL, if the specified
-bitmap is no palletized standard bitmap. If non-NULL, the returned value is
+@return A pointer to the newly created RGBA palette or nullptr, if the specified
+bitmap is no palletized standard bitmap. If non-nullptr, the returned value is
 actually the pointer passed in parameter 'buffer'.
 */
 static inline FIRGBA8 *
@@ -235,7 +235,7 @@ FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_h
 	const unsigned src_bpp = FreeImage_GetBPP(src);
 
 	// determine the image's color type
-	FIBOOL bIsGreyscale = FALSE;
+	BOOL bIsGreyscale = FALSE;
 	FREE_IMAGE_COLOR_TYPE color_type;
 	if (src_bpp <= 8) {
 		color_type = GetExtendedColorType(src, &bIsGreyscale);

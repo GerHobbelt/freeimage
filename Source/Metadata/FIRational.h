@@ -87,7 +87,7 @@ public:
 	//@}
 
 	/// Checks if this rational number is an integer, either positive or negative
-	FIBOOL isInteger();
+	BOOL isInteger();
 
 	/// Convert as "numerator/denominator"
 	std::string toString();

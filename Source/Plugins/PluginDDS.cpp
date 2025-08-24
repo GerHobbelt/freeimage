@@ -667,7 +667,7 @@ LoadRGB(const DDSURFACEDESC2 *desc, FreeImageIO *io, fi_handle handle) {
 #endif
 	
 	// enable transparency
-	FIBOOL bIsTransparent = (bpp != 16) && ((ddspf->dwFlags & DDPF_ALPHAPIXELS) == DDPF_ALPHAPIXELS) ? TRUE : FALSE;
+	BOOL bIsTransparent = (bpp != 16) && ((ddspf->dwFlags & DDPF_ALPHAPIXELS) == DDPF_ALPHAPIXELS) ? TRUE : FALSE;
 	FreeImage_SetTransparent(dib.get(), bIsTransparent);
 
 	if (!bIsTransparent && bpp == 32) {
@@ -809,7 +809,7 @@ MimeType() {
 	return "image/x-dds";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	DDSHEADER header;
 	memset(&header, 0, sizeof(header));
@@ -826,12 +826,12 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return TRUE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return FALSE;
 }
@@ -839,7 +839,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 // ----------------------------------------------------------
 
 static void * DLL_CALLCONV
-Open(FreeImageIO *io, fi_handle handle, FIBOOL read) {
+Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 	return nullptr;
 }
 
@@ -888,7 +888,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 }
 
 /*
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	return FALSE;
 }

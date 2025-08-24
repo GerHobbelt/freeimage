@@ -29,7 +29,7 @@ Flip the image horizontally along the vertical axis.
 @param src Input image to be processed.
 @return Returns TRUE if successful, FALSE otherwise.
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_FlipHorizontal(FIBITMAP *src) {
 	if (!FreeImage_HasPixels(src)) return FALSE;
 
@@ -54,7 +54,7 @@ FreeImage_FlipHorizontal(FIBITMAP *src) {
 			{
 				for (unsigned x = 0; x < width; x++) {
 					// get pixel at (x, y)
-					FIBOOL value = (new_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
+					BOOL value = (new_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
 					// set pixel at (new_x, y)
 					unsigned new_x = width - 1 - x;
 					value ? bits[new_x >> 3] |= (0x80 >> (new_x & 0x7)) : bits[new_x >> 3] &= (0xff7f >> (new_x & 0x7));
@@ -128,7 +128,7 @@ Flip the image vertically along the horizontal axis.
 @return Returns TRUE if successful, FALSE otherwise.
 */
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_FlipVertical(FIBITMAP *src) {
 	uint8_t *From, *Mid;
 

@@ -112,14 +112,14 @@ CalculateImageOffset(const std::vector<std::unique_ptr<FIBITMAP, decltype(&FreeI
 Vista icon support
 @return Returns TRUE if the bitmap data is stored in PNG format
 */
-static FIBOOL
+static BOOL
 IsPNG(FreeImageIO *io, fi_handle handle) {
 	const uint8_t png_signature[8] = { 137, 80, 78, 71, 13, 10, 26, 10 };
 	uint8_t signature[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	long tell = io->tell_proc(handle);
 	io->read_proc(&signature, 1, 8, handle);
-	FIBOOL bIsPNG = (memcmp(png_signature, signature, 8) == 0);
+	BOOL bIsPNG = (memcmp(png_signature, signature, 8) == 0);
 	io->seek_proc(handle, tell, SEEK_SET);
 
 	return bIsPNG;
@@ -196,7 +196,7 @@ MimeType() {
 	return "image/vnd.microsoft.icon";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	ICONHEADER icon_header;
 
@@ -208,7 +208,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return ((icon_header.idReserved == 0) && (icon_header.idType == 1) && (icon_header.idCount > 0));
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 			(depth == 1) ||
@@ -220,12 +220,12 @@ SupportsExportDepth(int depth) {
 		);
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_BITMAP) ? TRUE : FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -233,7 +233,7 @@ SupportsNoPixels() {
 // ----------------------------------------------------------
 
 static void * DLL_CALLCONV
-Open(FreeImageIO *io, fi_handle handle, FIBOOL read) {
+Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 	// Allocate memory for the header structure
 	auto *lpIH = (ICONHEADER*)malloc(sizeof(ICONHEADER));
 	if (!lpIH) {
@@ -285,7 +285,7 @@ PageCount(FreeImageIO *io, fi_handle handle, void *data) {
 // ----------------------------------------------------------
 
 static FIBITMAP*
-LoadStandardIcon(FreeImageIO *io, fi_handle handle, int flags, FIBOOL header_only) {
+LoadStandardIcon(FreeImageIO *io, fi_handle handle, int flags, BOOL header_only) {
 	// load the BITMAPINFOHEADER
 	FIBITMAPINFOHEADER bmih;
 	io->read_proc(&bmih, sizeof(FIBITMAPINFOHEADER), 1, handle);
@@ -393,7 +393,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		page = 0;
 	}
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	if (handle) {
 		// get the icon header
@@ -445,7 +445,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 // ----------------------------------------------------------
 
-static FIBOOL 
+static BOOL 
 SaveStandardIcon(FreeImageIO *io, FIBITMAP *dib, fi_handle handle) {
 	// write the BITMAPINFOHEADER
 	auto *bmih = FreeImage_GetInfoHeader(dib);
@@ -642,7 +642,7 @@ SaveStandardIcon(FreeImageIO *io, FIBITMAP *dib, fi_handle handle) {
 	return TRUE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	ICONHEADER *icon_header{};
 	std::vector<std::unique_ptr<FIBITMAP, decltype(&FreeImage_Unload)>> vPages;

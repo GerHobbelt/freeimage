@@ -52,7 +52,7 @@ FIBITMAP* createZonePlateImage(unsigned width, unsigned height, int scale) {
 	// allocate a 8-bit dib
 	dst = FreeImage_Allocate(width, height, 8);
 	if(!dst)
-		return NULL;
+		return nullptr;
 
 	// build a greyscale palette
 	FIRGBA8 *pal = FreeImage_GetPalette(dst);

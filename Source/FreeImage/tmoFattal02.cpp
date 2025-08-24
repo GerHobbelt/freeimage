@@ -124,7 +124,7 @@ Compute a Gaussian pyramid using the specified number of levels.
 @param nlevels Number of resolution levels
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL GaussianPyramid(FIBITMAP *H, FIBITMAP **pyramid, int nlevels) {
+static BOOL GaussianPyramid(FIBITMAP *H, FIBITMAP **pyramid, int nlevels) {
 	try {
 		// first level is the original image
 		pyramid[0] = FreeImage_Clone(H);
@@ -152,7 +152,7 @@ and returns the average gradient.
 @param H Input image
 @param avgGrad [out] Average gradient
 @param k Level number
-@return Returns the gradient magnitude if successful, returns NULL otherwise
+@return Returns the gradient magnitude if successful, returns nullptr otherwise
 @see GradientPyramid
 */
 static FIBITMAP* GradientLevel(FIBITMAP *H, float *avgGrad, int k) {
@@ -212,7 +212,7 @@ Calculate gradient magnitude and its average value on each pyramid level
 @param avgGrad [out] Average gradient on each level (array of size nlevels)
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL GradientPyramid(FIBITMAP **pyramid, int nlevels, FIBITMAP **gradients, float *avgGrad) {
+static BOOL GradientPyramid(FIBITMAP **pyramid, int nlevels, FIBITMAP **gradients, float *avgGrad) {
 	try {
 		for (int k = 0; k < nlevels; k++) {
 			FIBITMAP *Hk = pyramid[k];
@@ -238,7 +238,7 @@ Compute the gradient attenuation function PHI(x, y)
 @param nlevels Number of levels
 @param alpha Parameter alpha in the paper
 @param beta Parameter beta in the paper
-@return Returns the attenuation matrix Phi if successful, returns NULL otherwise
+@return Returns the attenuation matrix Phi if successful, returns nullptr otherwise
 */
 static FIBITMAP* PhiMatrix(FIBITMAP **gradients, float *avgGrad, int nlevels, float alpha, float beta) {
 	float *src_pixel, *dst_pixel;
@@ -330,7 +330,7 @@ Compute gradients in x and y directions, attenuate them with the attenuation mat
 then compute the divergence div G from the attenuated gradient. 
 @param H Normalized luminance
 @param PHI Attenuation matrix
-@return Returns the divergence matrix if successful, returns NULL otherwise
+@return Returns the divergence matrix if successful, returns nullptr otherwise
 */
 static FIBITMAP* Divergence(FIBITMAP *H, FIBITMAP *PHI) {
 	FIBITMAP *Gx{}, *Gy{}, *divG{};
@@ -412,7 +412,7 @@ static FIBITMAP* Divergence(FIBITMAP *H, FIBITMAP *PHI) {
 Given the luminance channel, find max & min luminance values, 
 normalize to range 0..100 and take the logarithm. 
 @param Y Image luminance
-@return Returns the normalized luminance H if successful, returns NULL otherwise
+@return Returns the normalized luminance H if successful, returns nullptr otherwise
 */
 static FIBITMAP* LogLuminance(FIBITMAP *Y) {
 	FIBITMAP *H{};
@@ -602,7 +602,7 @@ Apply the Gradient Domain High Dynamic Range Compression to a RGBF image and con
 @param dib Input RGBF / RGB16 image
 @param color_saturation Color saturation (s parameter in the paper) in [0.4..0.6]
 @param attenuation Atenuation factor (beta parameter in the paper) in [0.8..0.9]
-@return Returns a 24-bit RGB image if successful, returns NULL otherwise
+@return Returns a 24-bit RGB image if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_TmoFattal02(FIBITMAP *dib, double color_saturation, double attenuation) {	

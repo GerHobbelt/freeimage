@@ -315,7 +315,7 @@ size_t FreeImage_GetTagMemorySize(FITAG *tag);
 typedef struct tagTagInfo {
 	uint16_t tag;			// Tag ID (required)
 	char *fieldname;	// Field name (required)
-	char *description;	// Field description (may be NULL)
+	char *description;	// Field description (may be nullptr)
 } TagInfo;
 
 
@@ -404,7 +404,7 @@ private:
 	@param tag_table Tag info table
 	@return Returns TRUE if successful, returns FALSE otherwise
 	*/
-	FIBOOL addMetadataModel(MDMODEL md_model, TagInfo *tag_table);
+	BOOL addMetadataModel(MDMODEL md_model, TagInfo *tag_table);
 
 public:
 	/**
@@ -416,27 +416,27 @@ public:
 	Given a tag ID, returns its TagInfo descriptor
 	@param md_model Internal metadata model
 	@param tagID tag ID
-	@return Returns the TagInfo descriptor if successful, returns NULL otherwise
+	@return Returns the TagInfo descriptor if successful, returns nullptr otherwise
 	*/
 	const TagInfo* getTagInfo(MDMODEL md_model, uint16_t tagID) const;
 
 	/**
 	Given a tag ID, returns its tag field name. 
-	When the tag is unknown and defaultKey is not NULL, a string such as "Tag 0x1234" is returned. 
+	When the tag is unknown and defaultKey is not nullptr, a string such as "Tag 0x1234" is returned. 
 	This string is contained in the provided defaultKey buffer (assumed to be an array of at least 16 chars). 
 	@param md_model Internal metadata model
 	@param tagID tag ID
-	@param defaultKey Assumed to be an array of 16 chars. If not NULL, build a key for unknown tags
+	@param defaultKey Assumed to be an array of 16 chars. If not nullptr, build a key for unknown tags
 	@return Returns the tag field name if successful, returns an 'unknown tag' string contained in defaultKey otherwise
 	*/
 	const char* getTagFieldName(MDMODEL md_model, uint16_t tagID, char *defaultKey) const;
 
 	/**
 	Given a tag ID, returns its description. 
-	When the tag has no description, a NULL value is returned.
+	When the tag has no description, a nullptr value is returned.
 	@param md_model Internal metadata model
 	@param tagID tag ID
-	@return Returns the tag description if successful, returns NULL otherwise
+	@return Returns the tag description if successful, returns nullptr otherwise
 	*/
 	const char* getTagDescription(MDMODEL md_model, uint16_t tagID) const;
 
@@ -477,24 +477,24 @@ extern "C" {
 
 // JPEG / JPEG-XR Exif profile (see Exif.cpp)
 // --------------------------------------------------------------------------
-FIBOOL jpeg_read_exif_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned datalen, bool optional_signature = false);
-FIBOOL jpeg_read_exif_profile_raw(FIBITMAP *dib, const uint8_t *profile, unsigned length, bool optional_signature = false);
-FIBOOL jpegxr_read_exif_profile(FIBITMAP *dib, const uint8_t *profile, unsigned length, unsigned file_offset);
-FIBOOL jpegxr_read_exif_gps_profile(FIBITMAP *dib, const uint8_t *profile, unsigned length, unsigned file_offset);
+BOOL jpeg_read_exif_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned datalen, bool optional_signature = false);
+BOOL jpeg_read_exif_profile_raw(FIBITMAP *dib, const uint8_t *profile, unsigned length, bool optional_signature = false);
+BOOL jpegxr_read_exif_profile(FIBITMAP *dib, const uint8_t *profile, unsigned length, unsigned file_offset);
+BOOL jpegxr_read_exif_gps_profile(FIBITMAP *dib, const uint8_t *profile, unsigned length, unsigned file_offset);
 
-FIBOOL tiff_get_ifd_profile(FIBITMAP *dib, FREE_IMAGE_MDMODEL md_model, uint8_t **ppbProfile, unsigned *uProfileLength);
+BOOL tiff_get_ifd_profile(FIBITMAP *dib, FREE_IMAGE_MDMODEL md_model, uint8_t **ppbProfile, unsigned *uProfileLength);
 
 
 // PSD Exif profile (see Exif.cpp)
 // --------------------------------------------------------------------------
-FIBOOL psd_read_exif_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned datalen);
-FIBOOL psd_read_exif_profile_raw(FIBITMAP *dib, const uint8_t *dataptr, unsigned datalen);
+BOOL psd_read_exif_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned datalen);
+BOOL psd_read_exif_profile_raw(FIBITMAP *dib, const uint8_t *dataptr, unsigned datalen);
 
 
 // JPEG / PSD / TIFF IPTC profile (see IPTC.cpp)
 // --------------------------------------------------------------------------
-FIBOOL read_iptc_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned int datalen);
-FIBOOL write_iptc_profile(FIBITMAP *dib, uint8_t **profile, unsigned *profile_size);
+BOOL read_iptc_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned int datalen);
+BOOL write_iptc_profile(FIBITMAP *dib, uint8_t **profile, unsigned *profile_size);
 
 #if defined(__cplusplus)
 }

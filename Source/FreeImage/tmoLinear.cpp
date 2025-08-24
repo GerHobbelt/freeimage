@@ -11,7 +11,7 @@
 
 
 template <typename YuvStandard_>
-FIBOOL TmoLinearImpl(FIBITMAP* dst, FIBITMAP* src, double maxValue, double minBrightness, double maxBrightness)
+BOOL TmoLinearImpl(FIBITMAP* dst, FIBITMAP* src, double maxValue, double minBrightness, double maxBrightness)
 {
     const float black = static_cast<float>(minBrightness / maxBrightness);
     const float div   = static_cast<float>(1.0 / (1.0 - black));
@@ -158,7 +158,7 @@ FIBITMAP* FreeImage_TmoLinear(FIBITMAP* src, double max_value, FREE_IMAGE_CVT_CO
     const unsigned w = FreeImage_GetWidth(src);
     std::unique_ptr<FIBITMAP, decltype(&::FreeImage_Unload)> dst(FreeImage_Allocate(w, h, dstBpp), &::FreeImage_Unload);
 
-    FIBOOL status = FALSE;
+    BOOL status = FALSE;
     switch (yuv_standard) {
     case FICPARAM_YUV_STANDARD_JPEG:
         status = TmoLinearImpl<YuvJPEG>(dst.get(), src, max_value, minBrightness, maxBrightness);

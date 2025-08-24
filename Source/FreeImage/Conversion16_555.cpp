@@ -46,7 +46,7 @@ FreeImage_ConvertLine1To16_555(uint8_t *target, uint8_t *source, int width_in_pi
 void DLL_CALLCONV
 FreeImage_ConvertLine4To16_555(uint8_t *target, uint8_t *source, int width_in_pixels, FIRGBA8 *palette) {
 	uint16_t *new_bits = (uint16_t *)target;
-	FIBOOL lonibble = FALSE;
+	BOOL lonibble = FALSE;
 	int x = 0;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {

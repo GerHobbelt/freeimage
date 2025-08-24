@@ -109,7 +109,7 @@ XTIFFInitialize(void) {
 //   GeoTIFF tag reading / writing
 // ----------------------------------------------------------
 
-FIBOOL
+BOOL
 tiff_read_geotiff_profile(TIFF *tif, FIBITMAP *dib) {
 	char defaultKey[16];
 
@@ -184,7 +184,7 @@ tiff_read_geotiff_profile(TIFF *tif, FIBITMAP *dib) {
 	return TRUE;
 }
 
-FIBOOL
+BOOL
 tiff_write_geotiff_profile(TIFF *tif, FIBITMAP *dib) {
 	char defaultKey[16];
 
@@ -228,7 +228,7 @@ Read a single Exif tag
 @param md_model Metadata model where to store the tag
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 tiff_read_exif_tag(TIFF *tif, uint32_t tag_id, FIBITMAP *dib, TagLib::MDMODEL md_model) {
 	uint32_t value_count = 0;
 	int mem_alloc = 0;
@@ -247,7 +247,7 @@ tiff_read_exif_tag(TIFF *tif, uint32_t tag_id, FIBITMAP *dib, TagLib::MDMODEL md
 	
 	const TagLib& tagLib = TagLib::instance();
 
-	// get the tag key - use NULL to avoid reading GeoTIFF tags
+	// get the tag key - use nullptr to avoid reading GeoTIFF tags
 	const char *key = tagLib.getTagFieldName(md_model, (uint16_t)tag_id, nullptr);
 	if (!key) {
 		return TRUE;
@@ -548,7 +548,7 @@ Read all known exif tags
 @param dib Image being read
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-FIBOOL 
+BOOL 
 tiff_read_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib) {
 
 	const TagLib& tagLib = TagLib::instance();
@@ -613,7 +613,7 @@ tiff_read_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib) {
 /**
 Skip tags that are already handled by the LibTIFF writing process
 */
-static FIBOOL 
+static BOOL 
 skip_write_field(TIFF* tif, uint32_t tag) {
 	switch (tag) {
 		case TIFFTAG_SUBFILETYPE:
@@ -698,7 +698,7 @@ Write all known exif tags
 @param dib Image being written
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-FIBOOL 
+BOOL 
 tiff_write_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib) {
 	char defaultKey[16];
 	

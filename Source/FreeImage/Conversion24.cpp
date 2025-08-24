@@ -44,7 +44,7 @@ FreeImage_ConvertLine1To24(uint8_t *target, uint8_t *source, int width_in_pixels
 
 void DLL_CALLCONV
 FreeImage_ConvertLine4To24(uint8_t *target, uint8_t *source, int width_in_pixels, FIRGBA8 *palette) {
-	FIBOOL low_nibble = FALSE;
+	BOOL low_nibble = FALSE;
 	int x = 0;
 
 	for (int cols = 0; cols < width_in_pixels; ++cols ) {

@@ -1417,24 +1417,24 @@ namespace fi
             static const char* DescriptionProc(void* ctx) try { return unwrap(ctx).DescriptionProc(); } catch (...) { return nullptr; };
             static const char* ExtensionListProc(void* ctx) try { return unwrap(ctx).ExtensionListProc(); } catch (...) { return nullptr; };
             static const char* RegExprProc(void* ctx) try { return unwrap(ctx).RegExprProc(); } catch (...) { return nullptr; };
-            static void* OpenProc(void* ctx, FreeImageIO* io, fi_handle handle, FIBOOL read) try { return unwrap(ctx).OpenProc(io, handle, read); } catch (...) { return nullptr; };
+            static void* OpenProc(void* ctx, FreeImageIO* io, fi_handle handle, BOOL read) try { return unwrap(ctx).OpenProc(io, handle, read); } catch (...) { return nullptr; };
             static void CloseProc(void* ctx, FreeImageIO* io, fi_handle handle, void* data) try { unwrap(ctx).CloseProc(io, handle, data); } catch (...) { };
             static uint32_t PageCountProc(void* ctx, FreeImageIO* io, fi_handle handle, void* data) try { return unwrap(ctx).PageCountProc(io, handle, data); } catch (...) { return 1U; };
             static uint32_t PageCapabilityProc(void* ctx, FreeImageIO* io, fi_handle handle, void* data) try { return unwrap(ctx).PageCapabilityProc(io, handle, data); } catch (...) { return 1U; };
             static FIBITMAP* LoadProc(void* ctx, FreeImageIO* io, fi_handle handle, uint32_t page, uint32_t flags, void* data) try { return unwrap(ctx).LoadProc(io, handle, page, flags, data); } catch (...) { return nullptr; };
-            static FIBOOL SaveProc(void* ctx, FreeImageIO* io, FIBITMAP* dib, fi_handle handle, uint32_t page, uint32_t flags, void* data) try { return unwrap(ctx).SaveProc(io, dib, handle, page, flags, data); } catch (...) { return FALSE; };
-            static FIBOOL ValidateProc(void* ctx, FreeImageIO* io, fi_handle handle) try { return unwrap(ctx).ValidateProc(io, handle); } catch (...) { return FALSE; };
+            static BOOL SaveProc(void* ctx, FreeImageIO* io, FIBITMAP* dib, fi_handle handle, uint32_t page, uint32_t flags, void* data) try { return unwrap(ctx).SaveProc(io, dib, handle, page, flags, data); } catch (...) { return FALSE; };
+            static BOOL ValidateProc(void* ctx, FreeImageIO* io, fi_handle handle) try { return unwrap(ctx).ValidateProc(io, handle); } catch (...) { return FALSE; };
             static const char* MimeProc(void* ctx) try { return unwrap(ctx).MimeProc(); } catch (...) { return nullptr; };
-            static FIBOOL SupportsExportBPPProc(void* ctx, uint32_t bpp) try { return unwrap(ctx).SupportsExportBPPProc(bpp); } catch (...) { return FALSE; };
-            static FIBOOL SupportsExportTypeProc(void* ctx, FREE_IMAGE_TYPE type) try { return unwrap(ctx).SupportsExportTypeProc(type); } catch (...) { return FALSE; };
-            static FIBOOL SupportsICCProfilesProc(void* ctx) try { return unwrap(ctx).SupportsICCProfilesProc(); } catch (...) { return FALSE; };
-            static FIBOOL SupportsNoPixelsProc(void* ctx) try { return unwrap(ctx).SupportsNoPixelsProc(); } catch (...) { return FALSE; };
+            static BOOL SupportsExportBPPProc(void* ctx, uint32_t bpp) try { return unwrap(ctx).SupportsExportBPPProc(bpp); } catch (...) { return FALSE; };
+            static BOOL SupportsExportTypeProc(void* ctx, FREE_IMAGE_TYPE type) try { return unwrap(ctx).SupportsExportTypeProc(type); } catch (...) { return FALSE; };
+            static BOOL SupportsICCProfilesProc(void* ctx) try { return unwrap(ctx).SupportsICCProfilesProc(); } catch (...) { return FALSE; };
+            static BOOL SupportsNoPixelsProc(void* ctx) try { return unwrap(ctx).SupportsNoPixelsProc(); } catch (...) { return FALSE; };
 
             static void DLL_CALLCONV ReleaseProc(void* ctx) {
                 delete static_cast<Plugin2Wrapper*>(ctx);
             }
 
-            static FIBOOL DLL_CALLCONV InitProc(::Plugin2* plugin, void* ctx) {
+            static BOOL DLL_CALLCONV InitProc(::Plugin2* plugin, void* ctx) {
                 if (!plugin) {
                     return FALSE;
                 }
@@ -1496,14 +1496,14 @@ namespace fi
     {
         if (plugin) {
             auto wrapper = std::make_unique<details::Plugin2Wrapper>(std::move(plugin));
-            const bool success = FreeImage_ResetLocalPlugin2(static_cast<FREE_IMAGE_FORMAT>(fif), &details::Plugin2Wrapper::InitProc, wrapper.get(), static_cast<FIBOOL>(force));
+            const bool success = FreeImage_ResetLocalPlugin2(static_cast<FREE_IMAGE_FORMAT>(fif), &details::Plugin2Wrapper::InitProc, wrapper.get(), static_cast<BOOL>(force));
             if (success) {
                 wrapper.release(); // ownership is transferred
             }
             return success;
         }
         else {
-            return FreeImage_ResetLocalPlugin2(static_cast<FREE_IMAGE_FORMAT>(fif), nullptr, nullptr, static_cast<FIBOOL>(force));
+            return FreeImage_ResetLocalPlugin2(static_cast<FREE_IMAGE_FORMAT>(fif), nullptr, nullptr, static_cast<BOOL>(force));
         }
     }
 

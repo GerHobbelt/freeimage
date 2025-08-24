@@ -98,7 +98,7 @@ FreeImage_strnicmp(const char *s1, const char *s2, size_t len) {
 // ----------------------------------------------------------
 
 static short 
-ReadInt16(FIBOOL msb_order, const void *buffer) {
+ReadInt16(BOOL msb_order, const void *buffer) {
 	short value;
 
 	if (msb_order) {
@@ -110,7 +110,7 @@ ReadInt16(FIBOOL msb_order, const void *buffer) {
 }
 
 static int32_t 
-ReadInt32(FIBOOL msb_order, const void *buffer) {
+ReadInt32(BOOL msb_order, const void *buffer) {
 	int32_t value;
 
 	if (msb_order) {
@@ -122,7 +122,7 @@ ReadInt32(FIBOOL msb_order, const void *buffer) {
 }
 
 static uint16_t 
-ReadUint16(FIBOOL msb_order, const void *buffer) {
+ReadUint16(BOOL msb_order, const void *buffer) {
 	uint16_t value;
 	
 	if (msb_order) {
@@ -134,7 +134,7 @@ ReadUint16(FIBOOL msb_order, const void *buffer) {
 }
 
 static uint32_t 
-ReadUint32(FIBOOL msb_order, const void *buffer) {
+ReadUint32(BOOL msb_order, const void *buffer) {
 	return ((uint32_t) ReadInt32(msb_order, buffer) & 0xFFFFFFFF);
 }
 
@@ -147,7 +147,7 @@ Process a IFD offset
 Returns the offset and the metadata model for this tag
 */
 static void 
-processIFDOffset(FITAG *tag, const char *pval, FIBOOL msb_order, uint32_t *subdirOffset, TagLib::MDMODEL *md_model) {
+processIFDOffset(FITAG *tag, const char *pval, BOOL msb_order, uint32_t *subdirOffset, TagLib::MDMODEL *md_model) {
 	// get the IFD offset
 	*subdirOffset = ReadUint32(msb_order, pval);
 
@@ -170,15 +170,15 @@ Process a maker note IFD offset
 Returns the offset and the metadata model for this tag
 */
 static void 
-processMakerNote(FIBITMAP *dib, const char *pval, FIBOOL msb_order, uint32_t *subdirOffset, TagLib::MDMODEL *md_model) {
+processMakerNote(FIBITMAP *dib, const char *pval, BOOL msb_order, uint32_t *subdirOffset, TagLib::MDMODEL *md_model) {
 	FITAG *tagMake{};
 
 	*subdirOffset = 0;
 	*md_model = TagLib::UNKNOWN;
 
 	// Determine the camera model and makernote format
-	// WARNING: note that Maker may be NULL sometimes so check its value before using it
-	// (NULL pointer checking is done by FreeImage_strnicmp)
+	// WARNING: note that Maker may be nullptr sometimes so check its value before using it
+	// (nullptr pointer checking is done by FreeImage_strnicmp)
 	FreeImage_GetMetadata(FIMD_EXIF_MAIN, dib, "Make", &tagMake);
 	const char *Maker = (char*)FreeImage_GetTagValue(tagMake);
 
@@ -304,7 +304,7 @@ processMakerNote(FIBITMAP *dib, const char *pval, FIBOOL msb_order, uint32_t *su
 Process a Canon maker note tag. 
 A single Canon tag may contain many other tags within.
 */
-static FIBOOL 
+static BOOL 
 processCanonMakerNoteTag(FIBITMAP *dib, FITAG *tag) {
 	char defaultKey[16];
 	uint32_t startIndex = 0;
@@ -400,7 +400,7 @@ processCanonMakerNoteTag(FIBITMAP *dib, FITAG *tag) {
 Process a standard Exif tag
 */
 static void 
-processExifTag(FIBITMAP *dib, FITAG *tag, char *pval, FIBOOL msb_order, TagLib::MDMODEL md_model) {
+processExifTag(FIBITMAP *dib, FITAG *tag, char *pval, BOOL msb_order, TagLib::MDMODEL md_model) {
 	char defaultKey[16];
 	int n;
 	uint32_t i;
@@ -525,8 +525,8 @@ Process Exif directory
 @param starting_md_model Metadata model of the IFD (should be TagLib::EXIF_MAIN for a jpeg)
 @return Returns TRUE if sucessful, returns FALSE otherwise
 */
-static FIBOOL 
-jpeg_read_exif_dir(FIBITMAP *dib, const uint8_t *tiffp, uint32_t dwOffsetIfd0, uint32_t dwLength, uint32_t dwProfileOffset, FIBOOL msb_order, TagLib::MDMODEL starting_md_model) {
+static BOOL 
+jpeg_read_exif_dir(FIBITMAP *dib, const uint8_t *tiffp, uint32_t dwOffsetIfd0, uint32_t dwLength, uint32_t dwProfileOffset, BOOL msb_order, TagLib::MDMODEL starting_md_model) {
 	uint16_t de, nde;
 
 	std::stack<uint16_t>			destack;	// directory entries stack
@@ -648,7 +648,7 @@ jpeg_read_exif_dir(FIBITMAP *dib, const uint8_t *tiffp, uint32_t dwOffsetIfd0, u
 			}
 
 			// check for a IFD offset
-			FIBOOL isIFDOffset = FALSE;
+			BOOL isIFDOffset = FALSE;
 			switch (FreeImage_GetTagID(tag)) {
 				case TAG_EXIF_OFFSET:
 				case TAG_GPS_OFFSET:
@@ -817,7 +817,7 @@ Read and decode JPEG_APP1 marker (Exif profile)
 @param length APP1 marker length
 @return Returns TRUE if successful, FALSE otherwise
 */
-FIBOOL  
+BOOL  
 jpeg_read_exif_profile(FIBITMAP *dib, const uint8_t *data, unsigned length, bool optional_signature) {
     // marker identifying string for Exif = "Exif\0\0"
     uint8_t exif_signature[6] = { 0x45, 0x78, 0x69, 0x66, 0x00, 0x00 };
@@ -843,7 +843,7 @@ jpeg_read_exif_profile(FIBITMAP *dib, const uint8_t *data, unsigned length, bool
 
 		// check the endianess order
 		
-		FIBOOL bBigEndian = TRUE;
+		BOOL bBigEndian = TRUE;
 
 		if (memcmp(pbProfile, lsb_first, sizeof(lsb_first)) == 0) {
 			// Exif section is in little-endian order
@@ -894,7 +894,7 @@ Read JPEG_APP1 marker (Exif profile)
 @param datalen APP1 marker length
 @return Returns TRUE if successful, FALSE otherwise
 */
-FIBOOL  
+BOOL  
 jpeg_read_exif_profile_raw(FIBITMAP *dib, const uint8_t *profile, unsigned length, bool optional_signature) {
     // marker identifying string for Exif = "Exif\0\0"
     uint8_t exif_signature[6] = { 0x45, 0x78, 0x69, 0x66, 0x00, 0x00 };
@@ -938,10 +938,10 @@ Read and decode JPEG-XR Exif IFD
 @param file_offset Reference offset in the original file of each tag value whose length is > 4
 @return Returns TRUE if successful, FALSE otherwise
 */
-FIBOOL  
+BOOL  
 jpegxr_read_exif_profile(FIBITMAP *dib, const uint8_t *profile, unsigned length, unsigned file_offset) {
 	// assume Little Endian order
-	FIBOOL bBigEndian = FALSE;
+	BOOL bBigEndian = FALSE;
 	
 	// process Exif specific IFD
 	return jpeg_read_exif_dir(dib, profile, 0, length, file_offset, bBigEndian, TagLib::EXIF_EXIF);
@@ -955,10 +955,10 @@ Read and decode JPEG-XR Exif-GPS IFD
 @param file_offset Reference offset in the original file of each tag value whose length is > 4
 @return Returns TRUE if successful, FALSE otherwise
 */
-FIBOOL  
+BOOL  
 jpegxr_read_exif_gps_profile(FIBITMAP *dib, const uint8_t *profile, unsigned length, unsigned file_offset) {
 	// assume Little Endian order
-	FIBOOL bBigEndian = FALSE;
+	BOOL bBigEndian = FALSE;
 	
 	// process Exif GPS IFD
 	return jpeg_read_exif_dir(dib, profile, 0, length, file_offset, bBigEndian, TagLib::EXIF_GPS);
@@ -1058,7 +1058,7 @@ The end of the buffer is filled with 4 bytes equal to 0 (end of IFD offset)
 @return Returns TRUE if successful, FALSE otherwise
 @see tiff_get_ifd_profile
 */
-static FIBOOL
+static BOOL
 tiff_write_ifd(FIBITMAP *dib, FREE_IMAGE_MDMODEL md_model, FIMEMORY *hmem) {
 	FITAG *tag{};
 	FIMETADATA *mdhandle{};
@@ -1217,7 +1217,7 @@ The buffer is allocated by the function and must be freed by the caller, using '
 @return Returns TRUE if successful, FALSE otherwise
 @see tiff_write_ifd
 */
-FIBOOL
+BOOL
 tiff_get_ifd_profile(FIBITMAP *dib, FREE_IMAGE_MDMODEL md_model, uint8_t **ppbProfile, unsigned *uProfileLength) {
 	FIMEMORY *hmem{};
 
@@ -1229,7 +1229,7 @@ tiff_get_ifd_profile(FIBITMAP *dib, FREE_IMAGE_MDMODEL md_model, uint8_t **ppbPr
 		}
 
 		// write the metadata model as a TIF IFD
-		FIBOOL bResult = tiff_write_ifd(dib, md_model, hmem);
+		BOOL bResult = tiff_write_ifd(dib, md_model, hmem);
 
 		if (bResult) {
 			uint8_t *data{};
@@ -1273,7 +1273,7 @@ Read and decode PSD image resource (Exif profile)
 @param length Resource length
 @return Returns TRUE if successful, FALSE otherwise
 */
-FIBOOL
+BOOL
 psd_read_exif_profile(FIBITMAP *dib, const uint8_t *data, unsigned length) {
 	uint8_t lsb_first[4] = { 0x49, 0x49, 0x2A, 0x00 };		// Classic TIFF signature - little-endian order
 	uint8_t msb_first[4] = { 0x4D, 0x4D, 0x00, 0x2A };		// Classic TIFF signature - big-endian order
@@ -1290,7 +1290,7 @@ psd_read_exif_profile(FIBITMAP *dib, const uint8_t *data, unsigned length) {
 
 	// check the endianess order
 
-	FIBOOL bBigEndian = TRUE;
+	BOOL bBigEndian = TRUE;
 
 	if (memcmp(pbProfile, lsb_first, sizeof(lsb_first)) == 0) {
 		// Exif section is in little-endian order
@@ -1323,7 +1323,7 @@ Read PSD image resource (Exif profile)
 @param datalen Resource length
 @return Returns TRUE if successful, FALSE otherwise
 */
-FIBOOL
+BOOL
 psd_read_exif_profile_raw(FIBITMAP *dib, const uint8_t *profile, unsigned length) {
     // marker identifying string for Exif = "Exif\0\0"
 	// used by JPEG not PSD
@@ -1344,7 +1344,7 @@ psd_read_exif_profile_raw(FIBITMAP *dib, const uint8_t *profile, unsigned length
 
 	// create a tag
 	FITAG *tag = FreeImage_CreateTag();
-	FIBOOL bSuccess = FALSE;
+	BOOL bSuccess = FALSE;
 	if (tag) {
 		FreeImage_SetTagKey(tag, g_TagLib_ExifRawFieldName);
 		FreeImage_SetTagLength(tag, dwProfileLength);

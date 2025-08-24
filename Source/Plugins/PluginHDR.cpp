@@ -80,26 +80,26 @@ typedef enum {
 // Prototypes
 // ----------------------------------------------------------
 
-static FIBOOL rgbe_Error(rgbe_error_code error_code, const char *msg);
-static FIBOOL rgbe_GetLine(FreeImageIO *io, fi_handle handle, char *buffer, int length);
+static BOOL rgbe_Error(rgbe_error_code error_code, const char *msg);
+static BOOL rgbe_GetLine(FreeImageIO *io, fi_handle handle, char *buffer, int length);
 static inline void rgbe_FloatToRGBE(uint8_t rgbe[4], FIRGBF *rgbf);
 static inline void rgbe_RGBEToFloat(FIRGBF *rgbf, uint8_t rgbe[4]);
-static FIBOOL rgbe_ReadHeader(FreeImageIO *io, fi_handle handle, unsigned *width, unsigned *height, rgbeHeaderInfo *header_info);
-static FIBOOL rgbe_WriteHeader(FreeImageIO *io, fi_handle handle, unsigned width, unsigned height, rgbeHeaderInfo *info);
-static FIBOOL rgbe_ReadPixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels);
-static FIBOOL rgbe_WritePixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels);
-static FIBOOL rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanline_width, unsigned num_scanlines);
-static FIBOOL rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, uint8_t *data, int numbytes);
-static FIBOOL rgbe_WritePixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned scanline_width, unsigned num_scanlines);
-static FIBOOL rgbe_ReadMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info);
-static FIBOOL rgbe_WriteMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info);
+static BOOL rgbe_ReadHeader(FreeImageIO *io, fi_handle handle, unsigned *width, unsigned *height, rgbeHeaderInfo *header_info);
+static BOOL rgbe_WriteHeader(FreeImageIO *io, fi_handle handle, unsigned width, unsigned height, rgbeHeaderInfo *info);
+static BOOL rgbe_ReadPixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels);
+static BOOL rgbe_WritePixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels);
+static BOOL rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanline_width, unsigned num_scanlines);
+static BOOL rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, uint8_t *data, int numbytes);
+static BOOL rgbe_WritePixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned scanline_width, unsigned num_scanlines);
+static BOOL rgbe_ReadMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info);
+static BOOL rgbe_WriteMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info);
 
 // ----------------------------------------------------------
 
 /**
 Default error routine.  change this to change error handling 
 */
-static FIBOOL  
+static BOOL  
 rgbe_Error(rgbe_error_code error_code, const char *msg) {
 	switch (error_code) {
 		case rgbe_read_error:
@@ -122,7 +122,7 @@ rgbe_Error(rgbe_error_code error_code, const char *msg) {
 /**
 Get a line from a ASCII io stream
 */
-static FIBOOL 
+static BOOL 
 rgbe_GetLine(FreeImageIO *io, fi_handle handle, char *buffer, int length) {
 	int i;
 	memset(buffer, 0, length);
@@ -185,13 +185,13 @@ rgbe_RGBEToFloat(FIRGBF *rgbf, uint8_t rgbe[4]) {
 /**
 Minimal header reading. Modify if you want to parse more information 
 */
-static FIBOOL 
+static BOOL 
 rgbe_ReadHeader(FreeImageIO *io, fi_handle handle, unsigned *width, unsigned *height, rgbeHeaderInfo *header_info) {
 	char buf[HDR_MAXLINE];
 	float tempf;
 	int i;
-	FIBOOL bFormatFound = FALSE;
-	FIBOOL bHeaderFound = FALSE;
+	BOOL bFormatFound = FALSE;
+	BOOL bHeaderFound = FALSE;
 
 	header_info->valid = 0;
 	header_info->programtype[0] = 0;
@@ -269,7 +269,7 @@ rgbe_ReadHeader(FreeImageIO *io, fi_handle handle, unsigned *width, unsigned *he
 /**
  default minimal header. modify if you want more information in header 
 */
-static FIBOOL 
+static BOOL 
 rgbe_WriteHeader(FreeImageIO *io, fi_handle handle, unsigned width, unsigned height, rgbeHeaderInfo *info) {
 	char buffer[HDR_MAXLINE];
 
@@ -311,11 +311,11 @@ rgbe_WriteHeader(FreeImageIO *io, fi_handle handle, unsigned width, unsigned hei
 	return TRUE;
 }
 
-static FIBOOL 
+static BOOL 
 rgbe_ReadMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info) {
 	return TRUE;
 }
-static FIBOOL 
+static BOOL 
 rgbe_WriteMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info) {
 	header_info->gamma = 1;
 	header_info->valid |= RGBE_VALID_GAMMA;
@@ -328,7 +328,7 @@ rgbe_WriteMetadata(FIBITMAP *dib, rgbeHeaderInfo *header_info) {
 /** 
 Simple read routine. Will not correctly handle run length encoding 
 */
-static FIBOOL 
+static BOOL 
 rgbe_ReadPixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels) {
   uint8_t rgbe[4];
 
@@ -347,7 +347,7 @@ rgbe_ReadPixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpix
  These routines can be made faster by allocating a larger buffer and
  fread-ing and fwrite-ing the data in larger chunks.
 */
-static FIBOOL 
+static BOOL 
 rgbe_WritePixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpixels) {
   uint8_t rgbe[4];
 
@@ -361,7 +361,7 @@ rgbe_WritePixels(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned numpi
   return TRUE;
 }
 
-static FIBOOL 
+static BOOL 
 rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanline_width, unsigned num_scanlines) {
 	uint8_t rgbe[4], *scanline_buffer{}, *ptr, *ptr_end;
 	int i, count;
@@ -451,7 +451,7 @@ rgbe_ReadPixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, int scanlin
  encoded separately for better compression. 
  @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, uint8_t *data, int numbytes) {
 	static const int MINRUNLENGTH = 4;
 	int cur, beg_run, run_count, old_run_count, nonrun_count;
@@ -508,7 +508,7 @@ rgbe_WriteBytes_RLE(FreeImageIO *io, fi_handle handle, uint8_t *data, int numbyt
 	return TRUE;
 }
 
-static FIBOOL 
+static BOOL 
 rgbe_WritePixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned scanline_width, unsigned num_scanlines) {
 	uint8_t rgbe[4];
 
@@ -542,7 +542,7 @@ rgbe_WritePixels_RLE(FreeImageIO *io, fi_handle handle, FIRGBF *data, unsigned s
 		// write out each of the four channels separately run length encoded
 		// first red, then green, then blue, then exponent
 		for (int i = 0; i < 4; i++) {
-			FIBOOL bOK = rgbe_WriteBytes_RLE(io, handle, &buffer[i*scanline_width], scanline_width);
+			BOOL bOK = rgbe_WriteBytes_RLE(io, handle, &buffer[i*scanline_width], scanline_width);
 			if (!bOK) {
 				return bOK;
 			}
@@ -586,7 +586,7 @@ MimeType() {
 	return "image/vnd.radiance";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t hdr_signature[] = { '#', '?' };
 	uint8_t signature[] = { 0, 0 };
@@ -596,17 +596,17 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return (memcmp(hdr_signature, signature, 2) == 0);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_RGBF) ? TRUE : FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -619,7 +619,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		return nullptr;
 	}
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	try {
 
@@ -663,7 +663,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	return nullptr;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	if (!dib) return FALSE;
 

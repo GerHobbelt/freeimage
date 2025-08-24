@@ -76,7 +76,7 @@ MimeType() {
 	return "image/jp2";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t jp2_signature[] = { 0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20, 0x0D, 0x0A, 0x87, 0x0A };
 	uint8_t signature[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -88,7 +88,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return (memcmp(jp2_signature, signature, sizeof(jp2_signature)) == 0);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 		(depth == 8) ||
@@ -97,7 +97,7 @@ SupportsExportDepth(int depth) {
 	);
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (
 		(type == FIT_BITMAP)  ||
@@ -110,7 +110,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 // ----------------------------------------------------------
 
 static void * DLL_CALLCONV
-Open(FreeImageIO *io, fi_handle handle, FIBOOL read) {
+Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 	// create the stream wrapper
 	J2KFIO_t *fio = opj_freeimage_stream_create(io, handle, read);
 	return fio;
@@ -136,7 +136,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			return nullptr;
 		}
 
-		FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 		// get the OpenJPEG stream
 		opj_stream_t *d_stream = fio->stream;
@@ -200,11 +200,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	return nullptr;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	J2KFIO_t *fio = (J2KFIO_t*)data;
 	if (dib && handle && fio) {
-		FIBOOL bSuccess;
+		BOOL bSuccess;
 		opj_codec_t *c_codec{};	// handle to a compressor
 		opj_cparameters_t parameters;	// compression parameters
 		opj_image_t *image{};		// image to encode

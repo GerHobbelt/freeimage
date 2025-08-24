@@ -201,7 +201,7 @@ FreeImage_ConvertTo32Bits(FIBITMAP *dib) {
 		// copy metadata from src to dst
 		FreeImage_CloneMetadata(new_dib, dib);
 
-		FIBOOL bIsTransparent = FreeImage_IsTransparent(dib);
+		BOOL bIsTransparent = FreeImage_IsTransparent(dib);
 
 		switch (bpp) {
 			case 1:

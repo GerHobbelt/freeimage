@@ -62,7 +62,7 @@
 // ==========================================================
 // Utility functions declared in Utilities.h
 
-FIBOOL SwapRedBlue32(FIBITMAP* dib) {
+BOOL SwapRedBlue32(FIBITMAP* dib) {
 	if (FreeImage_GetImageType(dib) != FIT_BITMAP) {
 		return FALSE;
 	}
@@ -132,7 +132,7 @@ CMYKToRGB(T C, T M, T Y, T K, T* out) {
 template <class T>
 static void 
 _convertCMYKtoRGBA(unsigned width, unsigned height, uint8_t* line_start, unsigned pitch, unsigned samplesperpixel) {
-	const FIBOOL hasBlack = (samplesperpixel > 3) ? TRUE : FALSE;
+	const BOOL hasBlack = (samplesperpixel > 3) ? TRUE : FALSE;
 	const T MAX_VAL = std::numeric_limits<T>::max();
 		
 	T K = 0;
@@ -153,7 +153,7 @@ _convertCMYKtoRGBA(unsigned width, unsigned height, uint8_t* line_start, unsigne
 	}
 }
 
-FIBOOL 
+BOOL 
 ConvertCMYKtoRGBA(FIBITMAP* dib) {
 	if (!FreeImage_HasPixels(dib)) {
 		return FALSE;
@@ -302,7 +302,7 @@ _convertLABtoRGB(unsigned width, unsigned height, uint8_t* line_start, unsigned 
 	}
 }
 
-FIBOOL
+BOOL
 ConvertLABtoRGB(FIBITMAP* dib) {
 	if (!FreeImage_HasPixels(dib)) {
 		return FALSE;
@@ -438,7 +438,7 @@ FreeImage_ColorQuantizeEx(FIBITMAP *dib, FREE_IMAGE_QUANTIZE quantize, int Palet
 // ==========================================================
 
 FIBITMAP * DLL_CALLCONV
-FreeImage_ConvertFromRawBitsEx(FIBOOL copySource, uint8_t *bits, FREE_IMAGE_TYPE type, int width, int height, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, FIBOOL topdown) {
+FreeImage_ConvertFromRawBitsEx(BOOL copySource, uint8_t *bits, FREE_IMAGE_TYPE type, int width, int height, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown) {
 	FIBITMAP *dib{};
 
 	if (copySource) {
@@ -475,12 +475,12 @@ FreeImage_ConvertFromRawBitsEx(FIBOOL copySource, uint8_t *bits, FREE_IMAGE_TYPE
 }
 
 FIBITMAP * DLL_CALLCONV
-FreeImage_ConvertFromRawBits(uint8_t *bits, int width, int height, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, FIBOOL topdown) {
+FreeImage_ConvertFromRawBits(uint8_t *bits, int width, int height, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown) {
 	return FreeImage_ConvertFromRawBitsEx(TRUE /* copySource */, bits, FIT_BITMAP, width, height, pitch, bpp, red_mask, green_mask, blue_mask, topdown);
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertToRawBits(uint8_t *bits, FIBITMAP *dib, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, FIBOOL topdown) {
+FreeImage_ConvertToRawBits(uint8_t *bits, FIBITMAP *dib, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown) {
 	if (FreeImage_HasPixels(dib) && bits) {
 		for (unsigned i = 0; i < FreeImage_GetHeight(dib); ++i) {
 			uint8_t *scanline = FreeImage_GetScanLine(dib, topdown ? (FreeImage_GetHeight(dib) - i - 1) : i);
@@ -502,7 +502,7 @@ FreeImage_ConvertToRawBits(uint8_t *bits, FIBITMAP *dib, int pitch, unsigned bpp
 					}
 				}
 			} else if (FreeImage_GetBPP(dib) != bpp) {
-                FIBOOL bIsTransparent = FreeImage_IsTransparent(dib);
+                BOOL bIsTransparent = FreeImage_IsTransparent(dib);
 				switch (FreeImage_GetBPP(dib)) {
 					case 1 :
 						switch (bpp) {

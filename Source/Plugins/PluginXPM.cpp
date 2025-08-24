@@ -48,7 +48,7 @@ static int s_format_id;
 // ==========================================================
 
 // read in and skip all junk until we find a certain char
-static FIBOOL
+static BOOL
 FindChar(FreeImageIO *io, fi_handle handle, uint8_t look_for) {
 	uint8_t c;
 	io->read_proc(&c, sizeof(uint8_t), 1, handle);
@@ -119,7 +119,7 @@ MimeType() {
 	return "image/x-xpixmap";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	char buffer[256];
 
@@ -133,7 +133,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 			(depth == 8) ||
@@ -141,12 +141,12 @@ SupportsExportDepth(int depth) {
 		);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_BITMAP) ? TRUE : FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -162,7 +162,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
     try {
 		char *str;
 
-		FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 		//find the starting brace
 		if (!FindChar(io, handle,'{'))
@@ -346,7 +346,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
     return nullptr;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	if (dib && handle) {
 		char header[] = "/* XPM */\nstatic char *freeimage[] = {\n/* width height num_colors chars_per_pixel */\n\"",

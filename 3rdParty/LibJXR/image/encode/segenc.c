@@ -896,7 +896,7 @@ static Int CodeCoeffs (CWMImageStrCodec * pSC, CCodingContext *pContext,
                 writeIS_L2(pSC, pIOFL);
             
             for (iSubblock = 0; iSubblock < 4; iSubblock++, iPattern >>= 1, iIndex ++) {
-                const PixelI *pCoeffs = NULL;
+                const PixelI *pCoeffs = nullptr;
 
                 if(iBlock < 4){
                     pCoeffs = pSC->pPlane[i] + blkOffset[iIndex];
