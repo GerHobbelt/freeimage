@@ -48,9 +48,9 @@ private:
 	/// Row (or column) of contribution weights 
 	Contribution *m_WeightTable;
 	/// Filter window size (of affecting source pixels) 
-	DWORD m_WindowSize;
+	uint32_t m_WindowSize;
 	/// Length of line (no. of rows / cols) 
-	DWORD m_LineLength;
+	uint32_t m_LineLength;
 
 public:
 	/** 
@@ -60,7 +60,7 @@ public:
 	@param uLineSize Length (in pixels) of the destination line buffer
 	@param uSrcSize Length (in pixels) of the source line buffer
 	*/
-	CWeightsTable(CGenericFilter *pFilter, DWORD uDstSize, DWORD uSrcSize);
+	CWeightsTable(CGenericFilter *pFilter, uint32_t uDstSize, uint32_t uSrcSize);
 
 	/**
 	Destructor<br>
@@ -127,7 +127,7 @@ public:
 	@param src Pointer to the source image
 	@param dst_width Destination image width
 	@param dst_height Destination image height
-	@return Returns the scaled image if successful, returns NULL otherwise
+	@return Returns the scaled image if successful, returns nullptr otherwise
 	*/
 	FIBITMAP* scale(FIBITMAP *src, unsigned dst_width, unsigned dst_height);
 

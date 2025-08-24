@@ -52,7 +52,7 @@ public:
     }getbits;
     struct 
     {
-         UINT64 bitbuf;
+         uint64_t bitbuf;
          int vbits;
 
     }ph1_bits;

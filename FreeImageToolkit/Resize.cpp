@@ -26,8 +26,8 @@
   Filter weights table.
   This class stores contribution information for an entire line (row or column).
 */
-CWeightsTable::CWeightsTable(CGenericFilter *pFilter, DWORD uDstSize, DWORD uSrcSize) {
-	DWORD u;
+CWeightsTable::CWeightsTable(CGenericFilter *pFilter, uint32_t uDstSize, uint32_t uSrcSize) {
+	uint32_t u;
 	double dWidth;
 	double dFScale = 1.0;
 	double dFilterWidth = pFilter->GetWidth();
@@ -107,7 +107,7 @@ CWeightsTable::CWeightsTable(CGenericFilter *pFilter, DWORD uDstSize, DWORD uSrc
 }
 
 CWeightsTable::~CWeightsTable() {
-	for(DWORD u = 0; u < m_LineLength; u++) {
+	for(uint32_t u = 0; u < m_LineLength; u++) {
 		// free contributions for every pixel
 		free(m_WeightTable[u].Weights);
 	}
@@ -132,8 +132,8 @@ CWeightsTable::~CWeightsTable() {
 */
 
 FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_height) { 
-	DWORD src_width  = FreeImage_GetWidth(src); 
-	DWORD src_height = FreeImage_GetHeight(src);
+	uint32_t src_width  = FreeImage_GetWidth(src); 
+	uint32_t src_height = FreeImage_GetHeight(src);
 
 	unsigned redMask	= FreeImage_GetRedMask(src);
 	unsigned greenMask	= FreeImage_GetGreenMask(src);
@@ -149,7 +149,7 @@ FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_h
 
 	// allocate the dst image
 	FIBITMAP *dst = FreeImage_AllocateT(image_type, dst_width, dst_height, bpp, redMask, greenMask, blueMask);
-	if(!dst) return NULL;
+	if(!dst) return nullptr;
 	
 	if(bpp == 8) {
 		if(FreeImage_GetColorType(src) == FIC_MINISWHITE) {
@@ -157,14 +157,14 @@ FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_h
 			RGBQUAD *dst_pal = FreeImage_GetPalette(dst);
 			for(int i = 0; i < 256; i++) {
 				dst_pal[i].rgbRed = dst_pal[i].rgbGreen =
-					dst_pal[i].rgbBlue = (BYTE)(255 - i);
+					dst_pal[i].rgbBlue = (uint8_t)(255 - i);
 			}
 		} else {
 			// build a greyscale palette
 			RGBQUAD *dst_pal = FreeImage_GetPalette(dst);
 			for(int i = 0; i < 256; i++) {
 				dst_pal[i].rgbRed = dst_pal[i].rgbGreen =
-					dst_pal[i].rgbBlue = (BYTE)i;
+					dst_pal[i].rgbBlue = (uint8_t)i;
 			}
 		}
 	}
@@ -180,7 +180,7 @@ FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_h
 		FIBITMAP *tmp = FreeImage_AllocateT(image_type, dst_width, src_height, bpp, redMask, greenMask, blueMask);
 		if(!tmp) {
 			FreeImage_Unload(dst);
-			return NULL;
+			return nullptr;
 		}
 
 		// scale source image horizontally into temporary image
@@ -200,7 +200,7 @@ FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_h
 		FIBITMAP *tmp = FreeImage_AllocateT(image_type, src_width, dst_height, bpp, redMask, greenMask, blueMask);
 		if(!tmp) {
 			FreeImage_Unload(dst);
-			return NULL;
+			return nullptr;
 		}
 
 		// scale source image vertically into temporary image
@@ -227,8 +227,8 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 				if(FreeImage_GetBPP(dst) != 8) break;
 				for(unsigned y = 0; y < dst_height; y++) {
 					// convert each row 
-					BYTE *src_bits = FreeImage_GetScanLine(src, y);
-					BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
+					uint8_t *src_bits = FreeImage_GetScanLine(src, y);
+					uint8_t *dst_bits = FreeImage_GetScanLine(dst, y);
 					FreeImage_ConvertLine1To8(dst_bits, src_bits, dst_width);
 				}
 			}
@@ -236,8 +236,8 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 
 			default:
 			{
-				BYTE *src_bits = FreeImage_GetBits(src);
-				BYTE *dst_bits = FreeImage_GetBits(dst);
+				uint8_t *src_bits = FreeImage_GetBits(src);
+				uint8_t *dst_bits = FreeImage_GetBits(dst);
 				memcpy(dst_bits, src_bits, dst_height * FreeImage_GetPitch(dst));
 			}
 			break;
@@ -261,8 +261,8 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 
 						for(unsigned y = 0; y < dst_height; y++) {
 							// scale each row 
-							BYTE *src_bits = FreeImage_GetScanLine(src, y);
-							BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
+							uint8_t *src_bits = FreeImage_GetScanLine(src, y);
+							uint8_t *dst_bits = FreeImage_GetScanLine(dst, y);
 
 							for(unsigned x = 0; x < dst_width; x++) {
 								// loop through row
@@ -275,13 +275,13 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 									// accumulate weighted effect of each neighboring pixel
 									double weight = weightsTable.getWeight(x, i-iLeft);
 									
-									BYTE pixel = (src_bits[i >> 3] & (0x80 >> (i & 0x07))) != 0;
+									uint8_t pixel = (src_bits[i >> 3] & (0x80 >> (i & 0x07))) != 0;
 									value += (weight * (double)pixel);
 								} 
 								value *= 255;
 
 								// clamp and place result in destination pixel
-								dst_bits[x] = (BYTE)MIN(MAX((int)0, (int)(value + 0.5)), (int)255);
+								dst_bits[x] = (uint8_t)MIN(MAX((int)0, (int)(value + 0.5)), (int)255);
 							} 
 						}
 					}
@@ -296,8 +296,8 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 
 						for(unsigned y = 0; y < dst_height; y++) {
 							// scale each row 
-							BYTE *src_bits = FreeImage_GetScanLine(src, y);
-							BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
+							uint8_t *src_bits = FreeImage_GetScanLine(src, y);
+							uint8_t *dst_bits = FreeImage_GetScanLine(dst, y);
 
 							for(unsigned x = 0; x < dst_width; x++) {
 								// loop through row
@@ -318,7 +318,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 
 								// clamp and place result in destination pixel
 								for (unsigned j = 0; j < bytespp; j++) {
-									dst_bits[j] = (BYTE)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)255);
+									dst_bits[j] = (uint8_t)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)255);
 								}
 
 								dst_bits += bytespp;
@@ -335,12 +335,12 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 			case FIT_RGBA16:
 			{
 				// Calculate the number of words per pixel (1 for 16-bit, 3 for 48-bit or 4 for 64-bit)
-				unsigned wordspp = (FreeImage_GetLine(src) / FreeImage_GetWidth(src)) / sizeof(WORD);
+				unsigned wordspp = (FreeImage_GetLine(src) / FreeImage_GetWidth(src)) / sizeof(uint16_t);
 
 				for(unsigned y = 0; y < dst_height; y++) {
 					// scale each row 
-					WORD *src_bits = (WORD*)FreeImage_GetScanLine(src, y);
-					WORD *dst_bits = (WORD*)FreeImage_GetScanLine(dst, y);
+					uint16_t *src_bits = (uint16_t*)FreeImage_GetScanLine(src, y);
+					uint16_t *dst_bits = (uint16_t*)FreeImage_GetScanLine(dst, y);
 
 					for(unsigned x = 0; x < dst_width; x++) {
 						// loop through row
@@ -361,7 +361,7 @@ void CResizeEngine::horizontalFilter(FIBITMAP *src, unsigned src_width, unsigned
 
 						// clamp and place result in destination pixel
 						for (unsigned j = 0; j < wordspp; j++) {
-							dst_bits[j] = (WORD)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)0xFFFF);
+							dst_bits[j] = (uint16_t)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)0xFFFF);
 						}
 
 						dst_bits += wordspp;
@@ -424,8 +424,8 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 				if(FreeImage_GetBPP(dst) != 8) break;
 				for(unsigned y = 0; y < dst_height; y++) {
 					// convert each row 
-					BYTE *src_bits = FreeImage_GetScanLine(src, y);
-					BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
+					uint8_t *src_bits = FreeImage_GetScanLine(src, y);
+					uint8_t *dst_bits = FreeImage_GetScanLine(dst, y);
 					FreeImage_ConvertLine1To8(dst_bits, src_bits, dst_width);
 				}
 			}
@@ -433,8 +433,8 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 
 			default:
 			{
-				BYTE *src_bits = FreeImage_GetBits(src);
-				BYTE *dst_bits = FreeImage_GetBits(dst);
+				uint8_t *src_bits = FreeImage_GetBits(src);
+				uint8_t *dst_bits = FreeImage_GetBits(dst);
 				memcpy(dst_bits, src_bits, dst_height * FreeImage_GetPitch(dst));
 			}
 			break;
@@ -464,7 +464,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 						for(unsigned x = 0; x < dst_width; x++) {
 
 							// work on column x in dst
-							BYTE *dst_bits = FreeImage_GetBits(dst) + x;
+							uint8_t *dst_bits = FreeImage_GetBits(dst) + x;
 
 							// scale each column
 							for(unsigned y = 0; y < dst_height; y++) {
@@ -473,14 +473,14 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 								int iLeft = weightsTable.getLeftBoundary(y);    // retrieve left boundary
 								int iRight = weightsTable.getRightBoundary(y);  // retrieve right boundary
 
-								BYTE *src_bits = FreeImage_GetScanLine(src, iLeft);
+								uint8_t *src_bits = FreeImage_GetScanLine(src, iLeft);
 
 								for(int i = iLeft; i <= iRight; i++) {
 									// scan between boundaries
 									// accumulate weighted effect of each neighboring pixel
 									double weight = weightsTable.getWeight(y, i-iLeft);	
 									
-									BYTE pixel = (src_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
+									uint8_t pixel = (src_bits[x >> 3] & (0x80 >> (x & 0x07))) != 0;
 									value += (weight * (double)pixel);
 
 									src_bits += src_pitch;
@@ -488,7 +488,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 								value *= 255;
 
 								// clamp and place result in destination pixel
-								*dst_bits = (BYTE)MIN(MAX((int)0, (int)(value + 0.5)), (int)255);
+								*dst_bits = (uint8_t)MIN(MAX((int)0, (int)(value + 0.5)), (int)255);
 
 								dst_bits += dst_pitch;
 							}
@@ -510,7 +510,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 							index = x * bytespp;
 
 							// work on column x in dst
-							BYTE *dst_bits = FreeImage_GetBits(dst) + index;
+							uint8_t *dst_bits = FreeImage_GetBits(dst) + index;
 
 							// scale each column
 							for(unsigned y = 0; y < dst_height; y++) {
@@ -519,7 +519,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 								int iLeft = weightsTable.getLeftBoundary(y);    // retrieve left boundary
 								int iRight = weightsTable.getRightBoundary(y);  // retrieve right boundary
 
-								BYTE *src_bits = FreeImage_GetScanLine(src, iLeft) + index;
+								uint8_t *src_bits = FreeImage_GetScanLine(src, iLeft) + index;
 
 								for(int i = iLeft; i <= iRight; i++) {
 									// scan between boundaries
@@ -534,7 +534,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 
 								// clamp and place result in destination pixel
 								for (unsigned j = 0; j < bytespp; j++) {
-									dst_bits[j] = (BYTE)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)255);
+									dst_bits[j] = (uint8_t)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)255);
 								}
 
 								dst_bits += dst_pitch;
@@ -551,16 +551,16 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 			case FIT_RGBA16:
 			{
 				// Calculate the number of words per pixel (1 for 16-bit, 3 for 48-bit or 4 for 64-bit)
-				unsigned wordspp = (FreeImage_GetLine(src) / FreeImage_GetWidth(src)) / sizeof(WORD);
+				unsigned wordspp = (FreeImage_GetLine(src) / FreeImage_GetWidth(src)) / sizeof(uint16_t);
 
-				unsigned src_pitch = FreeImage_GetPitch(src) / sizeof(WORD);
-				unsigned dst_pitch = FreeImage_GetPitch(dst) / sizeof(WORD);
+				unsigned src_pitch = FreeImage_GetPitch(src) / sizeof(uint16_t);
+				unsigned dst_pitch = FreeImage_GetPitch(dst) / sizeof(uint16_t);
 
 				for(unsigned x = 0; x < dst_width; x++) {
 					index = x * wordspp;
 
 					// work on column x in dst
-					WORD *dst_bits = (WORD*)FreeImage_GetBits(dst) + index;
+					uint16_t *dst_bits = (uint16_t*)FreeImage_GetBits(dst) + index;
 
 					// scale each column
 					for(unsigned y = 0; y < dst_height; y++) {
@@ -569,7 +569,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 						int iLeft = weightsTable.getLeftBoundary(y);    // retrieve left boundary
 						int iRight = weightsTable.getRightBoundary(y);  // retrieve right boundary
 
-						WORD *src_bits = (WORD*)FreeImage_GetScanLine(src, iLeft) + index;
+						uint16_t *src_bits = (uint16_t*)FreeImage_GetScanLine(src, iLeft) + index;
 
 						for(int i = iLeft; i <= iRight; i++) {
 							// scan between boundaries
@@ -584,7 +584,7 @@ void CResizeEngine::verticalFilter(FIBITMAP *src, unsigned src_width, unsigned s
 
 						// clamp and place result in destination pixel
 						for (unsigned j = 0; j < wordspp; j++) {
-							dst_bits[j] = (WORD)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)0xFFFF);
+							dst_bits[j] = (uint16_t)MIN(MAX((int)0, (int)(value[j] + 0.5)), (int)0xFFFF);
 						}
 
 						dst_bits += dst_pitch;

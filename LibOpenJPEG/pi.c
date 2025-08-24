@@ -80,8 +80,8 @@ static bool pi_next_cprl(opj_pi_iterator_t * pi);
 */
 
 static bool pi_next_lrcp(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	long index = 0;
 	
 	if (!pi->first) {
@@ -120,8 +120,8 @@ LABEL_SKIP:;
 }
 
 static bool pi_next_rlcp(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	long index = 0;
 
 	if (!pi->first) {
@@ -159,8 +159,8 @@ LABEL_SKIP:;
 }
 
 static bool pi_next_rpcl(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	long index = 0;
 
 	if (!pi->first) {
@@ -242,8 +242,8 @@ LABEL_SKIP:;
 }
 
 static bool pi_next_pcrl(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	long index = 0;
 
 	if (!pi->first) {
@@ -323,8 +323,8 @@ LABEL_SKIP:;
 }
 
 static bool pi_next_cprl(opj_pi_iterator_t * pi) {
-	opj_pi_comp_t *comp = NULL;
-	opj_pi_resolution_t *res = NULL;
+	opj_pi_comp_t *comp = nullptr;
+	opj_pi_resolution_t *res = nullptr;
 	long index = 0;
 
 	if (!pi->first) {
@@ -410,16 +410,16 @@ LABEL_SKIP:;
 opj_pi_iterator_t *pi_create_decode(opj_image_t *image, opj_cp_t *cp, int tileno) {
 	int p, q;
 	int compno, resno, pino;
-	opj_pi_iterator_t *pi = NULL;
-	opj_tcp_t *tcp = NULL;
-	opj_tccp_t *tccp = NULL;
+	opj_pi_iterator_t *pi = nullptr;
+	opj_tcp_t *tcp = nullptr;
+	opj_tccp_t *tccp = nullptr;
 
 	tcp = &cp->tcps[tileno];
 
 	pi = (opj_pi_iterator_t*) opj_calloc((tcp->numpocs + 1), sizeof(opj_pi_iterator_t));
 	if(!pi) {
 		/* TODO: throw an error */
-		return NULL;
+		return nullptr;
 	}
 
 	for (pino = 0; pino < tcp->numpocs + 1; pino++) {	/* change */
@@ -438,7 +438,7 @@ opj_pi_iterator_t *pi_create_decode(opj_image_t *image, opj_cp_t *cp, int tileno
 		if(!pi[pino].comps) {
 			/* TODO: throw an error */
 			pi_destroy(pi, cp, tileno);
-			return NULL;
+			return nullptr;
 		}
 		
 		for (compno = 0; compno < pi->numcomps; compno++) {
@@ -453,7 +453,7 @@ opj_pi_iterator_t *pi_create_decode(opj_image_t *image, opj_cp_t *cp, int tileno
 			if(!comp->resolutions) {
 				/* TODO: throw an error */
 				pi_destroy(pi, cp, tileno);
-				return NULL;
+				return nullptr;
 			}
 
 			tcx0 = int_ceildiv(pi->tx0, comp->dx);
@@ -506,7 +506,7 @@ opj_pi_iterator_t *pi_create_decode(opj_image_t *image, opj_cp_t *cp, int tileno
 			if(!pi[pino].include) {
 				/* TODO: throw an error */
 				pi_destroy(pi, cp, tileno);
-				return NULL;
+				return nullptr;
 			}
 		}
 		else {
@@ -545,14 +545,14 @@ opj_pi_iterator_t *pi_initialise_encode(opj_image_t *image, opj_cp_t *cp, int ti
 	int compno, resno;
 	int maxres = 0;
 	int maxprec = 0;
-	opj_pi_iterator_t *pi = NULL;
-	opj_tcp_t *tcp = NULL;
-	opj_tccp_t *tccp = NULL;
+	opj_pi_iterator_t *pi = nullptr;
+	opj_tcp_t *tcp = nullptr;
+	opj_tccp_t *tccp = nullptr;
 	
 	tcp = &cp->tcps[tileno];
 
 	pi = (opj_pi_iterator_t*) opj_calloc((tcp->numpocs + 1), sizeof(opj_pi_iterator_t));
-	if(!pi) {	return NULL;}
+	if(!pi) {	return nullptr;}
 	pi->tp_on = cp->tp_on;
 
 	for(pino = 0;pino < tcp->numpocs+1 ; pino ++){
@@ -568,7 +568,7 @@ opj_pi_iterator_t *pi_initialise_encode(opj_image_t *image, opj_cp_t *cp, int ti
 		pi[pino].comps = (opj_pi_comp_t*) opj_calloc(image->numcomps, sizeof(opj_pi_comp_t));
 		if(!pi[pino].comps) {
 			pi_destroy(pi, cp, tileno);
-			return NULL;
+			return nullptr;
 		}
 		
 		for (compno = 0; compno < pi[pino].numcomps; compno++) {
@@ -582,7 +582,7 @@ opj_pi_iterator_t *pi_initialise_encode(opj_image_t *image, opj_cp_t *cp, int ti
 			comp->resolutions = (opj_pi_resolution_t*) opj_malloc(comp->numresolutions * sizeof(opj_pi_resolution_t));
 			if(!comp->resolutions) {
 				pi_destroy(pi, cp, tileno);
-				return NULL;
+				return nullptr;
 			}
 
 			tcx0 = int_ceildiv(pi[pino].tx0, comp->dx);
@@ -645,7 +645,7 @@ opj_pi_iterator_t *pi_initialise_encode(opj_image_t *image, opj_cp_t *cp, int ti
 			pi[pino].include = (short int*) opj_calloc(tcp->numlayers * pi[pino].step_l, sizeof(short int));
 			if(!pi[pino].include) {
 				pi_destroy(pi, cp, tileno);
-				return NULL;
+				return nullptr;
 			}
 		}
 		else {

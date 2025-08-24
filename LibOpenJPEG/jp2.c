@@ -512,9 +512,9 @@ opj_jp2_t* jp2_create_decompress(opj_common_ptr cinfo) {
 		jp2->cinfo = cinfo;
 		/* create the J2K codec */
 		jp2->j2k = j2k_create_decompress(cinfo);
-		if(jp2->j2k == NULL) {
+		if(jp2->j2k == nullptr) {
 			jp2_destroy_decompress(jp2);
-			return NULL;
+			return nullptr;
 		}
 	}
 	return jp2;
@@ -543,10 +543,10 @@ void jp2_setup_decoder(opj_jp2_t *jp2, opj_dparameters_t *parameters) {
 
 opj_image_t* jp2_decode(opj_jp2_t *jp2, opj_cio_t *cio, opj_codestream_info_t *cstr_info) {
 	opj_common_ptr cinfo;
-	opj_image_t *image = NULL;
+	opj_image_t *image = nullptr;
 
 	if(!jp2 || !cio) {
-		return NULL;
+		return nullptr;
 	}
 
 	cinfo = jp2->cinfo;
@@ -554,14 +554,14 @@ opj_image_t* jp2_decode(opj_jp2_t *jp2, opj_cio_t *cio, opj_codestream_info_t *c
 	/* JP2 decoding */
 	if(!jp2_read_struct(jp2, cio)) {
 		opj_event_msg(cinfo, EVT_ERROR, "Failed to decode jp2 structure\n");
-		return NULL;
+		return nullptr;
 	}
 
 	/* J2K decoding */
 	image = j2k_decode(jp2->j2k, cio, cstr_info);
 	if(!image) {
 		opj_event_msg(cinfo, EVT_ERROR, "Failed to decode J2K image\n");
-		return NULL;
+		return nullptr;
 	}
 
 	/* Set Image Color Space */
@@ -587,9 +587,9 @@ opj_jp2_t* jp2_create_compress(opj_common_ptr cinfo) {
 		jp2->cinfo = cinfo;
 		/* create the J2K codec */
 		jp2->j2k = j2k_create_compress(cinfo);
-		if(jp2->j2k == NULL) {
+		if(jp2->j2k == nullptr) {
 			jp2_destroy_compress(jp2);
-			return NULL;
+			return nullptr;
 		}
 	}
 	return jp2;

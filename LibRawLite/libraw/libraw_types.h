@@ -40,8 +40,8 @@ extern "C" {
 #include "libraw_const.h"
 #include "libraw_version.h"
 
-typedef long long INT64;
-typedef unsigned long long UINT64;
+typedef long long int64_t;
+typedef unsigned long long uint64_t;
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 

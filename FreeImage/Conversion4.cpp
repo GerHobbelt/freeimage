@@ -27,7 +27,7 @@
 // ----------------------------------------------------------
 
 void DLL_CALLCONV
-FreeImage_ConvertLine1To4(BYTE *target, BYTE *source, int width_in_pixels) {
+FreeImage_ConvertLine1To4(uint8_t *target, uint8_t *source, int width_in_pixels) {
 	BOOL hinibble = TRUE;
 	for (int cols = 0; cols < width_in_pixels; cols++){
 		if (hinibble == TRUE){
@@ -42,9 +42,9 @@ FreeImage_ConvertLine1To4(BYTE *target, BYTE *source, int width_in_pixels) {
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine8To4(BYTE *target, BYTE *source, int width_in_pixels, RGBQUAD *palette) {
+FreeImage_ConvertLine8To4(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette) {
 	BOOL hinibble = TRUE;
-	BYTE index;
+	uint8_t index;
 
 	for (int cols = 0; cols < width_in_pixels; cols++){
 		index = GREY(palette[source[cols]].rgbRed, palette[source[cols]].rgbGreen, palette[source[cols]].rgbBlue);
@@ -59,8 +59,8 @@ FreeImage_ConvertLine8To4(BYTE *target, BYTE *source, int width_in_pixels, RGBQU
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine16To4_555(BYTE *target, BYTE *source, int width_in_pixels) {
-	WORD *bits = (WORD *)source;
+FreeImage_ConvertLine16To4_555(uint8_t *target, uint8_t *source, int width_in_pixels) {
+	uint16_t *bits = (uint16_t *)source;
 	BOOL hinibble = TRUE;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
@@ -81,8 +81,8 @@ FreeImage_ConvertLine16To4_555(BYTE *target, BYTE *source, int width_in_pixels) 
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine16To4_565(BYTE *target, BYTE *source, int width_in_pixels) {
-	WORD *bits = (WORD *)source;
+FreeImage_ConvertLine16To4_565(uint8_t *target, uint8_t *source, int width_in_pixels) {
+	uint16_t *bits = (uint16_t *)source;
 	BOOL hinibble = TRUE;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
@@ -103,7 +103,7 @@ FreeImage_ConvertLine16To4_565(BYTE *target, BYTE *source, int width_in_pixels) 
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine24To4(BYTE *target, BYTE *source, int width_in_pixels) {
+FreeImage_ConvertLine24To4(uint8_t *target, uint8_t *source, int width_in_pixels) {
 	BOOL hinibble = TRUE;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
@@ -119,7 +119,7 @@ FreeImage_ConvertLine24To4(BYTE *target, BYTE *source, int width_in_pixels) {
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine32To4(BYTE *target, BYTE *source, int width_in_pixels) {
+FreeImage_ConvertLine32To4(uint8_t *target, uint8_t *source, int width_in_pixels) {
 	BOOL hinibble = TRUE;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
@@ -140,7 +140,7 @@ FreeImage_ConvertLine32To4(BYTE *target, BYTE *source, int width_in_pixels) {
 
 FIBITMAP * DLL_CALLCONV
 FreeImage_ConvertTo4Bits(FIBITMAP *dib) {
-	if(!dib) return NULL;
+	if(!dib) return nullptr;
 
 	const int bpp = FreeImage_GetBPP(dib);
 
@@ -149,8 +149,8 @@ FreeImage_ConvertTo4Bits(FIBITMAP *dib) {
 		const int height = FreeImage_GetHeight(dib);
 		FIBITMAP *new_dib = FreeImage_Allocate(width, height, 4);
 
-		if(new_dib == NULL) {
-			return NULL;
+		if(new_dib == nullptr) {
+			return nullptr;
 		}
 
 		// copy metadata from src to dst
@@ -161,9 +161,9 @@ FreeImage_ConvertTo4Bits(FIBITMAP *dib) {
 		RGBQUAD *new_pal = FreeImage_GetPalette(new_dib);
 
 		for(int i = 0; i < 16; i++) {
-			new_pal[i].rgbRed	= (BYTE)((i << 4) + i);
-			new_pal[i].rgbGreen = (BYTE)((i << 4) + i);
-			new_pal[i].rgbBlue	= (BYTE)((i << 4) + i);
+			new_pal[i].rgbRed	= (uint8_t)((i << 4) + i);
+			new_pal[i].rgbGreen = (uint8_t)((i << 4) + i);
+			new_pal[i].rgbBlue	= (uint8_t)((i << 4) + i);
 		}
 
 		switch(bpp) {
@@ -183,7 +183,7 @@ FreeImage_ConvertTo4Bits(FIBITMAP *dib) {
 					// Reverse the grayscale palette
 
 					for(int i = 0; i < 16; i++) {
-						new_pal[i].rgbRed = new_pal[i].rgbGreen = new_pal[i].rgbBlue = (BYTE)(255 - ((i << 4) + i));
+						new_pal[i].rgbRed = new_pal[i].rgbGreen = new_pal[i].rgbBlue = (uint8_t)(255 - ((i << 4) + i));
 					}
 				}
 

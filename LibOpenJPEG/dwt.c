@@ -325,9 +325,9 @@ static void dwt_encode_stepsize(int stepsize, int numbps, opj_stepsize_t *bandno
 /* </summary>                           */
 void dwt_encode(opj_tcd_tilecomp_t * tilec) {
 	int i, j, k;
-	int *a = NULL;
-	int *aj = NULL;
-	int *bj = NULL;
+	int *a = nullptr;
+	int *aj = nullptr;
+	int *bj = nullptr;
 	int w, l;
 	
 	w = tilec->x1-tilec->x0;
@@ -408,9 +408,9 @@ double dwt_getnorm(int level, int orient) {
 
 void dwt_encode_real(opj_tcd_tilecomp_t * tilec) {
 	int i, j, k;
-	int *a = NULL;
-	int *aj = NULL;
-	int *bj = NULL;
+	int *a = nullptr;
+	int *aj = nullptr;
+	int *bj = nullptr;
 	int w, l;
 	
 	w = tilec->x1-tilec->x0;

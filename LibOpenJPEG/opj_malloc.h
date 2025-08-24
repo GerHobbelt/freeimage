@@ -43,7 +43,7 @@ The functions in opj_malloc.h are internal utilities used for memory management.
 /**
 Allocate an uninitialized memory block
 @param size Bytes to allocate
-@return Returns a void pointer to the allocated space, or NULL if there is insufficient memory available
+@return Returns a void pointer to the allocated space, or nullptr if there is insufficient memory available
 */
 #define opj_malloc(size) malloc(size)
 
@@ -51,14 +51,14 @@ Allocate an uninitialized memory block
 Allocate a memory block with elements initialized to 0
 @param num Blocks to allocate
 @param size Bytes per block to allocate
-@return Returns a void pointer to the allocated space, or NULL if there is insufficient memory available
+@return Returns a void pointer to the allocated space, or nullptr if there is insufficient memory available
 */
 #define opj_calloc(num, size) calloc(num, size)
 
 /**
 Allocate memory aligned to a 16 byte boundry
 @param size Bytes to allocate
-@return Returns a void pointer to the allocated space, or NULL if there is insufficient memory available
+@return Returns a void pointer to the allocated space, or nullptr if there is insufficient memory available
 */
 /* FIXME: These should be set with cmake tests, but we're currently not requiring use of cmake */
 #ifdef WIN32
@@ -105,7 +105,7 @@ Allocate memory aligned to a 16 byte boundry
 	extern int posix_memalign(void**, size_t, size_t);
 
 	static INLINE void* __attribute__ ((malloc)) opj_aligned_malloc(size_t size){
-		void* mem = NULL;
+		void* mem = nullptr;
 		posix_memalign(&mem, 16, size);
 		return mem;
 	}

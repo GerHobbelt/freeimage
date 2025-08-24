@@ -31,14 +31,14 @@
  */
 #include "tiffiop.h"
 
-static uint32
+static uint32_t
 summarize(TIFF* tif, size_t summand1, size_t summand2, const char* where)
 {
 	/*
-	 * XXX: We are using casting to uint32 here, because sizeof(size_t)
-	 * may be larger than sizeof(uint32) on 64-bit architectures.
+	 * XXX: We are using casting to uint32_t here, because sizeof(size_t)
+	 * may be larger than sizeof(uint32_t) on 64-bit architectures.
 	 */
-	uint32	bytes = summand1 + summand2;
+	uint32_t	bytes = summand1 + summand2;
 
 	if (bytes - summand1 != summand2) {
 		TIFFErrorExt(tif->tif_clientdata, tif->tif_name, "Integer overflow in %s", where);
@@ -48,10 +48,10 @@ summarize(TIFF* tif, size_t summand1, size_t summand2, const char* where)
 	return (bytes);
 }
 
-static uint32
+static uint32_t
 multiply(TIFF* tif, size_t nmemb, size_t elem_size, const char* where)
 {
-	uint32	bytes = nmemb * elem_size;
+	uint32_t	bytes = nmemb * elem_size;
 
 	if (elem_size && bytes / elem_size != nmemb) {
 		TIFFErrorExt(tif->tif_clientdata, tif->tif_name, "Integer overflow in %s", where);
@@ -65,26 +65,26 @@ multiply(TIFF* tif, size_t nmemb, size_t elem_size, const char* where)
  * Compute which tile an (x,y,z,s) value is in.
  */
 ttile_t
-TIFFComputeTile(TIFF* tif, uint32 x, uint32 y, uint32 z, tsample_t s)
+TIFFComputeTile(TIFF* tif, uint32_t x, uint32_t y, uint32_t z, tsample_t s)
 {
 	TIFFDirectory *td = &tif->tif_dir;
-	uint32 dx = td->td_tilewidth;
-	uint32 dy = td->td_tilelength;
-	uint32 dz = td->td_tiledepth;
+	uint32_t dx = td->td_tilewidth;
+	uint32_t dy = td->td_tilelength;
+	uint32_t dz = td->td_tiledepth;
 	ttile_t tile = 1;
 
 	if (td->td_imagedepth == 1)
 		z = 0;
-	if (dx == (uint32) -1)
+	if (dx == (uint32_t) -1)
 		dx = td->td_imagewidth;
-	if (dy == (uint32) -1)
+	if (dy == (uint32_t) -1)
 		dy = td->td_imagelength;
-	if (dz == (uint32) -1)
+	if (dz == (uint32_t) -1)
 		dz = td->td_imagedepth;
 	if (dx != 0 && dy != 0 && dz != 0) {
-		uint32 xpt = TIFFhowmany(td->td_imagewidth, dx); 
-		uint32 ypt = TIFFhowmany(td->td_imagelength, dy); 
-		uint32 zpt = TIFFhowmany(td->td_imagedepth, dz); 
+		uint32_t xpt = TIFFhowmany(td->td_imagewidth, dx); 
+		uint32_t ypt = TIFFhowmany(td->td_imagelength, dy); 
+		uint32_t zpt = TIFFhowmany(td->td_imagedepth, dz); 
 
 		if (td->td_planarconfig == PLANARCONFIG_SEPARATE) 
 			tile = (xpt*ypt*zpt)*s +
@@ -102,7 +102,7 @@ TIFFComputeTile(TIFF* tif, uint32 x, uint32 y, uint32 z, tsample_t s)
  * against the image bounds.
  */
 int
-TIFFCheckTile(TIFF* tif, uint32 x, uint32 y, uint32 z, tsample_t s)
+TIFFCheckTile(TIFF* tif, uint32_t x, uint32_t y, uint32_t z, tsample_t s)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 
@@ -145,16 +145,16 @@ ttile_t
 TIFFNumberOfTiles(TIFF* tif)
 {
 	TIFFDirectory *td = &tif->tif_dir;
-	uint32 dx = td->td_tilewidth;
-	uint32 dy = td->td_tilelength;
-	uint32 dz = td->td_tiledepth;
+	uint32_t dx = td->td_tilewidth;
+	uint32_t dy = td->td_tilelength;
+	uint32_t dz = td->td_tiledepth;
 	ttile_t ntiles;
 
-	if (dx == (uint32) -1)
+	if (dx == (uint32_t) -1)
 		dx = td->td_imagewidth;
-	if (dy == (uint32) -1)
+	if (dy == (uint32_t) -1)
 		dy = td->td_imagelength;
-	if (dz == (uint32) -1)
+	if (dz == (uint32_t) -1)
 		dz = td->td_imagedepth;
 	ntiles = (dx == 0 || dy == 0 || dz == 0) ? 0 :
 	    multiply(tif, multiply(tif, TIFFhowmany(td->td_imagewidth, dx),
@@ -190,7 +190,7 @@ TIFFTileRowSize(TIFF* tif)
  * Compute the # bytes in a variable length, row-aligned tile.
  */
 tsize_t
-TIFFVTileSize(TIFF* tif, uint32 nrows)
+TIFFVTileSize(TIFF* tif, uint32_t nrows)
 {
 	TIFFDirectory *td = &tif->tif_dir;
 	tsize_t tilesize;
@@ -250,13 +250,13 @@ TIFFTileSize(TIFF* tif)
  * to certain heuristics.
  */
 void
-TIFFDefaultTileSize(TIFF* tif, uint32* tw, uint32* th)
+TIFFDefaultTileSize(TIFF* tif, uint32_t* tw, uint32_t* th)
 {
 	(*tif->tif_deftilesize)(tif, tw, th);
 }
 
 void
-_TIFFDefaultTileSize(TIFF* tif, uint32* tw, uint32* th)
+_TIFFDefaultTileSize(TIFF* tif, uint32_t* tw, uint32_t* th)
 {
 	(void) tif;
 	if (*(int32*) tw < 1)

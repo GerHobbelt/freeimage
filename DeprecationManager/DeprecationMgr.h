@@ -50,7 +50,7 @@
 	// default fallback case, which does not use the ebp register's content
 	#define DEPRECATE(a,b) \
 	{ \
-		void *fptr = NULL;	\
+		void *fptr = nullptr;	\
 		DeprecationMgr::GetInstance()->AddDeprecatedFunction(a, b, fptr); \
 	}
 #endif

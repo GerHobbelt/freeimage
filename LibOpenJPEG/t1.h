@@ -116,7 +116,7 @@ typedef struct opj_t1 {
 /**
 Create a new T1 handle 
 and initialize the look-up tables of the Tier-1 coder/decoder
-@return Returns a new T1 handle if successful, returns NULL otherwise
+@return Returns a new T1 handle if successful, returns nullptr otherwise
 @see t1_init_luts
 */
 opj_t1_t* t1_create(opj_common_ptr cinfo);

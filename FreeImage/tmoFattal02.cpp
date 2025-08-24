@@ -43,7 +43,7 @@ followed by a subsampling by 2.
 */
 static FIBITMAP* GaussianLevel5x5(FIBITMAP *dib) {
 	int x, y, width, height, pitch;
-	FIBITMAP *h_dib = NULL, *v_dib = NULL, *dst = NULL;
+	FIBITMAP *h_dib = nullptr, *v_dib = nullptr, *dst = nullptr;
 	float *src_pixel, *dst_pixel;
 
 	try {
@@ -95,7 +95,7 @@ static FIBITMAP* GaussianLevel5x5(FIBITMAP *dib) {
 			dst_pixel[(height-1)*pitch+x] = (src_pixel[(height-3)*pitch+x] + 5 * src_pixel[(height-2)*pitch+x] + 10 * src_pixel[(height-1)*pitch+x]) / 16;
 		}
 
-		FreeImage_Unload(h_dib); h_dib = NULL;
+		FreeImage_Unload(h_dib); h_dib = nullptr;
 
 		// perform downsampling
 
@@ -109,7 +109,7 @@ static FIBITMAP* GaussianLevel5x5(FIBITMAP *dib) {
 		if(h_dib) FreeImage_Unload(h_dib);
 		if(v_dib) FreeImage_Unload(v_dib);
 		if(dst) FreeImage_Unload(dst);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -124,18 +124,18 @@ static BOOL GaussianPyramid(FIBITMAP *H, FIBITMAP **pyramid, int nlevels) {
 	try {
 		// first level is the original image
 		pyramid[0] = FreeImage_Clone(H);
-		if(pyramid[0] == NULL) throw(1);
+		if(pyramid[0] == nullptr) throw(1);
 		// compute next levels
 		for(int k = 1; k < nlevels; k++) {
 			pyramid[k] = GaussianLevel5x5(pyramid[k-1]);
-			if(pyramid[k] == NULL) throw(1);
+			if(pyramid[k] == nullptr) throw(1);
 		}
 		return TRUE;
 	} catch(int) {
 		for(int k = 0; k < nlevels; k++) {
-			if(pyramid[k] != NULL) {
+			if(pyramid[k] != nullptr) {
 				FreeImage_Unload(pyramid[k]);
-				pyramid[k] = NULL;
+				pyramid[k] = nullptr;
 			}
 		}
 		return FALSE;
@@ -148,12 +148,12 @@ and returns the average gradient.
 @param H Input image
 @param avgGrad [out] Average gradient
 @param k Level number
-@return Returns the gradient magnitude if successful, returns NULL otherwise
+@return Returns the gradient magnitude if successful, returns nullptr otherwise
 @see GradientPyramid
 */
 static FIBITMAP* GradientLevel(FIBITMAP *H, float *avgGrad, int k) {
 	int x, y, width, height, pitch;
-	FIBITMAP *G = NULL;
+	FIBITMAP *G = nullptr;
 
 	try {
 		const FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(H);
@@ -195,7 +195,7 @@ static FIBITMAP* GradientLevel(FIBITMAP *H, float *avgGrad, int k) {
 		return G;
 	} catch(int) {
 		if(G) FreeImage_Unload(G);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -212,14 +212,14 @@ static BOOL GradientPyramid(FIBITMAP **pyramid, int nlevels, FIBITMAP **gradient
 		for(int k = 0; k < nlevels; k++) {
 			FIBITMAP *Hk = pyramid[k];
 			gradients[k] = GradientLevel(Hk, &avgGrad[k], k);
-			if(gradients[k] == NULL) throw(1);
+			if(gradients[k] == nullptr) throw(1);
 		}
 		return TRUE;
 	} catch(int) {
 		for(int k = 0; k < nlevels; k++) {
-			if(gradients[k] != NULL) {
+			if(gradients[k] != nullptr) {
 				FreeImage_Unload(gradients[k]);
-				gradients[k] = NULL;
+				gradients[k] = nullptr;
 			}
 		}
 		return FALSE;
@@ -233,12 +233,12 @@ Compute the gradient attenuation function PHI(x, y)
 @param nlevels Number of levels
 @param alpha Parameter alpha in the paper
 @param beta Parameter beta in the paper
-@return Returns the attenuation matrix Phi if successful, returns NULL otherwise
+@return Returns the attenuation matrix Phi if successful, returns nullptr otherwise
 */
 static FIBITMAP* PhiMatrix(FIBITMAP **gradients, float *avgGrad, int nlevels, float alpha, float beta) {
 	int x, y, width, height, pitch;
 	float *src_pixel, *dst_pixel;
-	FIBITMAP **phi = NULL;
+	FIBITMAP **phi = nullptr;
 
 	try {
 		phi = (FIBITMAP**)malloc(nlevels * sizeof(FIBITMAP*));
@@ -298,7 +298,7 @@ static FIBITMAP* PhiMatrix(FIBITMAP **gradients, float *avgGrad, int nlevels, fl
 
 				// PHI(k+1) is no longer needed
 				FreeImage_Unload(phi[k+1]);
-				phi[k+1] = NULL;
+				phi[k+1] = nullptr;
 			}
 
 			// next level
@@ -318,7 +318,7 @@ static FIBITMAP* PhiMatrix(FIBITMAP **gradients, float *avgGrad, int nlevels, fl
 			}
 			free(phi);
 		}
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -327,11 +327,11 @@ Compute gradients in x and y directions, attenuate them with the attenuation mat
 then compute the divergence div G from the attenuated gradient. 
 @param H Normalized luminance
 @param PHI Attenuation matrix
-@return Returns the divergence matrix if successful, returns NULL otherwise
+@return Returns the divergence matrix if successful, returns nullptr otherwise
 */
 static FIBITMAP* Divergence(FIBITMAP *H, FIBITMAP *PHI) {
 	int x, y, width, height, pitch;
-	FIBITMAP *Gx = NULL, *Gy = NULL, *divG = NULL;
+	FIBITMAP *Gx = nullptr, *Gy = nullptr, *divG = nullptr;
 	float *phi, *h, *gx, *gy, *divg;
 
 	try {
@@ -402,7 +402,7 @@ static FIBITMAP* Divergence(FIBITMAP *H, FIBITMAP *PHI) {
 		if(Gx) FreeImage_Unload(Gx);
 		if(Gy) FreeImage_Unload(Gy);
 		if(divG) FreeImage_Unload(divG);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -410,11 +410,11 @@ static FIBITMAP* Divergence(FIBITMAP *H, FIBITMAP *PHI) {
 Given the luminance channel, find max & min luminance values, 
 normalize to range 0..100 and take the logarithm. 
 @param Y Image luminance
-@return Returns the normalized luminance H if successful, returns NULL otherwise
+@return Returns the normalized luminance H if successful, returns nullptr otherwise
 */
 static FIBITMAP* LogLuminance(FIBITMAP *Y) {
 	int x, y, width, height, pitch;
-	FIBITMAP *H = NULL;
+	FIBITMAP *H = nullptr;
 
 	try {
 		// get the luminance channel
@@ -428,7 +428,7 @@ static FIBITMAP* LogLuminance(FIBITMAP *Y) {
 		// find max & min luminance values
 		float maxLum = -1e20F, minLum = 1e20F;
 
-		BYTE *bits = (BYTE*)FreeImage_GetBits(H);
+		uint8_t *bits = (uint8_t*)FreeImage_GetBits(H);
 		for(y = 0; y < height; y++) {
 			const float *pixel = (float*)bits;
 			for(x = 0; x < width; x++) {
@@ -443,7 +443,7 @@ static FIBITMAP* LogLuminance(FIBITMAP *Y) {
 
 		// normalize to range 0..100 and take the logarithm
 		const float scale = 100.F / (maxLum - minLum);
-		bits = (BYTE*)FreeImage_GetBits(H);
+		bits = (uint8_t*)FreeImage_GetBits(H);
 		for(y = 0; y < height; y++) {
 			float *pixel = (float*)bits;
 			for(x = 0; x < width; x++) {
@@ -458,7 +458,7 @@ static FIBITMAP* LogLuminance(FIBITMAP *Y) {
 
 	} catch(int) {
 		if(H) FreeImage_Unload(H);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -472,7 +472,7 @@ static void ExpLuminance(FIBITMAP *Y) {
 	int height = FreeImage_GetHeight(Y);
 	int pitch = FreeImage_GetPitch(Y);
 
-	BYTE *bits = (BYTE*)FreeImage_GetBits(Y);
+	uint8_t *bits = (uint8_t*)FreeImage_GetBits(Y);
 	for(y = 0; y < height; y++) {
 		float *pixel = (float*)bits;
 		for(x = 0; x < width; x++) {
@@ -494,13 +494,13 @@ Gradient Domain HDR tone mapping operator
 static FIBITMAP* tmoFattal02(FIBITMAP *Y, float alpha, float beta) {
 	const int MIN_PYRAMID_SIZE = 32;	// minimun size (width or height) of the coarsest level of the pyramid
 
-	FIBITMAP *H = NULL;
-	FIBITMAP **pyramid = NULL;
-	FIBITMAP **gradients = NULL;
-	FIBITMAP *phy = NULL;
-	FIBITMAP *divG = NULL;
-	FIBITMAP *U = NULL;
-	float *avgGrad = NULL;
+	FIBITMAP *H = nullptr;
+	FIBITMAP **pyramid = nullptr;
+	FIBITMAP **gradients = nullptr;
+	FIBITMAP *phy = nullptr;
+	FIBITMAP *divG = nullptr;
+	FIBITMAP *U = nullptr;
+	float *avgGrad = nullptr;
 
 	int k;
 	int nlevels = 0;
@@ -539,7 +539,7 @@ static FIBITMAP* tmoFattal02(FIBITMAP *Y, float alpha, float beta) {
 		for(k = 0; k < nlevels; k++) {
 			if(pyramid[k]) FreeImage_Unload(pyramid[k]);
 		}
-		free(pyramid); pyramid = NULL;
+		free(pyramid); pyramid = nullptr;
 
 		// compute the gradient attenuation function PHI(x, y)
 		phy = PhiMatrix(gradients, avgGrad, nlevels, alpha, beta);
@@ -549,8 +549,8 @@ static FIBITMAP* tmoFattal02(FIBITMAP *Y, float alpha, float beta) {
 		for(k = 0; k < nlevels; k++) {
 			if(gradients[k]) FreeImage_Unload(gradients[k]);
 		}
-		free(gradients); gradients = NULL;
-		free(avgGrad); avgGrad = NULL;
+		free(gradients); gradients = nullptr;
+		free(avgGrad); avgGrad = nullptr;
 
 		// compute gradients in x and y directions, attenuate them with the attenuation matrix, 
 		// then compute the divergence div G from the attenuated gradient. 
@@ -558,8 +558,8 @@ static FIBITMAP* tmoFattal02(FIBITMAP *Y, float alpha, float beta) {
 		if(!divG) throw(1);
 
 		// H & phy no longer needed
-		FreeImage_Unload(H); H = NULL;
-		FreeImage_Unload(phy); phy = NULL;
+		FreeImage_Unload(H); H = nullptr;
+		FreeImage_Unload(phy); phy = nullptr;
 
 		// solve the PDE (Poisson equation) using a multigrid solver and 3 cycles
 		FIBITMAP *U = FreeImage_MultigridPoissonSolver(divG, 3);
@@ -591,7 +591,7 @@ static FIBITMAP* tmoFattal02(FIBITMAP *Y, float alpha, float beta) {
 		if(divG) FreeImage_Unload(divG);
 		if(U) FreeImage_Unload(U);
 
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -604,7 +604,7 @@ Apply the Gradient Domain High Dynamic Range Compression to a RGBF image and con
 @param dib Input RGBF / RGB16 image
 @param color_saturation Color saturation (s parameter in the paper) in [0.4..0.6]
 @param attenuation Atenuation factor (beta parameter in the paper) in [0.8..0.9]
-@return Returns a 24-bit RGB image if successful, returns NULL otherwise
+@return Returns a 24-bit RGB image if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_TmoFattal02(FIBITMAP *dib, double color_saturation, double attenuation) {	
@@ -612,10 +612,10 @@ FreeImage_TmoFattal02(FIBITMAP *dib, double color_saturation, double attenuation
 	const float beta = (float)MAX(0.8, MIN(0.9, attenuation));	// parameter beta = [0.8..0.9]
 	const float s = (float)MAX(0.4, MIN(0.6, color_saturation));// exponent s controls color saturation = [0.4..0.6]
 
-	FIBITMAP *src = NULL;
-	FIBITMAP *Yin = NULL;
-	FIBITMAP *Yout = NULL;
-	FIBITMAP *dst = NULL;
+	FIBITMAP *src = nullptr;
+	FIBITMAP *Yin = nullptr;
+	FIBITMAP *Yout = nullptr;
+	FIBITMAP *dst = nullptr;
 
 	try {
 		int x, y;
@@ -644,9 +644,9 @@ FreeImage_TmoFattal02(FIBITMAP *dib, double color_saturation, double attenuation
 		int rgb_pitch = FreeImage_GetPitch(src);
 		int y_pitch = FreeImage_GetPitch(Yin);
 
-		BYTE *bits      = (BYTE*)FreeImage_GetBits(src);
-		BYTE *bits_yin  = (BYTE*)FreeImage_GetBits(Yin);
-		BYTE *bits_yout = (BYTE*)FreeImage_GetBits(Yout);
+		uint8_t *bits      = (uint8_t*)FreeImage_GetBits(src);
+		uint8_t *bits_yin  = (uint8_t*)FreeImage_GetBits(Yin);
+		uint8_t *bits_yout = (uint8_t*)FreeImage_GetBits(Yout);
 
 		for(y = 0; y < height; y++) {
 			float *Lin = (float*)bits_yin;
@@ -664,14 +664,14 @@ FreeImage_TmoFattal02(FIBITMAP *dib, double color_saturation, double attenuation
 		}
 
 		// not needed anymore
-		FreeImage_Unload(Yin);  Yin  = NULL;
-		FreeImage_Unload(Yout); Yout = NULL;
+		FreeImage_Unload(Yin);  Yin  = nullptr;
+		FreeImage_Unload(Yout); Yout = nullptr;
 
 		// clamp image highest values to display white, then convert to 24-bit RGB
 		dst = ClampConvertRGBFTo24(src);
 
 		// clean-up and return
-		FreeImage_Unload(src); src = NULL;
+		FreeImage_Unload(src); src = nullptr;
 
 		// copy metadata from src to dst
 		FreeImage_CloneMetadata(dst, dib);
@@ -682,6 +682,6 @@ FreeImage_TmoFattal02(FIBITMAP *dib, double color_saturation, double attenuation
 		if(src) FreeImage_Unload(src);
 		if(Yin) FreeImage_Unload(Yin);
 		if(Yout) FreeImage_Unload(Yout);
-		return NULL;
+		return nullptr;
 	}
 }

@@ -39,25 +39,25 @@
 #endif
 
 typedef struct tagTGAHEADER {
-	BYTE id_length;				// ID length
-	BYTE color_map_type;		// color map type
-	BYTE image_type;			// image type
+	uint8_t id_length;				// ID length
+	uint8_t color_map_type;		// color map type
+	uint8_t image_type;			// image type
 
-	WORD cm_first_entry;		// first entry index
-	WORD cm_length;				// color map length
-	BYTE cm_size;				// color map entry size, in bits
+	uint16_t cm_first_entry;		// first entry index
+	uint16_t cm_length;				// color map length
+	uint8_t cm_size;				// color map entry size, in bits
 
-	WORD is_xorigin;			// X-origin of image
-	WORD is_yorigin;			// Y-origin of image
-	WORD is_width;				// image width
-	WORD is_height;				// image height
-	BYTE is_pixel_depth;		// pixel depth
-	BYTE is_image_descriptor;	// image descriptor
+	uint16_t is_xorigin;			// X-origin of image
+	uint16_t is_yorigin;			// Y-origin of image
+	uint16_t is_width;				// image width
+	uint16_t is_height;				// image height
+	uint8_t is_pixel_depth;		// pixel depth
+	uint8_t is_image_descriptor;	// image descriptor
 } TGAHEADER;
 
 typedef struct tagTGAFOOTER {
-	DWORD extension_offset;	// extension area offset
-	DWORD developer_offset;	// developer directory offset
+	uint32_t extension_offset;	// extension area offset
+	uint32_t developer_offset;	// developer directory offset
 	char signature[18];		// signature string
 } TGAFOOTER;
 
@@ -93,9 +93,9 @@ We use an arbitrary size instead and access it through this struct, it takes car
 NOTE: access must be *fast*, so safety measures are minimal.
 */
 typedef struct tagCacheIO {
-    BYTE *ptr;
-	BYTE *home;
-	BYTE *end;
+    uint8_t *ptr;
+	uint8_t *home;
+	uint8_t *end;
     size_t size;
     FreeImageIO *io;	// not necessary, but
     fi_handle handle;	// passing them as args is slower
@@ -109,9 +109,9 @@ half a megabyte. Out of Mem is really not an issue!
 */
 static BOOL
 cacheIO_alloc(CacheIO *ch, FreeImageIO *io, fi_handle handle, size_t size) {
-	ch->home = NULL;
-    ch->home = (BYTE*)malloc(size);
-	if(ch->home == NULL) {
+	ch->home = nullptr;
+    ch->home = (uint8_t*)malloc(size);
+	if(ch->home == nullptr) {
         return FALSE;
 	}
     ch->end = ch->home + size;
@@ -125,39 +125,39 @@ cacheIO_alloc(CacheIO *ch, FreeImageIO *io, fi_handle handle, size_t size) {
 
 static void
 cacheIO_free(CacheIO *ch) {
-	if(ch->home != NULL) {
+	if(ch->home != nullptr) {
         free(ch->home);
 	}
 }
 
-inline static BYTE
+inline static uint8_t
 cacheIO_getByte(CacheIO *ch) {
 	if(ch->ptr >= ch->end) {
 		ch->ptr = ch->home;
-		ch->io->read_proc(ch->ptr, sizeof(BYTE), (unsigned)ch->size, ch->handle);//### EOF - no problem?
+		ch->io->read_proc(ch->ptr, sizeof(uint8_t), (unsigned)ch->size, ch->handle);//### EOF - no problem?
 	}
-	BYTE result = *ch->ptr;
+	uint8_t result = *ch->ptr;
 	ch->ptr++;
 
     return result;
 }
 
-inline static BYTE*
+inline static uint8_t*
 cacheIO_getBytes(CacheIO *ch, size_t count /*must be < ch.size!*/) {
 	if(ch->ptr + count >= ch->end) {
 		// 'count' bytes might span two cache bounds, SEEK back to add them in the new cache
 		long read = (long)(ch->ptr - ch->home);
 		ch->io->seek_proc(ch->handle, -(((long)ch->size - read)), SEEK_CUR);
 		ch->ptr = ch->home;
-		ch->io->read_proc(ch->ptr, sizeof(BYTE), (unsigned)ch->size, ch->handle);//### EOF - no problem?
+		ch->io->read_proc(ch->ptr, sizeof(uint8_t), (unsigned)ch->size, ch->handle);//### EOF - no problem?
 	}
-	BYTE *result = ch->ptr;
+	uint8_t *result = ch->ptr;
 	ch->ptr += count;
 
     return result;
 }
 
-static BYTE *
+static uint8_t *
 Internal_GetScanLine(FIBITMAP *dib, int scanline, int flipvert) {
 	//assert ((scanline >= 0) && (scanline < (int)FreeImage_GetHeight(dib)));
 
@@ -213,7 +213,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -331,7 +331,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			// read and process the bitmap's header
 
-			FIBITMAP *dib = NULL;
+			FIBITMAP *dib = nullptr;
 			TGAHEADER header;
 
 			io->read_proc(&header, sizeof(tagTGAHEADER), 1, handle);
@@ -355,7 +355,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				{
 					dib = FreeImage_Allocate(header.is_width, header.is_height, 8);
 
-					if (dib == NULL) {
+					if (dib == nullptr) {
 						throw FI_MSG_ERROR_DIB_MEMORY;
 					}
 
@@ -367,9 +367,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						// no color-map data is included with this image ...
 						// build a greyscale palette
 						for (unsigned i = 0; i < 256; i++) {
-							palette[i].rgbRed	= (BYTE)i;
-							palette[i].rgbGreen = (BYTE)i;
-							palette[i].rgbBlue	= (BYTE)i;
+							palette[i].rgbRed	= (uint8_t)i;
+							palette[i].rgbGreen = (uint8_t)i;
+							palette[i].rgbBlue	= (uint8_t)i;
 						}
 					}
 					else {
@@ -377,19 +377,19 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 						// calculate the color map size
 						csize = header.cm_length * header.cm_size / 8;
-						BYTE *cmap = (BYTE*)malloc(csize * sizeof(BYTE));
+						uint8_t *cmap = (uint8_t*)malloc(csize * sizeof(uint8_t));
 
-						io->read_proc(cmap, sizeof(BYTE), csize, handle);
+						io->read_proc(cmap, sizeof(uint8_t), csize, handle);
 
 						// build the palette
 						switch(header.cm_size) {
 							case 16:
 							{
-								WORD *rgb555 = (WORD*)&cmap[0];
+								uint16_t *rgb555 = (uint16_t*)&cmap[0];
 								for (count = header.cm_first_entry; count < header.cm_length; count++) {
-									palette[count].rgbRed   = (BYTE)((((*rgb555 & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
-									palette[count].rgbGreen = (BYTE)((((*rgb555 & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
-									palette[count].rgbBlue  = (BYTE)((((*rgb555 & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
+									palette[count].rgbRed   = (uint8_t)((((*rgb555 & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
+									palette[count].rgbGreen = (uint8_t)((((*rgb555 & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
+									palette[count].rgbBlue  = (uint8_t)((((*rgb555 & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
 									rgb555++;
 								}
 							}
@@ -409,7 +409,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 							case 32:
 							{
-								BYTE trns[256];
+								uint8_t trns[256];
 
 								// clear the transparency table
 								memset(trns, 0xFF, 256);
@@ -439,18 +439,18 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						case TGA_CMAP:
 						case TGA_MONO:
 						{
-							BYTE *bits = NULL;
+							uint8_t *bits = nullptr;
 
 							if (fliphoriz) {
 								for (unsigned count = 0; count < header.is_height; count++) {
 									bits = Internal_GetScanLine(dib, header.is_height - count - 1, flipvert);
-									io->read_proc(bits, sizeof(BYTE), line, handle);
+									io->read_proc(bits, sizeof(uint8_t), line, handle);
 								}
 							}
 							else {
 								for (unsigned count = 0; count < header.is_height; count++) {
 									bits = Internal_GetScanLine(dib, count, flipvert);
-									io->read_proc(bits, sizeof(BYTE), line, handle);
+									io->read_proc(bits, sizeof(uint8_t), line, handle);
 								}
 							}
 
@@ -460,8 +460,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						case TGA_RLECMAP:
 						case TGA_RLEMONO: //(8 bit)
 						{
-							BYTE rle = 0;
-							BYTE *bits;
+							uint8_t rle = 0;
+							uint8_t *bits;
 
 							// Compute the *rough* size of a line...
 							long pixels_offset = io->tell_proc(handle);
@@ -486,11 +486,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 								BOOL has_rle = rle & 0x80;
 								rle &= ~0x80;	// remove type-bit
 
-								BYTE rle_count = rle + 1;
+								uint8_t rle_count = rle + 1;
 
 								if (has_rle) {
 
-									BYTE val = cacheIO_getByte(&cache);
+									uint8_t val = cacheIO_getByte(&cache);
 
 									for(int ix = 0; ix < rle_count; ix++) {
 										bits[x++] = val;
@@ -510,7 +510,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 									for(int ix = 0; ix < rle_count; ix++) {
 
-										BYTE val = cacheIO_getByte(&cache);
+										uint8_t val = cacheIO_getByte(&cache);
 										bits[x++] = val;
 										if(x >= line){
 											x=0;
@@ -531,7 +531,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 						default :
 							FreeImage_Unload(dib);
-							return NULL;
+							return nullptr;
 					}
 
 					break;
@@ -552,7 +552,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						dib = FreeImage_Allocate(header.is_width, header.is_height, pixel_bits, FI16_555_RED_MASK, FI16_555_GREEN_MASK, FI16_555_BLUE_MASK);
 					}
 
-					if (dib == NULL) {
+					if (dib == nullptr) {
 						throw FI_MSG_ERROR_DIB_MEMORY;
 					}
 
@@ -580,21 +580,21 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					case TGA_RGB: //(16 bit)
 					{
 						// in(put)_line cache
-						WORD *in_line = (WORD*)malloc(header.is_width * sizeof(WORD));
+						uint16_t *in_line = (uint16_t*)malloc(header.is_width * sizeof(uint16_t));
 						if(!in_line) throw FI_MSG_ERROR_MEMORY;
 
 						const int h = header.is_height;
 						for (int y = 0; y < h; y++) {
-							BYTE *bits;
+							uint8_t *bits;
 
 							if (fliphoriz) {
 								bits = Internal_GetScanLine(dib, h - y - 1, flipvert);
 							} else {
 								bits = Internal_GetScanLine(dib, y, flipvert);
 							}
-							io->read_proc(in_line, sizeof(WORD), header.is_width, handle);
+							io->read_proc(in_line, sizeof(uint16_t), header.is_width, handle);
 
-							WORD *pixel = in_line;
+							uint16_t *pixel = in_line;
 							for (int x = 0; x < line; x += pixel_size) {
 
 #ifdef FREEIMAGE_BIGENDIAN
@@ -602,11 +602,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #endif
 
 									if (TARGA_LOAD_RGB888 & flags) {
-										bits[x + FI_RGBA_BLUE]  = (BYTE)((((*pixel & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
-										bits[x + FI_RGBA_GREEN] = (BYTE)((((*pixel & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
-										bits[x + FI_RGBA_RED]   = (BYTE)((((*pixel & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
+										bits[x + FI_RGBA_BLUE]  = (uint8_t)((((*pixel & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
+										bits[x + FI_RGBA_GREEN] = (uint8_t)((((*pixel & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
+										bits[x + FI_RGBA_RED]   = (uint8_t)((((*pixel & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
 									} else {
-										*reinterpret_cast<WORD*>(bits + x) = 0x7FFF & *pixel;
+										*reinterpret_cast<uint16_t*>(bits + x) = 0x7FFF & *pixel;
 									}
 									pixel++;
 							}
@@ -618,8 +618,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 					case TGA_RLERGB: //(16 bit)
 					{
-						BYTE rle;
-						BYTE *bits;
+						uint8_t rle;
+						uint8_t *bits;
 
 						// Compute the *rough* size of a line...
 						long pixels_offset = io->tell_proc(handle);
@@ -647,17 +647,17 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 							if (has_rle) {
 
-								WORD *val = (WORD*)cacheIO_getBytes(&cache, sizeof(WORD));
+								uint16_t *val = (uint16_t*)cacheIO_getBytes(&cache, sizeof(uint16_t));
 #ifdef FREEIMAGE_BIGENDIAN
 								SwapShort(val);
 #endif
 									for (int ix = 0; ix < rle_count; ix++) {
 										if (TARGA_LOAD_RGB888 & flags) {
-											bits[x + FI_RGBA_BLUE]  = (BYTE)((((*val & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
-											bits[x + FI_RGBA_GREEN] = (BYTE)((((*val & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
-											bits[x + FI_RGBA_RED]   = (BYTE)((((*val & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
+											bits[x + FI_RGBA_BLUE]  = (uint8_t)((((*val & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
+											bits[x + FI_RGBA_GREEN] = (uint8_t)((((*val & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
+											bits[x + FI_RGBA_RED]   = (uint8_t)((((*val & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
 										} else {
-											*reinterpret_cast<WORD *>(bits + x) = 0x7FFF & *val;
+											*reinterpret_cast<uint16_t *>(bits + x) = 0x7FFF & *val;
 										}
 
 										x += pixel_size;
@@ -677,18 +677,18 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 							} else {
 
 								for (int ix = 0; ix < rle_count; ix++) {
-									WORD *val = (WORD*)cacheIO_getBytes(&cache, sizeof(WORD));
+									uint16_t *val = (uint16_t*)cacheIO_getBytes(&cache, sizeof(uint16_t));
 
 #ifdef FREEIMAGE_BIGENDIAN
 									SwapShort(val);
 #endif
 
 									if (TARGA_LOAD_RGB888 & flags) {
-										bits[x + FI_RGBA_BLUE]  = (BYTE)((((*val & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
-										bits[x + FI_RGBA_GREEN] = (BYTE)((((*val & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
-										bits[x + FI_RGBA_RED]   = (BYTE)((((*val & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
+										bits[x + FI_RGBA_BLUE]  = (uint8_t)((((*val & FI16_555_BLUE_MASK) >> FI16_555_BLUE_SHIFT) * 0xFF) / 0x1F);
+										bits[x + FI_RGBA_GREEN] = (uint8_t)((((*val & FI16_555_GREEN_MASK) >> FI16_555_GREEN_SHIFT) * 0xFF) / 0x1F);
+										bits[x + FI_RGBA_RED]   = (uint8_t)((((*val & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F);
 									} else {
-										*reinterpret_cast<WORD *>(bits + x) = 0x7FFF & *val;
+										*reinterpret_cast<uint16_t *>(bits + x) = 0x7FFF & *val;
 									}
 
 									x += pixel_size;
@@ -713,7 +713,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 					default :
 						FreeImage_Unload(dib);
-						return NULL;
+						return nullptr;
 					}
 
 					break;
@@ -723,7 +723,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				{
 					dib = FreeImage_Allocate(header.is_width, header.is_height, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 
-					if (dib == NULL) {
+					if (dib == nullptr) {
 						throw FI_MSG_ERROR_DIB_MEMORY;
 					}
 
@@ -737,7 +737,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 							if (fliphoriz) {
 								for (unsigned count = header.is_height; count > 0; count--) {
-									BYTE *bits = Internal_GetScanLine(dib, count-1, flipvert);
+									uint8_t *bits = Internal_GetScanLine(dib, count-1, flipvert);
 									io->read_proc(bgr_line, sizeof(FILE_BGR), header.is_width, handle);
 
 									FILE_BGR *bgr = bgr_line;
@@ -751,7 +751,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 							} else {
 								for (unsigned count = 0; count < header.is_height; count++) {
-									BYTE *bits = Internal_GetScanLine(dib, count, flipvert);
+									uint8_t *bits = Internal_GetScanLine(dib, count, flipvert);
 									io->read_proc(bgr_line, sizeof(FILE_BGR), header.is_width, handle);
 
 									FILE_BGR *bgr = bgr_line;
@@ -771,8 +771,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						case TGA_RLERGB://(24 bit)
 						{
 
-							BYTE rle;
-							BYTE *bits;
+							uint8_t rle;
+							uint8_t *bits;
 
 							// Compute the *rough* size of a line...
 							long pixels_offset = io->tell_proc(handle);
@@ -795,7 +795,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 								BOOL has_rle = rle & 0x80;
 								rle &= ~0x80; //remove type-bit
 
-								BYTE rle_count = rle + 1;
+								uint8_t rle_count = rle + 1;
 
 								if (has_rle) {
 
@@ -851,7 +851,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 						default :
 							FreeImage_Unload(dib);
-							return NULL;
+							return nullptr;
 					}
 
 					break;
@@ -872,7 +872,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					// Allocate the DIB
 					dib = FreeImage_Allocate(header.is_width, header.is_height, pixel_bits, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 
-					if (dib == NULL) {
+					if (dib == nullptr) {
 						throw FI_MSG_ERROR_DIB_MEMORY;
 					}
 
@@ -891,7 +891,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						const int h = header.is_height; // to move these outside
 
 						for (int y = 0; y < h; y++) {
-							BYTE *bits;
+							uint8_t *bits;
 
 							if (fliphoriz) {
 								bits = Internal_GetScanLine(dib, h - y - 1, flipvert);
@@ -921,8 +921,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					}
 					case TGA_RLERGB://(32 bit)
 					{
-						BYTE rle;
-						BYTE *bits;
+						uint8_t rle;
+						uint8_t *bits;
 
 						// Compute the *rough* size of a line...
 						long pixels_offset = io->tell_proc(handle);
@@ -946,7 +946,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 							BOOL has_rle = rle & 0x80;
 							rle &= ~0x80; // remove type-bit
 
-							BYTE rle_count = rle + 1;
+							uint8_t rle_count = rle + 1;
 
 							if (has_rle) {
 
@@ -1009,7 +1009,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 					default :
 						FreeImage_Unload(dib);
-						return NULL;
+						return nullptr;
 					}
 
 					break;
@@ -1021,16 +1021,16 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		} catch(const char *message) {
 			FreeImage_OutputMessageProc(s_format_id, message);
 
-			return NULL;
+			return nullptr;
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
-	if ((dib != NULL) && (handle != NULL)) {
+	if ((dib != nullptr) && (handle != nullptr)) {
 		RGBQUAD *palette = FreeImage_GetPalette(dib);
 		int bpp = FreeImage_GetBPP(dib);
 
@@ -1041,15 +1041,15 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		header.cm_first_entry = 0;
 		header.is_xorigin = 0;
 		header.is_yorigin = 0;
-		header.is_width = (WORD)FreeImage_GetWidth(dib);
-		header.is_height = (WORD)FreeImage_GetHeight(dib);
-		header.is_pixel_depth = (BYTE)bpp;
+		header.is_width = (uint16_t)FreeImage_GetWidth(dib);
+		header.is_height = (uint16_t)FreeImage_GetHeight(dib);
+		header.is_pixel_depth = (uint8_t)bpp;
 		header.is_image_descriptor = 0;
 
 		if (palette) {
 			header.color_map_type = 1;
 			header.image_type = TGA_CMAP;
-			header.cm_length = (WORD)(1 << bpp);
+			header.cm_length = (uint16_t)(1 << bpp);
 			if(FreeImage_IsTransparent(dib)) {
 				header.cm_size = 32;
 			} else {
@@ -1079,7 +1079,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 				FILE_BGRA *bgra_pal = (FILE_BGRA*)malloc(header.cm_length * sizeof(FILE_BGRA));
 
 				// get the transparency table
-				BYTE *trns = FreeImage_GetTransparencyTable(dib);
+				uint8_t *trns = FreeImage_GetTransparencyTable(dib);
 
 				for(unsigned i = 0; i < header.cm_length; i++) {
 					bgra_pal[i].b = palette[i].rgbBlue;
@@ -1110,7 +1110,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		// write the data bits
 
 		for (unsigned y = 0; y < header.is_height; y++) {
-			BYTE *bits = FreeImage_GetScanLine(dib, y);
+			uint8_t *bits = FreeImage_GetScanLine(dib, y);
 
 			switch(bpp) {
 				case 8:
@@ -1120,13 +1120,13 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 				}
 				case 16:
 				{
-					WORD pixel;
+					uint16_t pixel;
 					for(unsigned x = 0; x < header.is_width; x++) {
-						pixel = *(((WORD *)bits) + x);
+						pixel = *(((uint16_t *)bits) + x);
 #ifdef FREEIMAGE_BIGENDIAN
 						SwapShort(&pixel);
 #endif
-						io->write_proc(&pixel, sizeof(WORD), 1, handle);
+						io->write_proc(&pixel, sizeof(uint16_t), 1, handle);
 					}
 					break;
 				}
@@ -1190,15 +1190,15 @@ InitTARGA(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

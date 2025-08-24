@@ -374,7 +374,7 @@ typedef struct opj_j2k {
 /**
 Creates a J2K decompression structure
 @param cinfo Codec context info
-@return Returns a handle to a J2K decompressor if successful, returns NULL otherwise
+@return Returns a handle to a J2K decompressor if successful, returns nullptr otherwise
 */
 opj_j2k_t* j2k_create_decompress(opj_common_ptr cinfo);
 /**
@@ -393,22 +393,22 @@ void j2k_setup_decoder(opj_j2k_t *j2k, opj_dparameters_t *parameters);
 Decode an image from a JPEG-2000 codestream
 @param j2k J2K decompressor handle
 @param cio Input buffer stream
-@param cstr_info Codestream information structure if required, NULL otherwise
-@return Returns a decoded image if successful, returns NULL otherwise
+@param cstr_info Codestream information structure if required, nullptr otherwise
+@return Returns a decoded image if successful, returns nullptr otherwise
 */
 opj_image_t* j2k_decode(opj_j2k_t *j2k, opj_cio_t *cio, opj_codestream_info_t *cstr_info);
 /**
 Decode an image form a JPT-stream (JPEG 2000, JPIP)
 @param j2k J2K decompressor handle
 @param cio Input buffer stream
-@param cstr_info Codestream information structure if required, NULL otherwise
-@return Returns a decoded image if successful, returns NULL otherwise
+@param cstr_info Codestream information structure if required, nullptr otherwise
+@return Returns a decoded image if successful, returns nullptr otherwise
 */
 opj_image_t* j2k_decode_jpt_stream(opj_j2k_t *j2k, opj_cio_t *cio, opj_codestream_info_t *cstr_info);
 /**
 Creates a J2K compression structure
 @param cinfo Codec context info
-@return Returns a handle to a J2K compressor if successful, returns NULL otherwise
+@return Returns a handle to a J2K compressor if successful, returns nullptr otherwise
 */
 opj_j2k_t* j2k_create_compress(opj_common_ptr cinfo);
 /**
@@ -433,7 +433,7 @@ Encode an image into a JPEG-2000 codestream
 @param j2k J2K compressor handle
 @param cio Output buffer stream
 @param image Image to encode
-@param cstr_info Codestream information structure if required, NULL otherwise
+@param cstr_info Codestream information structure if required, nullptr otherwise
 @return Returns true if successful, returns false otherwise
 */
 bool j2k_encode(opj_j2k_t *j2k, opj_cio_t *cio, opj_image_t *image, opj_codestream_info_t *cstr_info);

@@ -44,12 +44,12 @@
 #define PSD_COMPRESSION_NONE	0	// Raw data
 #define PSD_COMPRESSION_RLE		1	// RLE compression (same as TIFF packed bits)
 
-#define SAFE_DELETE_ARRAY(_p_) { if (NULL != (_p_)) { delete [] (_p_); (_p_) = NULL; } }
+#define SAFE_DELETE_ARRAY(_p_) { if (nullptr != (_p_)) { delete [] (_p_); (_p_) = nullptr; } }
 
 // --------------------------------------------------------------------------
 
 static inline int 
-psdGetValue(const BYTE * iprBuffer, const int iBytes) {
+psdGetValue(const uint8_t * iprBuffer, const int iBytes) {
 	int v = iprBuffer[0];
 	for (int i=1; i<iBytes; ++i) {
 		v = (v << 8) | iprBuffer[i];
@@ -80,7 +80,7 @@ bool psdHeaderInfo::Read(FreeImageIO *io, fi_handle handle) {
 		int nVersion = psdGetValue( header.Version, sizeof(header.Version) );
 		if (1 == nVersion) {
 			// header.Reserved must be zero
-			BYTE psd_reserved[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+			uint8_t psd_reserved[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 			if(memcmp(header.Reserved, psd_reserved, 6) != 0) {
 				FreeImage_OutputMessageProc(FIF_PSD, "Warning: file header reserved member is not equal to zero");
 			}
@@ -100,7 +100,7 @@ bool psdHeaderInfo::Read(FreeImageIO *io, fi_handle handle) {
 
 // --------------------------------------------------------------------------
 
-psdColourModeData::psdColourModeData() : _Length(-1), _plColourData(NULL) {
+psdColourModeData::psdColourModeData() : _Length(-1), _plColourData(nullptr) {
 }
 
 psdColourModeData::~psdColourModeData() { 
@@ -112,12 +112,12 @@ bool psdColourModeData::Read(FreeImageIO *io, fi_handle handle) {
 		SAFE_DELETE_ARRAY(_plColourData);
 	}
 	
-	BYTE Length[4];
+	uint8_t Length[4];
 	io->read_proc(&Length, sizeof(Length), 1, handle);
 	
 	_Length = psdGetValue( Length, sizeof(_Length) );
 	if (0 < _Length) {
-		_plColourData = new BYTE[_Length];
+		_plColourData = new uint8_t[_Length];
 		io->read_proc(_plColourData, _Length, 1, handle);
 	}
 
@@ -164,7 +164,7 @@ psdResolutionInfo::~psdResolutionInfo() {
 }
 	
 int psdResolutionInfo::Read(FreeImageIO *io, fi_handle handle) {
-	BYTE IntValue[4], ShortValue[2];
+	uint8_t IntValue[4], ShortValue[2];
 	int nBytes=0, n;
 	
 	// Horizontal resolution in pixels per inch.
@@ -222,7 +222,7 @@ psdResolutionInfo_v2::~psdResolutionInfo_v2() {
 }
 
 int psdResolutionInfo_v2::Read(FreeImageIO *io, fi_handle handle) {
-	BYTE ShortValue[2];
+	uint8_t ShortValue[2];
 	int nBytes=0, n;
 	
 	n = (int)io->read_proc(&ShortValue, sizeof(ShortValue), 1, handle);
@@ -263,7 +263,7 @@ psdDisplayInfo::~psdDisplayInfo() {
 }
 	
 int psdDisplayInfo::Read(FreeImageIO *io, fi_handle handle) {
-	BYTE ShortValue[2];
+	uint8_t ShortValue[2];
 	int nBytes=0, n;
 	
 	n = (int)io->read_proc(&ShortValue, sizeof(ShortValue), 1, handle);
@@ -282,14 +282,14 @@ int psdDisplayInfo::Read(FreeImageIO *io, fi_handle handle) {
 	assert( 0 <= _Opacity );
 	assert( 100 >= _Opacity );
 	
-	BYTE c[1];
+	uint8_t c[1];
 	n = (int)io->read_proc(&c, sizeof(c), 1, handle);
 	nBytes += n * sizeof(c);
-	_Kind = (BYTE)psdGetValue(c, sizeof(c));
+	_Kind = (uint8_t)psdGetValue(c, sizeof(c));
 	
 	n = (int)io->read_proc(&c, sizeof(c), 1, handle);
 	nBytes += n * sizeof(c);
-	_padding = (BYTE)psdGetValue(c, sizeof(c));
+	_padding = (uint8_t)psdGetValue(c, sizeof(c));
 	assert( 0 == _padding );
 	
 	return nBytes;
@@ -298,7 +298,7 @@ int psdDisplayInfo::Read(FreeImageIO *io, fi_handle handle) {
 // --------------------------------------------------------------------------
 
 psdThumbnail::psdThumbnail() : 
-_Format(-1), _Width(-1), _Height(-1), _WidthBytes(-1), _Size(-1), _CompressedSize(-1), _BitPerPixel(-1), _Planes(-1), _plData(NULL) {
+_Format(-1), _Width(-1), _Height(-1), _WidthBytes(-1), _Size(-1), _CompressedSize(-1), _BitPerPixel(-1), _Planes(-1), _plData(nullptr) {
 }
 
 psdThumbnail::~psdThumbnail() { 
@@ -306,7 +306,7 @@ psdThumbnail::~psdThumbnail() {
 }
 
 int psdThumbnail::Read(FreeImageIO *io, fi_handle handle, int iTotalData, bool isBGR) {
-	BYTE c[1], ShortValue[2], IntValue[4];
+	uint8_t c[1], ShortValue[2], IntValue[4];
 	int nBytes=0, n;
 	
 	n = (int)io->read_proc(&IntValue, sizeof(IntValue), 1, handle);
@@ -341,29 +341,29 @@ int psdThumbnail::Read(FreeImageIO *io, fi_handle handle, int iTotalData, bool i
 	nBytes += n * sizeof(ShortValue);
 	_Planes = (short)psdGetValue(ShortValue, sizeof(_Planes) );
 
-	_plData = new BYTE[iTotalData];
+	_plData = new uint8_t[iTotalData];
 	  
 	if (isBGR) {
 		// In BGR format
 		for (int i=0; i<iTotalData; i+=3 ) {
-			n = (int)io->read_proc(&c, sizeof(BYTE), 1, handle);
-			nBytes += n * sizeof(BYTE);
-			_plData[i+2] = (BYTE)psdGetValue(c, sizeof(BYTE) );
+			n = (int)io->read_proc(&c, sizeof(uint8_t), 1, handle);
+			nBytes += n * sizeof(uint8_t);
+			_plData[i+2] = (uint8_t)psdGetValue(c, sizeof(uint8_t) );
 
-			n = (int)io->read_proc(&c, sizeof(BYTE), 1, handle);
-			nBytes += n * sizeof(BYTE);
-			_plData[i+1] = (BYTE)psdGetValue(c, sizeof(BYTE) );
+			n = (int)io->read_proc(&c, sizeof(uint8_t), 1, handle);
+			nBytes += n * sizeof(uint8_t);
+			_plData[i+1] = (uint8_t)psdGetValue(c, sizeof(uint8_t) );
 
-			n = (int)io->read_proc(&c, sizeof(BYTE), 1, handle);
-			nBytes += n * sizeof(BYTE);
-			_plData[i+0] = (BYTE)psdGetValue(c, sizeof(BYTE) );
+			n = (int)io->read_proc(&c, sizeof(uint8_t), 1, handle);
+			nBytes += n * sizeof(uint8_t);
+			_plData[i+0] = (uint8_t)psdGetValue(c, sizeof(uint8_t) );
 		}
 	} else {
 		// In RGB format										
 		for (int i=0; i<iTotalData; ++i) {
-			n = (int)io->read_proc(&c, sizeof(BYTE), 1, handle);
-			nBytes += n * sizeof(BYTE);
-			_plData[i] = (BYTE)psdGetValue(c, sizeof(BYTE) );
+			n = (int)io->read_proc(&c, sizeof(uint8_t), 1, handle);
+			nBytes += n * sizeof(uint8_t);
+			_plData[i] = (uint8_t)psdGetValue(c, sizeof(uint8_t) );
 		}
 	}
 
@@ -372,7 +372,7 @@ int psdThumbnail::Read(FreeImageIO *io, fi_handle handle, int iTotalData, bool i
 
 //---------------------------------------------------------------------------
 
-psdICCProfile::psdICCProfile() : _ProfileSize(0), _ProfileData(NULL) {
+psdICCProfile::psdICCProfile() : _ProfileSize(0), _ProfileData(nullptr) {
 }
 
 psdICCProfile::~psdICCProfile() {
@@ -383,11 +383,11 @@ int psdICCProfile::Read(FreeImageIO *io, fi_handle handle, int size) {
 	int nBytes = 0, n;
 	
 	SAFE_DELETE_ARRAY(_ProfileData);
-	_ProfileData = new BYTE[size];
-	if(NULL != _ProfileData) {
+	_ProfileData = new uint8_t[size];
+	if(nullptr != _ProfileData) {
 		n = (int)io->read_proc(_ProfileData, 1, size, handle);
 		_ProfileSize = size;
-		nBytes += n * sizeof(BYTE);
+		nBytes += n * sizeof(uint8_t);
 	}
 
 	return nBytes;
@@ -411,9 +411,9 @@ static void CMYKToRGB8(float iC, float iM, float iY, float iK, RGBTRIPLE *rgb) {
   if (g < 0) g = 0; else if (g > 255) g = 255;
   if (b < 0) b = 0; else if (b > 255) b = 255;
 
-  rgb->rgbtRed   = (BYTE)r;
-  rgb->rgbtGreen = (BYTE)g;
-  rgb->rgbtBlue  = (BYTE)b;
+  rgb->rgbtRed   = (uint8_t)r;
+  rgb->rgbtGreen = (uint8_t)g;
+  rgb->rgbtBlue  = (uint8_t)b;
 }
 
 /**
@@ -428,9 +428,9 @@ static void CMYKToRGB16(float iC, float iM, float iY, float iK, FIRGB16 *rgb) {
   if (g < 0) g = 0; else if (g > 65535) g = 65535;
   if (b < 0) b = 0; else if (b > 65535) b = 65535;
 
-  rgb->red   = (WORD)r;
-  rgb->green = (WORD)g;
-  rgb->blue  = (WORD)b;
+  rgb->red   = (uint16_t)r;
+  rgb->green = (uint16_t)g;
+  rgb->blue  = (uint16_t)b;
 }
 
 #define PSD_CLAMP(v, min, max) ((v < min) ? min : (v > max) ? max : v)
@@ -517,9 +517,9 @@ static void CIELabToRGB16(float L, float a, float b, FIRGB16 *rgb) {
 
 	CIELabToXYZ(L, a, b, &X, &Y, &Z);
 	XYZToRGB(X, Y, Z, &R, &G, &B);
-	rgb->red   = (WORD)PSD_CLAMP(R * max_value, 0, max_value);
-	rgb->green = (WORD)PSD_CLAMP(G * max_value, 0, max_value);
-	rgb->blue  = (WORD)PSD_CLAMP(B * max_value, 0, max_value);	
+	rgb->red   = (uint16_t)PSD_CLAMP(R * max_value, 0, max_value);
+	rgb->green = (uint16_t)PSD_CLAMP(G * max_value, 0, max_value);
+	rgb->blue  = (uint16_t)PSD_CLAMP(B * max_value, 0, max_value);	
 }
 
 static void CIELabToRGB8(float L, float a, float b, RGBTRIPLE *rgb) {
@@ -529,9 +529,9 @@ static void CIELabToRGB8(float L, float a, float b, RGBTRIPLE *rgb) {
 
 	CIELabToXYZ(L, a, b, &X, &Y, &Z);
 	XYZToRGB(X, Y, Z, &R, &G, &B);
-	rgb->rgbtRed   = (BYTE)PSD_CLAMP(R * max_value, 0, max_value);
-	rgb->rgbtGreen = (BYTE)PSD_CLAMP(G * max_value, 0, max_value);
-	rgb->rgbtBlue  = (BYTE)PSD_CLAMP(B * max_value, 0, max_value);	
+	rgb->rgbtRed   = (uint8_t)PSD_CLAMP(R * max_value, 0, max_value);
+	rgb->rgbtGreen = (uint8_t)PSD_CLAMP(G * max_value, 0, max_value);
+	rgb->rgbtBlue  = (uint8_t)PSD_CLAMP(B * max_value, 0, max_value);	
 }
 
 //---------------------------------------------------------------------------
@@ -553,12 +553,12 @@ psdParser::~psdParser() {
 bool psdParser::ReadLayerAndMaskInfoSection(FreeImageIO *io, fi_handle handle)	{
 	bool bSuccess = false;
 	
-	BYTE DataLength[4];
+	uint8_t DataLength[4];
 	int nBytes = 0;
 	int n = (int)io->read_proc(&DataLength, sizeof(DataLength), 1, handle);
 	int nTotalBytes = psdGetValue( DataLength, sizeof(DataLength) );
 	
-	BYTE data[1];
+	uint8_t data[1];
 	while( n && ( nBytes < nTotalBytes ) ) {
 		data[0] = '\0';
 		n = (int)io->read_proc(&data, sizeof(data), 1, handle);
@@ -577,7 +577,7 @@ bool psdParser::ReadImageResource(FreeImageIO *io, fi_handle handle) {
 	psdImageResource oResource;
 	bool bSuccess = false;
 	
-	BYTE Length[4];
+	uint8_t Length[4];
 	int n = (int)io->read_proc(&Length, sizeof(Length), 1, handle);
 	
 	oResource._Length = psdGetValue( Length, sizeof(oResource._Length) );
@@ -593,22 +593,22 @@ bool psdParser::ReadImageResource(FreeImageIO *io, fi_handle handle) {
 		nBytes += n * sizeof(oResource._OSType);
 		assert( 0 == (nBytes % 2) );
 		
-		int nOSType = psdGetValue((BYTE*)&oResource._OSType, sizeof(oResource._OSType));
+		int nOSType = psdGetValue((uint8_t*)&oResource._OSType, sizeof(oResource._OSType));
 
 		if ( PSD_RESOURCE == nOSType ) {
-			BYTE ID[2];
+			uint8_t ID[2];
 			n = (int)io->read_proc(&ID, sizeof(ID), 1, handle);
 			nBytes += n * sizeof(ID);
 			
 			oResource._ID = (short)psdGetValue( ID, sizeof(ID) );
 			
-			BYTE SizeOfName;
+			uint8_t SizeOfName;
 			n = (int)io->read_proc(&SizeOfName, sizeof(SizeOfName), 1, handle);
 			nBytes += n * sizeof(SizeOfName);
 			
 			int nSizeOfName = psdGetValue( &SizeOfName, sizeof(SizeOfName) );
 			if ( 0 < nSizeOfName ) {
-				oResource._plName = new BYTE[nSizeOfName];
+				oResource._plName = new uint8_t[nSizeOfName];
 				n = (int)io->read_proc(oResource._plName, nSizeOfName, 1, handle);
 				nBytes += n * nSizeOfName;
 			}
@@ -618,7 +618,7 @@ bool psdParser::ReadImageResource(FreeImageIO *io, fi_handle handle) {
 				nBytes += n * sizeof(SizeOfName);
 			}
 			
-			BYTE Size[4];
+			uint8_t Size[4];
 			n = (int)io->read_proc(&Size, sizeof(Size), 1, handle);
 			nBytes += n * sizeof(Size);
 			
@@ -629,8 +629,8 @@ bool psdParser::ReadImageResource(FreeImageIO *io, fi_handle handle) {
 				oResource._Size++;
 			}
 			if ( 0 < oResource._Size ) {
-				BYTE IntValue[4];
-				BYTE ShortValue[2];
+				uint8_t IntValue[4];
+				uint8_t ShortValue[2];
 				
 				switch( oResource._ID ) {
 					case 1000:
@@ -704,7 +704,7 @@ bool psdParser::ReadImageResource(FreeImageIO *io, fi_handle handle) {
 					default:
 					{
 						// skip resource
-						BYTE c[1];
+						uint8_t c[1];
 						for(int i=0; i<oResource._Size; ++i) {
 							n = (int)io->read_proc(&c, sizeof(c), 1, handle);
 							nBytes += n * sizeof(c);
@@ -725,10 +725,10 @@ bool psdParser::ReadImageResource(FreeImageIO *io, fi_handle handle) {
   
 } 
 
-FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
-	assert(NULL != iprData);
+FIBITMAP* psdParser::ProcessBuffer(uint8_t * iprData) {
+	assert(nullptr != iprData);
 	
-	FIBITMAP *Bitmap = NULL;
+	FIBITMAP *Bitmap = nullptr;
 	int nHeight = _headerInfo._Height;
 	int nWidth  = _headerInfo._Width;
 	unsigned bytes = _headerInfo._BitsPerPixel / 8;
@@ -739,20 +739,20 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 		{
 			// monochrome 1-bit
 			FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 1);
-			if (NULL != dib) {
+			if (nullptr != dib) {
 				// fill the palette
 				RGBQUAD *pal = FreeImage_GetPalette(dib);
 				if(pal) {
 					for (int i = 0; i < 2; i++) {
-						BYTE val = i ? 0x0 : 0xFF;
+						uint8_t val = i ? 0x0 : 0xFF;
 						pal[i].rgbRed   = val;
 						pal[i].rgbGreen = val;
 						pal[i].rgbBlue  = val;
 					}
 				}
 				// copy buffer
-				BYTE *src_bits = (BYTE*)iprData;
-				BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+				uint8_t *src_bits = (uint8_t*)iprData;
+				uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 				unsigned src_pitch = (nWidth + 7) / 8;
 				unsigned dst_pitch = FreeImage_GetPitch(dib);
 				for(int y = 0; y < nHeight; y++) {
@@ -775,10 +775,10 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				if (1 == nChannels) {
 					// L 16-bit
 					FIBITMAP *dib = FreeImage_AllocateT(FIT_UINT16, nWidth, nHeight);
-					if (NULL != dib) {
+					if (nullptr != dib) {
 						// just copy buffer
-						BYTE *src_bits = (BYTE*)iprData;
-						BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+						uint8_t *src_bits = (uint8_t*)iprData;
+						uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned src_pitch = nChannels * nWidth * bytes;
 						unsigned dst_pitch = FreeImage_GetPitch(dib);
 						for(int y = 0; y < nHeight; y++) {
@@ -792,7 +792,7 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				else if (2 == nChannels) {
 					// LA 16-bit : convert to RGBA 16-bit
 					FIBITMAP *dib = FreeImage_AllocateT(FIT_RGBA16, nWidth, nHeight);
-					if (NULL != dib) {
+					if (nullptr != dib) {
 						unsigned short *src_bits = (unsigned short*)iprData;
 						FIRGBA16 *dst_bits = (FIRGBA16*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned pitch = FreeImage_GetPitch(dib) / sizeof(FIRGBA16);
@@ -812,10 +812,10 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				else if (3 == nChannels) {
 					// RGB 16-bit
 					FIBITMAP *dib = FreeImage_AllocateT(FIT_RGB16, nWidth, nHeight);
-					if (NULL != dib) {
+					if (nullptr != dib) {
 						// just copy buffer
-						BYTE *src_bits = (BYTE*)iprData;
-						BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+						uint8_t *src_bits = (uint8_t*)iprData;
+						uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned src_pitch = nChannels * nWidth * bytes;
 						unsigned dst_pitch = FreeImage_GetPitch(dib);
 						for(int y = 0; y < nHeight; y++) {
@@ -829,10 +829,10 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				else if (4 == nChannels) {
 					// RGBA 16-bit
 					FIBITMAP *dib = FreeImage_AllocateT(FIT_RGBA16, nWidth, nHeight);
-					if (NULL != dib) {
+					if (nullptr != dib) {
 						// just copy buffer
-						BYTE *src_bits = (BYTE*)iprData;
-						BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+						uint8_t *src_bits = (uint8_t*)iprData;
+						uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned src_pitch = nChannels * nWidth * bytes;
 						unsigned dst_pitch = FreeImage_GetPitch(dib);
 						for(int y = 0; y < nHeight; y++) {
@@ -850,17 +850,17 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				if (1 == nChannels) {
 					// L 8-bit
 					FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 8);
-					if (NULL != dib) {
+					if (nullptr != dib) {
 						// build a greyscale palette
 						RGBQUAD *pal = FreeImage_GetPalette(dib);
 						for (int i = 0; i < 256; i++) {
-							pal[i].rgbRed	= (BYTE)i;
-							pal[i].rgbGreen = (BYTE)i;
-							pal[i].rgbBlue	= (BYTE)i;
+							pal[i].rgbRed	= (uint8_t)i;
+							pal[i].rgbGreen = (uint8_t)i;
+							pal[i].rgbBlue	= (uint8_t)i;
 						}
 						// just copy buffer
-						BYTE *src_bits = (BYTE*)iprData;
-						BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+						uint8_t *src_bits = (uint8_t*)iprData;
+						uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned src_pitch = nChannels * nWidth * bytes;
 						unsigned dst_pitch = FreeImage_GetPitch(dib);
 						for(int y = 0; y < nHeight; y++) {
@@ -874,14 +874,14 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				else if (2 == nChannels) {
 					// LA 8-bit : convert to RGBA 32-bit
 					FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 32);
-					if (NULL != dib) {
-						BYTE *src_bits = (BYTE*)iprData;
-						BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+					if (nullptr != dib) {
+						uint8_t *src_bits = (uint8_t*)iprData;
+						uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned src_pitch = nChannels * nWidth * bytes;
 						unsigned dst_pitch = FreeImage_GetPitch(dib);
 						for(int y = 0; y < nHeight; y++) {
-							BYTE *p_src = src_bits;
-							BYTE *p_dst = dst_bits;
+							uint8_t *p_src = src_bits;
+							uint8_t *p_dst = dst_bits;
 							for(int x = 0; x < nWidth; x++) {
 								p_dst[FI_RGBA_RED]   = p_src[0];
 								p_dst[FI_RGBA_GREEN] = p_src[0];
@@ -899,15 +899,15 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				else if (3 == nChannels) {
 					// RGB 8-bit
 					FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 24);
-					if (NULL != dib) {
+					if (nullptr != dib) {
 						// just copy buffer
-						BYTE *src_bits = (BYTE*)iprData;
-						BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+						uint8_t *src_bits = (uint8_t*)iprData;
+						uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned src_pitch = nChannels * nWidth * bytes;
 						unsigned dst_pitch = FreeImage_GetPitch(dib);
 						for(int y = 0; y < nHeight; y++) {
-							BYTE *p_src = src_bits;
-							BYTE *p_dst = dst_bits;
+							uint8_t *p_src = src_bits;
+							uint8_t *p_dst = dst_bits;
 							for(int x = 0; x < nWidth; x++) {
 								p_dst[FI_RGBA_RED]   = p_src[0];
 								p_dst[FI_RGBA_GREEN] = p_src[1];
@@ -924,15 +924,15 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				else if (4 == nChannels) {
 					// RGBA 8-bit
 					FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 32);
-					if (NULL != dib) {
+					if (nullptr != dib) {
 						// just copy buffer
-						BYTE *src_bits = (BYTE*)iprData;
-						BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+						uint8_t *src_bits = (uint8_t*)iprData;
+						uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned src_pitch = nChannels * nWidth * bytes;
 						unsigned dst_pitch = FreeImage_GetPitch(dib);
 						for(int y = 0; y < nHeight; y++) {
-							BYTE *p_src = src_bits;
-							BYTE *p_dst = dst_bits;
+							uint8_t *p_src = src_bits;
+							uint8_t *p_dst = dst_bits;
 							for(int x = 0; x < nWidth; x++) {
 								p_dst[FI_RGBA_RED]   = p_src[0];
 								p_dst[FI_RGBA_GREEN] = p_src[1];
@@ -957,10 +957,10 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 				if (3 == nChannels) {
 					// RGBF 32-bit
 					FIBITMAP *dib = FreeImage_AllocateT(FIT_RGBF, nWidth, nHeight);
-					if (NULL != dib) {
+					if (nullptr != dib) {
 						// just copy buffer
-						BYTE *src_bits = (BYTE*)iprData;
-						BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+						uint8_t *src_bits = (uint8_t*)iprData;
+						uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 						unsigned src_pitch = nChannels * nWidth * bytes;
 						unsigned dst_pitch = FreeImage_GetPitch(dib);
 						for(int y = 0; y < nHeight; y++) {
@@ -984,12 +984,12 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 
 			// grey or palettised 8 bits
 			FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 8);
-			if (NULL != dib) {
+			if (nullptr != dib) {
 				// get the palette
 				if (_colourModeData.FillPalette(dib)) {
 					// copy buffer
-					BYTE *src_bits = (BYTE*)iprData;
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+					uint8_t *src_bits = (uint8_t*)iprData;
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 					unsigned src_pitch = nChannels * nWidth * bytes;
 					unsigned dst_pitch = FreeImage_GetPitch(dib);
 					for(int y = 0; y < nHeight; y++) {
@@ -1011,19 +1011,19 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 			if (16 == _headerInfo._BitsPerPixel) {
 				// CMYK 16-bit : convert to RGB 16-bit
 				FIBITMAP *dib = FreeImage_AllocateT(FIT_RGB16, nWidth, nHeight);
-				if (NULL != dib) {
-					BYTE *src_bits = (BYTE*)iprData;
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+				if (nullptr != dib) {
+					uint8_t *src_bits = (uint8_t*)iprData;
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 					unsigned src_pitch = nChannels * nWidth * bytes;
 					unsigned dst_pitch = FreeImage_GetPitch(dib);
 					for(int y = 0; y < nHeight; y++) {
 						unsigned short *src_line = (unsigned short*)src_bits;
 						FIRGB16 *dst_line = (FIRGB16*)dst_bits;
 						for(int x = 0; x < nWidth; x++) {
-							C = (1.f - (float)psdGetValue((BYTE*)&src_line[0], bytes ) * s );
-							M = (1.f - (float)psdGetValue((BYTE*)&src_line[1], bytes ) * s );
-							Y = (1.f - (float)psdGetValue((BYTE*)&src_line[2], bytes ) * s );
-							K = (1.f - (float)psdGetValue((BYTE*)&src_line[3], bytes ) * s );
+							C = (1.f - (float)psdGetValue((uint8_t*)&src_line[0], bytes ) * s );
+							M = (1.f - (float)psdGetValue((uint8_t*)&src_line[1], bytes ) * s );
+							Y = (1.f - (float)psdGetValue((uint8_t*)&src_line[2], bytes ) * s );
+							K = (1.f - (float)psdGetValue((uint8_t*)&src_line[3], bytes ) * s );
 							CMYKToRGB16(C, M, Y, K, &dst_line[x]);
 							src_line += nChannels;
 						}
@@ -1036,19 +1036,19 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 			else {
 				// CMYK 8-bit : convert to RGB 8-bit
 				FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 24);
-				if (NULL != dib) {
-					BYTE *src_bits = (BYTE*)iprData;
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+				if (nullptr != dib) {
+					uint8_t *src_bits = (uint8_t*)iprData;
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 					unsigned src_pitch = nChannels * nWidth * bytes;
 					unsigned dst_pitch = FreeImage_GetPitch(dib);
 					for(int y = 0; y < nHeight; y++) {
-						BYTE *src_line = (BYTE*)src_bits;
+						uint8_t *src_line = (uint8_t*)src_bits;
 						RGBTRIPLE *dst_line = (RGBTRIPLE*)dst_bits;
 						for(int x = 0; x < nWidth; x++) {
-							C = (1.f - (float)psdGetValue((BYTE*)&src_line[0], bytes ) * s );
-							M = (1.f - (float)psdGetValue((BYTE*)&src_line[1], bytes ) * s );
-							Y = (1.f - (float)psdGetValue((BYTE*)&src_line[2], bytes ) * s );
-							K = (1.f - (float)psdGetValue((BYTE*)&src_line[3], bytes ) * s );
+							C = (1.f - (float)psdGetValue((uint8_t*)&src_line[0], bytes ) * s );
+							M = (1.f - (float)psdGetValue((uint8_t*)&src_line[1], bytes ) * s );
+							Y = (1.f - (float)psdGetValue((uint8_t*)&src_line[2], bytes ) * s );
+							K = (1.f - (float)psdGetValue((uint8_t*)&src_line[3], bytes ) * s );
 							CMYKToRGB8(C, M, Y, K, &dst_line[x]);
 							src_line += nChannels;
 						}
@@ -1071,19 +1071,19 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 			if (16 == _headerInfo._BitsPerPixel) {
 				// CMY(K) 16-bit : convert to RGB 16-bit
 				FIBITMAP *dib = FreeImage_AllocateT(FIT_RGB16, nWidth, nHeight);
-				if (NULL != dib) {
-					BYTE *src_bits = (BYTE*)iprData;
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+				if (nullptr != dib) {
+					uint8_t *src_bits = (uint8_t*)iprData;
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 					unsigned src_pitch = nChannels * nWidth * bytes;
 					unsigned dst_pitch = FreeImage_GetPitch(dib);
 					for(int y = 0; y < nHeight; y++) {
 						unsigned short *src_line = (unsigned short*)src_bits;
 						FIRGB16 *dst_line = (FIRGB16*)dst_bits;
 						for(int x = 0; x < nWidth; x++) {
-							C = (1.f - (float)psdGetValue((BYTE*)&src_line[0], bytes ) * s );
-							M = (1.f - (float)psdGetValue((BYTE*)&src_line[1], bytes ) * s );
-							Y = (1.f - (float)psdGetValue((BYTE*)&src_line[2], bytes ) * s );
-							K = (4 <= nChannels) ? (1.f - (float)psdGetValue((BYTE*)&src_line[nChannels], bytes )*s ) : 0;
+							C = (1.f - (float)psdGetValue((uint8_t*)&src_line[0], bytes ) * s );
+							M = (1.f - (float)psdGetValue((uint8_t*)&src_line[1], bytes ) * s );
+							Y = (1.f - (float)psdGetValue((uint8_t*)&src_line[2], bytes ) * s );
+							K = (4 <= nChannels) ? (1.f - (float)psdGetValue((uint8_t*)&src_line[nChannels], bytes )*s ) : 0;
 							CMYKToRGB16(C, M, Y, K, &dst_line[x]);
 							src_line += nChannels;
 						}
@@ -1096,19 +1096,19 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 			else {
 				// CMY(K) 8-bit : convert to RGB 8-bit
 				FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 24);
-				if (NULL != dib) {
-					BYTE *src_bits = (BYTE*)iprData;
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+				if (nullptr != dib) {
+					uint8_t *src_bits = (uint8_t*)iprData;
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 					unsigned src_pitch = nChannels * nWidth * bytes;
 					unsigned dst_pitch = FreeImage_GetPitch(dib);
 					for(int y = 0; y < nHeight; y++) {
-						BYTE *src_line = (BYTE*)src_bits;
+						uint8_t *src_line = (uint8_t*)src_bits;
 						RGBTRIPLE *dst_line = (RGBTRIPLE*)dst_bits;
 						for(int x = 0; x < nWidth; x++) {
-							C = (1.f - (float)psdGetValue((BYTE*)&src_line[0], bytes ) * s );
-							M = (1.f - (float)psdGetValue((BYTE*)&src_line[1], bytes ) * s );
-							Y = (1.f - (float)psdGetValue((BYTE*)&src_line[2], bytes ) * s );
-							K = (4 <= nChannels) ? (1.f - (float)psdGetValue((BYTE*)&src_line[nChannels], bytes )*s ) : 0;
+							C = (1.f - (float)psdGetValue((uint8_t*)&src_line[0], bytes ) * s );
+							M = (1.f - (float)psdGetValue((uint8_t*)&src_line[1], bytes ) * s );
+							Y = (1.f - (float)psdGetValue((uint8_t*)&src_line[2], bytes ) * s );
+							K = (4 <= nChannels) ? (1.f - (float)psdGetValue((uint8_t*)&src_line[nChannels], bytes )*s ) : 0;
 							CMYKToRGB8(C, M, Y, K, &dst_line[x]);
 							src_line += nChannels;
 						}
@@ -1132,18 +1132,18 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 			if (16 == _headerInfo._BitsPerPixel) {
 				// CIE Lab 16-bit : convert to RGB 16-bit
 				FIBITMAP *dib = FreeImage_AllocateT(FIT_RGB16, nWidth, nHeight);
-				if (NULL != dib) {
-					BYTE *src_bits = (BYTE*)iprData;
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+				if (nullptr != dib) {
+					uint8_t *src_bits = (uint8_t*)iprData;
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 					unsigned src_pitch = nChannels * nWidth * bytes;
 					unsigned dst_pitch = FreeImage_GetPitch(dib);
 					for(int y = 0; y < nHeight; y++) {
 						unsigned short *src_line = (unsigned short*)src_bits;
 						FIRGB16 *dst_line = (FIRGB16*)dst_bits;
 						for(int x = 0; x < nWidth; x++) {
-							L = (float)psdGetValue((BYTE*)&src_line[0], bytes ) * sL;
-							a = (float)psdGetValue((BYTE*)&src_line[1], bytes ) * sa - 128.F;
-							b = (float)psdGetValue((BYTE*)&src_line[2], bytes ) * sb - 128.F;
+							L = (float)psdGetValue((uint8_t*)&src_line[0], bytes ) * sL;
+							a = (float)psdGetValue((uint8_t*)&src_line[1], bytes ) * sa - 128.F;
+							b = (float)psdGetValue((uint8_t*)&src_line[2], bytes ) * sb - 128.F;
 							CIELabToRGB16(L, a, b, &dst_line[x]);
 							src_line += nChannels;
 						}
@@ -1155,18 +1155,18 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 			} else {
 				// CIE Lab 8-bit : convert to RGB 8-bit
 				FIBITMAP *dib = FreeImage_Allocate(nWidth, nHeight, 24);
-				if (NULL != dib) {
-					BYTE *src_bits = (BYTE*)iprData;
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, nHeight-1);
+				if (nullptr != dib) {
+					uint8_t *src_bits = (uint8_t*)iprData;
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, nHeight-1);
 					unsigned src_pitch = nChannels * nWidth * bytes;
 					unsigned dst_pitch = FreeImage_GetPitch(dib);
 					for(int y = 0; y < nHeight; y++) {
-						BYTE *src_line = (BYTE*)src_bits;
+						uint8_t *src_line = (uint8_t*)src_bits;
 						RGBTRIPLE *dst_line = (RGBTRIPLE*)dst_bits;
 						for(int x = 0; x < nWidth; x++) {
-							L = (float)psdGetValue((BYTE*)&src_line[0], bytes ) * sL;
-							a = (float)psdGetValue((BYTE*)&src_line[1], bytes ) * sa - 128.F;
-							b = (float)psdGetValue((BYTE*)&src_line[2], bytes ) * sb - 128.F;
+							L = (float)psdGetValue((uint8_t*)&src_line[0], bytes ) * sL;
+							a = (float)psdGetValue((uint8_t*)&src_line[1], bytes ) * sa - 128.F;
+							b = (float)psdGetValue((uint8_t*)&src_line[2], bytes ) * sb - 128.F;
 							CIELabToRGB8(L, a, b, &dst_line[x]);
 							src_line += nChannels;
 						}
@@ -1187,10 +1187,10 @@ FIBITMAP* psdParser::ProcessBuffer(BYTE * iprData) {
 } 
 
 FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
-	FIBITMAP *Bitmap = NULL;
+	FIBITMAP *Bitmap = nullptr;
 
-	if(handle != NULL) {
-		BYTE ShortValue[2];
+	if(handle != nullptr) {
+		uint8_t ShortValue[2];
 		int n = (int)io->read_proc(&ShortValue, sizeof(ShortValue), 1, handle);
 		short nCompression = (short)psdGetValue( ShortValue, sizeof(ShortValue) );
 		
@@ -1213,16 +1213,16 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 					nTotalBytes = nWidth * nHeight;
 				}
 				
-				BYTE * plData = 0;
-				BYTE * plPixel = 0;
+				uint8_t * plData = 0;
+				uint8_t * plPixel = 0;
 				
 				int nBytes = 0;
 
 				switch (_headerInfo._ColourMode) {
 					case PSD_BITMAP:
 					{				
-						plData = new BYTE [nTotalBytes];
-						plPixel = new BYTE [bytes];
+						plData = new uint8_t [nTotalBytes];
+						plPixel = new uint8_t [bytes];
 						
 						while(nBytes < nTotalBytes) {
 							n = (int)io->read_proc(plPixel, bytes, 1, handle);
@@ -1236,10 +1236,10 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 					case PSD_INDEXED: // Indexed
 					{
 						assert( (-1 != _ColourCount) && (0 < _ColourCount) );
-						assert( NULL != _colourModeData._plColourData );
+						assert( nullptr != _colourModeData._plColourData );
 						
-						plData = new BYTE [nTotalBytes];
-						plPixel = new BYTE [bytes];
+						plData = new uint8_t [nTotalBytes];
+						plPixel = new uint8_t [bytes];
 						
 						while(nBytes < nTotalBytes) {
 							n = (int)io->read_proc(plPixel, bytes, 1, handle);
@@ -1254,8 +1254,8 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 					case PSD_DUOTONE: // Duotone
 					case PSD_RGB: // RGB
 					{
-						plData = new BYTE [nTotalBytes];
-						plPixel = new BYTE [bytes];
+						plData = new uint8_t [nTotalBytes];
+						plPixel = new uint8_t [bytes];
 						int nPixelCounter = 0;
 						int nChannels = _headerInfo._Channels;
 						
@@ -1267,11 +1267,11 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 									break;
 								}								
 								if(2 == bytes) { 
-									// swap for uint16
-									SwapShort((WORD*)&plPixel[0]);
+									// swap for uint16_t
+									SwapShort((uint16_t*)&plPixel[0]);
 								} else if(4 == bytes) {
 									// swap for float
-									SwapLong((DWORD*)&plPixel[0]);
+									SwapLong((uint32_t*)&plPixel[0]);
 								}
 								memcpy( plData + nPixelCounter, plPixel, bytes );
 								nBytes += n * bytes;
@@ -1285,8 +1285,8 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 					case PSD_CMYK: // CMYK
 					case PSD_MULTICHANNEL: // Multichannel
 					{
-						plPixel = new BYTE[bytes];
-						plData = new BYTE[nTotalBytes];
+						plPixel = new uint8_t[bytes];
+						plData = new uint8_t[nTotalBytes];
 						
 						int nPixelCounter = 0;
 						for (int c=0; c<_headerInfo._Channels; c++) {
@@ -1308,8 +1308,8 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 					
 					case PSD_LAB: // Lab
 					{
-						plPixel = new BYTE[bytes];
-						plData = new BYTE[nTotalBytes];
+						plPixel = new uint8_t[bytes];
+						plData = new uint8_t[nTotalBytes];
 						int nPixelCounter = 0;
 						for(int c = 0; c < 3; c++) {
 							nPixelCounter = c*bytes;
@@ -1368,11 +1368,11 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 					nTotalBytes = nWidth * nHeight;
 				}
 				
-				BYTE * plData = new BYTE[nTotalBytes];
-				BYTE * p = plData;
+				uint8_t * plData = new uint8_t[nTotalBytes];
+				uint8_t * p = plData;
 				int nValue = 0;
 				
-				BYTE ByteValue[1];
+				uint8_t ByteValue[1];
 				
 				int Count = 0;
 				
@@ -1394,7 +1394,7 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 							while (len) {
 								io->read_proc(&ByteValue, sizeof(ByteValue), 1, handle);
 								nValue = psdGetValue( ByteValue, sizeof(ByteValue) );
-								*p = (BYTE)nValue;
+								*p = (uint8_t)nValue;
 								p += sizeof(ByteValue);
 								len--;
 							}
@@ -1409,7 +1409,7 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 							nValue = psdGetValue( ByteValue, sizeof(ByteValue) );
 							Count += len;
 							while (len) {
-								*p = (BYTE)nValue;
+								*p = (uint8_t)nValue;
 								p += sizeof(ByteValue);
 								len--;
 							}
@@ -1420,8 +1420,8 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 					}
 				}
 				
-				BYTE * prSource = plData;
-				BYTE * plDest = new BYTE[nTotalBytes];
+				uint8_t * prSource = plData;
+				uint8_t * plDest = new uint8_t[nTotalBytes];
 				memset(plDest, 254, nTotalBytes);
 				
 				int nPixelCounter = 0;
@@ -1467,10 +1467,10 @@ FIBITMAP* psdParser::ReadImageData(FreeImageIO *io, fi_handle handle) {
 } 
 
 FIBITMAP* psdParser::Load(FreeImageIO *io, fi_handle handle, int s_format_id) {
-	FIBITMAP *Bitmap = NULL;
+	FIBITMAP *Bitmap = nullptr;
 		
 	try {
-		if (NULL == handle) {
+		if (nullptr == handle) {
 			throw("Cannot open file");
 		}
 		
@@ -1491,12 +1491,12 @@ FIBITMAP* psdParser::Load(FreeImageIO *io, fi_handle handle, int s_format_id) {
 		}
 		
 		Bitmap = ReadImageData(io, handle);
-		if (NULL == Bitmap) {
+		if (nullptr == Bitmap) {
 			throw("Error in Image Data");
 		}
 
 		// set resolution info
-		if(NULL != Bitmap) {
+		if(nullptr != Bitmap) {
 			unsigned res_x = 2835;	// 72 dpi
 			unsigned res_y = 2835;	// 72 dpi
 			if (_bResolutionInfoFilled) {
@@ -1507,7 +1507,7 @@ FIBITMAP* psdParser::Load(FreeImageIO *io, fi_handle handle, int s_format_id) {
 		}
 
 		// set ICC profile
-		if(NULL != _iccProfile._ProfileData) {
+		if(nullptr != _iccProfile._ProfileData) {
 			FreeImage_CreateICCProfile(Bitmap, _iccProfile._ProfileData, _iccProfile._ProfileSize);
 		}
 		

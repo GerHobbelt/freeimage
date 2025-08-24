@@ -83,7 +83,7 @@ mymngreadstream(mng_handle mng, mng_ptr buffer, mng_uint32 size, mng_uint32 *byt
 mng_bool
 mymngprocessheader(mng_handle mng, mng_uint32 width, mng_uint32 height) {
 	mngstuff *client_data = (mngstuff *)mng_get_userdata(mng);
-	BYTE bHasAlpha = mng_get_alphadepth(mng);
+	uint8_t bHasAlpha = mng_get_alphadepth(mng);
 
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_RGB
 	if(bHasAlpha) {
@@ -178,7 +178,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -216,9 +216,9 @@ Close(FreeImageIO *io, fi_handle handle, void *data) {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	mng_handle hmng = NULL;
+	mng_handle hmng = nullptr;
 
-	if (handle != NULL) {
+	if (handle != nullptr) {
 		try {
 			// allocate our stream data structure
 			mngstuff *mymng = (mngstuff *)data;
@@ -233,7 +233,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// set the colorprofile, lcms uses this
 			mng_set_srgb(hmng, MNG_TRUE );
 			// set white as background color
-			WORD wRed, wGreen, wBlue;
+			uint16_t wRed, wGreen, wBlue;
 			wRed = wGreen = wBlue = (255 << 8) + 255;
 			mng_set_bgcolor(hmng, wRed, wGreen, wBlue);
 			// if PNG Background is available, use it
@@ -284,7 +284,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }	
 
 // ==========================================================
@@ -301,13 +301,13 @@ InitMNG(Plugin *plugin, int format_id) {
 	plugin->regexpr_proc = RegExpr;
 	plugin->open_proc = Open;
 	plugin->close_proc = Close;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
-	plugin->validate_proc = NULL;
+	plugin->save_proc = nullptr;
+	plugin->validate_proc = nullptr;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;	// not implemented yet;
+	plugin->supports_icc_profiles_proc = nullptr;	// not implemented yet;
 }

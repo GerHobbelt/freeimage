@@ -90,8 +90,8 @@ ReadMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 	// XMP keyword
 	char *g_png_xmp_keyword = "XML:com.adobe.xmp";
 
-	FITAG *tag = NULL;
-	png_textp text_ptr = NULL;
+	FITAG *tag = nullptr;
+	png_textp text_ptr = nullptr;
 	int num_text = 0;
 
 	// iTXt/tEXt/zTXt chuncks
@@ -101,7 +101,7 @@ ReadMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 			tag = FreeImage_CreateTag();
 			if(!tag) return FALSE;
 
-			DWORD tag_length = (DWORD) MAX(text_ptr[i].text_length, text_ptr[i].itxt_length);
+			uint32_t tag_length = (uint32_t) MAX(text_ptr[i].text_length, text_ptr[i].itxt_length);
 
 			FreeImage_SetTagLength(tag, tag_length);
 			FreeImage_SetTagCount(tag, tag_length);
@@ -131,8 +131,8 @@ WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 	// XMP keyword
 	char *g_png_xmp_keyword = "XML:com.adobe.xmp";
 
-	FITAG *tag = NULL;
-	FIMETADATA *mdhandle = NULL;
+	FITAG *tag = nullptr;
+	FIMETADATA *mdhandle = nullptr;
 	BOOL bResult = TRUE;
 
 	png_text text_metadata;
@@ -149,8 +149,8 @@ WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 			text_metadata.text = (char*)FreeImage_GetTagValue(tag);	// comment, may be an empty string (ie "")
 			text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
 			text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
-			text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
-			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
+			text_metadata.lang = 0;		 // language code, 0-79 characters or a nullptr pointer
+			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a nullptr pointer
 
 			// set the tag 
 			png_set_text(png_ptr, info_ptr, &text_metadata, 1);
@@ -162,7 +162,7 @@ WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 	}
 
 	// set the 'XMP' metadata as iTXt chuncks
-	tag = NULL;
+	tag = nullptr;
 	FreeImage_GetMetadata(FIMD_XMP, dib, g_TagLib_XMPFieldName, &tag);
 	if(tag && FreeImage_GetTagLength(tag)) {
 		memset(&text_metadata, 0, sizeof(png_text));
@@ -171,8 +171,8 @@ WriteMetadata(png_structp png_ptr, png_infop info_ptr, FIBITMAP *dib) {
 		text_metadata.text = (char*)FreeImage_GetTagValue(tag);	// comment, may be an empty string (ie "")
 		text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
 		text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
-		text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
-		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
+		text_metadata.lang = 0;		 // language code, 0-79 characters or a nullptr pointer
+		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a nullptr pointer
 
 		// set the tag 
 		png_set_text(png_ptr, info_ptr, &text_metadata, 1);
@@ -219,8 +219,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE png_signature[8] = { 137, 80, 78, 71, 13, 10, 26, 10 };
-	BYTE signature[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+	uint8_t png_signature[8] = { 137, 80, 78, 71, 13, 10, 26, 10 };
+	uint8_t signature[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	io->read_proc(&signature, 1, 8, handle);
 
@@ -257,16 +257,16 @@ SupportsICCProfiles() {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	png_structp png_ptr = NULL;
+	png_structp png_ptr = nullptr;
 	png_infop info_ptr;
 	png_uint_32 width, height;
-	png_colorp png_palette = NULL;
+	png_colorp png_palette = nullptr;
 	int color_type, palette_entries = 0;
 	int bit_depth, pixel_depth;		// pixel_depth = bit_depth * channels
 
-	FIBITMAP *dib = NULL;
-	RGBQUAD *palette = NULL;		// pointer to dib palette
-	png_bytepp  row_pointers = NULL;
+	FIBITMAP *dib = nullptr;
+	RGBQUAD *palette = nullptr;		// pointer to dib palette
+	png_bytepp  row_pointers = nullptr;
 	int i;
 
     fi_ioStructure fio;
@@ -277,27 +277,27 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		try {		
 			// check to see if the file is in fact a PNG file
 
-			BYTE png_check[PNG_BYTES_TO_CHECK];
+			uint8_t png_check[PNG_BYTES_TO_CHECK];
 
 			io->read_proc(png_check, PNG_BYTES_TO_CHECK, 1, handle);
 
 			if (png_sig_cmp(png_check, (png_size_t)0, PNG_BYTES_TO_CHECK) != 0)
-				return NULL;	// Bad signature
+				return nullptr;	// Bad signature
 			
 			// create the chunk manage structure
 
-			png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, (png_voidp)NULL, error_handler, warning_handler);
+			png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, (png_voidp)nullptr, error_handler, warning_handler);
 
 			if (!png_ptr)
-				return NULL;			
+				return nullptr;			
 
 			// create the info structure
 
 		    info_ptr = png_create_info_struct(png_ptr);
 
 			if (!info_ptr) {
-				png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
-				return NULL;
+				png_destroy_read_struct(&png_ptr, (png_infopp)nullptr, (png_infopp)nullptr);
+				return nullptr;
 			}
 
 			// init the IO
@@ -305,8 +305,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			png_set_read_fn(png_ptr, &fio, _ReadProc);
 
             if (setjmp(png_jmpbuf(png_ptr))) {
-				png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-				return NULL;
+				png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+				return nullptr;
 			}
 
 			// because we have already read the signature...
@@ -316,7 +316,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// read the IHDR chunk
 
 			png_read_info(png_ptr, info_ptr);
-			png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, NULL, NULL, NULL);
+			png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, nullptr, nullptr, nullptr);
 			pixel_depth = info_ptr->pixel_depth;
 
 			// get image data type (assume standard image type)
@@ -400,13 +400,13 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// Note that even if the PNG file supplies a background, you are not required to
 			// use it - you should use the (solid) application background if it has one.
 
-			png_color_16p image_background = NULL;
+			png_color_16p image_background = nullptr;
 			RGBQUAD rgbBkColor;
 
 			if (png_get_bKGD(png_ptr, info_ptr, &image_background)) {
-				rgbBkColor.rgbRed      = (BYTE)image_background->red;
-				rgbBkColor.rgbGreen    = (BYTE)image_background->green;
-				rgbBkColor.rgbBlue     = (BYTE)image_background->blue;
+				rgbBkColor.rgbRed      = (uint8_t)image_background->red;
+				rgbBkColor.rgbGreen    = (uint8_t)image_background->green;
+				rgbBkColor.rgbBlue     = (uint8_t)image_background->blue;
 				rgbBkColor.rgbReserved = 0;
 			}
 
@@ -469,9 +469,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 					if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
 						int num_trans = 0; 
-						png_bytep trans = NULL; 
-						png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, NULL); 
-						FreeImage_SetTransparencyTable(dib, (BYTE *)trans, num_trans);
+						png_bytep trans = nullptr; 
+						png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, nullptr); 
+						FreeImage_SetTransparencyTable(dib, (uint8_t *)trans, num_trans);
 					}
 
 					break;
@@ -486,18 +486,18 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						for (i = 0; i < palette_entries; i++) {
 							palette[i].rgbRed   =
 							palette[i].rgbGreen =
-							palette[i].rgbBlue  = (BYTE)((i * 255) / (palette_entries - 1));
+							palette[i].rgbBlue  = (uint8_t)((i * 255) / (palette_entries - 1));
 						}
 					}
 
 					// store the transparency table
 
 					if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
-						png_color_16p trans_values = NULL; 
-						png_get_tRNS(png_ptr, info_ptr, NULL, NULL, &trans_values); 
+						png_color_16p trans_values = nullptr; 
+						png_get_tRNS(png_ptr, info_ptr, nullptr, nullptr, &trans_values); 
 						if(trans_values) {
 							if (trans_values->gray < palette_entries) { 
-								BYTE table[256]; 
+								uint8_t table[256]; 
 								memset(table, 0xFF, palette_entries); 
 								table[trans_values->gray] = 0; 
 								FreeImage_SetTransparencyTable(dib, table, palette_entries); 
@@ -537,8 +537,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// get possible ICC profile
 
 			if (png_get_valid(png_ptr, info_ptr, PNG_INFO_iCCP)) {
-				png_charp profile_name = NULL;
-				png_charp profile_data = NULL;
+				png_charp profile_name = nullptr;
+				png_charp profile_data = nullptr;
 				png_uint_32 profile_length = 0;
 				int  compression_type;
 
@@ -558,10 +558,10 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				if (palette)
 					png_free(png_ptr, palette);				
 
-				png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+				png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
 				FreeImage_Unload(dib);
-				return NULL;
+				return nullptr;
 			}
 
 			// read in the bitmap bits via the pointer table
@@ -583,7 +583,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			if (row_pointers) {
 				free(row_pointers);
-				row_pointers = NULL;
+				row_pointers = nullptr;
 			}
 
 			// read the rest of the file, getting any additional chunks in info_ptr
@@ -596,13 +596,13 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			if (png_ptr) {
 				// clean up after the read, and free any memory allocated - REQUIRED
-				png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+				png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)nullptr);
 			}
 
 			return dib;
 		} catch (const char *text) {
 			if (png_ptr)
-				png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+				png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)nullptr);
 			
 			if (row_pointers)
 				free(row_pointers);
@@ -612,18 +612,18 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			FreeImage_OutputMessageProc(s_format_id, text);
 			
-			return NULL;
+			return nullptr;
 		}
 	}			
 
-	return NULL;
+	return nullptr;
 }
 
 static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	png_structp png_ptr;
 	png_infop info_ptr;
-	png_colorp palette = NULL;
+	png_colorp palette = nullptr;
 	png_uint_32 width, height;
 	BOOL has_alpha_channel = FALSE;
 
@@ -640,7 +640,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		try {
 			// create the chunk manage structure
 
-			png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, (png_voidp)NULL, error_handler, warning_handler);
+			png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, (png_voidp)nullptr, error_handler, warning_handler);
 
 			if (!png_ptr)  {
 				return FALSE;
@@ -651,7 +651,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			info_ptr = png_create_info_struct(png_ptr);
 
 			if (!info_ptr)  {
-				png_destroy_write_struct(&png_ptr,  (png_infopp)NULL);
+				png_destroy_write_struct(&png_ptr,  (png_infopp)nullptr);
 				return FALSE;
 			}
 
@@ -811,7 +811,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			// set the transparency table
 
 			if (FreeImage_IsTransparent(dib) && (FreeImage_GetTransparencyCount(dib) > 0)) {
-				png_set_tRNS(png_ptr, info_ptr, FreeImage_GetTransparencyTable(dib), FreeImage_GetTransparencyCount(dib), NULL);
+				png_set_tRNS(png_ptr, info_ptr, FreeImage_GetTransparencyTable(dib), FreeImage_GetTransparencyCount(dib), nullptr);
 			}
 
 			// set the background color
@@ -849,7 +849,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			}
 
 			if ((pixel_depth == 32) && (!has_alpha_channel)) {
-				BYTE *buffer = (BYTE *)malloc(width * 3);
+				uint8_t *buffer = (uint8_t *)malloc(width * 3);
 
 				// transparent conversion to 24-bit
 				// the number of passes is either 1 for non-interlaced images, or 7 for interlaced images
@@ -902,10 +902,10 @@ InitPNG(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;

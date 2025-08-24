@@ -64,7 +64,7 @@ class libraw_memmgr
             if(mems[i])
                 {
                     free(mems[i]);
-                    mems[i] = NULL;
+                    mems[i] = nullptr;
                 }
     }
 
@@ -86,7 +86,7 @@ class libraw_memmgr
         if(ptr)
             for(int i=0;i < MSIZE; i++)
                 if(mems[i] == ptr)
-                    mems[i] = NULL;
+                    mems[i] = nullptr;
     }
 
 };

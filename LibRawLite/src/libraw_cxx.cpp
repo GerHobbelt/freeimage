@@ -159,8 +159,8 @@ LibRaw:: LibRaw(unsigned int flags)
     bzero(&imgdata,sizeof(imgdata));
     bzero(&libraw_internal_data,sizeof(libraw_internal_data));
     bzero(&callbacks,sizeof(callbacks));
-    callbacks.mem_cb = (flags & LIBRAW_OPIONS_NO_MEMERR_CALLBACK) ? NULL:  &default_memory_callback;
-    callbacks.data_cb = (flags & LIBRAW_OPIONS_NO_DATAERR_CALLBACK)? NULL : &default_data_callback;
+    callbacks.mem_cb = (flags & LIBRAW_OPIONS_NO_MEMERR_CALLBACK) ? nullptr:  &default_memory_callback;
+    callbacks.data_cb = (flags & LIBRAW_OPIONS_NO_DATAERR_CALLBACK)? nullptr : &default_data_callback;
     memmove(&imgdata.params.aber,&aber,sizeof(aber));
     memmove(&imgdata.params.gamm,&gamm,sizeof(gamm));
     memmove(&imgdata.params.greybox,&greybox,sizeof(greybox));
@@ -227,10 +227,10 @@ void LibRaw:: recycle()
     if(libraw_internal_data.internal_data.input && libraw_internal_data.internal_data.input_internal) 
         { 
             delete libraw_internal_data.internal_data.input; 
-            libraw_internal_data.internal_data.input = NULL;
+            libraw_internal_data.internal_data.input = nullptr;
         }
     libraw_internal_data.internal_data.input_internal = 0;
-#define FREE(a) do { if(a) { free(a); a = NULL;} }while(0)
+#define FREE(a) do { if(a) { free(a); a = nullptr;} }while(0)
             
     FREE(imgdata.image); 
     FREE(imgdata.thumbnail.thumb);
@@ -320,7 +320,7 @@ void LibRaw:: merror (void *ptr, const char *where)
     if(callbacks.mem_cb)(*callbacks.mem_cb)(callbacks.memcb_data,
                                             libraw_internal_data.internal_data.input
                                             ?libraw_internal_data.internal_data.input->fname()
-                                            :NULL,
+                                            :nullptr,
                                             where);
     throw LIBRAW_EXCEPTION_ALLOC;
 }
@@ -613,7 +613,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
                 {
                     if(errcode) *errcode= LIBRAW_OUT_OF_ORDER_CALL;
                 }
-            return NULL;
+            return nullptr;
         }
 
     if (T.tformat == LIBRAW_THUMBNAIL_BITMAP)
@@ -624,7 +624,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
             if(!ret)
                 {
                     if(errcode) *errcode= ENOMEM;
-                    return NULL;
+                    return nullptr;
                 }
 
             bzero(ret,sizeof(libraw_processed_image_t));
@@ -653,7 +653,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
             if(!ret)
                 {
                     if(errcode) *errcode= ENOMEM;
-                    return NULL;
+                    return nullptr;
                 }
 
             bzero(ret,sizeof(libraw_processed_image_t));
@@ -684,7 +684,7 @@ libraw_processed_image_t * LibRaw::dcraw_make_mem_thumb(int *errcode)
     else
         {
             if(errcode) *errcode= LIBRAW_UNSUPPORTED_THUMBNAIL;
-            return NULL;
+            return nullptr;
 
         }
 }
@@ -696,7 +696,7 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_image(int *errcode)
     if((imgdata.progress_flags & LIBRAW_PROGRESS_THUMB_MASK) < LIBRAW_PROGRESS_PRE_INTERPOLATE)
             {
                 if(errcode) *errcode= LIBRAW_OUT_OF_ORDER_CALL;
-                return NULL;
+                return nullptr;
             }
 
     if(!libraw_internal_data.output_data.histogram)
@@ -711,7 +711,7 @@ libraw_processed_image_t *LibRaw::dcraw_make_mem_image(int *errcode)
     if(!ret)
         {
                 if(errcode) *errcode= ENOMEM;
-                return NULL;
+                return nullptr;
         }
     bzero(ret,sizeof(libraw_processed_image_t));
     // metadata init
@@ -1550,7 +1550,7 @@ static const char  *static_camera_list[] =
 "Sony DSLR-A900",
 "Sony XCD-SX910CR",
 "STV680 VGA",
-   NULL
+   nullptr
 };
 
 const char** LibRaw::cameraList() { return static_camera_list;}

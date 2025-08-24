@@ -34,7 +34,7 @@
 #ifdef WIN32
 #ifndef OPJ_STATIC
 BOOL APIENTRY
-DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+DllMain(HANDLE hModule, uint32_t ul_reason_for_call, LPVOID lpReserved) {
 	switch (ul_reason_for_call) {
 		case DLL_PROCESS_ATTACH :
 			break;
@@ -59,7 +59,7 @@ const char* OPJ_CALLCONV opj_version(void) {
 
 opj_dinfo_t* OPJ_CALLCONV opj_create_decompress(OPJ_CODEC_FORMAT format) {
 	opj_dinfo_t *dinfo = (opj_dinfo_t*)opj_calloc(1, sizeof(opj_dinfo_t));
-	if(!dinfo) return NULL;
+	if(!dinfo) return nullptr;
 	dinfo->is_decompressor = true;
 	switch(format) {
 		case CODEC_J2K:
@@ -68,7 +68,7 @@ opj_dinfo_t* OPJ_CALLCONV opj_create_decompress(OPJ_CODEC_FORMAT format) {
 			dinfo->j2k_handle = (void*)j2k_create_decompress((opj_common_ptr)dinfo);
 			if(!dinfo->j2k_handle) {
 				opj_free(dinfo);
-				return NULL;
+				return nullptr;
 			}
 			break;
 		case CODEC_JP2:
@@ -76,13 +76,13 @@ opj_dinfo_t* OPJ_CALLCONV opj_create_decompress(OPJ_CODEC_FORMAT format) {
 			dinfo->jp2_handle = (void*)jp2_create_decompress((opj_common_ptr)dinfo);
 			if(!dinfo->jp2_handle) {
 				opj_free(dinfo);
-				return NULL;
+				return nullptr;
 			}
 			break;
 		case CODEC_UNKNOWN:
 		default:
 			opj_free(dinfo);
-			return NULL;
+			return nullptr;
 	}
 
 	dinfo->codec_format = format;
@@ -148,7 +148,7 @@ void OPJ_CALLCONV opj_setup_decoder(opj_dinfo_t *dinfo, opj_dparameters_t *param
 }
 
 opj_image_t* OPJ_CALLCONV opj_decode(opj_dinfo_t *dinfo, opj_cio_t *cio) {
-	return opj_decode_with_info(dinfo, cio, NULL);
+	return opj_decode_with_info(dinfo, cio, nullptr);
 }
 
 opj_image_t* OPJ_CALLCONV opj_decode_with_info(opj_dinfo_t *dinfo, opj_cio_t *cio, opj_codestream_info_t *cstr_info) {
@@ -165,12 +165,12 @@ opj_image_t* OPJ_CALLCONV opj_decode_with_info(opj_dinfo_t *dinfo, opj_cio_t *ci
 				break;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 opj_cinfo_t* OPJ_CALLCONV opj_create_compress(OPJ_CODEC_FORMAT format) {
 	opj_cinfo_t *cinfo = (opj_cinfo_t*)opj_calloc(1, sizeof(opj_cinfo_t));
-	if(!cinfo) return NULL;
+	if(!cinfo) return nullptr;
 	cinfo->is_decompressor = false;
 	switch(format) {
 		case CODEC_J2K:
@@ -178,7 +178,7 @@ opj_cinfo_t* OPJ_CALLCONV opj_create_compress(OPJ_CODEC_FORMAT format) {
 			cinfo->j2k_handle = (void*)j2k_create_compress((opj_common_ptr)cinfo);
 			if(!cinfo->j2k_handle) {
 				opj_free(cinfo);
-				return NULL;
+				return nullptr;
 			}
 			break;
 		case CODEC_JP2:
@@ -186,14 +186,14 @@ opj_cinfo_t* OPJ_CALLCONV opj_create_compress(OPJ_CODEC_FORMAT format) {
 			cinfo->jp2_handle = (void*)jp2_create_compress((opj_common_ptr)cinfo);
 			if(!cinfo->jp2_handle) {
 				opj_free(cinfo);
-				return NULL;
+				return nullptr;
 			}
 			break;
 		case CODEC_JPT:
 		case CODEC_UNKNOWN:
 		default:
 			opj_free(cinfo);
-			return NULL;
+			return nullptr;
 	}
 
 	cinfo->codec_format = format;
@@ -297,11 +297,11 @@ void OPJ_CALLCONV opj_setup_encoder(opj_cinfo_t *cinfo, opj_cparameters_t *param
 }
 
 bool OPJ_CALLCONV opj_encode(opj_cinfo_t *cinfo, opj_cio_t *cio, opj_image_t *image, char *index) {
-	if (index != NULL)
-		opj_event_msg((opj_common_ptr)cinfo, EVT_WARNING, "Set index to NULL when calling the opj_encode function.\n"
+	if (index != nullptr)
+		opj_event_msg((opj_common_ptr)cinfo, EVT_WARNING, "Set index to nullptr when calling the opj_encode function.\n"
 		"To extract the index, use the opj_encode_with_info() function.\n"
 		"No index will be generated during this encoding\n");
-	return opj_encode_with_info(cinfo, cio, image, NULL);
+	return opj_encode_with_info(cinfo, cio, image, nullptr);
 }
 
 bool OPJ_CALLCONV opj_encode_with_info(opj_cinfo_t *cinfo, opj_cio_t *cio, opj_image_t *image, opj_codestream_info_t *cstr_info) {
