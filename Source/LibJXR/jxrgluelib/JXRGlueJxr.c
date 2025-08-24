@@ -787,7 +787,7 @@ ERR PKImageEncode_EncodeContent_Init(
     if (0 == ((size_t)pbPixels % 128) &&        // Frame buffer is aligned to 128-byte boundary
         0 == (pIE->uWidth % 16) &&              // Horizontal resolution is multiple of 16
         0 == (cLine % 16) &&                    // Vertical resolution is multiple of 16
-        0 == (cbStride % 128))                  // Stride is a multiple of 128 bytes
+        0 == ((unsigned long long)cbStride % 128))                  // Stride is a multiple of 128 bytes
     {
         pIE->WMP.wmiI.fPaddedUserBuffer = TRUE;
         // Note that there are additional conditions in strenc_x86.c's strEncOpt
@@ -830,7 +830,7 @@ ERR PKImageEncode_EncodeContent_Encode(
 		Bool f420 = ( pIE->WMP.wmiI.cfColorFormat == YUV_420 || 
 					  (pIE->WMP.wmiSCP.bYUVData && pIE->WMP.wmiSCP.cfColorFormat==YUV_420) );
         CWMImageBufferInfo wmiBI = { 0 };
-        wmiBI.pv = pbPixels + cbStride * i / (f420 ? 2 : 1);
+        wmiBI.pv = (unsigned long long)pbPixels + (unsigned long long)cbStride * i / (f420 ? 2 : 1);
         wmiBI.cLine = min(16, cLine - i);
         wmiBI.cbStride = cbStride;
         FailIf(ICERR_OK != ImageStrEncEncode(pIE->WMP.ctxSC, &wmiBI), WMP_errFail);
@@ -954,7 +954,7 @@ ERR PKImageEncode_EncodeAlpha_Encode(
     for (i = 0; i < cLine; i += 16)
     {
         CWMImageBufferInfo wmiBI = { 0 };
-        wmiBI.pv = pbPixels + cbStride * i;
+        wmiBI.pv = (unsigned long long)pbPixels + (unsigned long long)cbStride * i;
         wmiBI.cLine = min(16, cLine - i);
         wmiBI.cbStride = cbStride;
         FailIf(ICERR_OK != ImageStrEncEncode(pIE->WMP.ctxSC_Alpha, &wmiBI), WMP_errFail);

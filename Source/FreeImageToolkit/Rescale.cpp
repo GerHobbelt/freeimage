@@ -76,7 +76,7 @@ FreeImage_RescaleRect(FIBITMAP *src, int dst_width, int dst_height, int src_left
 	CResizeEngine Engine(pFilter);
 
 	dst = Engine.scale(src, dst_width, dst_height, src_left, src_top,
-			src_right - src_left, src_bottom - src_top, flags);
+			src_right - src_left, src_bottom - src_top, flags, 0, 0, 0);
 
 	delete pFilter;
 
@@ -91,6 +91,74 @@ FreeImage_RescaleRect(FIBITMAP *src, int dst_width, int dst_height, int src_left
 FIBITMAP * DLL_CALLCONV
 FreeImage_Rescale(FIBITMAP *src, int dst_width, int dst_height, FREE_IMAGE_FILTER filter) {
 	return FreeImage_RescaleRect(src, dst_width, dst_height, 0, 0, FreeImage_GetWidth(src), FreeImage_GetHeight(src), filter, FI_RESCALE_DEFAULT);
+}
+
+BOOL DLL_CALLCONV
+FreeImage_RescaleRawBits(uint8_t *src_bits, uint8_t *dst_bits, FREE_IMAGE_TYPE type, int width, int height, int src_pitch, int dst_pitch, unsigned bpp, int dst_width, int dst_height, int src_left, int src_top, int src_right, int src_bottom, FREE_IMAGE_FILTER filter) {
+   FIBITMAP *src = nullptr;
+   src = FreeImage_AllocateHeaderForBits(src_bits, src_pitch, type, width, height, bpp, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+   if(!src) {
+      return nullptr;
+   }
+
+   const int src_width = FreeImage_GetWidth(src);
+   const int src_height = FreeImage_GetHeight(src);
+
+   if (!FreeImage_HasPixels(src) || (dst_width <= 0) || (dst_height <= 0) || (src_width <= 0) || (src_height <= 0)) {
+      FreeImage_Unload(src);
+      return nullptr;
+   }
+
+   FIBITMAP *dst = nullptr;
+   // normalize the rectangle
+   if (src_right < src_left) {
+      INPLACESWAP(src_left, src_right);
+   }
+   if (src_bottom < src_top) {
+      INPLACESWAP(src_top, src_bottom);
+   }
+
+   // check the size of the sub image
+   if((src_left < 0) || (src_right > src_width) || (src_top < 0) || (src_bottom > src_height)) {
+      FreeImage_Unload(src);
+      return 0;
+   }
+
+   // select the filter
+   CGenericFilter *pFilter = nullptr;
+   switch (filter) {
+      case FILTER_BOX:
+         pFilter = new(std::nothrow) CBoxFilter();
+         break;
+      case FILTER_BICUBIC:
+         pFilter = new(std::nothrow) CBicubicFilter();
+         break;
+      case FILTER_BILINEAR:
+         pFilter = new(std::nothrow) CBilinearFilter();
+         break;
+      case FILTER_BSPLINE:
+         pFilter = new(std::nothrow) CBSplineFilter();
+         break;
+      case FILTER_CATMULLROM:
+         pFilter = new(std::nothrow) CCatmullRomFilter();
+         break;
+      case FILTER_LANCZOS3:
+         pFilter = new(std::nothrow) CLanczos3Filter();
+         break;
+   }
+
+   if (!pFilter) {
+      FreeImage_Unload(src);
+      return 0;
+   }
+
+   CResizeEngine Engine(pFilter);
+   dst = Engine.scale(src, dst_width, dst_height, src_left, src_top,
+         src_right - src_left, src_bottom - src_top, 0, 1, dst_pitch, dst_bits);
+
+   FreeImage_Unload(dst);
+   delete pFilter;
+   return 1;
 }
 
 FIBITMAP * DLL_CALLCONV

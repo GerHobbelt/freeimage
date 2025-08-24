@@ -208,11 +208,12 @@ GetAlphaBlendedColor(const RGBQUAD *bgcolor, const RGBQUAD *fgcolor, RGBQUAD *bl
  @param dib The image to be filled.
  @param color The color, the specified image should be filled with.
  @param options Options that affect the color search process for palletized images.
+ @param applyAlpha For 32-bits RGBA, sets the alpha channel to specified value.
  @return Returns TRUE on success, FALSE otherwise. This function fails if any of
  the dib and color is nullptr or the provided image is not a FIT_BITMAP image.
  */
 static BOOL
-FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options) {
+FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options, int applyAlpha) {
 
 	if ((!dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
 		return FALSE;;
@@ -237,7 +238,7 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options) {
 	
 	// Check for RGBA case if bitmap supports alpha 
 	// blending (8-bit greyscale, 24- or 32-bit images)
-	if (supports_alpha && (options & FI_COLOR_IS_RGBA_COLOR)) {
+	if (supports_alpha && applyAlpha == 0 && (options & FI_COLOR_IS_RGBA_COLOR)) {
 		
 		if (color->rgbReserved == 0) {
 			// the fill color is fully transparent; we are done
@@ -276,6 +277,9 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options) {
 		// image. This should never happen...
 		return FALSE;
 	}
+
+   if (applyAlpha==0)
+   	applyAlpha = 0xFF;
 	
 	// first, build the first scanline (line 0)
 	switch (bpp) {
@@ -328,7 +332,7 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options) {
 			rgbq.rgbBlue = ((RGBTRIPLE *)color_intl)->rgbtBlue;
 			rgbq.rgbGreen = ((RGBTRIPLE *)color_intl)->rgbtGreen;
 			rgbq.rgbRed = ((RGBTRIPLE *)color_intl)->rgbtRed;
-			rgbq.rgbReserved = 0xFF;
+			rgbq.rgbReserved = applyAlpha;
 			for (unsigned x = 0; x < width; x++) {
 				((RGBQUAD *)dst_bits)[x] = rgbq;
 			}
@@ -414,11 +418,12 @@ FillBackgroundBitmap(FIBITMAP *dib, const RGBQUAD *color, int options) {
  memory pointed to by this pointer is always assumed to be at least as large as the
  image's color value, but never smaller than the size of an RGBQUAD structure.
  @param options Options that affect the color search process for palletized images.
+ @param applyAlpha For 32-bits RGBA, sets the alpha channel to specified value.
  @return Returns TRUE on success, FALSE otherwise. This function fails if any of
  dib and color is nullptr.
  */
 BOOL DLL_CALLCONV
-FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options) {
+FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options, int applyAlpha) {
 
 	if (!FreeImage_HasPixels(dib)) {
 		return FALSE;
@@ -428,9 +433,9 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options) {
 		return FALSE;
 	}
 
-	// handle FIT_BITMAP images with FreeImage_FillBackground()
+   // handle FIT_BITMAP images with FreeImage_FillBackground()
 	if (FreeImage_GetImageType(dib) == FIT_BITMAP) {
-		return FillBackgroundBitmap(dib, (RGBQUAD *)color, options);
+		return FillBackgroundBitmap(dib, (RGBQUAD *)color, options, applyAlpha);
 	}
 	
 	// first, construct the first scanline (bottom line)

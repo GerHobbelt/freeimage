@@ -1195,6 +1195,10 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// step 3: read handle parameters with jpeg_read_header()
 
 			jpeg_read_header(&cinfo, TRUE);
+			if (cinfo.image_width > JPEG_MAX_DIMENSION || cinfo.image_height > JPEG_MAX_DIMENSION) {
+				// Fix for CVE-2023-47995 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2023-47995.patch
+				throw FI_MSG_ERROR_DIB_MEMORY;
+			}
 
 			// step 4: set parameters for decompression
 

@@ -1429,7 +1429,8 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		uint8_t *dib_bits = FreeImage_GetBits(dib);
 
 		// get dst pitch (count of uint8_t for stride)
-		const unsigned cbStride = FreeImage_GetPitch(dib);
+		const int64_t cbStride = FreeImage_GetPitch(dib);
+		const unsigned bpp = FreeImage_GetBPP(dib);
 
 		// write metadata + pixels on output
 		error_code = pEncoder->WritePixels(pEncoder, height, dib_bits, cbStride);

@@ -770,8 +770,13 @@ jpeg_read_exif_dir(FIBITMAP *dib, const uint8_t *tiffp, uint32_t dwOffsetIfd0, u
 	//
 
 	const uint16_t entriesCount0th = ReadUint16(msb_order, ifd0th);
-	
-	uint32_t next_offset = ReadUint32(msb_order, DIR_ENTRY_ADDR(ifd0th, entriesCount0th));
+	const uint8_t* de_addr = DIR_ENTRY_ADDR(ifd0th, entriesCount0th);
+	if(de_addr+4 >= (uint8_t*)(dwLength + ifd0th - tiffp)) {
+		// Fix for CVE-2021-33367 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2021-33367.patch
+		return TRUE; //< no thumbnail
+	}
+
+	uint32_t next_offset = ReadUint32(msb_order, de_addr);
 	if((next_offset == 0) || (next_offset >= dwLength)) {
 		return TRUE; //< no thumbnail
 	}
@@ -877,6 +882,10 @@ jpeg_read_exif_profile(FIBITMAP *dib, const uint8_t *data, unsigned length) {
 		// This is an Exif profile
 		// should contain a TIFF header with up to 2 IFDs (IFD stands for 'Image File Directory')
 		// 0th IFD : the image attributes, 1st IFD : may be used for thumbnail
+		if (dwProfileLength < sizeof(exif_signature)) {
+			// Image not big enough to contain the Exif signature
+			return FALSE;
+		}
 
 		pbProfile += sizeof(exif_signature);
 		dwProfileLength -= sizeof(exif_signature);

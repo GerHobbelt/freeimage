@@ -223,18 +223,17 @@ LoadPixelData(FreeImageIO *io, fi_handle handle, FIBITMAP *dib, int height, unsi
 
 	// Load pixel data
 	// NB: height can be < 0 for BMP data
-	if (height > 0) {
-		count = io->read_proc((void *)FreeImage_GetBits(dib), height * pitch, 1, handle);
+	uint8_t *scan0 = FreeImage_GetBits(dib);
+	int64_t positiveHeight = abs(height);
+	uint8_t *line = nullptr;
+	for (int64_t c = 0; c < positiveHeight; c++) {
+		if (height>0)
+		   line = (uint8_t*)((unsigned long long)scan0 + (unsigned long long)pitch * c);
+		else
+		   line = (uint8_t*)((unsigned long long)scan0 + (unsigned long long)pitch * (positiveHeight - c - 1));
+		count = io->read_proc(line, pitch, 1, handle);
 		if(count != 1) {
 			return FALSE;
-		}
-	} else {
-		int positiveHeight = abs(height);
-		for (int c = 0; c < positiveHeight; ++c) {
-			count = io->read_proc((void *)FreeImage_GetScanLine(dib, positiveHeight - c - 1), pitch, 1, handle);
-			if(count != 1) {
-				return FALSE;
-			}
 		}
 	}
 
@@ -286,11 +285,11 @@ LoadPixelDataRLE4(FreeImageIO *io, fi_handle handle, int width, int height, FIBI
 	try {
 		height = abs(height);
 
-		pixels = (uint8_t*)malloc(width * height * sizeof(uint8_t));
+		pixels = (uint8_t*)malloc((unsigned long long)width * height * sizeof(uint8_t));
 		if (!pixels) {
 			throw(1);
 		}
-		memset(pixels, 0, width * height * sizeof(uint8_t));
+		memset(pixels, 0, (unsigned long long)width * height * sizeof(uint8_t));
 
 		uint8_t *q = pixels;
 		uint8_t *end = pixels + height * width;
@@ -382,12 +381,16 @@ LoadPixelDataRLE4(FreeImageIO *io, fi_handle handle, int width, int height, FIBI
 		{
 			// Convert to 4-bit
 			for(int y = 0; y < height; y++) {
-				const uint8_t *src = (uint8_t*)pixels + y * width;
+				const uint8_t *src = (uint8_t*)pixels + (unsigned long long)y * width;
 				uint8_t *dst = FreeImage_GetScanLine(dib, y);
 
 				BOOL hinibble = TRUE;
 
 				for (int cols = 0; cols < width; cols++){
+					if ((src + cols) >= end) {
+						throw(1);
+					}
+
 					if (hinibble) {
 						dst[cols >> 1] = (src[cols] << 4);
 					} else {
@@ -422,89 +425,89 @@ Load image pixels for 8-bit RLE compressed dib
 */
 static BOOL 
 LoadPixelDataRLE8(FreeImageIO *io, fi_handle handle, int width, int height, FIBITMAP *dib) {
-	uint8_t status_byte = 0;
-	uint8_t second_byte = 0;
-	int scanline = 0;
-	int bits = 0;
-	int count = 0;
-	uint8_t delta_x = 0;
-	uint8_t delta_y = 0;
+   uint8_t status_byte = 0;
+   uint8_t second_byte = 0;
+   int scanline = 0;
+   int bits = 0;
+   int count = 0;
+   uint8_t delta_x = 0;
+   uint8_t delta_y = 0;
 
-	height = abs(height);
-	
-	while(scanline < height) {
+   height = abs(height);
+   
+   while(scanline < height) {
+      if (io->read_proc(&status_byte, sizeof(uint8_t), 1, handle) != 1) {
+         return FALSE;
+      }
 
-		if (io->read_proc(&status_byte, sizeof(uint8_t), 1, handle) != 1) {
-			return FALSE;
-		}
+      if (status_byte == RLE_COMMAND) {
+         if (io->read_proc(&status_byte, sizeof(uint8_t), 1, handle) != 1) {
+            return FALSE;
+         }
 
-		if (status_byte == RLE_COMMAND) {
-			if (io->read_proc(&status_byte, sizeof(uint8_t), 1, handle) != 1) {
-				return FALSE;
-			}
+         switch (status_byte) {
+            case RLE_ENDOFLINE:
+               bits = 0;
+               scanline++;
+               break;
 
-			switch (status_byte) {
-				case RLE_ENDOFLINE:
-					bits = 0;
-					scanline++;
-					break;
+            case RLE_ENDOFBITMAP:
+               return TRUE;
 
-				case RLE_ENDOFBITMAP:
-					return TRUE;
+            case RLE_DELTA:
+               // read the delta values
+               delta_x = 0;
+               delta_y = 0;
+               if (io->read_proc(&delta_x, sizeof(uint8_t), 1, handle) != 1) {
+                  return FALSE;
+               }
+               if (io->read_proc(&delta_y, sizeof(uint8_t), 1, handle) != 1) {
+                  return FALSE;
+               }
+               // apply them
+               bits += delta_x;
+               scanline += delta_y;
+               break;
 
-				case RLE_DELTA:
-					// read the delta values
-					delta_x = 0;
-					delta_y = 0;
-					if (io->read_proc(&delta_x, sizeof(uint8_t), 1, handle) != 1) {
-						return FALSE;
-					}
-					if (io->read_proc(&delta_y, sizeof(uint8_t), 1, handle) != 1) {
-						return FALSE;
-					}
-					// apply them
-					bits += delta_x;
-					scanline += delta_y;
-					break;
+            default:
+               // absolute mode
+               count = MIN((int)status_byte, width - bits);
+               if (count < 0) {
+                  return FALSE;
+               }
+               uint8_t *sline = FreeImage_GetScanLine(dib, scanline);
+               if (io->read_proc((void *)(sline + bits), sizeof(uint8_t) * count, 1, handle) != 1) {
+                  return FALSE;
+               }
+               // align run length to even number of bytes
+               if ((status_byte & 1) == 1) {
+                  if (io->read_proc(&second_byte, sizeof(uint8_t), 1, handle) != 1) {
+                     return FALSE;
+                  }
+               }
+               bits += status_byte;            
+               break;
 
-				default:
-					// absolute mode
-					count = MIN((int)status_byte, width - bits);
-					if (count < 0) {
-						return FALSE;
-					}
-					uint8_t *sline = FreeImage_GetScanLine(dib, scanline);
-					if (io->read_proc((void *)(sline + bits), sizeof(uint8_t) * count, 1, handle) != 1) {
-						return FALSE;
-					}
-					// align run length to even number of bytes
-					if ((status_byte & 1) == 1) {
-						if (io->read_proc(&second_byte, sizeof(uint8_t), 1, handle) != 1) {
-							return FALSE;
-						}
-					}
-					bits += status_byte;				
-					break;
+         } // switch (status_byte)
+      }
+      else {
+         count = MIN((int)status_byte, width - bits);
+         if (count < 0) {
+            return FALSE;
+         }
+         uint8_t *sline = FreeImage_GetScanLine(dib, scanline);
+         if (io->read_proc(&second_byte, sizeof(uint8_t), 1, handle) != 1) {
+            return FALSE;
+         }
+         for (int i = 0; i < count; i++) {
+            *(sline + bits) = second_byte;
+            bits++;
+         }
+      }
+   }
 
-			} // switch (status_byte)
-		}
-		else {
-			count = MIN((int)status_byte, width - bits);
-			if (count < 0) {
-				return FALSE;
-			}
-			uint8_t *sline = FreeImage_GetScanLine(dib, scanline);
-			if (io->read_proc(&second_byte, sizeof(uint8_t), 1, handle) != 1) {
-				return FALSE;
-			}
-			for (int i = 0; i < count; i++) {
-				*(sline + bits) = second_byte;
-				bits++;
-			}
-		}
-	}
-	
-	return FALSE;
+   // return true if the entire height was decoded even if RLE_ENDOFBITMAP was not reached
+   return (scanline>=height && count>0) ? TRUE : FALSE;
 }
 
 // --------------------------------------------------------------------------
@@ -533,12 +536,12 @@ LoadWindowsBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bit
 
 		// keep some general information about the bitmap
 
-		unsigned used_colors	= bih.biClrUsed;
-		int width				= bih.biWidth;
-		int height				= bih.biHeight;		// WARNING: height can be < 0 => check each call using 'height' as a parameter
+		unsigned used_colors		= bih.biClrUsed;
+		int64_t width					= bih.biWidth;
+		int64_t height				= bih.biHeight;		// WARNING: height can be < 0 => check each call using 'height' as a parameter
 		unsigned bit_count		= bih.biBitCount;
-		unsigned compression	= bih.biCompression;
-		unsigned pitch			= CalculatePitch(CalculateLine(width, bit_count));
+		unsigned compression		= bih.biCompression;
+		unsigned long pitch		= CalculatePitch(CalculateLine(width, bit_count));
 
 		switch (bit_count) {
 			case 1 :
@@ -1179,7 +1182,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		uint32_t type = 0;
 
 		// we use this offset value to make seemingly absolute seeks relative in the file		
-		long offset_in_file = io->tell_proc(handle);
+		long long offset_in_file = io->tell_proc(handle);
 
 		// read the fileheader
 		memset(&bitmapfileheader, 0, sizeof(BITMAPFILEHEADER));
@@ -1199,7 +1202,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		// read the first byte of the infoheader
 		io->read_proc(&type, sizeof(uint32_t), 1, handle);
-		io->seek_proc(handle, 0 - (long)sizeof(uint32_t), SEEK_CUR);
+		io->seek_proc(handle, 0 - (long long)sizeof(uint32_t), SEEK_CUR);
 
 #ifdef FREEIMAGE_BIGENDIAN
 		SwapLong(&type);
@@ -1389,18 +1392,18 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 	if ((dib != nullptr) && (handle != nullptr)) {
 		// write the file header
 
-		const unsigned dst_width = FreeImage_GetWidth(dib);
-		const unsigned dst_height = FreeImage_GetHeight(dib);
+		const uint64_t dst_width = FreeImage_GetWidth(dib);
+		const uint64_t dst_height = FreeImage_GetHeight(dib);
 
 		// note that the dib may have been created using FreeImage_CreateView
 		// we need to recalculate the dst pitch here
-		const unsigned dst_bpp = FreeImage_GetBPP(dib);
-		const unsigned dst_pitch = CalculatePitch(CalculateLine(dst_width, dst_bpp));
+		const uint64_t dst_bpp = FreeImage_GetBPP(dib);
+		const uint64_t dst_pitch = CalculatePitch(CalculateLine(dst_width, dst_bpp));
 
 		BITMAPFILEHEADER bitmapfileheader;
 		bitmapfileheader.bfType = 0x4D42;
 		bitmapfileheader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + FreeImage_GetColorsUsed(dib) * sizeof(RGBQUAD);
-		bitmapfileheader.bfSize = bitmapfileheader.bfOffBits + dst_height * dst_pitch;
+		bitmapfileheader.bfSize = (unsigned long long)bitmapfileheader.bfOffBits + (unsigned long long)dst_height * dst_pitch;
 		bitmapfileheader.bfReserved1 = 0;
 		bitmapfileheader.bfReserved2 = 0;
 
@@ -1487,7 +1490,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		// write the bitmap data... if RLE compression is enable, use it
 
 		if ((dst_bpp == 8) && ((flags & BMP_SAVE_RLE) == BMP_SAVE_RLE)) {
-			uint8_t *buffer = (uint8_t*)malloc(dst_pitch * 2 * sizeof(uint8_t));
+			uint8_t *buffer = (uint8_t*)malloc((unsigned long long)dst_pitch * 2 * sizeof(uint8_t));
 
 			for (unsigned i = 0; i < dst_height; ++i) {
 				int size = RLEEncodeLine(buffer, FreeImage_GetScanLine(dib, i), FreeImage_GetLine(dib));
@@ -1510,7 +1513,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 #ifdef FREEIMAGE_BIGENDIAN
 		} else if (dst_bpp == 16) {
-			int padding = dst_pitch - dst_width * sizeof(uint16_t);
+			int64_t padding = dst_pitch - (unsigned long long)dst_width * sizeof(uint16_t);
 			uint16_t pad = 0;
 			uint16_t pixel;
 			for(unsigned y = 0; y < dst_height; y++) {
@@ -1532,11 +1535,12 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_RGB
 		} else if (dst_bpp == 24) {
-			int padding = dst_pitch - dst_width * sizeof(FILE_BGR);
+			uint8_t *dBits = FreeImage_GetBits(dib);
+			int64_t padding = dst_pitch - (unsigned long long)dst_width * sizeof(FILE_BGR);
 			uint32_t pad = 0;
 			FILE_BGR bgr;
 			for(unsigned y = 0; y < dst_height; y++) {
-				uint8_t *line = FreeImage_GetScanLine(dib, y);
+				uint8_t *line = (uint8_t*)((unsigned long long)dBits + dst_pitch * y);
 				for(unsigned x = 0; x < dst_width; x++) {
 					RGBTRIPLE *triple = ((RGBTRIPLE *)line)+x;
 					bgr.b = triple->rgbtBlue;
@@ -1554,9 +1558,10 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			}
 		} else if (dst_bpp == 32) {
 			FILE_BGRA bgra;
-			for(unsigned y = 0; y < dst_height; y++) {
-				uint8_t *line = FreeImage_GetScanLine(dib, y);
-				for(unsigned x = 0; x < dst_width; x++) {
+			uint8_t *dBits = FreeImage_GetBits(dib);
+			for(uint64_t y = 0; y < dst_height; y++) {
+				uint8_t *line = (uint8_t*)((unsigned long long)dBits + dst_pitch * y);
+				for(uint64_t x = 0; x < dst_width; x++) {
 					RGBQUAD *quad = ((RGBQUAD *)line)+x;
 					bgra.b = quad->rgbBlue;
 					bgra.g = quad->rgbGreen;
@@ -1568,14 +1573,10 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 				}
 			}
 #endif
-		} 
-		else if (FreeImage_GetPitch(dib) == dst_pitch) {
-			return (io->write_proc(FreeImage_GetBits(dib), dst_height * dst_pitch, 1, handle) != 1) ? FALSE : TRUE;
-		}
-		else {
-			for (unsigned y = 0; y < dst_height; y++) {
-				uint8_t *line = (uint8_t*)FreeImage_GetScanLine(dib, y);
-				
+		} else {
+			uint8_t *dBits = FreeImage_GetBits(dib);
+			for (uint64_t y = 0; y < dst_height; y++) {
+				uint8_t *line = (uint8_t*)((unsigned long long)dBits + dst_pitch * y);
 				if (io->write_proc(line, dst_pitch, 1, handle) != 1) {
 					return FALSE;
 				}

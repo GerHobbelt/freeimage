@@ -289,6 +289,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					// Create linear color ramp
 
 					RGBQUAD *pal = FreeImage_GetPalette(dib);
+					if (nullptr == pal) {
+						throw "Invalid palette, return null";
+					}
 
 					int numcolors = 1 << header.depth;
 
@@ -316,11 +319,14 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					throw "Invalid palette";
 				}
 
+				RGBQUAD *pal = FreeImage_GetPalette(dib);
+				if (nullptr == pal) {
+					throw "Invalid palette, return null";
+				}
+
 				r = (uint8_t*)malloc(3 * numcolors * sizeof(uint8_t));
 				g = r + numcolors;
 				b = g + numcolors;
-
-				RGBQUAD *pal = FreeImage_GetPalette(dib);
 
 				io->read_proc(r, 3 * numcolors, 1, handle);
 

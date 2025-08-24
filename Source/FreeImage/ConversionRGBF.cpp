@@ -223,9 +223,9 @@ FreeImage_ConvertToRGBF(FIBITMAP *dib) {
 
 				for(unsigned x = 0; x < width; x++) {
 					// convert and skip alpha channel
-					dst_pixel[x].red   = CLAMP(src_pixel[x].red, 0.0F, 1.0F);
-					dst_pixel[x].green = CLAMP(src_pixel[x].green, 0.0F, 1.0F);
-					dst_pixel[x].blue  = CLAMP(src_pixel[x].blue, 0.0F, 1.0F);
+					dst_pixel[x].red   = CLAMP(src_pixel[x].red, 0.0F, 15.0F);
+					dst_pixel[x].green = CLAMP(src_pixel[x].green, 0.0F, 15.0F);
+					dst_pixel[x].blue  = CLAMP(src_pixel[x].blue, 0.0F, 15.0F);
 				}
 				src_bits += src_pitch;
 				dst_bits += dst_pitch;

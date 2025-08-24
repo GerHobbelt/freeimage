@@ -245,7 +245,8 @@ void LibRaw::parse_smal(int offset, int fsize)
 
 void LibRaw::parse_riff(int maxdepth)
 {
-  unsigned i, size, end;
+  unsigned i, size;
+  unsigned long end;
   char tag[4], date[64], month[64];
   static const char mon[12][4] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
