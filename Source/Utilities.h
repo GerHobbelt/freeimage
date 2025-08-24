@@ -113,7 +113,7 @@ Allocate a FIBITMAP with no pixel data and wrap a user provided pixel buffer
 @return Returns the allocated FIBITMAP
 @see FreeImage_ConvertFromRawBitsEx
 */
-DLL_API FIBITMAP * DLL_CALLCONV FreeImage_AllocateHeaderForBits(BYTE *ext_bits, unsigned ext_pitch, FREE_IMAGE_TYPE type, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask);
+DLL_API FIBITMAP * DLL_CALLCONV FreeImage_AllocateHeaderForBits(uint8_t *ext_bits, unsigned ext_pitch, FREE_IMAGE_TYPE type, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask);
 
 /**
 Helper for 16-bit FIT_BITMAP
@@ -295,7 +295,7 @@ CalculateUsedPaletteEntries(unsigned bit_count) {
 
 inline unsigned char *
 CalculateScanLine(unsigned char *bits, unsigned pitch, int scanline) {
-	return bits ? (bits + ((size_t)pitch * scanline)) : NULL;
+	return bits ? (bits + ((size_t)pitch * scanline)) : nullptr;
 }
 
 // ----------------------------------------------------------
@@ -307,35 +307,35 @@ Fast generic assign (faster than for loop)
 @param bytesperpixel # of bytes per pixel
 */
 inline void 
-AssignPixel(BYTE* dst, const BYTE* src, unsigned bytesperpixel) {
+AssignPixel(uint8_t* dst, const uint8_t* src, unsigned bytesperpixel) {
 	switch (bytesperpixel) {
 		case 1:	// FIT_BITMAP (8-bit)
 			*dst = *src;
 			break;
 
 		case 2: // FIT_UINT16 / FIT_INT16 / 16-bit
-			*(reinterpret_cast<WORD*>(dst)) = *(reinterpret_cast<const WORD*> (src));
+			*(reinterpret_cast<uint16_t*>(dst)) = *(reinterpret_cast<const uint16_t*> (src));
 			break;
 
 		case 3: // FIT_BITMAP (24-bit)
-			*(reinterpret_cast<WORD*>(dst)) = *(reinterpret_cast<const WORD*> (src));
+			*(reinterpret_cast<uint16_t*>(dst)) = *(reinterpret_cast<const uint16_t*> (src));
 			dst[2] = src[2];
 			break;
 
 		case 4: // FIT_BITMAP (32-bit) / FIT_UINT32 / FIT_INT32 / FIT_FLOAT
-			*(reinterpret_cast<DWORD*>(dst)) = *(reinterpret_cast<const DWORD*> (src));
+			*(reinterpret_cast<uint32_t*>(dst)) = *(reinterpret_cast<const uint32_t*> (src));
 			break;
 
 		case 6: // FIT_RGB16 (3 x 16-bit)
-			*(reinterpret_cast<DWORD*>(dst)) = *(reinterpret_cast<const DWORD*> (src));
-			*(reinterpret_cast<WORD*>(dst + 4)) = *(reinterpret_cast<const WORD*> (src + 4));	
+			*(reinterpret_cast<uint32_t*>(dst)) = *(reinterpret_cast<const uint32_t*> (src));
+			*(reinterpret_cast<uint16_t*>(dst + 4)) = *(reinterpret_cast<const uint16_t*> (src + 4));	
 			break;
 
 		// the rest can be speeded up with int64
 			
 		case 8: // FIT_RGBA16 (4 x 16-bit)
-			*(reinterpret_cast<DWORD*>(dst)) = *(reinterpret_cast<const DWORD*> (src));
-			*(reinterpret_cast<DWORD*>(dst + 4)) = *(reinterpret_cast<const DWORD*> (src + 4));	
+			*(reinterpret_cast<uint32_t*>(dst)) = *(reinterpret_cast<const uint32_t*> (src));
+			*(reinterpret_cast<uint32_t*>(dst + 4)) = *(reinterpret_cast<const uint32_t*> (src + 4));	
 			break;
 		
 		case 12: // FIT_RGBF (3 x 32-bit IEEE floating point)
@@ -396,39 +396,39 @@ void RotateExif(FIBITMAP **dib);
 //   Big Endian / Little Endian utility functions
 // ==========================================================
 
-inline WORD 
-__SwapUInt16(WORD arg) { 
+inline uint16_t 
+__SwapUInt16(uint16_t arg) { 
 #if defined(_MSC_VER) && _MSC_VER >= 1310 
 	return _byteswap_ushort(arg); 
 #elif defined(__i386__) && defined(__GNUC__) 
 	__asm__("xchgb %b0, %h0" : "+q" (arg)); 
 	return arg; 
 #elif defined(__ppc__) && defined(__GNUC__) 
-	WORD result; 
+	uint16_t result; 
 	__asm__("lhbrx %0,0,%1" : "=r" (result) : "r" (&arg), "m" (arg)); 
 	return result; 
 #else 
 	// swap bytes 
-	WORD result;
+	uint16_t result;
 	result = ((arg << 8) & 0xFF00) | ((arg >> 8) & 0x00FF); 
 	return result; 
 #endif 
 } 
  
-inline DWORD 
-__SwapUInt32(DWORD arg) { 
+inline uint32_t 
+__SwapUInt32(uint32_t arg) { 
 #if defined(_MSC_VER) && _MSC_VER >= 1310 
 	return _byteswap_ulong(arg); 
 #elif defined(__i386__) && defined(__GNUC__) 
 	__asm__("bswap %0" : "+r" (arg)); 
 	return arg; 
 #elif defined(__ppc__) && defined(__GNUC__) 
-	DWORD result; 
+	uint32_t result; 
 	__asm__("lwbrx %0,0,%1" : "=r" (result) : "r" (&arg), "m" (arg)); 
 	return result; 
 #else 
 	// swap words then bytes
-	DWORD result; 
+	uint32_t result; 
 	result = ((arg & 0x000000FF) << 24) | ((arg & 0x0000FF00) << 8) | ((arg >> 8) & 0x0000FF00) | ((arg >> 24) & 0x000000FF); 
 	return result; 
 #endif 
@@ -454,12 +454,12 @@ SwapInt64(uint64_t arg) {
 */
 
 inline void
-SwapShort(WORD *sp) {
+SwapShort(uint16_t *sp) {
 	*sp = __SwapUInt16(*sp);
 }
 
 inline void
-SwapLong(DWORD *lp) {
+SwapLong(uint32_t *lp) {
 	*lp = __SwapUInt32(*lp);
 }
 
@@ -477,12 +477,12 @@ A Standard Default Color Space for the Internet - sRGB.
 */
 #define LUMA_REC709(r, g, b)	(0.2126F * r + 0.7152F * g + 0.0722F * b)
 
-#define GREY(r, g, b) (BYTE)(LUMA_REC709(r, g, b) + 0.5F)
+#define GREY(r, g, b) (uint8_t)(LUMA_REC709(r, g, b) + 0.5F)
 /*
-#define GREY(r, g, b) (BYTE)(((WORD)r * 77 + (WORD)g * 150 + (WORD)b * 29) >> 8)	// .299R + .587G + .114B
+#define GREY(r, g, b) (uint8_t)(((uint16_t)r * 77 + (uint16_t)g * 150 + (uint16_t)b * 29) >> 8)	// .299R + .587G + .114B
 */
 /*
-#define GREY(r, g, b) (BYTE)(((WORD)r * 169 + (WORD)g * 256 + (WORD)b * 87) >> 9)	// .33R + 0.5G + .17B
+#define GREY(r, g, b) (uint8_t)(((uint16_t)r * 169 + (uint16_t)g * 256 + (uint16_t)b * 87) >> 9)	// .33R + 0.5G + .17B
 */
 
 #define RGB565(b, g, r) ((((b) >> 3) << FI16_565_BLUE_SHIFT) | (((g) >> 2) << FI16_565_GREEN_SHIFT) | (((r) >> 3) << FI16_565_RED_SHIFT))

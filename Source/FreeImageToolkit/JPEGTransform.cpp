@@ -150,7 +150,7 @@ getCropString(char* crop, int* left, int* top, int* right, int* bottom, int widt
 
 static BOOL
 JPEGTransformFromHandle(FreeImageIO* src_io, fi_handle src_handle, FreeImageIO* dst_io, fi_handle dst_handle, FREE_IMAGE_JPEG_OPERATION operation, int* left, int* top, int* right, int* bottom, BOOL perfect) {
-	const BOOL onlyReturnCropRect = (dst_io == NULL) || (dst_handle == NULL);
+	const BOOL onlyReturnCropRect = (dst_io == nullptr) || (dst_handle == nullptr);
 	const long stream_start = onlyReturnCropRect ? 0 : dst_io->tell_proc(dst_handle);
 	BOOL swappedDim = FALSE;
 	BOOL trimH = FALSE;
@@ -160,8 +160,8 @@ JPEGTransformFromHandle(FreeImageIO* src_io, fi_handle src_handle, FreeImageIO* 
 	jpeg_decompress_struct srcinfo;
 	jpeg_compress_struct dstinfo;
 	jpeg_error_mgr jsrcerr, jdsterr;
-	jvirt_barray_ptr *src_coef_arrays = NULL;
-	jvirt_barray_ptr *dst_coef_arrays = NULL;
+	jvirt_barray_ptr *src_coef_arrays = nullptr;
+	jvirt_barray_ptr *dst_coef_arrays = nullptr;
 	// Support for copying optional markers from source to destination file
 	JCOPY_OPTION copyoption;
 	// Image transformation options
@@ -383,16 +383,16 @@ closeStdIO(fi_handle src_handle, fi_handle dst_handle) {
 
 static BOOL
 openStdIO(const char* src_file, const char* dst_file, FreeImageIO* dst_io, fi_handle* src_handle, fi_handle* dst_handle) {
-	*src_handle = NULL;
-	*dst_handle = NULL;
+	*src_handle = nullptr;
+	*dst_handle = nullptr;
 	
 	FreeImageIO io;
 	SetDefaultIO (&io);
 	
 	const BOOL isSameFile = (dst_file && (strcmp(src_file, dst_file) == 0)) ? TRUE : FALSE;
 	
-	FILE* srcp = NULL;
-	FILE* dstp = NULL;
+	FILE* srcp = nullptr;
+	FILE* dstp = nullptr;
 	
 	if(isSameFile) {
 		srcp = fopen(src_file, "r+b");
@@ -432,16 +432,16 @@ static BOOL
 openStdIOU(const wchar_t* src_file, const wchar_t* dst_file, FreeImageIO* dst_io, fi_handle* src_handle, fi_handle* dst_handle) {
 #ifdef _WIN32
 
-	*src_handle = NULL;
-	*dst_handle = NULL;
+	*src_handle = nullptr;
+	*dst_handle = nullptr;
 
 	FreeImageIO io;
 	SetDefaultIO (&io);
 	
 	const BOOL isSameFile = (dst_file && (wcscmp(src_file, dst_file) == 0)) ? TRUE : FALSE;
 
-	FILE* srcp = NULL;
-	FILE* dstp = NULL;
+	FILE* srcp = nullptr;
+	FILE* dstp = nullptr;
 
 	if(isSameFile) {
 		srcp = _wfopen(src_file, L"r+b");
@@ -490,7 +490,7 @@ FreeImage_JPEGTransform(const char *src_file, const char *dst_file, FREE_IMAGE_J
 		return FALSE;
 	}
 	
-	BOOL ret = JPEGTransformFromHandle(&io, src, &io, dst, operation, NULL, NULL, NULL, NULL, perfect);
+	BOOL ret = JPEGTransformFromHandle(&io, src, &io, dst, operation, nullptr, nullptr, nullptr, nullptr, perfect);
 
 	closeStdIO(src, dst);
 
@@ -524,7 +524,7 @@ FreeImage_JPEGTransformU(const wchar_t *src_file, const wchar_t *dst_file, FREE_
 		return FALSE;
 	}
 	
-	BOOL ret = JPEGTransformFromHandle(&io, src, &io, dst, operation, NULL, NULL, NULL, NULL, perfect);
+	BOOL ret = JPEGTransformFromHandle(&io, src, &io, dst, operation, nullptr, nullptr, nullptr, nullptr, perfect);
 	
 	closeStdIO(src, dst);
 
@@ -586,8 +586,8 @@ FreeImage_JPEGTransformCombinedU(const wchar_t *src_file, const wchar_t *dst_fil
 
 static BOOL
 getMemIO(FIMEMORY* src_stream, FIMEMORY* dst_stream, FreeImageIO* dst_io, fi_handle* src_handle, fi_handle* dst_handle) {
-	*src_handle = NULL;
-	*dst_handle = NULL;
+	*src_handle = nullptr;
+	*dst_handle = nullptr;
 
 	FreeImageIO io;
 	SetMemoryIO (&io);

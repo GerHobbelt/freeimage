@@ -49,11 +49,11 @@ static int s_format_id;
 
 // read in and skip all junk until we find a certain char
 static BOOL
-FindChar(FreeImageIO *io, fi_handle handle, BYTE look_for) {
-	BYTE c;
-	io->read_proc(&c, sizeof(BYTE), 1, handle);
+FindChar(FreeImageIO *io, fi_handle handle, uint8_t look_for) {
+	uint8_t c;
+	io->read_proc(&c, sizeof(uint8_t), 1, handle);
 	while(c != look_for) {
-		if( io->read_proc(&c, sizeof(BYTE), 1, handle) != 1 )
+		if( io->read_proc(&c, sizeof(uint8_t), 1, handle) != 1 )
 			return FALSE;
 	}
 	return TRUE;
@@ -63,14 +63,14 @@ FindChar(FreeImageIO *io, fi_handle handle, BYTE look_for) {
 static char *
 ReadString(FreeImageIO *io, fi_handle handle) {
 	if( !FindChar(io, handle,'"') )
-		return NULL;
-	BYTE c;
+		return nullptr;
+	uint8_t c;
 	std::string s;
-	io->read_proc(&c, sizeof(BYTE), 1, handle);
+	io->read_proc(&c, sizeof(uint8_t), 1, handle);
 	while(c != '"') {
 		s += c;
-		if( io->read_proc(&c, sizeof(BYTE), 1, handle) != 1 )
-			return NULL;
+		if( io->read_proc(&c, sizeof(uint8_t), 1, handle) != 1 )
+			return nullptr;
 	}
 	char *cstr = (char *)malloc(s.length()+1);
 	strcpy(cstr,s.c_str());
@@ -156,9 +156,9 @@ SupportsNoPixels() {
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	char msg[256];
-    FIBITMAP *dib = NULL;
+    FIBITMAP *dib = nullptr;
 
-    if (!handle) return NULL;
+    if (!handle) return nullptr;
 
     try {
 		char *str;
@@ -243,9 +243,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						free(str);
 						throw "Improperly formed hex color value";
 					}
-					rgba.r = (BYTE)red;
-					rgba.g = (BYTE)green;
-					rgba.b = (BYTE)blue;
+					rgba.r = (uint8_t)red;
+					rgba.g = (uint8_t)green;
+					rgba.b = (uint8_t)blue;
 				} else if( !strncmp(clr,"None",4) || !strncmp(clr,"none",4) ) {
 					rgba.r = rgba.g = rgba.b = 0xFF;
 				} else {
@@ -255,7 +255,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					//this means its probably some other visual data beyond that point and not
 					//part of the color name.  How many named color end with a 1 or 2 character
 					//word? Probably none in our list at least.
-					while( (tmp = strchr(tmp,' ')) != NULL ) {
+					while( (tmp = strchr(tmp,' ')) != nullptr ) {
 						if( tmp[1] != ' ' ) {
 							if( (tmp[2] == ' ') || (tmp[2] != ' ' && tmp[3] == ' ') ) {
 								tmp[0] = '\0';
@@ -284,7 +284,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			}
 
 			//add color to map
-			rgba.a = (BYTE)((colors > 256) ? 0 : i);
+			rgba.a = (uint8_t)((colors > 256) ? 0 : i);
 			rawpal[chrs] = rgba;
 
 			//build palette if needed
@@ -306,7 +306,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		//read in pixel data
 		for(int y = 0; y < height; y++ ) {
-			BYTE *line = FreeImage_GetScanLine(dib, height - y - 1);
+			uint8_t *line = FreeImage_GetScanLine(dib, height - y - 1);
 			str = ReadString(io, handle);
 			if(!str)
 				throw "Error reading pixel strings";
@@ -338,16 +338,16 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	} catch(const char *text) {
        FreeImage_OutputMessageProc(s_format_id, text);
 
-       if( dib != NULL )
+       if( dib != nullptr )
            FreeImage_Unload(dib);
 
-       return NULL;
+       return nullptr;
     }
 }
 
 static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
-	if ((dib != NULL) && (handle != NULL)) {
+	if ((dib != nullptr) && (handle != nullptr)) {
 		char header[] = "/* XPM */\nstatic char *freeimage[] = {\n/* width height num_colors chars_per_pixel */\n\"",
 		start_colors[] = "\",\n/* colors */\n\"",
 		start_pixels[] = "\",\n/* pixels */\n\"",
@@ -363,18 +363,18 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 		int x,y;
 
 		//map base92 chrs to the rgb value to create the palette
-		std::map<DWORD,FILE_RGB> chrs2color;
+		std::map<uint32_t,FILE_RGB> chrs2color;
 		//map 8bpp index or 24bpp rgb value to the base92 chrs to create pixel data
 		typedef union {
-			DWORD index;
+			uint32_t index;
 			FILE_RGBA rgba;
 		} DWORDRGBA;
-		std::map<DWORD,std::string> color2chrs;
+		std::map<uint32_t,std::string> color2chrs;
 
 		//loop thru entire dib, if new color, inc num_colors and add to both maps
 		int num_colors = 0;
 		for(y = 0; y < height; y++ ) {
-			BYTE *line = FreeImage_GetScanLine(dib, height - y - 1);
+			uint8_t *line = FreeImage_GetScanLine(dib, height - y - 1);
 			for(x = 0; x < width; x++ ) {
 				FILE_RGB rgb;
 				DWORDRGBA u;
@@ -426,7 +426,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 		//write pixels, using map of rgb(if 24bpp) or index(if 8bpp)->chrs
 		for(y = 0; y < height; y++ ) {
-			BYTE *line = FreeImage_GetScanLine(dib, height - y - 1);
+			uint8_t *line = FreeImage_GetScanLine(dib, height - y - 1);
 			for(x = 0; x < width; x++ ) {
 				DWORDRGBA u;
 				if( bpp > 8 ) {
@@ -471,17 +471,17 @@ InitXPM(Plugin *plugin, int format_id)
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }
 

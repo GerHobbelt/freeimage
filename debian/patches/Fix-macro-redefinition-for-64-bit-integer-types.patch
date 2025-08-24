@@ -2,7 +2,7 @@ From: Debian QA Group <packages@qa.debian.org>
 Date: Fri, 6 Nov 2015 13:51:20 +0000
 Subject: Fix macro redefinition for 64-bit integer types.
 
-Both FreeImage and LibRAW defines INT64 and UINT64 aliases in their respective
+Both FreeImage and LibRAW defines int64_t and uint64_t aliases in their respective
 public headers via macros. This commit guards against macro redefinitions for
 these types inside the FreeImage.h public header.
 ---
@@ -13,13 +13,13 @@ diff --git a/Source/FreeImage.h b/Source/FreeImage.h
 index 94d817d..38910b8 100644
 --- a/Source/FreeImage.h
 +++ b/Source/FreeImage.h
-@@ -155,8 +155,10 @@ typedef uint8_t BYTE;
- typedef uint16_t WORD;
- typedef uint32_t DWORD;
- typedef int32_t LONG;
+@@ -155,8 +155,10 @@ typedef uint8_t uint8_t;
+ typedef uint16_t uint16_t;
+ typedef uint32_t uint32_t;
+ typedef int32_t int32_t;
 +#ifndef _LIBRAW_TYPES_H
- typedef int64_t INT64;
- typedef uint64_t UINT64;
+ typedef int64_t int64_t;
+ typedef uint64_t uint64_t;
 +#endif
  #else
  // MS is not C99 ISO compliant

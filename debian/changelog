@@ -204,7 +204,7 @@ freeimage (3.15.4-3) unstable; urgency=low
 
 freeimage (3.15.4-2) unstable; urgency=low
 
-  * Fix FTBFS from declaring UINT64 twice
+  * Fix FTBFS from declaring uint64_t twice
     - updated debian/patches/fixes_ftbfs_amd64.patch
 
  -- Scott Howard <showard@debian.org>  Tue, 14 Jan 2014 11:51:54 -0500

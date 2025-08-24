@@ -14,8 +14,8 @@ Origin: upstream, https://sourceforge.net/p/freeimage/svn/1670/
  @return Returns FALSE if a uncommon bit-depth is encountered, returns TRUE otherwise
  */
  static BOOL 
--IsValidBitsPerSample(uint16 photometric, uint16 bitspersample) {
-+IsValidBitsPerSample(uint16 photometric, uint16 bitspersample, uint16 samplesperpixel) {
+-IsValidBitsPerSample(uint16_t photometric, uint16_t bitspersample) {
++IsValidBitsPerSample(uint16_t photometric, uint16_t bitspersample, uint16_t samplesperpixel) {
  
  	switch(bitspersample) {
  		case 1:

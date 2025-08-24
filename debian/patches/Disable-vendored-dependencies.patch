@@ -132,7 +132,7 @@ index 0a083b4..cef145c 100644
  // ==========================================================
  //   Constant/Macro declarations
  // ==========================================================
-@@ -192,6 +191,7 @@ copyFaxFile(FreeImageIO *io, fi_handle handle, TIFF* tifin, uint32 xsize, int st
+@@ -192,6 +191,7 @@ copyFaxFile(FreeImageIO *io, fi_handle handle, TIFF* tifin, uint32_t xsize, int st
  
  	return (row);
  }
@@ -148,7 +148,7 @@ index 0a083b4..cef145c 100644
 +#if 0
  static FIBITMAP * DLL_CALLCONV
  Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
- 	TIFF *faxTIFF = NULL;
+ 	TIFF *faxTIFF = nullptr;
 @@ -406,6 +406,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
  	return dib;
  
@@ -158,13 +158,13 @@ index 0a083b4..cef145c 100644
  // ==========================================================
  //   Init
 @@ -423,7 +424,7 @@ InitG3(Plugin *plugin, int format_id) {
- 	plugin->close_proc = NULL;
- 	plugin->pagecount_proc = NULL;
- 	plugin->pagecapability_proc = NULL;
+ 	plugin->close_proc = nullptr;
+ 	plugin->pagecount_proc = nullptr;
+ 	plugin->pagecapability_proc = nullptr;
 -	plugin->load_proc = Load;
-+	plugin->load_proc = NULL;
- 	plugin->save_proc = NULL;
- 	plugin->validate_proc = NULL;
++	plugin->load_proc = nullptr;
+ 	plugin->save_proc = nullptr;
+ 	plugin->validate_proc = nullptr;
  	plugin->mime_proc = MimeType;
 diff --git a/Source/FreeImage/PluginJ2K.cpp b/Source/FreeImage/PluginJ2K.cpp
 index b8bcfc8..621a903 100644
@@ -301,12 +301,12 @@ index 3ab6d32..1a90904 100644
  
  /**
  Compresses a source buffer into a target buffer, using the ZLib library. 
-@@ -115,7 +114,7 @@ FreeImage_ZLibGZip(BYTE *target, DWORD target_size, BYTE *source, DWORD source_s
+@@ -115,7 +114,7 @@ FreeImage_ZLibGZip(uint8_t *target, uint32_t target_size, uint8_t *source, uint32_t source_s
  			return 0;
          case Z_OK: {
              // patch header, setup crc and length (stolen from mod_trace_output)
--            BYTE *p = target + 8; *p++ = 2; *p = OS_CODE; // xflags, os_code
-+            BYTE *p = target + 8; *p++ = 2; *p = 0x03; // xflags, os_code (unix)
+-            uint8_t *p = target + 8; *p++ = 2; *p = OS_CODE; // xflags, os_code
++            uint8_t *p = target + 8; *p++ = 2; *p = 0x03; // xflags, os_code (unix)
   	        crc = crc32(crc, source, source_size);
  	        memcpy(target + 4 + dest_len, &crc, 4);
  	        memcpy(target + 8 + dest_len, &source_size, 4);
@@ -338,7 +338,7 @@ index d5be902..c1519ca 100644
  //   TIFF EXIF tag reading & writing
  // ----------------------------------------------------------
  
-+static uint32 exif_tag_ids[] = {
++static uint32_t exif_tag_ids[] = {
 +  EXIFTAG_EXPOSURETIME, EXIFTAG_FNUMBER, EXIFTAG_EXPOSUREPROGRAM,
 +  EXIFTAG_SPECTRALSENSITIVITY, EXIFTAG_ISOSPEEDRATINGS, EXIFTAG_OECF,
 +  EXIFTAG_EXIFVERSION, EXIFTAG_DATETIMEORIGINAL, EXIFTAG_DATETIMEDIGITIZED,
@@ -376,12 +376,12 @@ index d5be902..c1519ca 100644
  	if(md_model == TagLib::EXIF_MAIN) {
 -		const TIFFDirectory *td = &tif->tif_dir;
 -
--		uint32 lastTag = 0;	//<- used to prevent reading some tags twice (as stored in tif_fieldinfo)
+-		uint32_t lastTag = 0;	//<- used to prevent reading some tags twice (as stored in tif_fieldinfo)
 -
 -		for (int fi = 0, nfi = (int)tif->tif_nfields; nfi > 0; nfi--, fi++) {
 -			const TIFFField *fld = tif->tif_fields[fi];
 -
--			const uint32 tag_id = TIFFFieldTag(fld);
+-			const uint32_t tag_id = TIFFFieldTag(fld);
 -
 -			if(tag_id == lastTag) {
 -				continue;
@@ -422,9 +422,9 @@ index d5be902..c1519ca 100644
 -	for (int fi = 0, nfi = (int)tif->tif_nfields; nfi > 0; nfi--, fi++) {
 -		const TIFFField *fld = tif->tif_fields[fi];
 -		
--		const uint32 tag_id = TIFFFieldTag(fld);
+-		const uint32_t tag_id = TIFFFieldTag(fld);
 +	for (int fi = 0, nfi = nExifTags; nfi > 0; nfi--, fi++) {
-+		const uint32 tag_id = exif_tag_ids[fi];
++		const uint32_t tag_id = exif_tag_ids[fi];
 +		const TIFFField *fld = TIFFFieldWithTag(tif, tag_id);
  
  		if(skip_write_field(tif, tag_id)) {

@@ -30,7 +30,7 @@ When both parameters are set to zero, a default set of parameters is used.
 @param tmo Tone mapping operator
 @param first_param First parameter of the algorithm
 @param second_param Second parameter of the algorithm
-return Returns a 24-bit tone mapped image if successful, returns NULL otherwise
+return Returns a 24-bit tone mapped image if successful, returns nullptr otherwise
 */ 
 FIBITMAP * DLL_CALLCONV
 FreeImage_ToneMapping(FIBITMAP *dib, FREE_IMAGE_TMO tmo, double first_param, double second_param) {
@@ -69,7 +69,7 @@ FreeImage_ToneMapping(FIBITMAP *dib, FREE_IMAGE_TMO tmo, double first_param, dou
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
