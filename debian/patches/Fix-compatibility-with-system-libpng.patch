@@ -23,10 +23,10 @@ Index: FreeImage/Source/FreeImage/PluginPNG.cpp
  			if(!tag) return FALSE;
 -
 +#ifdef PNG_iTXt_SUPPORTED
- 			DWORD tag_length = (DWORD) MAX(text_ptr[i].text_length, text_ptr[i].itxt_length);
+ 			uint32_t tag_length = (uint32_t) MAX(text_ptr[i].text_length, text_ptr[i].itxt_length);
 -
 +#else
-+			DWORD tag_length = text_ptr[i].text_length;
++			uint32_t tag_length = text_ptr[i].text_length;
 +#endif
  			FreeImage_SetTagLength(tag, tag_length);
  			FreeImage_SetTagCount(tag, tag_length);
@@ -45,8 +45,8 @@ Index: FreeImage/Source/FreeImage/PluginPNG.cpp
  			text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
 +#ifdef PNG_iTXt_SUPPORTED
  			text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
- 			text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
- 			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
+ 			text_metadata.lang = 0;		 // language code, 0-79 characters or a nullptr pointer
+ 			text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a nullptr pointer
 -
 +#endif
  			// set the tag 
@@ -58,8 +58,8 @@ Index: FreeImage/Source/FreeImage/PluginPNG.cpp
  		text_metadata.text_length = FreeImage_GetTagLength(tag);// length of the text string
 +#ifdef PNG_iTXt_SUPPORTED
  		text_metadata.itxt_length = FreeImage_GetTagLength(tag);// length of the itxt string
- 		text_metadata.lang = 0;		 // language code, 0-79 characters or a NULL pointer
- 		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a NULL pointer
+ 		text_metadata.lang = 0;		 // language code, 0-79 characters or a nullptr pointer
+ 		text_metadata.lang_key = 0;	 // keyword translated UTF-8 string, 0 or more chars or a nullptr pointer
 -
 +#endif
  		// set the tag 
@@ -68,12 +68,12 @@ Index: FreeImage/Source/FreeImage/PluginPNG.cpp
 @@ -707,11 +715,19 @@ Load(FreeImageIO *io, fi_handle handle,
  
  			if (png_get_valid(png_ptr, info_ptr, PNG_INFO_iCCP)) {
- 				png_charp profile_name = NULL;
--				png_bytep profile_data = NULL;
+ 				png_charp profile_name = nullptr;
+-				png_bytep profile_data = nullptr;
 +#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
-+				png_bytepp profile_data = NULL;
++				png_bytepp profile_data = nullptr;
 +#else
-+				png_charp profile_data = NULL;
++				png_charp profile_data = nullptr;
 +#endif
  				png_uint_32 profile_length = 0;
  				int  compression_type;

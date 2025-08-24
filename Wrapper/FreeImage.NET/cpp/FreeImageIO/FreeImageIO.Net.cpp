@@ -33,7 +33,7 @@ extern "C" static unsigned __stdcall ReadProc (void *buffer, unsigned size, unsi
 		total_read = puh->_stream->Read(mbuffer,0,size);
 		Marshal::Copy(mbuffer,0,buffer,total_read);
 	} __finally {
-		mbuffer=NULL;
+		mbuffer=nullptr;
 	}		
 	return (unsigned)total_read;
 }
@@ -49,7 +49,7 @@ extern "C" static unsigned __stdcall WriteProc (void *buffer, unsigned size, uns
 		memcpy(pbuffer,buffer,size*count);
 		puh->_stream->Write(mbuffer,0,size);			
 	} __finally {
-		mbuffer=NULL;
+		mbuffer=nullptr;
 	}		
 	return count;
 }

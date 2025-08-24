@@ -43,7 +43,7 @@ Read the whole file into memory
 */
 static BOOL
 ReadFileToWebPData(FreeImageIO *io, fi_handle handle, WebPData * const bitstream) {
-  uint8_t *raw_data = NULL;
+  uint8_t *raw_data = nullptr;
 
   try {
 	  // Read the input file and put it in memory
@@ -70,7 +70,7 @@ ReadFileToWebPData(FreeImageIO *io, fi_handle handle, WebPData * const bitstream
 		  free(raw_data);
 	  }
 	  memset(bitstream, 0, sizeof(WebPData));
-	  if(NULL != text) {
+	  if(nullptr != text) {
 		  FreeImage_OutputMessageProc(s_format_id, text);
 	  }
 	  return FALSE;
@@ -87,7 +87,7 @@ data/data_size is the segment of data to write, and 'picture' is for
 reference (and so one can make use of picture->custom_ptr).
 */
 static int 
-WebP_MemoryWriter(const BYTE *data, size_t data_size, const WebPPicture* const picture) {
+WebP_MemoryWriter(const uint8_t *data, size_t data_size, const WebPPicture* const picture) {
 	FIMEMORY *hmem = (FIMEMORY*)picture->custom_ptr;
 	return data_size ? (FreeImage_WriteMemory(data, 1, (unsigned)data_size, hmem) == data_size) : 0;
 }
@@ -113,7 +113,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -123,9 +123,9 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE riff_signature[4] = { 0x52, 0x49, 0x46, 0x46 };
-	BYTE webp_signature[4] = { 0x57, 0x45, 0x42, 0x50 };
-	BYTE signature[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	uint8_t riff_signature[4] = { 0x52, 0x49, 0x46, 0x46 };
+	uint8_t webp_signature[4] = { 0x57, 0x45, 0x42, 0x50 };
+	uint8_t signature[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	io->read_proc(signature, 1, 12, handle);
 
@@ -165,7 +165,7 @@ SupportsNoPixels() {
 
 static void * DLL_CALLCONV
 Open(FreeImageIO *io, fi_handle handle, BOOL read) {
-	WebPMux *mux = NULL;
+	WebPMux *mux = nullptr;
 	int copy_data = 1;	// 1 : copy data into the mux, 0 : keep a link to local data
 
 	if(read) {
@@ -173,22 +173,22 @@ Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 		WebPData bitstream;
 		// read the input file and put it in memory
 		if(!ReadFileToWebPData(io, handle, &bitstream)) {
-			return NULL;
+			return nullptr;
 		}
 		// create the MUX object
 		mux = WebPMuxCreate(&bitstream, copy_data);
 		// no longer needed since copy_data == 1
 		free((void*)bitstream.bytes);
-		if(mux == NULL) {
+		if(mux == nullptr) {
 			FreeImage_OutputMessageProc(s_format_id, "Failed to create mux object from file");
-			return NULL;
+			return nullptr;
 		}
 	} else {
 		// creates an empty mux object
 		mux = WebPMuxNew();
-		if(mux == NULL) {
+		if(mux == nullptr) {
 			FreeImage_OutputMessageProc(s_format_id, "Failed to create empty mux object");
-			return NULL;
+			return nullptr;
 		}
 	}
 	
@@ -198,7 +198,7 @@ Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 static void DLL_CALLCONV
 Close(FreeImageIO *io, fi_handle handle, void *data) {
 	WebPMux *mux = (WebPMux*)data;
-	if(mux != NULL) {
+	if(mux != nullptr) {
 		// free the MUX object
 		WebPMuxDelete(mux);
 	}
@@ -210,11 +210,11 @@ Close(FreeImageIO *io, fi_handle handle, void *data) {
 Decode a WebP image and returns a FIBITMAP image
 @param webp_image Raw WebP image
 @param flags FreeImage load flags
-@return Returns a dib if successfull, returns NULL otherwise
+@return Returns a dib if successfull, returns nullptr otherwise
 */
 static FIBITMAP *
 DecodeImage(WebPData *webp_image, int flags) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	const uint8_t* data = webp_image->bytes;	// raw image data
 	const size_t data_size = webp_image->size;	// raw image size
@@ -278,14 +278,14 @@ DecodeImage(WebPData *webp_image, int flags) {
 
 		// fill the dib with the decoded data
 
-		const BYTE *src_bitmap = output_buffer->u.RGBA.rgba;
+		const uint8_t *src_bitmap = output_buffer->u.RGBA.rgba;
 		const unsigned src_pitch = (unsigned)output_buffer->u.RGBA.stride;
 
 		switch(bpp) {
 			case 24:
 				for(unsigned y = 0; y < height; y++) {
-					const BYTE *src_bits = src_bitmap + y * src_pitch;						
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, height-1-y);
+					const uint8_t *src_bits = src_bitmap + y * src_pitch;						
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, height-1-y);
 					for(unsigned x = 0; x < width; x++) {
 						dst_bits[FI_RGBA_BLUE]	= src_bits[0];	// B
 						dst_bits[FI_RGBA_GREEN]	= src_bits[1];	// G
@@ -297,8 +297,8 @@ DecodeImage(WebPData *webp_image, int flags) {
 				break;
 			case 32:
 				for(unsigned y = 0; y < height; y++) {
-					const BYTE *src_bits = src_bitmap + y * src_pitch;						
-					BYTE *dst_bits = (BYTE*)FreeImage_GetScanLine(dib, height-1-y);
+					const uint8_t *src_bits = src_bitmap + y * src_pitch;						
+					uint8_t *dst_bits = (uint8_t*)FreeImage_GetScanLine(dib, height-1-y);
 					for(unsigned x = 0; x < width; x++) {
 						dst_bits[FI_RGBA_BLUE]	= src_bits[0];	// B
 						dst_bits[FI_RGBA_GREEN]	= src_bits[1];	// G
@@ -322,26 +322,26 @@ DecodeImage(WebPData *webp_image, int flags) {
 		}
 		WebPFreeDecBuffer(output_buffer);
 
-		if(NULL != text) {
+		if(nullptr != text) {
 			FreeImage_OutputMessageProc(s_format_id, text);
 		}
 
-		return NULL;
+		return nullptr;
 	}
 }
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	WebPMux *mux = NULL;
+	WebPMux *mux = nullptr;
 	WebPMuxFrameInfo webp_frame = { 0 };	// raw image
 	WebPData color_profile;	// ICC raw data
 	WebPData xmp_metadata;	// XMP raw data
 	WebPData exif_metadata;	// EXIF raw data
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 	WebPMuxError error_status;
 
 	if(!handle) {
-		return NULL;
+		return nullptr;
 	}
 
 	try {
@@ -384,8 +384,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					FITAG *tag = FreeImage_CreateTag();
 					if(tag) {
 						FreeImage_SetTagKey(tag, g_TagLib_XMPFieldName);
-						FreeImage_SetTagLength(tag, (DWORD)xmp_metadata.size);
-						FreeImage_SetTagCount(tag, (DWORD)xmp_metadata.size);
+						FreeImage_SetTagLength(tag, (uint32_t)xmp_metadata.size);
+						FreeImage_SetTagCount(tag, (uint32_t)xmp_metadata.size);
 						FreeImage_SetTagType(tag, FIDT_ASCII);
 						FreeImage_SetTagValue(tag, xmp_metadata.bytes);
 						
@@ -416,7 +416,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 	} catch(int) {
 		WebPDataClear(&webp_frame.bitstream);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -500,7 +500,7 @@ EncodeImage(FIMEMORY *hmem, FIBITMAP *dib, int flags) {
 
 		// convert dib buffer to output stream
 
-		const BYTE *bits = FreeImage_GetBits(dib);
+		const uint8_t *bits = FreeImage_GetBits(dib);
 
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
 		switch(bpp) {
@@ -545,7 +545,7 @@ EncodeImage(FIMEMORY *hmem, FIBITMAP *dib, int flags) {
 			FreeImage_FlipVertical(dib);
 		}
 
-		if(NULL != text) {
+		if(nullptr != text) {
 			FreeImage_OutputMessageProc(s_format_id, text);
 		}
 	}
@@ -555,8 +555,8 @@ EncodeImage(FIMEMORY *hmem, FIBITMAP *dib, int flags) {
 
 static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
-	WebPMux *mux = NULL;
-	FIMEMORY *hmem = NULL;
+	WebPMux *mux = nullptr;
+	FIMEMORY *hmem = nullptr;
 	WebPData webp_image;
 	WebPData output_data = { 0 };
 	WebPMuxError error_status;
@@ -583,15 +583,15 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 			throw (1);
 		}
 		// store the blob into the mux
-		BYTE *data = NULL;
-		DWORD data_size = 0;
+		uint8_t *data = nullptr;
+		uint32_t data_size = 0;
 		FreeImage_AcquireMemory(hmem, &data, &data_size);
 		webp_image.bytes = data;
 		webp_image.size = data_size;
 		error_status = WebPMuxSetImage(mux, &webp_image, copy_data);
 		// no longer needed since copy_data == 1
 		FreeImage_CloseMemory(hmem);
-		hmem = NULL;
+		hmem = nullptr;
 		if(error_status != WEBP_MUX_OK) {
 			throw (1);
 		}
@@ -614,7 +614,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 		// set XMP metadata
 		{
-			FITAG *tag = NULL;
+			FITAG *tag = nullptr;
 			if(FreeImage_GetMetadata(FIMD_XMP, dib, g_TagLib_XMPFieldName, &tag)) {
 				WebPData xmp_profile;
 				xmp_profile.bytes = (uint8_t*)FreeImage_GetTagValue(tag);
@@ -628,7 +628,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void
 
 		// set Exif metadata
 		{
-			FITAG *tag = NULL;
+			FITAG *tag = nullptr;
 			if(FreeImage_GetMetadata(FIMD_EXIF_RAW, dib, g_TagLib_ExifRawFieldName, &tag)) {
 				WebPData exif_profile;
 				exif_profile.bytes = (uint8_t*)FreeImage_GetTagValue(tag);
@@ -683,8 +683,8 @@ InitWEBP(Plugin *plugin, int format_id) {
 	plugin->regexpr_proc = RegExpr;
 	plugin->open_proc = Open;
 	plugin->close_proc = Close;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
 	plugin->save_proc = Save;
 	plugin->validate_proc = Validate;
