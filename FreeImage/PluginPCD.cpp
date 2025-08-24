@@ -87,7 +87,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -162,10 +162,10 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 	// temporary stuff to load PCD
 
-	BYTE *y1   = new BYTE[width];
-	BYTE *y2   = new BYTE[width];
-	BYTE *cbcr = new BYTE[width];
-	BYTE *yl[] = { y1, y2 };
+	uint8_t *y1   = new uint8_t[width];
+	uint8_t *y2   = new uint8_t[width];
+	uint8_t *cbcr = new uint8_t[width];
+	uint8_t *yl[] = { y1, y2 };
 
 	// seek to the part where the bitmap data begins
 
@@ -180,15 +180,15 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		io->read_proc(cbcr, width, 1, handle);
 
 		for (int i = 0; i < 2; ++i) {
-			BYTE *img = FreeImage_GetScanLine(dib, start_scan_line);
+			uint8_t *img = FreeImage_GetScanLine(dib, start_scan_line);
 			for (int x = 0; x < width; ++x) {
 				int r, g, b;
 
 				YUV2RGB(yl[i][x], cbcr[x / 2], cbcr[(width / 2) + (x / 2)], r, g, b);
 
-				img[FI_RGBA_BLUE]  = (BYTE)b;
-				img[FI_RGBA_GREEN] = (BYTE)g;
-				img[FI_RGBA_RED]   = (BYTE)r;
+				img[FI_RGBA_BLUE]  = (uint8_t)b;
+				img[FI_RGBA_GREEN] = (uint8_t)g;
+				img[FI_RGBA_RED]   = (uint8_t)r;
 				img += 3;
 			}
 
@@ -215,15 +215,15 @@ InitPCD(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
-	plugin->validate_proc = NULL;
+	plugin->save_proc = nullptr;
+	plugin->validate_proc = nullptr;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

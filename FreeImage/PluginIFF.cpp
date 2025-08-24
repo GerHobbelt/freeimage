@@ -36,15 +36,15 @@
 #endif
 
 typedef struct {
-    WORD w, h;                    /* raster width & height in pixels */
-    WORD x, y;                    /* position for this image */
-    BYTE nPlanes;                 /* # source bitplanes */
-    BYTE masking;                 /* masking technique */
-    BYTE compression;             /* compression algorithm */
-    BYTE pad1;                    /* UNUSED.  For consistency, put 0 here.*/
-    WORD transparentColor;        /* transparent "color number" */
-    BYTE xAspect, yAspect;        /* aspect ratio, a rational number x/y */
-    WORD pageWidth, pageHeight;   /* source "page" size in pixels */
+    uint16_t w, h;                    /* raster width & height in pixels */
+    uint16_t x, y;                    /* position for this image */
+    uint8_t nPlanes;                 /* # source bitplanes */
+    uint8_t masking;                 /* masking technique */
+    uint8_t compression;             /* compression algorithm */
+    uint8_t pad1;                    /* UNUSED.  For consistency, put 0 here.*/
+    uint16_t transparentColor;        /* transparent "color number" */
+    uint8_t xAspect, yAspect;        /* aspect ratio, a rational number x/y */
+    uint16_t pageWidth, pageHeight;   /* source "page" size in pixels */
 } BMHD;
 
 #ifdef _WIN32
@@ -70,7 +70,7 @@ SwapHeader(BMHD *header) {
 
 /* IFF chunk IDs */
 
-typedef DWORD IFF_ID;
+typedef uint32_t IFF_ID;
 
 #define MAKE_ID(a, b, c, d)         ((IFF_ID)(a)<<24 | (IFF_ID)(b)<<16 | (IFF_ID)(c)<<8 | (IFF_ID)(d))
 
@@ -148,7 +148,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -158,7 +158,7 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	DWORD type = 0;
+	uint32_t type = 0;
 
 	// read chunk type
 	io->read_proc(&type, 4, 1, handle);
@@ -197,10 +197,10 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	if (handle != NULL) {
-		FIBITMAP *dib = NULL;
+	if (handle != nullptr) {
+		FIBITMAP *dib = nullptr;
 
-		DWORD type, size;
+		uint32_t type, size;
 
 		io->read_proc(&type, 4, 1, handle);
 #ifndef FREEIMAGE_BIGENDIAN
@@ -208,7 +208,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #endif
 
 		if(type != ID_FORM)
-			return NULL;
+			return nullptr;
 
 		io->read_proc(&size, 4, 1, handle);
 #ifndef FREEIMAGE_BIGENDIAN
@@ -221,14 +221,14 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #endif
 
 		if((type != ID_ILBM) && (type != ID_PBM))
-			return NULL;
+			return nullptr;
 
 		size -= 4;
 
 		unsigned width = 0, height = 0, planes = 0, depth = 0, comp = 0;
 
 		while (size) {
-			DWORD ch_type,ch_size;
+			uint32_t ch_type,ch_size;
 
 			io->read_proc(&ch_type, 4, 1, handle);
 #ifndef FREEIMAGE_BIGENDIAN
@@ -262,7 +262,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					planes++;	// there is a mask ( 'stencil' )
 
 				if (planes > 8 && planes != 24)
-					return NULL;
+					return nullptr;
 
 				depth = planes > 8 ? 24 : 8;
 
@@ -273,7 +273,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				}
 			} else if (ch_type == ID_CMAP) {	// Palette (Color Map)
 				if (!dib)
-					return NULL;
+					return nullptr;
 
 				RGBQUAD *pal = FreeImage_GetPalette(dib);
 
@@ -284,7 +284,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				}
 			} else if (ch_type == ID_BODY) {
 				if (!dib)
-					return NULL;
+					return nullptr;
 
 				if (type == ID_PBM) {
 					// NON INTERLACED (LBM)
@@ -292,14 +292,14 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					unsigned line = FreeImage_GetLine(dib) + 1 & ~1;
 					
 					for (unsigned i = 0; i < FreeImage_GetHeight(dib); i++) {
-						BYTE *bits = FreeImage_GetScanLine(dib, FreeImage_GetHeight(dib) - i - 1);
+						uint8_t *bits = FreeImage_GetScanLine(dib, FreeImage_GetHeight(dib) - i - 1);
 
 						if (comp == 1) {
 							// use RLE compression
 
-							DWORD number_of_bytes_written = 0;
-							BYTE rle_count;
-							BYTE byte;
+							uint32_t number_of_bytes_written = 0;
+							uint8_t rle_count;
+							uint8_t byte;
 
 							while (number_of_bytes_written < line) {
 								io->read_proc(&rle_count, 1, 1, handle);
@@ -333,8 +333,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					unsigned n_width=(width+15)&~15;
 					unsigned plane_size = n_width/8;
 					unsigned src_size = plane_size * planes;
-					BYTE *src = (BYTE*)malloc(src_size);
-					BYTE *dest = FreeImage_GetBits(dib);
+					uint8_t *src = (uint8_t*)malloc(src_size);
+					uint8_t *dest = FreeImage_GetBits(dib);
 
 					dest += FreeImage_GetPitch(dib) * height;
 
@@ -367,7 +367,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 									}
 								} else if (t != -128) {
 									// t = [-1..-127]  => replicate the next byte -t+1 times
-									BYTE b = 0;
+									uint8_t b = 0;
 									io->read_proc(&b, 1, 1, handle);
 									unsigned size_to_copy = (unsigned)(-(int)t + 1);
 
@@ -391,7 +391,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 						for (unsigned x = 0; x < width; x++) {
 							for (unsigned n = 0; n < planes; n++) {
-								BYTE bit = (BYTE)( src[n * plane_size + (x / 8)] >> ((x^7) & 7) );
+								uint8_t bit = (uint8_t)( src[n * plane_size + (x / 8)] >> ((x^7) & 7) );
 
 								dest[x * pixel_size + (n / 8)] |= (bit & 1) << (n & 7);
 							}
@@ -443,15 +443,15 @@ InitIFF(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
+	plugin->save_proc = nullptr;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

@@ -37,7 +37,7 @@ public:
 template<class Tdst, class Tsrc> FIBITMAP* 
 CONVERT_TYPE<Tdst, Tsrc>::convert(FIBITMAP *src, FREE_IMAGE_TYPE dst_type) {
 
-	FIBITMAP *dst = NULL;
+	FIBITMAP *dst = nullptr;
 
 	unsigned width	= FreeImage_GetWidth(src);
 	unsigned height = FreeImage_GetHeight(src);
@@ -47,7 +47,7 @@ CONVERT_TYPE<Tdst, Tsrc>::convert(FIBITMAP *src, FREE_IMAGE_TYPE dst_type) {
 
 	dst = FreeImage_AllocateT(dst_type, width, height, bpp, 
 			FreeImage_GetRedMask(src), FreeImage_GetGreenMask(src), FreeImage_GetBlueMask(src));
-	if(!dst) return NULL;
+	if(!dst) return nullptr;
 
 	// convert from src_type to dst_type
 	
@@ -66,7 +66,7 @@ CONVERT_TYPE<Tdst, Tsrc>::convert(FIBITMAP *src, FREE_IMAGE_TYPE dst_type) {
 
 /** Convert a greyscale image of type Tsrc to a 8-bit grayscale dib.
 	Conversion is done using either a linear scaling from [min, max] to [0, 255]
-	or a rounding from src_pixel to (BYTE) MIN(255, MAX(0, q)) where int q = int(src_pixel + 0.5); 
+	or a rounding from src_pixel to (uint8_t) MIN(255, MAX(0, q)) where int q = int(src_pixel + 0.5); 
 */
 template<class Tsrc>
 class CONVERT_TO_BYTE
@@ -77,7 +77,7 @@ public:
 
 template<class Tsrc> FIBITMAP* 
 CONVERT_TO_BYTE<Tsrc>::convert(FIBITMAP *src, BOOL scale_linear) {
-	FIBITMAP *dst = NULL;
+	FIBITMAP *dst = nullptr;
 	unsigned x, y;
 
 	unsigned width	= FreeImage_GetWidth(src);
@@ -86,14 +86,14 @@ CONVERT_TO_BYTE<Tsrc>::convert(FIBITMAP *src, BOOL scale_linear) {
 	// allocate a 8-bit dib
 
 	dst = FreeImage_AllocateT(FIT_BITMAP, width, height, 8, 0, 0, 0);
-	if(!dst) return NULL;
+	if(!dst) return nullptr;
 
 	// build a greyscale palette
 	RGBQUAD *pal = FreeImage_GetPalette(dst);
 	for(int i = 0; i < 256; i++) {
-		pal[i].rgbRed = (BYTE)i;
-		pal[i].rgbGreen = (BYTE)i;
-		pal[i].rgbBlue = (BYTE)i;
+		pal[i].rgbRed = (uint8_t)i;
+		pal[i].rgbGreen = (uint8_t)i;
+		pal[i].rgbBlue = (uint8_t)i;
 	}
 
 	// convert the src image to dst
@@ -121,19 +121,19 @@ CONVERT_TO_BYTE<Tsrc>::convert(FIBITMAP *src, BOOL scale_linear) {
 		// scale to 8-bit
 		for(y = 0; y < height; y++) {
 			Tsrc *src_bits = reinterpret_cast<Tsrc*>(FreeImage_GetScanLine(src, y));
-			BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
+			uint8_t *dst_bits = FreeImage_GetScanLine(dst, y);
 			for(x = 0; x < width; x++) {
-				dst_bits[x] = (BYTE)( scale * (src_bits[x] - min) + 0.5);
+				dst_bits[x] = (uint8_t)( scale * (src_bits[x] - min) + 0.5);
 			}
 		}
 	} else {
 		for(y = 0; y < height; y++) {
 			Tsrc *src_bits = reinterpret_cast<Tsrc*>(FreeImage_GetScanLine(src, y));
-			BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
+			uint8_t *dst_bits = FreeImage_GetScanLine(dst, y);
 			for(x = 0; x < width; x++) {
 				// rounding
 				int q = int(src_bits[x] + 0.5);
-				dst_bits[x] = (BYTE) MIN(255, MAX(0, q));
+				dst_bits[x] = (uint8_t) MIN(255, MAX(0, q));
 			}
 		}
 	}
@@ -152,7 +152,7 @@ public:
 
 template<class Tsrc> FIBITMAP* 
 CONVERT_TO_COMPLEX<Tsrc>::convert(FIBITMAP *src) {
-	FIBITMAP *dst = NULL;
+	FIBITMAP *dst = nullptr;
 
 	unsigned width	= FreeImage_GetWidth(src);
 	unsigned height = FreeImage_GetHeight(src);
@@ -160,7 +160,7 @@ CONVERT_TO_COMPLEX<Tsrc>::convert(FIBITMAP *src) {
 	// allocate dst image
 
 	dst = FreeImage_AllocateT(FIT_COMPLEX, width, height);
-	if(!dst) return NULL;
+	if(!dst) return nullptr;
 
 	// convert from src_type to FIT_COMPLEX
 	
@@ -179,15 +179,15 @@ CONVERT_TO_COMPLEX<Tsrc>::convert(FIBITMAP *src) {
 
 // ----------------------------------------------------------
 
-// Convert from type BYTE to type X
-CONVERT_TYPE<unsigned short, BYTE>	convertByteToUShort;
-CONVERT_TYPE<short, BYTE>			convertByteToShort;
-CONVERT_TYPE<unsigned long, BYTE>	convertByteToULong;
-CONVERT_TYPE<long, BYTE>			convertByteToLong;
-CONVERT_TYPE<float, BYTE>			convertByteToFloat;
-CONVERT_TYPE<double, BYTE>			convertByteToDouble;
+// Convert from type uint8_t to type X
+CONVERT_TYPE<unsigned short, uint8_t>	convertByteToUShort;
+CONVERT_TYPE<short, uint8_t>			convertByteToShort;
+CONVERT_TYPE<unsigned long, uint8_t>	convertByteToULong;
+CONVERT_TYPE<long, uint8_t>			convertByteToLong;
+CONVERT_TYPE<float, uint8_t>			convertByteToFloat;
+CONVERT_TYPE<double, uint8_t>			convertByteToDouble;
 
-// Convert from type X to type BYTE
+// Convert from type X to type uint8_t
 CONVERT_TO_BYTE<unsigned short>	convertUShortToByte;
 CONVERT_TO_BYTE<short>			convertShortToByte;
 CONVERT_TO_BYTE<unsigned long>	convertULongToByte;
@@ -209,7 +209,7 @@ CONVERT_TYPE<double, long>				convertLongToDouble;
 CONVERT_TYPE<double, float>				convertFloatToDouble;
 
 // Convert from type X to type FICOMPLEX
-CONVERT_TO_COMPLEX<BYTE>			convertByteToComplex;
+CONVERT_TO_COMPLEX<uint8_t>			convertByteToComplex;
 CONVERT_TO_COMPLEX<unsigned short>	convertUShortToComplex;
 CONVERT_TO_COMPLEX<short>			convertShortToComplex;
 CONVERT_TO_COMPLEX<unsigned long>	convertULongToComplex;
@@ -234,9 +234,9 @@ For complex images, the magnitude is extracted as a double image, then converted
 */
 FIBITMAP* DLL_CALLCONV
 FreeImage_ConvertToStandardType(FIBITMAP *src, BOOL scale_linear) {
-	FIBITMAP *dst = NULL;
+	FIBITMAP *dst = nullptr;
 
-	if(!src) return NULL;
+	if(!src) return nullptr;
 
 	// convert from src_type to FIT_BITMAP
 
@@ -286,7 +286,7 @@ FreeImage_ConvertToStandardType(FIBITMAP *src, BOOL scale_linear) {
 			break;
 	}
 
-	if(NULL == dst) {
+	if(nullptr == dst) {
 		FreeImage_OutputMessageProc(FIF_UNKNOWN, "FREE_IMAGE_TYPE: Unable to convert from type %d to type %d.\n No such conversion exists.", src_type, FIT_BITMAP);
 	} else {
 		// copy metadata from src to dst
@@ -304,9 +304,9 @@ FreeImage_ConvertToStandardType(FIBITMAP *src, BOOL scale_linear) {
 
 FIBITMAP* DLL_CALLCONV
 FreeImage_ConvertToType(FIBITMAP *src, FREE_IMAGE_TYPE dst_type, BOOL scale_linear) {
-	FIBITMAP *dst = NULL;
+	FIBITMAP *dst = nullptr;
 
-	if(!src) return NULL;
+	if(!src) return nullptr;
 
 	// convert from src_type to dst_type
 
@@ -319,11 +319,11 @@ FreeImage_ConvertToType(FIBITMAP *src, FREE_IMAGE_TYPE dst_type, BOOL scale_line
 		const unsigned src_bpp = FreeImage_GetBPP(src);
 		if(((src_bpp == 24) || (src_bpp == 32)) && (dst_type != FIT_RGBF)) {
 			FreeImage_OutputMessageProc(FIF_UNKNOWN, "FREE_IMAGE_TYPE: Only 24-/32-bit dib can be converted to type %d.", dst_type);
-			return NULL;
+			return nullptr;
 		}
 		else if(src_bpp != 8) {
 			FreeImage_OutputMessageProc(FIF_UNKNOWN, "FREE_IMAGE_TYPE: Only 8-bit dib can be converted to type %d.", dst_type);
-			return NULL;
+			return nullptr;
 		}
 	}
 
@@ -676,7 +676,7 @@ FreeImage_ConvertToType(FIBITMAP *src, FREE_IMAGE_TYPE dst_type, BOOL scale_line
 			break;
 	}
 
-	if(NULL == dst) {
+	if(nullptr == dst) {
 		FreeImage_OutputMessageProc(FIF_UNKNOWN, "FREE_IMAGE_TYPE: Unable to convert from type %d to type %d.\n No such conversion exists.", src_type, dst_type);
 	} else {
 		// copy metadata from src to dst

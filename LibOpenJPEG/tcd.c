@@ -99,12 +99,12 @@ Create a new TCD handle
 opj_tcd_t* tcd_create(opj_common_ptr cinfo) {
 	/* create the tcd structure */
 	opj_tcd_t *tcd = (opj_tcd_t*)opj_malloc(sizeof(opj_tcd_t));
-	if(!tcd) return NULL;
+	if(!tcd) return nullptr;
 	tcd->cinfo = cinfo;
 	tcd->tcd_image = (opj_tcd_image_t*)opj_malloc(sizeof(opj_tcd_image_t));
 	if(!tcd->tcd_image) {
 		opj_free(tcd);
-		return NULL;
+		return nullptr;
 	}
 
 	return tcd;
@@ -256,7 +256,7 @@ void tcd_malloc_encode(opj_tcd_t *tcd, opj_image_t * image, opj_cp_t * cp, int c
 				for (bandno = 0; bandno < res->numbands; bandno++) {
 					int x0b, y0b, i;
 					int gain, numbps;
-					opj_stepsize_t *ss = NULL;
+					opj_stepsize_t *ss = nullptr;
 
 					opj_tcd_band_t *band = &res->bands[bandno];
 
@@ -288,8 +288,8 @@ void tcd_malloc_encode(opj_tcd_t *tcd, opj_image_t * image, opj_cp_t * cp, int c
 					band->precincts = (opj_tcd_precinct_t *) opj_malloc(3 * res->pw * res->ph * sizeof(opj_tcd_precinct_t));
 					
 					for (i = 0; i < res->pw * res->ph * 3; i++) {
-						band->precincts[i].imsbtree = NULL;
-						band->precincts[i].incltree = NULL;
+						band->precincts[i].imsbtree = nullptr;
+						band->precincts[i].incltree = nullptr;
 					}
 					
 					for (precno = 0; precno < res->pw * res->ph; precno++) {
@@ -365,13 +365,13 @@ void tcd_free_encode(opj_tcd_t *tcd) {
 					for (precno = 0; precno < res->pw * res->ph; precno++) {
 						opj_tcd_precinct_t *prc = &band->precincts[precno];
 
-						if (prc->incltree != NULL) {
+						if (prc->incltree != nullptr) {
 							tgt_destroy(prc->incltree);
-							prc->incltree = NULL;
+							prc->incltree = nullptr;
 						}
-						if (prc->imsbtree != NULL) {
+						if (prc->imsbtree != nullptr) {
 							tgt_destroy(prc->imsbtree);	
-							prc->imsbtree = NULL;
+							prc->imsbtree = nullptr;
 						}
 						for (cblkno = 0; cblkno < prc->cw * prc->ch; cblkno++) {
 							opj_free(prc->cblks.enc[cblkno].data - 2);
@@ -381,17 +381,17 @@ void tcd_free_encode(opj_tcd_t *tcd) {
 						opj_free(prc->cblks.enc);
 					} /* for (precno */
 					opj_free(band->precincts);
-					band->precincts = NULL;
+					band->precincts = nullptr;
 				} /* for (bandno */
 			} /* for (resno */
 			opj_free(tilec->resolutions);
-			tilec->resolutions = NULL;
+			tilec->resolutions = nullptr;
 		} /* for (compno */
 		opj_free(tile->comps);
-		tile->comps = NULL;
+		tile->comps = nullptr;
 	} /* for (tileno */
 	opj_free(tcd->tcd_image->tiles);
-	tcd->tcd_image->tiles = NULL;
+	tcd->tcd_image->tiles = nullptr;
 }
 
 void tcd_init_encode(opj_tcd_t *tcd, opj_image_t * image, opj_cp_t * cp, int curtileno) {
@@ -515,7 +515,7 @@ void tcd_init_encode(opj_tcd_t *tcd, opj_image_t * image, opj_cp_t * cp, int cur
 				for (bandno = 0; bandno < res->numbands; bandno++) {
 					int x0b, y0b;
 					int gain, numbps;
-					opj_stepsize_t *ss = NULL;
+					opj_stepsize_t *ss = nullptr;
 
 					opj_tcd_band_t *band = &res->bands[bandno];
 
@@ -568,10 +568,10 @@ void tcd_init_encode(opj_tcd_t *tcd, opj_image_t * image, opj_cp_t * cp, int cur
 						opj_free(prc->cblks.enc);
 						prc->cblks.enc = (opj_tcd_cblk_enc_t*) opj_calloc(prc->cw * prc->ch, sizeof(opj_tcd_cblk_enc_t));
 
-						if (prc->incltree != NULL) {
+						if (prc->incltree != nullptr) {
 							tgt_destroy(prc->incltree);
 						}
-						if (prc->imsbtree != NULL) {
+						if (prc->imsbtree != nullptr) {
 							tgt_destroy(prc->imsbtree);
 						}
 						
@@ -753,7 +753,7 @@ void tcd_malloc_decode_tile(opj_tcd_t *tcd, opj_image_t * image, opj_cp_t * cp, 
 			for (bandno = 0; bandno < res->numbands; bandno++) {
 				int x0b, y0b;
 				int gain, numbps;
-				opj_stepsize_t *ss = NULL;
+				opj_stepsize_t *ss = nullptr;
 				
 				opj_tcd_band_t *band = &res->bands[bandno];
 				band->bandno = resno == 0 ? 0 : bandno + 1;
@@ -815,8 +815,8 @@ void tcd_malloc_decode_tile(opj_tcd_t *tcd, opj_image_t * image, opj_cp_t * cp, 
 						int cblkyend = cblkystart + (1 << cblkheightexpn);					
 
 						opj_tcd_cblk_dec_t* cblk = &prc->cblks.dec[cblkno];
-						cblk->data = NULL;
-						cblk->segs = NULL;
+						cblk->data = nullptr;
+						cblk->segs = nullptr;
 						/* code-block size (global) */
 						cblk->x0 = int_max(cblkxstart, prc->x0);
 						cblk->y0 = int_max(cblkystart, prc->y0);
@@ -1167,16 +1167,16 @@ bool tcd_rateallocate(opj_tcd_t *tcd, unsigned char *dest, int len, opj_codestre
 int tcd_encode_tile(opj_tcd_t *tcd, int tileno, unsigned char *dest, int len, opj_codestream_info_t *cstr_info) {
 	int compno;
 	int l, i, numpacks = 0;
-	opj_tcd_tile_t *tile = NULL;
-	opj_tcp_t *tcd_tcp = NULL;
-	opj_cp_t *cp = NULL;
+	opj_tcd_tile_t *tile = nullptr;
+	opj_tcp_t *tcd_tcp = nullptr;
+	opj_cp_t *cp = nullptr;
 
 	opj_tcp_t *tcp = &tcd->cp->tcps[0];
 	opj_tccp_t *tccp = &tcp->tccps[0];
 	opj_image_t *image = tcd->image;
 	
-	opj_t1_t *t1 = NULL;		/* T1 component */
-	opj_t2_t *t2 = NULL;		/* T2 component */
+	opj_t1_t *t1 = nullptr;		/* T1 component */
+	opj_t2_t *t2 = nullptr;		/* T2 component */
 
 	tcd->tcd_tileno = tileno;
 	tcd->tcd_tile = tcd->tcd_image->tiles;
@@ -1318,10 +1318,10 @@ bool tcd_decode_tile(opj_tcd_t *tcd, unsigned char *src, int len, int tileno, op
 	int compno;
 	int eof = 0;
 	double tile_time, t1_time, dwt_time;
-	opj_tcd_tile_t *tile = NULL;
+	opj_tcd_tile_t *tile = nullptr;
 
-	opj_t1_t *t1 = NULL;		/* T1 component */
-	opj_t2_t *t2 = NULL;		/* T2 component */
+	opj_t1_t *t1 = nullptr;		/* T1 component */
+	opj_t2_t *t2 = nullptr;		/* T2 component */
 	
 	tcd->tcd_tileno = tileno;
 	tcd->tcd_tile = &(tcd->tcd_image->tiles[tileno]);
@@ -1501,8 +1501,8 @@ void tcd_free_decode_tile(opj_tcd_t *tcd, int tileno) {
 				opj_tcd_band_t *band = &res->bands[bandno];
 				for (precno = 0; precno < res->ph * res->pw; precno++) {
 					opj_tcd_precinct_t *prec = &band->precincts[precno];
-					if (prec->imsbtree != NULL) tgt_destroy(prec->imsbtree);
-					if (prec->incltree != NULL) tgt_destroy(prec->incltree);
+					if (prec->imsbtree != nullptr) tgt_destroy(prec->imsbtree);
+					if (prec->incltree != nullptr) tgt_destroy(prec->incltree);
 				}
 				opj_free(band->precincts);
 			}

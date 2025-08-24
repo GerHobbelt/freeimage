@@ -86,7 +86,7 @@ Create a T2 handle
 @param cinfo Codec context info
 @param image Source or destination image
 @param cp Image coding parameters
-@return Returns a new T2 handle if successful, returns NULL otherwise
+@return Returns a new T2 handle if successful, returns nullptr otherwise
 */
 opj_t2_t* t2_create(opj_common_ptr cinfo, opj_image_t *image, opj_cp_t *cp);
 /**

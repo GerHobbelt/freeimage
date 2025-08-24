@@ -23,7 +23,7 @@ png_set_bgr(png_structp png_ptr)
 {
    png_debug(1, "in png_set_bgr");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_ptr->transformations |= PNG_BGR;
 }
@@ -36,7 +36,7 @@ png_set_swap(png_structp png_ptr)
 {
    png_debug(1, "in png_set_swap");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    if (png_ptr->bit_depth == 16)
       png_ptr->transformations |= PNG_SWAP_BYTES;
@@ -50,7 +50,7 @@ png_set_packing(png_structp png_ptr)
 {
    png_debug(1, "in png_set_packing");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    if (png_ptr->bit_depth < 8)
    {
@@ -67,7 +67,7 @@ png_set_packswap(png_structp png_ptr)
 {
    png_debug(1, "in png_set_packswap");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    if (png_ptr->bit_depth < 8)
       png_ptr->transformations |= PNG_PACKSWAP;
@@ -80,7 +80,7 @@ png_set_shift(png_structp png_ptr, png_color_8p true_bits)
 {
    png_debug(1, "in png_set_shift");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_ptr->transformations |= PNG_SHIFT;
    png_ptr->shift = *true_bits;
@@ -115,7 +115,7 @@ png_set_filler(png_structp png_ptr, png_uint_32 filler, int filler_loc)
 {
    png_debug(1, "in png_set_filler");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_ptr->transformations |= PNG_FILLER;
 #ifdef PNG_LEGACY_SUPPORTED
@@ -154,7 +154,7 @@ png_set_add_alpha(png_structp png_ptr, png_uint_32 filler, int filler_loc)
 {
    png_debug(1, "in png_set_add_alpha");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_set_filler(png_ptr, filler, filler_loc);
    png_ptr->transformations |= PNG_ADD_ALPHA;
@@ -170,7 +170,7 @@ png_set_swap_alpha(png_structp png_ptr)
 {
    png_debug(1, "in png_set_swap_alpha");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_ptr->transformations |= PNG_SWAP_ALPHA;
 }
@@ -183,7 +183,7 @@ png_set_invert_alpha(png_structp png_ptr)
 {
    png_debug(1, "in png_set_invert_alpha");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_ptr->transformations |= PNG_INVERT_ALPHA;
 }
@@ -195,7 +195,7 @@ png_set_invert_mono(png_structp png_ptr)
 {
    png_debug(1, "in png_set_invert_mono");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_ptr->transformations |= PNG_INVERT_MONO;
 }
@@ -210,7 +210,7 @@ png_do_invert(png_row_infop row_info, png_bytep row)
    *   if (row_info->bit_depth == 1 &&
    */
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-   if (row == NULL || row_info == NULL)
+   if (row == nullptr || row_info == nullptr)
      return;
 #endif
    if (row_info->color_type == PNG_COLOR_TYPE_GRAY)
@@ -264,7 +264,7 @@ png_do_swap(png_row_infop row_info, png_bytep row)
 
    if (
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-       row != NULL && row_info != NULL &&
+       row != nullptr && row_info != nullptr &&
 #endif
        row_info->bit_depth == 16)
    {
@@ -396,7 +396,7 @@ png_do_packswap(png_row_infop row_info, png_bytep row)
 
    if (
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-       row != NULL && row_info != NULL &&
+       row != nullptr && row_info != nullptr &&
 #endif
        row_info->bit_depth < 8)
    {
@@ -428,7 +428,7 @@ png_do_strip_filler(png_row_infop row_info, png_bytep row, png_uint_32 flags)
    png_debug(1, "in png_do_strip_filler");
 
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-   if (row != NULL && row_info != NULL)
+   if (row != nullptr && row_info != nullptr)
 #endif
    {
       png_bytep sp=row;
@@ -588,7 +588,7 @@ png_do_bgr(png_row_infop row_info, png_bytep row)
 
    if (
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-       row != NULL && row_info != NULL &&
+       row != nullptr && row_info != nullptr &&
 #endif
        (row_info->color_type & PNG_COLOR_MASK_COLOR))
    {
@@ -666,7 +666,7 @@ png_set_user_transform_info(png_structp png_ptr, png_voidp
 {
    png_debug(1, "in png_set_user_transform_info");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 #ifdef PNG_USER_TRANSFORM_PTR_SUPPORTED
    png_ptr->user_transform_ptr = user_transform_ptr;
@@ -688,12 +688,12 @@ png_set_user_transform_info(png_structp png_ptr, png_voidp
 png_voidp PNGAPI
 png_get_user_transform_ptr(png_structp png_ptr)
 {
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 #ifdef PNG_USER_TRANSFORM_PTR_SUPPORTED
    return ((png_voidp)png_ptr->user_transform_ptr);
 #else
-   return (NULL);
+   return (nullptr);
 #endif
 }
 #endif /* PNG_READ_SUPPORTED || PNG_WRITE_SUPPORTED */

@@ -29,14 +29,14 @@ Table 2-12: File header section.
 The file header contains the basic properties of the image. 
 */
 typedef struct psdHeader {
-	BYTE Signature[4];	//! Always equal 8BPS, do not try to read the file if the signature does not match this value.
-	BYTE Version[2];	//! Always equal 1, do not read file if the version does not match this value.
+	uint8_t Signature[4];	//! Always equal 8BPS, do not try to read the file if the signature does not match this value.
+	uint8_t Version[2];	//! Always equal 1, do not read file if the version does not match this value.
 	char Reserved[6];	//! Must be zero.
-	BYTE Channels[2];	//! Number of channels including any alpha channels, supported range is 1 to 24.
-	BYTE Rows[4];		//! The height of the image in pixels. Supported range is 1 to 30,000.
-	BYTE Columns[4];	//! The width of the image in pixels. Supported range is 1 to 30,000.
-	BYTE Depth[2];		//! The number of bits per channel. Supported values are 1, 8, and 16.
-	BYTE Mode[2];		//! Colour mode of the file, Bitmap=0, Grayscale=1, Indexed=2, RGB=3, CMYK=4, Multichannel=7, Duotone=8, Lab=9. 
+	uint8_t Channels[2];	//! Number of channels including any alpha channels, supported range is 1 to 24.
+	uint8_t Rows[4];		//! The height of the image in pixels. Supported range is 1 to 30,000.
+	uint8_t Columns[4];	//! The width of the image in pixels. Supported range is 1 to 30,000.
+	uint8_t Depth[2];		//! The number of bits per channel. Supported values are 1, 8, and 16.
+	uint8_t Mode[2];		//! Colour mode of the file, Bitmap=0, Grayscale=1, Indexed=2, RGB=3, CMYK=4, Multichannel=7, Duotone=8, Lab=9. 
 } psdHeader;
 
 /**
@@ -76,7 +76,7 @@ the file.
 class psdColourModeData {
 public:
 	int _Length;			//! The length of the following color data
-	BYTE * _plColourData;	//! The color data
+	uint8_t * _plColourData;	//! The color data
 
 public:
 	psdColourModeData();
@@ -97,7 +97,7 @@ public:
 	int     _Length;
 	char    _OSType[4];	//! Photoshop always uses its signature, 8BIM
 	short   _ID;		//! Unique identifier. Image resource IDs on page 8
-	BYTE * _plName;		//! A pascal string, padded to make size even (a null name consists of two bytes of 0)
+	uint8_t * _plName;		//! A pascal string, padded to make size even (a null name consists of two bytes of 0)
 	int     _Size;		//! Actual size of resource data. This does not include the Type, ID, Name or Size fields.
 
 public:
@@ -162,8 +162,8 @@ public:
 	short _ColourSpace;
 	short _Colour[4];
 	short _Opacity;  //! 0..100
-	BYTE _Kind;     //! selected = 0, protected = 1
-	BYTE _padding;  //! should be zero
+	uint8_t _Kind;     //! selected = 0, protected = 1
+	uint8_t _padding;  //! should be zero
 	
 public:
 	psdDisplayInfo();
@@ -194,7 +194,7 @@ public:
 	int _CompressedSize;	//! Size after compression. Used for consistentcy check. 
 	short _BitPerPixel;		//! = 24. Bits per pixel.
 	short _Planes;			//! = 1. Number of planes.
-	BYTE * _plData;			//! JFIF data in RGB format. Note: For resource ID 1033 the data is in BGR format.
+	uint8_t * _plData;			//! JFIF data in RGB format. Note: For resource ID 1033 the data is in BGR format.
 	
 public:
 	psdThumbnail();
@@ -208,7 +208,7 @@ public:
 class psdICCProfile {
 public:
 	int _ProfileSize;
-	BYTE * _ProfileData;
+	uint8_t * _ProfileData;
 public:
 	psdICCProfile();
 	~psdICCProfile();
@@ -245,7 +245,7 @@ private:
 	/**	Actually ignore it */
 	bool ReadLayerAndMaskInfoSection(FreeImageIO *io, fi_handle handle);
 	FIBITMAP* ReadImageData(FreeImageIO *io, fi_handle handle);
-	FIBITMAP* ProcessBuffer(BYTE * iprData);
+	FIBITMAP* ProcessBuffer(uint8_t * iprData);
 
 public:
 	psdParser();

@@ -178,9 +178,9 @@ dynamically linked libpng, there are functions to initialize and
 allocate the structures.  We also pass the library version, optional
 pointers to error handling functions, and a pointer to a data struct for
 use by the error functions, if necessary (the pointer and functions can
-be NULL if the default error handlers are to be used).  See the section
+be nullptr if the default error handlers are to be used).  See the section
 on Changes to Libpng below regarding the old initialization functions.
-The structure allocation functions quietly return NULL if they fail to
+The structure allocation functions quietly return nullptr if they fail to
 create the structure, so your application should check for that.
 
     png_structp png_ptr = png_create_read_struct
@@ -193,7 +193,7 @@ create the structure, so your application should check for that.
     if (!info_ptr)
     {
         png_destroy_read_struct(&png_ptr,
-           (png_infopp)NULL, (png_infopp)NULL);
+           (png_infopp)nullptr, (png_infopp)nullptr);
         return (ERROR);
     }
 
@@ -201,7 +201,7 @@ create the structure, so your application should check for that.
     if (!end_info)
     {
         png_destroy_read_struct(&png_ptr, &info_ptr,
-          (png_infopp)NULL);
+          (png_infopp)nullptr);
         return (ERROR);
     }
 
@@ -344,7 +344,7 @@ chunk types. To change this, you can call:
                  PNG_HANDLE_CHUNK_IF_SAFE      2
                  PNG_HANDLE_CHUNK_ALWAYS       3
     chunk_list - list of chunks affected (a byte string,
-                 five bytes per chunk, NULL or '\0' if
+                 five bytes per chunk, nullptr or '\0' if
                  num_chunks is 0)
     num_chunks - number of chunks affected; if 0, all
                  unknown chunks are affected.  If nonzero,
@@ -380,7 +380,7 @@ callback function:
 
     #if defined(PNG_UNKNOWN_CHUNKS_SUPPORTED)
       /* ignore all unknown chunks: */
-      png_set_keep_unknown_chunks(read_ptr, 1, NULL, 0);
+      png_set_keep_unknown_chunks(read_ptr, 1, nullptr, 0);
       /* except for vpAg: */
       png_set_keep_unknown_chunks(read_ptr, 2, vpAg, 1);
       /* also ignore unused known chunks: */
@@ -456,7 +456,7 @@ you want to do are limited to the following set:
 (This excludes setting a background color, doing gamma transformation,
 dithering, and setting filler.)  If this is the case, simply do this:
 
-    png_read_png(png_ptr, info_ptr, png_transforms, NULL)
+    png_read_png(png_ptr, info_ptr, png_transforms, nullptr)
 
 where png_transforms is an integer containing the bitwise OR of some
 set of transformation flags.  This call is equivalent to png_read_info(),
@@ -490,7 +490,7 @@ row_pointers prior to calling png_read_png() with
    row_pointers = png_malloc(png_ptr,
       height*png_sizeof(png_bytep));
    for (int i=0; i<height, i++)
-      row_pointers[i]=NULL;  /* security precaution */
+      row_pointers[i]=nullptr;  /* security precaution */
    for (int i=0; i<height, i++)
       row_pointers[i]=png_malloc(png_ptr,
          width*pixel_size);
@@ -562,7 +562,7 @@ in until png_read_end() has read the chunk data following the image.
                      PNG_INTERLACE_ADAM7)
 
     Any or all of interlace_type, compression_type, or
-    filter_method can be NULL if you are
+    filter_method can be nullptr if you are
     not interested in their values.
 
     Note that png_get_IHDR() returns 32-bit data into
@@ -636,7 +636,7 @@ pointer into the info_ptr is returned for any complex types.
     name            - The profile name.
     compression     - The compression type; always
                       PNG_COMPRESSION_TYPE_BASE for PNG 1.0.
-                      You may give NULL to this argument to
+                      You may give nullptr to this argument to
                       ignore it.
     profile         - International Color Consortium color
                       profile data. May contain NULs.
@@ -700,13 +700,13 @@ pointer into the info_ptr is returned for any complex types.
     when the library is built with iTXt chunk support.
 
     num_text       - number of comments (same as
-                     num_comments; you can put NULL here
+                     num_comments; you can put nullptr here
                      to avoid the duplication)
     Note while png_set_text() will accept text, language,
-    and translated keywords that can be NULL pointers, the
+    and translated keywords that can be nullptr pointers, the
     structure returned by png_get_text will always contain
     regular zero-terminated C strings.  They might be
-    empty strings but they will never be NULL pointers.
+    empty strings but they will never be nullptr pointers.
 
     num_spalettes = png_get_sPLT(png_ptr, info_ptr,
        &palette_ptr);
@@ -814,7 +814,7 @@ keyword.  It is possible to have the same keyword any number of times.
 The text_ptr is an array of png_text structures, each holding a
 pointer to a language string, a pointer to a keyword and a pointer to
 a text string.  The text string, language code, and translated
-keyword may be empty or NULL pointers.  The keyword/text
+keyword may be empty or nullptr pointers.  The keyword/text
 pairs are put into the array in the order that they are received.
 However, some or all of the text chunks may be after the image, so, to
 make sure you have read all the text chunks, don't mess with these
@@ -1118,7 +1118,7 @@ a slightly smaller exponent is better.
    /* One way that applications can share the same
       screen gamma value */
    else if ((gamma_str = getenv("SCREEN_GAMMA"))
-      != NULL)
+      != nullptr)
    {
       screen_gamma = (double)atof(gamma_str);
    }
@@ -1163,7 +1163,7 @@ histogram, it may not do as good a job.
       if (png_get_valid(png_ptr, info_ptr,
          PNG_INFO_PLTE))
       {
-         png_uint_16p histogram = NULL;
+         png_uint_16p histogram = nullptr;
 
          png_get_hIST(png_ptr, info_ptr,
             &histogram);
@@ -1177,7 +1177,7 @@ histogram, it may not do as good a job.
 
          png_set_dither(png_ptr, std_color_cube,
             MAX_SCREEN_COLORS, MAX_SCREEN_COLORS,
-            NULL,0);
+            nullptr,0);
       }
    }
 
@@ -1288,7 +1288,7 @@ If you don't want to read in the whole image at once, you can
 use png_read_rows() instead.  If there is no interlacing (check
 interlace_type == PNG_INTERLACE_NONE), this is simple:
 
-    png_read_rows(png_ptr, row_pointers, NULL,
+    png_read_rows(png_ptr, row_pointers, nullptr,
        number_of_rows);
 
 where row_pointers is the same as in the png_read_image() call.
@@ -1297,7 +1297,7 @@ If you are doing this just one row at a time, you can do this with
 a single row_pointer instead of an array of row_pointers:
 
     png_bytep row_pointer = row;
-    png_read_row(png_ptr, row_pointer, NULL);
+    png_read_row(png_ptr, row_pointer, nullptr);
 
 If the file is interlaced (interlace_type != 0 in the IHDR chunk), things
 get somewhat harder.  The only current (PNG Specification version 1.2)
@@ -1357,20 +1357,20 @@ after each pass, the "rectangle" effect is generally considered the
 better looking one.
 
 If you only want the "sparkle" effect, just call png_read_rows() as
-normal, with the third parameter NULL.  Make sure you make pass over
+normal, with the third parameter nullptr.  Make sure you make pass over
 the image number_of_passes times, and you don't change the data in the
 rows between calls.  You can change the locations of the data, just
 not the data.  Each pass only writes the pixels appropriate for that
 pass, and assumes the data from previous passes is still valid.
 
-    png_read_rows(png_ptr, row_pointers, NULL,
+    png_read_rows(png_ptr, row_pointers, nullptr,
        number_of_rows);
 
 If you only want the first effect (the rectangles), do the same as
 before except pass the row buffer in the third parameter, and leave
-the second parameter NULL.
+the second parameter nullptr.
 
-    png_read_rows(png_ptr, NULL, row_pointers,
+    png_read_rows(png_ptr, nullptr, row_pointers,
        number_of_rows);
 
 Finishing a sequential read
@@ -1380,7 +1380,7 @@ low-level interface, you can finish reading the file.  If you are
 interested in comments or time, which may be stored either before or
 after the image data, you should pass the separate png_info struct if
 you want to keep the comments from before and after the image
-separate.  If you are not interested, you can pass NULL.
+separate.  If you are not interested, you can pass nullptr.
 
    png_read_end(png_ptr, end_info);
 
@@ -1498,15 +1498,15 @@ png_infop info_ptr;
     info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr)
     {
-        png_destroy_read_struct(&png_ptr, (png_infopp)NULL,
-           (png_infopp)NULL);
+        png_destroy_read_struct(&png_ptr, (png_infopp)nullptr,
+           (png_infopp)nullptr);
         return (ERROR);
     }
 
     if (setjmp(png_jmpbuf(png_ptr)))
     {
         png_destroy_read_struct(&png_ptr, &info_ptr,
-           (png_infopp)NULL);
+           (png_infopp)nullptr);
         return (ERROR);
     }
 
@@ -1514,8 +1514,8 @@ png_infop info_ptr;
        to be called when the header info is valid,
        when each row is completed, and when the image
        is finished.  If you aren't using all functions,
-       you can specify NULL parameters.  Even when all
-       three functions are NULL, you need to call
+       you can specify nullptr parameters.  Even when all
+       three functions are nullptr, you need to call
        png_set_progressive_read_fn().  You can use
        any struct as the user_ptr (cast to a void pointer
        for the function call), and retrieve the pointer
@@ -1540,7 +1540,7 @@ png_infop info_ptr;
     if (setjmp(png_jmpbuf(png_ptr)))
     {
         png_destroy_read_struct(&png_ptr, &info_ptr,
-           (png_infopp)NULL);
+           (png_infopp)nullptr);
         return (ERROR);
     }
 
@@ -1592,16 +1592,16 @@ png_infop info_ptr;
        be called for every row in every pass.  Some
        of these rows will not be changed from the
        previous pass.  When the row is not changed,
-       the new_row variable will be NULL.  The rows
+       the new_row variable will be nullptr.  The rows
        and passes are called in order, so you don't
        really need the row_num and pass, but I'm
        supplying them because it may make your life
        easier.
 
-       For the non-NULL rows of interlaced images,
+       For the non-nullptr rows of interlaced images,
        you must call png_progressive_combine_row()
        passing in the row and the old row.  You can
-       call this function for NULL rows (it will just
+       call this function for nullptr rows (it will just
        return) and for non-interlaced images (it just
        does the memcpy for you) if it will make the
        code easier.  Thus, you can just do this for
@@ -1661,7 +1661,7 @@ custom writing functions.  See the discussion under Customizing libpng.
 Next, png_struct and png_info need to be allocated and initialized.
 As these can be both relatively large, you may not want to store these
 on the stack, unless you have stack space to spare.  Of course, you
-will want to check if they return NULL.  If you are also reading,
+will want to check if they return nullptr.  If you are also reading,
 you won't want to name your read structure and your write structure
 both "png_ptr"; you can call them anything you like, such as
 "read_ptr" and "write_ptr".  Look at pngtest.c, for example.
@@ -1676,7 +1676,7 @@ both "png_ptr"; you can call them anything you like, such as
     if (!info_ptr)
     {
        png_destroy_write_struct(&png_ptr,
-         (png_infopp)NULL);
+         (png_infopp)nullptr);
        return (ERROR);
     }
 
@@ -1915,7 +1915,7 @@ width, height, bit_depth, and color_type must be the same in each call.
     name            - The profile name.
     compression     - The compression type; always
                       PNG_COMPRESSION_TYPE_BASE for PNG 1.0.
-                      You may give NULL to this argument to
+                      You may give nullptr to this argument to
                       ignore it.
     profile         - International Color Consortium color
                       profile data. May contain NULs.
@@ -1962,14 +1962,14 @@ width, height, bit_depth, and color_type must be the same in each call.
     text_ptr[i].key   - keyword for comment.  Must contain
                  1-79 characters.
     text_ptr[i].text  - text comments for current
-                         keyword.  Can be NULL or empty.
+                         keyword.  Can be nullptr or empty.
     text_ptr[i].text_length - length of text string,
                  after decompression, 0 for iTXt
     text_ptr[i].itxt_length - length of itxt string,
                  after decompression, 0 for tEXt/zTXt
-    text_ptr[i].lang  - language of comment (NULL or
+    text_ptr[i].lang  - language of comment (nullptr or
                          empty for unknown).
-    text_ptr[i].translated_keyword  - keyword in UTF-8 (NULL
+    text_ptr[i].translated_keyword  - keyword in UTF-8 (nullptr
                          or empty for unknown).
     Note that the itxt_length, lang, and lang_key
     members of the text_ptr structure only exist
@@ -2157,7 +2157,7 @@ transformations are permitted, enabled by the following masks.
 If you have valid image data in the info structure (you can use
 png_set_rows() to put image data in the info structure), simply do this:
 
-    png_write_png(png_ptr, info_ptr, png_transforms, NULL)
+    png_write_png(png_ptr, info_ptr, png_transforms, nullptr)
 
 where png_transforms is an integer containing the bitwise OR of some set of
 transformation flags.  This call is equivalent to png_write_info(),
@@ -2405,7 +2405,7 @@ Finishing a sequential write
 After you are finished writing the image, you should finish writing
 the file.  If you are interested in writing comments or time, you should
 pass an appropriately filled png_info pointer.  If you are not interested,
-you can pass NULL.
+you can pass nullptr.
 
     png_write_end(png_ptr, info_ptr);
 
@@ -2525,12 +2525,12 @@ Your replacement memory functions must have prototypes as follows:
        png_size_t size);
     void free_fn(png_structp png_ptr, png_voidp ptr);
 
-Your malloc_fn() must return NULL in case of failure.  The png_malloc()
-function will normally call png_error() if it receives a NULL from the
+Your malloc_fn() must return nullptr in case of failure.  The png_malloc()
+function will normally call png_error() if it receives a nullptr from the
 system memory allocator or from your replacement malloc_fn().
 
-Your free_fn() will never be called with a NULL ptr, since libpng's
-png_free() checks for NULL before calling free_fn().
+Your free_fn() will never be called with a nullptr ptr, since libpng's
+png_free() checks for nullptr before calling free_fn().
 
 Input/Output in libpng is done through png_read() and png_write(),
 which currently just call fread() and fwrite().  The FILE * is stored in
@@ -2562,10 +2562,10 @@ The replacement I/O functions must have prototypes as follows:
 The user_read_data() function is responsible for detecting and
 handling end-of-data errors.
 
-Supplying NULL for the read, write, or flush functions sets them back
+Supplying nullptr for the read, write, or flush functions sets them back
 to using the default C stream functions, which expect the io_ptr to
 point to a standard *FILE structure.  It is probably a mistake
-to use NULL for one of write_data_fn and output_flush_fn but not both
+to use nullptr for one of write_data_fn and output_flush_fn but not both
 of them, unless you have built libpng with PNG_NO_WRITE_FLUSH defined.
 It is an error to read from a write stream, and vice versa.
 
@@ -2593,7 +2593,7 @@ functions after png_create_*_struct() has been called by calling:
 
     png_voidp error_ptr = png_get_error_ptr(png_ptr);
 
-If NULL is supplied for either error_fn or warning_fn, then the libpng
+If nullptr is supplied for either error_fn or warning_fn, then the libpng
 default function will be used, calling fprintf() and/or longjmp() if a
 problem is encountered.  The replacement error functions should have
 parameters as follows:
@@ -2960,7 +2960,7 @@ function was inadvertently removed from png.h in PNG_NO_ASSEMBLER_CODE
 builds of libpng-1.2.15.  It was restored in libpng-1.2.36).
 
 The png_malloc_warn() function was added at libpng-1.2.3.  This issues
-a png_warning and returns NULL instead of aborting when it fails to
+a png_warning and returns nullptr instead of aborting when it fails to
 acquire the requested memory allocation.
 
 Support for setting user limits on image width and height was enabled

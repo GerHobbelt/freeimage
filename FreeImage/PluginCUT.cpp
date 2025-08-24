@@ -71,7 +71,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -98,7 +98,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	if (handle != NULL) {
+	if (handle != nullptr) {
 		CUTHEADER header;
 		FIBITMAP *dib;
 
@@ -106,38 +106,38 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		io->read_proc(&header, 1, sizeof(CUTHEADER), handle);
 #ifdef FREEIMAGE_BIGENDIAN
-		SwapShort((WORD *)&header.width);
-		SwapShort((WORD *)&header.height);
+		SwapShort((uint16_t *)&header.width);
+		SwapShort((uint16_t *)&header.height);
 #endif
 
 		if ((header.width == 0) || (header.height == 0))
-			return NULL;
+			return nullptr;
 
 		// allocate a new bitmap
 
 		dib = FreeImage_Allocate(header.width, header.height, 8);
 
-		if (dib == NULL)
-			return NULL;
+		if (dib == nullptr)
+			return nullptr;
 
 		// stuff it with a palette
 
 		RGBQUAD *palette = FreeImage_GetPalette(dib);
 
 		for (int j = 0; j < 256; ++j)
-			palette[j].rgbBlue = palette[j].rgbGreen = palette[j].rgbRed = (BYTE)j;
+			palette[j].rgbBlue = palette[j].rgbGreen = palette[j].rgbRed = (uint8_t)j;
 
 		// unpack the RLE bitmap bits
 
-		BYTE *bits = FreeImage_GetScanLine(dib, header.height - 1);
+		uint8_t *bits = FreeImage_GetScanLine(dib, header.height - 1);
 
 		int i = 0, k = 0;
 		int pitch = FreeImage_GetPitch(dib);
 		int size = header.width * header.height;
-		BYTE count = 0, run = 0;
+		uint8_t count = 0, run = 0;
 
 		while (i < size) {
-			io->read_proc(&count, 1, sizeof(BYTE), handle);
+			io->read_proc(&count, 1, sizeof(uint8_t), handle);
 
 			if (count == 0) {
 				k = 0;
@@ -145,8 +145,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				// paint shop pro adds two useless bytes here...
 
-				io->read_proc(&count, 1, sizeof(BYTE), handle);
-				io->read_proc(&count, 1, sizeof(BYTE), handle);
+				io->read_proc(&count, 1, sizeof(uint8_t), handle);
+				io->read_proc(&count, 1, sizeof(uint8_t), handle);
 
 				continue;
 			}
@@ -154,11 +154,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			if (count & 0x80) {
 				count &= ~(0x80);
 
-				io->read_proc(&run, 1, sizeof(BYTE), handle);
+				io->read_proc(&run, 1, sizeof(uint8_t), handle);
 
 				memset(bits + k, run, count);
 			} else {
-				io->read_proc(&bits[k], count, sizeof(BYTE), handle);
+				io->read_proc(&bits[k], count, sizeof(uint8_t), handle);
 			}
 
 			k += count;
@@ -168,7 +168,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		return dib;		
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ==========================================================
@@ -183,15 +183,15 @@ InitCUT(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
+	plugin->save_proc = nullptr;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

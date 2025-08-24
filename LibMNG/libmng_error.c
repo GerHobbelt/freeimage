@@ -148,7 +148,7 @@ MNG_LOCAL mng_error_entry const error_table [] =
     {MNG_INVALIDINTERLACE, "The interlace_method is invalid"},
     {MNG_NOTENOUGHIDAT,    "There is not enough data in the IDAT chunk(s)"},
     {MNG_PLTEINDEXERROR,   "Palette-index out of bounds"},
-    {MNG_NULLNOTFOUND,     "NULL separator not found"},
+    {MNG_NULLNOTFOUND,     "nullptr separator not found"},
     {MNG_KEYWORDNULL,      "Keyword cannot be zero-length"},
     {MNG_OBJECTUNKNOWN,    "Object does not exist"},
     {MNG_OBJECTEXISTS,     "Object already exists"},
@@ -156,7 +156,7 @@ MNG_LOCAL mng_error_entry const error_table [] =
     {MNG_INVSAMPLEDEPTH,   "The sample_depth is invalid"},
     {MNG_INVOFFSETSIZE,    "The offset_type is invalid"},
     {MNG_INVENTRYTYPE,     "The entry_type is invalid"},
-    {MNG_ENDWITHNULL,      "Chunk must not end with NULL byte"},
+    {MNG_ENDWITHNULL,      "Chunk must not end with nullptr byte"},
     {MNG_INVIMAGETYPE,     "The image_type is invalid"},
 #ifndef MNG_NO_DELTA_PNG
     {MNG_INVDELTATYPE,     "The delta_type is invalid"},

@@ -1441,7 +1441,7 @@ unsigned CLASS ph1_bits (int nbits)
 #define bitbuf tls->ph1_bits.bitbuf
 #define vbits  tls->ph1_bits.vbits    
 #else
-  static UINT64 bitbuf=0;
+  static uint64_t bitbuf=0;
   static int vbits=0;
 #endif
   if (nbits == -1)
@@ -1616,7 +1616,7 @@ void CLASS imacon_full_load_raw()
 void CLASS packed_12_load_raw()
 {
   int vbits=0, rbits=0, irow, row, col;
-  UINT64 bitbuf=0;
+  uint64_t bitbuf=0;
 
   if (raw_width * 2 >= width * 3) {	/* If raw_width is in bytes, */
     rbits = raw_width * 8;
@@ -2260,7 +2260,7 @@ int CLASS kodak_65000_decode (short *out, int bsize)
 {
   uchar c, blen[768];
   ushort raw[6];
-  INT64 bitbuf=0;
+  int64_t bitbuf=0;
   int save, bits=0, i, j, len, diff;
 
   save = ftell(ifp);
@@ -2289,7 +2289,7 @@ int CLASS kodak_65000_decode (short *out, int bsize)
     len = blen[i];
     if (bits < len) {
       for (j=0; j < 32; j+=8)
-	bitbuf += (INT64) fgetc(ifp) << (bits+(j^8));
+	bitbuf += (int64_t) fgetc(ifp) << (bits+(j^8));
       bits += 32;
     }
     diff = bitbuf & (0xffff >> (16-len));
@@ -5211,8 +5211,8 @@ void CLASS parse_cine()
   fseek (ifp, off_image, SEEK_SET);
   if (shot_select < is_raw)
     fseek (ifp, shot_select*8, SEEK_CUR);
-  data_offset  = (INT64) get4() + 8;
-  data_offset += (INT64) get4() << 32;
+  data_offset  = (int64_t) get4() + 8;
+  data_offset += (int64_t) get4() << 32;
 }
 #line 6467 "dcraw/dcraw.c"
 #ifdef LIBRAW_LIBRARY_BUILD

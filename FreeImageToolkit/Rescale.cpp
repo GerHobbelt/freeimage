@@ -23,14 +23,14 @@
 
 FIBITMAP * DLL_CALLCONV 
 FreeImage_Rescale(FIBITMAP *src, int dst_width, int dst_height, FREE_IMAGE_FILTER filter) {
-	FIBITMAP *dst = NULL;
+	FIBITMAP *dst = nullptr;
 
 	if (!src || (dst_width <= 0) || (dst_height <= 0) || (FreeImage_GetWidth(src) <= 0) || (FreeImage_GetHeight(src) <= 0)) {
-		return NULL;
+		return nullptr;
 	}
 
 	// select the filter
-	CGenericFilter *pFilter = NULL;
+	CGenericFilter *pFilter = nullptr;
 	switch(filter) {
 		case FILTER_BOX:
 			pFilter = new CBoxFilter();
@@ -59,8 +59,8 @@ FreeImage_Rescale(FIBITMAP *src, int dst_width, int dst_height, FREE_IMAGE_FILTE
 	if((FreeImage_GetBPP(src) == 4) || (FreeImage_GetColorType(src) == FIC_PALETTE)) {
 		// special case for 4-bit images or color map indexed images ...
 		if(FreeImage_IsTransparent(src) == FALSE) {
-			FIBITMAP *src24 = NULL;
-			FIBITMAP *dst24 = NULL;
+			FIBITMAP *src24 = nullptr;
+			FIBITMAP *dst24 = nullptr;
 			try {
 				// transparent conversion to 24-bit (any transparency table will be destroyed)
 				src24 = FreeImage_ConvertTo24Bits(src);
@@ -78,7 +78,7 @@ FreeImage_Rescale(FIBITMAP *src, int dst_width, int dst_height, FREE_IMAGE_FILTE
 				if(dst24) FreeImage_Unload(dst24);
 			}
 		} else {
-			FIBITMAP *src32 = NULL;
+			FIBITMAP *src32 = nullptr;
 			try {
 				// transparent conversion to 32-bit (keep transparency)
 				src32 = FreeImage_ConvertTo32Bits(src);
@@ -96,7 +96,7 @@ FreeImage_Rescale(FIBITMAP *src, int dst_width, int dst_height, FREE_IMAGE_FILTE
 	}
 	else if((FreeImage_GetBPP(src) == 16) && (FreeImage_GetImageType(src) == FIT_BITMAP)) {
 		// convert 16-bit RGB to 24-bit
-		FIBITMAP *src24 = NULL;
+		FIBITMAP *src24 = nullptr;
 		try {
 			// transparent conversion to 24-bit (any transparency table will be destroyed)
 			src24 = FreeImage_ConvertTo24Bits(src);
@@ -130,10 +130,10 @@ FreeImage_Rescale(FIBITMAP *src, int dst_width, int dst_height, FREE_IMAGE_FILTE
 
 FIBITMAP * DLL_CALLCONV 
 FreeImage_MakeThumbnail(FIBITMAP *dib, int max_pixel_size, BOOL convert) {
-	FIBITMAP *thumbnail = NULL;
+	FIBITMAP *thumbnail = nullptr;
 	int new_width, new_height;
 
-	if(!dib || (max_pixel_size <= 0)) return NULL;
+	if(!dib || (max_pixel_size <= 0)) return nullptr;
 
 	int width	= FreeImage_GetWidth(dib);
 	int height = FreeImage_GetHeight(dib);
@@ -184,13 +184,13 @@ FreeImage_MakeThumbnail(FIBITMAP *dib, int max_pixel_size, BOOL convert) {
 		case FIT_COMPLEX:
 		default:
 			// cannot rescale this kind of image
-			thumbnail = NULL;
+			thumbnail = nullptr;
 			break;
 	}
 
-	if((thumbnail != NULL) && (image_type != FIT_BITMAP) && convert) {
+	if((thumbnail != nullptr) && (image_type != FIT_BITMAP) && convert) {
 		// convert to a standard bitmap
-		FIBITMAP *bitmap = NULL;
+		FIBITMAP *bitmap = nullptr;
 		switch(image_type) {
 			case FIT_UINT16:
 				bitmap = FreeImage_ConvertTo8Bits(thumbnail);
@@ -214,7 +214,7 @@ FreeImage_MakeThumbnail(FIBITMAP *dib, int max_pixel_size, BOOL convert) {
 				FreeImage_Unload(rgbf);
 				break;
 		}
-		if(bitmap != NULL) {
+		if(bitmap != nullptr) {
 			FreeImage_Unload(thumbnail);
 			thumbnail = bitmap;
 		}

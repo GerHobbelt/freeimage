@@ -33,14 +33,14 @@
 #endif
 
 typedef struct tagSUNHEADER {
-	DWORD magic;		// Magic number
-	DWORD width;		// Image width in pixels
-	DWORD height;		// Image height in pixels
-	DWORD depth;		// Depth (1, 8, 24 or 32 bits) of each pixel
-	DWORD length;		// Image length (in bytes)
-	DWORD type;			// Format of file (see RT_* below)
-	DWORD maptype;		// Type of colormap (see RMT_* below)
-	DWORD maplength;	// Length of colormap (in bytes)
+	uint32_t magic;		// Magic number
+	uint32_t width;		// Image width in pixels
+	uint32_t height;		// Image height in pixels
+	uint32_t depth;		// Depth (1, 8, 24 or 32 bits) of each pixel
+	uint32_t length;		// Image length (in bytes)
+	uint32_t type;			// Format of file (see RT_* below)
+	uint32_t maptype;		// Type of colormap (see RMT_* below)
+	uint32_t maplength;	// Length of colormap (in bytes)
 } SUNHEADER;
 
 #ifdef _WIN32
@@ -91,10 +91,10 @@ typedef struct tagSUNHEADER {
 // ==========================================================
 
 static void
-ReadData(FreeImageIO *io, fi_handle handle, BYTE *buf, DWORD length, BOOL rle) {
+ReadData(FreeImageIO *io, fi_handle handle, uint8_t *buf, uint32_t length, BOOL rle) {
 	// Read either Run-Length Encoded or normal image data
 
-	static BYTE repchar, remaining= 0;
+	static uint8_t repchar, remaining= 0;
 
 	if (rle) {
 		// Run-length encoded read
@@ -155,7 +155,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -165,8 +165,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE ras_signature[] = { 0x59, 0xA6, 0x6A, 0x95 };
-	BYTE signature[4] = { 0, 0, 0, 0 };
+	uint8_t ras_signature[] = { 0x59, 0xA6, 0x6A, 0x95 };
+	uint8_t signature[4] = { 0, 0, 0, 0 };
 
 	io->read_proc(signature, 1, sizeof(ras_signature), handle);
 
@@ -188,15 +188,15 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	SUNHEADER header;	// Sun file header
-	WORD linelength;	// Length of raster line in bytes
-	WORD fill;			// Number of fill bytes per raster line
+	uint16_t linelength;	// Length of raster line in bytes
+	uint16_t fill;			// Number of fill bytes per raster line
 	BOOL rle;			// TRUE if RLE file
 	BOOL isRGB;			// TRUE if file type is RT_FORMAT_RGB
-	BYTE fillchar;
+	uint8_t fillchar;
 
-	FIBITMAP *dib = NULL;
-	BYTE *bits;			// Pointer to dib data
-	WORD x, y;
+	FIBITMAP *dib = nullptr;
+	uint8_t *bits;			// Pointer to dib data
+	uint16_t x, y;
 
 	if (handle) {
 		try {
@@ -240,7 +240,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					break;
 			}
 
-			if (dib == NULL) {
+			if (dib == nullptr) {
 				throw FI_MSG_ERROR_DIB_MEMORY;
 			}
 
@@ -283,9 +283,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						int numcolors = 1 << header.depth;
 
 						for (int i = 0; i < numcolors; i++) {
-							pal[i].rgbRed	= (BYTE)((255 * i) / (numcolors - 1));
-							pal[i].rgbGreen = (BYTE)((255 * i) / (numcolors - 1));
-							pal[i].rgbBlue	= (BYTE)((255 * i) / (numcolors - 1));
+							pal[i].rgbRed	= (uint8_t)((255 * i) / (numcolors - 1));
+							pal[i].rgbGreen = (uint8_t)((255 * i) / (numcolors - 1));
+							pal[i].rgbBlue	= (uint8_t)((255 * i) / (numcolors - 1));
 						}
 					}
 
@@ -294,19 +294,19 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				case RMT_EQUAL_RGB:
 				{
-					BYTE *r, *g, *b;
+					uint8_t *r, *g, *b;
 
 					// Read SUN raster colormap
 
 					int numcolors = 1 << header.depth;
-					if((DWORD)(3 * numcolors) > header.maplength) {
+					if((uint32_t)(3 * numcolors) > header.maplength) {
 						// some RAS may have less colors than the full palette
 						numcolors = header.maplength / 3;
 					} else {
 						throw "Invalid palette";
 					}
 
-					r = (BYTE*)malloc(3 * numcolors * sizeof(BYTE));
+					r = (uint8_t*)malloc(3 * numcolors * sizeof(uint8_t));
 					g = r + numcolors;
 					b = g + numcolors;
 
@@ -326,11 +326,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				case RMT_RAW:
 				{
-					BYTE *colormap;
+					uint8_t *colormap;
 
 					// Read (skip) SUN raster colormap.
 
-					colormap = (BYTE *)malloc(header.maplength * sizeof(BYTE));
+					colormap = (uint8_t *)malloc(header.maplength * sizeof(uint8_t));
 
 					io->read_proc(colormap, header.maplength, 1, handle);
 
@@ -343,9 +343,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// Each row is multiple of 16 bits (2 bytes).
 
 			if (header.depth == 1)
-				linelength = (WORD)((header.width / 8) + (header.width % 8 ? 1 : 0));
+				linelength = (uint16_t)((header.width / 8) + (header.width % 8 ? 1 : 0));
 			else
-				linelength = (WORD)header.width;
+				linelength = (uint16_t)header.width;
 
 			fill = (linelength % 2) ? 1 : 0;
 
@@ -373,9 +373,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				case 24:
 				{
-					BYTE *buf, *bp;
+					uint8_t *buf, *bp;
 
-					buf = (BYTE*)malloc(header.width * 3);
+					buf = (uint8_t*)malloc(header.width * 3);
 
 					for (y = 0; y < header.height; y++) {
 						bits = FreeImage_GetBits(dib) + (header.height - 1 - y) * pitch;
@@ -412,9 +412,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				case 32:
 				{
-					BYTE *buf, *bp;
+					uint8_t *buf, *bp;
 
-					buf = (BYTE*)malloc(header.width * 4);
+					buf = (uint8_t*)malloc(header.width * 4);
 
 					for (y = 0; y < header.height; y++) {
 						bits = FreeImage_GetBits(dib) + (header.height - 1 - y) * pitch;
@@ -462,12 +462,12 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			}
 			FreeImage_OutputMessageProc(s_format_id, text);
 	
-			return NULL;
+			return nullptr;
 		}
 
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ==========================================================
@@ -482,15 +482,15 @@ InitRAS(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
+	plugin->save_proc = nullptr;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

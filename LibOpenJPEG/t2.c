@@ -139,7 +139,7 @@ static int t2_encode_packet(opj_tcd_tile_t * tile, opj_tcp_t * tcp, opj_pi_itera
 	opj_tcd_tilecomp_t *tilec = &tile->comps[compno];
 	opj_tcd_resolution_t *res = &tilec->resolutions[resno];
 	
-	opj_bio_t *bio = NULL;	/* BIO component */
+	opj_bio_t *bio = nullptr;	/* BIO component */
 	
 	/* <SOP 0xff91> */
 	if (tcp->csty & J2K_CP_CSTY_SOP) {
@@ -298,7 +298,7 @@ static void t2_init_seg(opj_tcd_cblk_dec_t* cblk, int index, int cblksty, int fi
 	opj_tcd_seg_t* seg;
 	cblk->segs = (opj_tcd_seg_t*) opj_realloc(cblk->segs, (index + 1) * sizeof(opj_tcd_seg_t));
 	seg = &cblk->segs[index];
-	seg->data = NULL;
+	seg->data = nullptr;
 	seg->dataindex = 0;
 	seg->numpasses = 0;
 	seg->len = 0;
@@ -330,10 +330,10 @@ static int t2_decode_packet(opj_t2_t* t2, unsigned char *src, int len, opj_tcd_t
 
 	opj_tcd_resolution_t* res = &tile->comps[compno].resolutions[resno];
 
-	unsigned char *hd = NULL;
+	unsigned char *hd = nullptr;
 	int present;
 	
-	opj_bio_t *bio = NULL;	/* BIO component */
+	opj_bio_t *bio = nullptr;	/* BIO component */
 	
 	if (layno == 0) {
 		for (bandno = 0; bandno < res->numbands; bandno++) {
@@ -525,7 +525,7 @@ static int t2_decode_packet(opj_t2_t* t2, unsigned char *src, int len, opj_tcd_t
 		
 		for (cblkno = 0; cblkno < prc->cw * prc->ch; cblkno++) {
 			opj_tcd_cblk_dec_t* cblk = &prc->cblks.dec[cblkno];
-			opj_tcd_seg_t *seg = NULL;
+			opj_tcd_seg_t *seg = nullptr;
 			if (!cblk->numnewpasses)
 				continue;
 			if (!cblk->numsegs) {
@@ -593,7 +593,7 @@ int t2_encode_packets(opj_t2_t* t2,int tileno, opj_tcd_tile_t *tile, int maxlaye
 	unsigned char *c = dest;
 	int e = 0;
 	int compno;
-	opj_pi_iterator_t *pi = NULL;
+	opj_pi_iterator_t *pi = nullptr;
 	int poc;
 	opj_image_t *image = t2->image;
 	opj_cp_t *cp = t2->cp;
@@ -705,7 +705,7 @@ int t2_decode_packets(opj_t2_t *t2, unsigned char *src, int len, int tileno, opj
 				if (cstr_info)
 					pack_info = &cstr_info->tile[tileno].packet[cstr_info->packno];
 				else
-					pack_info = NULL;
+					pack_info = nullptr;
 				e = t2_decode_packet(t2, c, src + len - c, tile, &cp->tcps[tileno], &pi[pino], pack_info);
 			} else {
 				e = 0;
@@ -767,7 +767,7 @@ int t2_decode_packets(opj_t2_t *t2, unsigned char *src, int len, int tileno, opj
 opj_t2_t* t2_create(opj_common_ptr cinfo, opj_image_t *image, opj_cp_t *cp) {
 	/* create the tcd structure */
 	opj_t2_t *t2 = (opj_t2_t*)opj_malloc(sizeof(opj_t2_t));
-	if(!t2) return NULL;
+	if(!t2) return nullptr;
 	t2->cinfo = cinfo;
 	t2->image = image;
 	t2->cp = cp;

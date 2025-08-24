@@ -24,12 +24,12 @@ png_do_write_transformations(png_structp png_ptr)
 {
    png_debug(1, "in png_do_write_transformations");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
 #ifdef PNG_WRITE_USER_TRANSFORM_SUPPORTED
    if (png_ptr->transformations & PNG_USER_TRANSFORM)
-      if (png_ptr->write_user_transform_fn != NULL)
+      if (png_ptr->write_user_transform_fn != nullptr)
         (*(png_ptr->write_user_transform_fn)) /* User write transform function */
           (png_ptr,                    /* png_ptr */
            &(png_ptr->row_info),       /* row_info:     */
@@ -94,7 +94,7 @@ png_do_pack(png_row_infop row_info, png_bytep row, png_uint_32 bit_depth)
 
    if (row_info->bit_depth == 8 &&
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-       row != NULL && row_info != NULL &&
+       row != nullptr && row_info != nullptr &&
 #endif
       row_info->channels == 1)
    {
@@ -220,7 +220,7 @@ png_do_shift(png_row_infop row_info, png_bytep row, png_color_8p bit_depth)
    png_debug(1, "in png_do_shift");
 
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-   if (row != NULL && row_info != NULL &&
+   if (row != nullptr && row_info != nullptr &&
 #else
    if (
 #endif
@@ -345,7 +345,7 @@ png_do_write_swap_alpha(png_row_infop row_info, png_bytep row)
    png_debug(1, "in png_do_write_swap_alpha");
 
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-   if (row != NULL && row_info != NULL)
+   if (row != nullptr && row_info != nullptr)
 #endif
    {
       if (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
@@ -434,7 +434,7 @@ png_do_write_invert_alpha(png_row_infop row_info, png_bytep row)
    png_debug(1, "in png_do_write_invert_alpha");
 
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-   if (row != NULL && row_info != NULL)
+   if (row != nullptr && row_info != nullptr)
 #endif
    {
       if (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
@@ -526,7 +526,7 @@ png_do_write_intrapixel(png_row_infop row_info, png_bytep row)
 
    if (
 #ifdef PNG_USELESS_TESTS_SUPPORTED
-       row != NULL && row_info != NULL &&
+       row != nullptr && row_info != nullptr &&
 #endif
        (row_info->color_type & PNG_COLOR_MASK_COLOR))
    {

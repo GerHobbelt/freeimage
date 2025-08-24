@@ -48,18 +48,18 @@ class LibRaw_abstract_datastream
     virtual int         seek(off_t o, int whence){return -1;}
     virtual int         tell(){return -1;}
     virtual int         get_char(){return -1;}
-    virtual char*       gets(char *, int){ return NULL;}
+    virtual char*       gets(char *, int){ return nullptr;}
     virtual int         scanf_one(const char *, void *){return -1;}
     virtual int         eof(){return -1;}
 
-    virtual const char* fname(){ return NULL;};
+    virtual const char* fname(){ return nullptr;};
     virtual int         subfile_open(const char*){ return EINVAL;}
     virtual void        subfile_close(){}
     virtual int		tempbuffer_open(void*, size_t);
     virtual void	tempbuffer_close()
     {
         if(substream) delete substream;
-        substream = NULL;
+        substream = nullptr;
     }
 
   protected:
@@ -130,7 +130,7 @@ class LibRaw_file_datastream : public LibRaw_abstract_datastream
         if(!f)
             {
                 f = sav;
-                sav = NULL;
+                sav = nullptr;
                 return ENOENT;
             }
         else
