@@ -68,7 +68,7 @@ namespace FreeImageIODotNet
 		}		
 		~FreeImageStream() 
 		{ 
-			_pUnmanaged->_stream = NULL;
+			_pUnmanaged->_stream = nullptr;
 			delete _pUnmanaged;
 		}
 

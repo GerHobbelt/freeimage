@@ -24,20 +24,20 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 @@ -217,7 +218,9 @@
  		height = abs(height);
  
- 		pixels = (BYTE*)malloc(width * height * sizeof(BYTE));
+ 		pixels = (uint8_t*)malloc(width * height * sizeof(uint8_t));
 -		if(!pixels) throw(1);
 +		if (!pixels) {
 +			throw(1);
 +		}
- 		memset(pixels, 0, width * height * sizeof(BYTE));
+ 		memset(pixels, 0, width * height * sizeof(uint8_t));
  
- 		BYTE *q = pixels;
+ 		uint8_t *q = pixels;
 @@ -237,7 +240,7 @@
  					throw(1);
  				}
  				for (int i = 0; i < status_byte; i++)	{
--					*q++=(BYTE)((i & 0x01) ? (second_byte & 0x0f) : ((second_byte >> 4) & 0x0f));
-+					*q++ = (BYTE)((i & 0x01) ? (second_byte & 0x0f) : ((second_byte >> 4) & 0x0f));
+-					*q++=(uint8_t)((i & 0x01) ? (second_byte & 0x0f) : ((second_byte >> 4) & 0x0f));
++					*q++ = (uint8_t)((i & 0x01) ? (second_byte & 0x0f) : ((second_byte >> 4) & 0x0f));
  				}
  				bits += status_byte;
  			}
@@ -55,8 +55,8 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
  					{
  						// read the delta values
 -
- 						BYTE delta_x = 0;
- 						BYTE delta_y = 0;
+ 						uint8_t delta_x = 0;
+ 						uint8_t delta_y = 0;
  
 @@ -276,7 +278,6 @@
  						}
@@ -70,8 +70,8 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
  									throw(1);
  								}
  							}
--							*q++=(BYTE)((i & 0x01) ? (second_byte & 0x0f) : ((second_byte >> 4) & 0x0f));
-+							*q++ = (BYTE)((i & 0x01) ? (second_byte & 0x0f) : ((second_byte >> 4) & 0x0f));
+-							*q++=(uint8_t)((i & 0x01) ? (second_byte & 0x0f) : ((second_byte >> 4) & 0x0f));
++							*q++ = (uint8_t)((i & 0x01) ? (second_byte & 0x0f) : ((second_byte >> 4) & 0x0f));
  						}
  						bits += status_byte;
  						// Read pad byte
@@ -96,30 +96,30 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
  */
  static BOOL 
 @@ -354,103 +357,85 @@
- 	BYTE second_byte = 0;
+ 	uint8_t second_byte = 0;
  	int scanline = 0;
  	int bits = 0;
 +	int count = 0;
-+	BYTE delta_x = 0;
-+	BYTE delta_y = 0;
++	uint8_t delta_x = 0;
++	uint8_t delta_y = 0;
  
 -	for (;;) {
--		if( io->read_proc(&status_byte, sizeof(BYTE), 1, handle) != 1) {
+-		if( io->read_proc(&status_byte, sizeof(uint8_t), 1, handle) != 1) {
 +	height = abs(height);
 +	
 +	while(scanline < height) {
 +
-+		if (io->read_proc(&status_byte, sizeof(BYTE), 1, handle) != 1) {
++		if (io->read_proc(&status_byte, sizeof(uint8_t), 1, handle) != 1) {
  			return FALSE;
  		}
  
 -		switch (status_byte) {
 -			case RLE_COMMAND :
--				if(io->read_proc(&status_byte, sizeof(BYTE), 1, handle) != 1) {
+-				if(io->read_proc(&status_byte, sizeof(uint8_t), 1, handle) != 1) {
 -					return FALSE;
 -				}
 +		if (status_byte == RLE_COMMAND) {
-+			if (io->read_proc(&status_byte, sizeof(BYTE), 1, handle) != 1) {
++			if (io->read_proc(&status_byte, sizeof(uint8_t), 1, handle) != 1) {
 +				return FALSE;
 +			}
  
@@ -146,10 +146,10 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 +					// read the delta values
 +					delta_x = 0;
 +					delta_y = 0;
-+					if (io->read_proc(&delta_x, sizeof(BYTE), 1, handle) != 1) {
++					if (io->read_proc(&delta_x, sizeof(uint8_t), 1, handle) != 1) {
 +						return FALSE;
 +					}
-+					if (io->read_proc(&delta_y, sizeof(BYTE), 1, handle) != 1) {
++					if (io->read_proc(&delta_y, sizeof(uint8_t), 1, handle) != 1) {
 +						return FALSE;
 +					}
 +					// apply them
@@ -157,13 +157,13 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 +					scanline += delta_y;
 +					break;
  
--						BYTE delta_x = 0;
--						BYTE delta_y = 0;
+-						uint8_t delta_x = 0;
+-						uint8_t delta_y = 0;
 -
--						if(io->read_proc(&delta_x, sizeof(BYTE), 1, handle) != 1) {
+-						if(io->read_proc(&delta_x, sizeof(uint8_t), 1, handle) != 1) {
 -							return FALSE;
 -						}
--						if(io->read_proc(&delta_y, sizeof(BYTE), 1, handle) != 1) {
+-						if(io->read_proc(&delta_y, sizeof(uint8_t), 1, handle) != 1) {
 -							return FALSE;
 -						}
 -
@@ -188,23 +188,23 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 -
 -						int count = MIN((int)status_byte, width - bits);
 -
--						BYTE *sline = FreeImage_GetScanLine(dib, scanline);
+-						uint8_t *sline = FreeImage_GetScanLine(dib, scanline);
 -
--						if(io->read_proc((void *)(sline + bits), sizeof(BYTE) * count, 1, handle) != 1) {
-+					BYTE *sline = FreeImage_GetScanLine(dib, scanline);
-+					if (io->read_proc((void *)(sline + bits), sizeof(BYTE) * count, 1, handle) != 1) {
+-						if(io->read_proc((void *)(sline + bits), sizeof(uint8_t) * count, 1, handle) != 1) {
++					uint8_t *sline = FreeImage_GetScanLine(dib, scanline);
++					if (io->read_proc((void *)(sline + bits), sizeof(uint8_t) * count, 1, handle) != 1) {
 +						return FALSE;
 +					}
 +					// align run length to even number of bytes
 +					if ((status_byte & 1) == 1) {
-+						if (io->read_proc(&second_byte, sizeof(BYTE), 1, handle) != 1) {
++						if (io->read_proc(&second_byte, sizeof(uint8_t), 1, handle) != 1) {
  							return FALSE;
  						}
 -						
 -						// align run length to even number of bytes 
 -
 -						if ((status_byte & 1) == 1) {
--							if(io->read_proc(&second_byte, sizeof(BYTE), 1, handle) != 1) {
+-							if(io->read_proc(&second_byte, sizeof(uint8_t), 1, handle) != 1) {
 -								return FALSE;
 -							}
 -						}
@@ -227,9 +227,9 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 -
 -				int count = MIN((int)status_byte, width - bits);
 -
--				BYTE *sline = FreeImage_GetScanLine(dib, scanline);
+-				uint8_t *sline = FreeImage_GetScanLine(dib, scanline);
 -
--				if(io->read_proc(&second_byte, sizeof(BYTE), 1, handle) != 1) {
+-				if(io->read_proc(&second_byte, sizeof(uint8_t), 1, handle) != 1) {
 -					return FALSE;
 -				}
 -
@@ -247,8 +247,8 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 +			if (count < 0) {
 +				return FALSE;
  			}
-+			BYTE *sline = FreeImage_GetScanLine(dib, scanline);
-+			if (io->read_proc(&second_byte, sizeof(BYTE), 1, handle) != 1) {
++			uint8_t *sline = FreeImage_GetScanLine(dib, scanline);
++			if (io->read_proc(&second_byte, sizeof(uint8_t), 1, handle) != 1) {
 +				return FALSE;
 +			}
 +			for (int i = 0; i < count; i++) {
@@ -394,7 +394,7 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
  
 @@ -1090,19 +1085,20 @@
  		BITMAPFILEHEADER bitmapfileheader;
- 		DWORD type = 0;
+ 		uint32_t type = 0;
  
 -		// we use this offset value to make seemingly absolute seeks relative in the file
 -		
@@ -404,7 +404,7 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
  		// read the fileheader
 +		memset(&bitmapfileheader, 0, sizeof(BITMAPFILEHEADER));
 +		if (io->read_proc(&bitmapfileheader, sizeof(BITMAPFILEHEADER), 1, handle) != 1) {
-+			return NULL;
++			return nullptr;
 +		}
  
 -		io->read_proc(&bitmapfileheader, sizeof(BITMAPFILEHEADER), 1, handle);
@@ -416,14 +416,14 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 -
  		if((bitmapfileheader.bfType != 0x4D42) && (bitmapfileheader.bfType != 0x4142)) {
  			FreeImage_OutputMessageProc(s_format_id, FI_MSG_ERROR_MAGIC_NUMBER);
- 			return NULL;
+ 			return nullptr;
 @@ -1109,9 +1105,9 @@
  		}
  
  		// read the first byte of the infoheader
 -
- 		io->read_proc(&type, sizeof(DWORD), 1, handle);
- 		io->seek_proc(handle, 0 - (long)sizeof(DWORD), SEEK_CUR);
+ 		io->read_proc(&type, sizeof(uint32_t), 1, handle);
+ 		io->seek_proc(handle, 0 - (long)sizeof(uint32_t), SEEK_CUR);
 +
  #ifdef FREEIMAGE_BIGENDIAN
  		SwapLong(&type);
@@ -436,7 +436,7 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 +		FreeImage_OutputMessageProc(s_format_id, "Unknown bmp subtype with id %d", type);
  	}
  
- 	return NULL;
+ 	return nullptr;
 @@ -1418,6 +1414,7 @@
  			}
  
@@ -444,7 +444,7 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 +
  #ifdef FREEIMAGE_BIGENDIAN
  		} else if (dst_bpp == 16) {
- 			int padding = dst_pitch - dst_width * sizeof(WORD);
+ 			int padding = dst_pitch - dst_width * sizeof(uint16_t);
 @@ -1439,6 +1436,7 @@
  				}
  			}

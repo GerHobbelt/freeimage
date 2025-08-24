@@ -39,11 +39,11 @@ Index: freeimage-3.17.0+ds1/Source/FreeImage/PluginJPEG.cpp
 -	unsigned total_length;
 -
 -	const int MAX_SEQ_NO = 255;			// sufficient since marker numbers are bytes
--	BYTE marker_present[MAX_SEQ_NO+1];	// 1 if marker found
+-	uint8_t marker_present[MAX_SEQ_NO+1];	// 1 if marker found
 -	unsigned data_length[MAX_SEQ_NO+1];	// size of profile data in marker
 -	unsigned data_offset[MAX_SEQ_NO+1];	// offset for data in marker
 -	
--	*icc_data_ptr = NULL;		// avoid confusion if FALSE return
+-	*icc_data_ptr = nullptr;		// avoid confusion if FALSE return
 -	*icc_data_len = 0;
 -	
 -	/**
@@ -53,7 +53,7 @@ Index: freeimage-3.17.0+ds1/Source/FreeImage/PluginJPEG.cpp
 -	
 -	memset(marker_present, 0, (MAX_SEQ_NO + 1));
 -	
--	for(marker = cinfo->marker_list; marker != NULL; marker = marker->next) {
+-	for(marker = cinfo->marker_list; marker != nullptr; marker = marker->next) {
 -		if (marker_is_icc(marker)) {
 -			if (num_markers == 0) {
 -				// number of markers
@@ -97,11 +97,11 @@ Index: freeimage-3.17.0+ds1/Source/FreeImage/PluginJPEG.cpp
 -	
 -	// allocate space for assembled data 
 -	icc_data = (JOCTET *) malloc(total_length * sizeof(JOCTET));
--	if (icc_data == NULL)
+-	if (icc_data == nullptr)
 -		return FALSE;		// out of memory
 -	
 -	// and fill it in
--	for (marker = cinfo->marker_list; marker != NULL; marker = marker->next) {
+-	for (marker = cinfo->marker_list; marker != nullptr; marker = marker->next) {
 -		if (marker_is_icc(marker)) {
 -			JOCTET FAR *src_ptr;
 -			JOCTET *dst_ptr;

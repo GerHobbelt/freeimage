@@ -113,7 +113,7 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 +				}
  				
  				if (use_bitfields > 0) {
-  					DWORD bitfields[4];
+  					uint32_t bitfields[4];
 @@ -595,10 +676,18 @@
  			case 32 :
  			{
@@ -136,7 +136,7 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
 +				}
  
   				if (use_bitfields > 0) {
- 					DWORD bitfields[4];
+ 					uint32_t bitfields[4];
 @@ -676,6 +765,10 @@
  		SwapInfoHeader(&bih);
  #endif
@@ -154,6 +154,6 @@ diff --git a/Source/FreeImage/PluginBMP.cpp b/Source/FreeImage/PluginBMP.cpp
  			{
 -				if (bih.biCompression == 3) {
 +				if (bih.biCompression == BI_BITFIELDS) {
- 					DWORD bitfields[3];
+ 					uint32_t bitfields[3];
  
- 					io->read_proc(bitfields, 3 * sizeof(DWORD), 1, handle);
+ 					io->read_proc(bitfields, 3 * sizeof(uint32_t), 1, handle);

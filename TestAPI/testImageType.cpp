@@ -26,7 +26,7 @@
 // ----------------------------------------------------------
 
 BOOL testClone(const char *lpszPathName) {
-	FIBITMAP *dib1 = NULL, *dib2 = NULL; 
+	FIBITMAP *dib1 = nullptr, *dib2 = nullptr; 
 
 	try {
 		FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(lpszPathName);
@@ -58,8 +58,8 @@ void testAllocateCloneUnload(const char *lpszPathName) {
 }
 
 BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, unsigned height) {
-	FIBITMAP *image = NULL;
-	FIBITMAP *clone = NULL;
+	FIBITMAP *image = nullptr;
+	FIBITMAP *clone = nullptr;
 
 	unsigned x, y;
 
@@ -76,7 +76,7 @@ BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, uns
 			case FIT_BITMAP:
 				if(FreeImage_GetBPP(image) == 8) {
 					for(y = 0; y < FreeImage_GetHeight(image); y++) {
-						BYTE *bits = (BYTE *)FreeImage_GetScanLine(image, y);
+						uint8_t *bits = (uint8_t *)FreeImage_GetScanLine(image, y);
 						for(x = 0; x < FreeImage_GetWidth(image); x++) {
 							bits[x] = 128;
 						}
@@ -101,7 +101,7 @@ BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, uns
 				break;
 			case FIT_UINT32:
 				for(y = 0; y < FreeImage_GetHeight(image); y++) {
-					DWORD *bits = (DWORD *)FreeImage_GetScanLine(image, y);
+					uint32_t *bits = (uint32_t *)FreeImage_GetScanLine(image, y);
 					for(x = 0; x < FreeImage_GetWidth(image); x++) {
 						bits[x] = 128;
 					}
@@ -109,7 +109,7 @@ BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, uns
 				break;
 			case FIT_INT32:
 				for(y = 0; y < FreeImage_GetHeight(image); y++) {
-					LONG *bits = (LONG *)FreeImage_GetScanLine(image, y);
+					int32_t *bits = (int32_t *)FreeImage_GetScanLine(image, y);
 					for(x = 0; x < FreeImage_GetWidth(image); x++) {
 						bits[x] = 128;
 					}
@@ -195,7 +195,7 @@ BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, uns
 			case FIT_BITMAP:
 				if(FreeImage_GetBPP(clone) == 8) {
 					for(y = 0; y < FreeImage_GetHeight(clone); y++) {
-						BYTE *bits = (BYTE *)FreeImage_GetScanLine(clone, y);
+						uint8_t *bits = (uint8_t *)FreeImage_GetScanLine(clone, y);
 						for(x = 0; x < FreeImage_GetWidth(clone); x++) {
 							if(bits[x] != 128)
 								throw(1);
@@ -223,7 +223,7 @@ BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, uns
 				break;
 			case FIT_UINT32:
 				for(y = 0; y < FreeImage_GetHeight(clone); y++) {
-					DWORD *bits = (DWORD *)FreeImage_GetScanLine(clone, y);
+					uint32_t *bits = (uint32_t *)FreeImage_GetScanLine(clone, y);
 					for(x = 0; x < FreeImage_GetWidth(clone); x++) {
 						if(bits[x] != 128)
 							throw(1);
@@ -232,7 +232,7 @@ BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, uns
 				break;
 			case FIT_INT32:
 				for(y = 0; y < FreeImage_GetHeight(clone); y++) {
-					LONG *bits = (LONG *)FreeImage_GetScanLine(clone, y);
+					int32_t *bits = (int32_t *)FreeImage_GetScanLine(clone, y);
 					for(x = 0; x < FreeImage_GetWidth(clone); x++) {
 						if(bits[x] != 128)
 							throw(1);
@@ -307,9 +307,9 @@ BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, uns
 
 		// test unload function
 		FreeImage_Unload(clone);
-		clone = NULL;
+		clone = nullptr;
 		FreeImage_Unload(image);
-		image = NULL;
+		image = nullptr;
 
 	} catch(int) {
 		if(image) FreeImage_Unload(image);
@@ -320,8 +320,8 @@ BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, uns
 }
 
 BOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
-	FIBITMAP *dst = NULL;
-	FIBITMAP *chk = NULL;
+	FIBITMAP *dst = nullptr;
+	FIBITMAP *chk = nullptr;
 	BOOL bResult = TRUE;
 
 	try {
@@ -335,7 +335,7 @@ BOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
 
 		// destroy dst
 		FreeImage_Unload(dst);
-		dst = NULL;
+		dst = nullptr;
 
 		// load image
 		dst = FreeImage_Load(FIF_TIFF, "TestImageType.tif", TIFF_DEFAULT);
@@ -345,13 +345,13 @@ BOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
 		chk = FreeImage_ConvertToType(dst, FIT_BITMAP, TRUE);
 		if(!chk) throw(1);
 		FreeImage_Unload(dst);
-		dst = NULL;
+		dst = nullptr;
 
 		// save image as TIFF
 		bResult = FreeImage_Save(FIF_TIFF, chk, "TestImageType.tif", TIFF_DEFAULT);
 		if(!bResult) throw(1);
 		FreeImage_Unload(chk);
-		chk = NULL;
+		chk = nullptr;
 
 
 	} catch(int) {
@@ -364,9 +364,9 @@ BOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
 }
 
 BOOL testLoadSaveConvertComplexType(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
-	FIBITMAP *dst = NULL;
-	FIBITMAP *chk_double = NULL;
-	FIBITMAP *chk = NULL;
+	FIBITMAP *dst = nullptr;
+	FIBITMAP *chk_double = nullptr;
+	FIBITMAP *chk = nullptr;
 	BOOL bResult = TRUE;
 
 	try {
@@ -380,7 +380,7 @@ BOOL testLoadSaveConvertComplexType(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL chan
 
 		// destroy dst
 		FreeImage_Unload(dst);
-		dst = NULL;
+		dst = nullptr;
 
 		// load image
 		dst = FreeImage_Load(FIF_TIFF, "TestImageType.tif", TIFF_DEFAULT);
@@ -391,19 +391,19 @@ BOOL testLoadSaveConvertComplexType(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL chan
 		chk_double = FreeImage_GetComplexChannel(dst, channel);
 		if(!chk_double) throw(1);
 		FreeImage_Unload(dst);
-		dst = NULL;
+		dst = nullptr;
 		
 		// convert to standard bitmap (linear scaling)
 		chk = FreeImage_ConvertToType(chk_double, FIT_BITMAP, TRUE);
 		if(!chk) throw(1);
 		FreeImage_Unload(chk_double);
-		chk_double = NULL;
+		chk_double = nullptr;
 
 		// save image as TIFF
 		bResult = FreeImage_Save(FIF_TIFF, chk, "TestImageType.tif", TIFF_DEFAULT);
 		if(!bResult) throw(1);
 		FreeImage_Unload(chk);
-		chk = NULL;
+		chk = nullptr;
 
 
 	} catch(int) {
@@ -458,7 +458,7 @@ void testImageTypeTIFF(unsigned width, unsigned height) {
 
 	// create a test 8-bit image
 	FIBITMAP *src = createZonePlateImage(width, height, 128);
-	assert(src != NULL);
+	assert(src != nullptr);
 
 	// save for further examination
 	bResult = FreeImage_Save(FIF_PNG, src, "zoneplate.png", PNG_DEFAULT);

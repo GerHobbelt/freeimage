@@ -222,8 +222,8 @@ namespace FreeImageAPI
 		/// <term>16</term>
 		/// <description>
 		/// The bitmap has a maximum of 2^16 colors. If the <b>biCompression</b> member of the
-		/// <b>BITMAPINFOHEADER</b> is BI_RGB, the <b>bmiColors</b> member of <b>BITMAPINFO</b> is NULL.
-		/// Each <b>WORD</b> in the bitmap array represents a single pixel. The relative intensities
+		/// <b>BITMAPINFOHEADER</b> is BI_RGB, the <b>bmiColors</b> member of <b>BITMAPINFO</b> is nullptr.
+		/// Each <b>uint16_t</b> in the bitmap array represents a single pixel. The relative intensities
 		/// of red, green, and blue are represented with five bits for each color component.
 		/// The value for blue is in the least significant five bits, followed by five bits each for
 		/// green and red. The most significant bit is not used. The <b>bmiColors</b> color table is used
@@ -231,12 +231,12 @@ namespace FreeImageAPI
 		/// specified by the <b>biClrUsed</b> member of the <b>BITMAPINFOHEADER</b>.
 		/// <para/>
 		/// If the <b>biCompression</b> member of the <b>BITMAPINFOHEADER</b> is BI_BITFIELDS, the
-		/// <b>bmiColors</b> member contains three <b>DWORD</b> color masks that specify the red, green,
-		/// and blue components, respectively, of each pixel. Each <b>WORD</b> in the bitmap array represents
+		/// <b>bmiColors</b> member contains three <b>uint32_t</b> color masks that specify the red, green,
+		/// and blue components, respectively, of each pixel. Each <b>uint16_t</b> in the bitmap array represents
 		/// a single pixel.
 		/// <para/>
 		/// <b>Windows NT/Windows 2000/XP:</b> When the <b>biCompression</b> member is BI_BITFIELDS,
-		/// bits set in each <b>DWORD</b> mask must be contiguous and should not overlap the bits
+		/// bits set in each <b>uint32_t</b> mask must be contiguous and should not overlap the bits
 		/// of another mask. All the bits in the pixel do not have to be used.
 		/// <para/>
 		/// <b>Windows 95/98/Me:</b> When the <b>biCompression</b> member is BI_BITFIELDS, the system
@@ -250,7 +250,7 @@ namespace FreeImageAPI
 		/// <term>24</term>
 		/// <description>
 		/// The bitmap has a maximum of 2^24 colors, and the <b>bmiColors</b> member of <b>BITMAPINFO</b>
-		/// is NULL. Each 3-byte triplet in the bitmap array represents the relative intensities of blue,
+		/// is nullptr. Each 3-byte triplet in the bitmap array represents the relative intensities of blue,
 		/// green, and red, respectively, for a pixel. The <b>bmiColors</b> color table is used for
 		/// optimizing colors used on palette-based devices, and must contain the number of entries
 		/// specified by the <b>biClrUsed</b> member of the <b>BITMAPINFOHEADER</b>.
@@ -261,19 +261,19 @@ namespace FreeImageAPI
 		/// <term>32</term>
 		/// <description>
 		/// The bitmap has a maximum of 2^32 colors. If the <b>biCompression</b> member of the
-		/// <b>BITMAPINFOHEADER</b> is BI_RGB, the <b>bmiColors</b> member of <b>BITMAPINFO</b> is NULL.
-		/// Each <b>DWORD</b> in the bitmap array represents the relative intensities of blue, green, and red,
-		/// respectively, for a pixel. The high byte in each <b>DWORD</b> is not used. The <b>bmiColors</b>
+		/// <b>BITMAPINFOHEADER</b> is BI_RGB, the <b>bmiColors</b> member of <b>BITMAPINFO</b> is nullptr.
+		/// Each <b>uint32_t</b> in the bitmap array represents the relative intensities of blue, green, and red,
+		/// respectively, for a pixel. The high byte in each <b>uint32_t</b> is not used. The <b>bmiColors</b>
 		/// color table is used for optimizing colors used on palette-based devices, and must contain the 
 		/// number of entries specified by the <b>biClrUsed</b> member of the <b>BITMAPINFOHEADER</b>.
 		/// <para/>
 		/// If the <b>biCompression</b> member of the <b>BITMAPINFOHEADER</b> is BI_BITFIELDS,
-		/// the <b>bmiColors</b> member contains three <b>DWORD</b> color masks that specify the red, green,
-		/// and blue components, respectively, of each pixel. Each <b>DWORD</b> in the bitmap array represents
+		/// the <b>bmiColors</b> member contains three <b>uint32_t</b> color masks that specify the red, green,
+		/// and blue components, respectively, of each pixel. Each <b>uint32_t</b> in the bitmap array represents
 		/// a single pixel.
 		/// <para/>
 		/// <b>Windows NT/ 2000:</b> When the <b>biCompression</b> member is BI_BITFIELDS, bits set in each
-		/// <b>DWORD</b> mask must be contiguous and should not overlap the bits of another mask. All the
+		/// <b>uint32_t</b> mask must be contiguous and should not overlap the bits of another mask. All the
 		/// bits in the pixel do not need to be used.
 		/// <para/>
 		/// <b>Windows 95/98/Me:</b> When the <b>biCompression</b> member is BI_BITFIELDS, the system
@@ -314,7 +314,7 @@ namespace FreeImageAPI
 		/// <item>
 		/// <term>BI_BITFIELDS</term>
 		/// <description>Specifies that the bitmap is not compressed and that the color table consists
-		/// of three <b>DWORD</b> color masks that specify the red, green, and blue components, respectively,
+		/// of three <b>uint32_t</b> color masks that specify the red, green, and blue components, respectively,
 		/// of each pixel. This is valid when used with 16- and 32-bpp bitmaps.</description>
 		/// </item>
 		/// 
@@ -359,7 +359,7 @@ namespace FreeImageAPI
 		/// member specifies the actual number of colors the graphics engine or device driver accesses.
 		/// If <b>biBitCount</b> is 16 or greater, the <b>biClrUsed</b> member specifies the size of the color
 		/// table used to optimize performance of the system color palettes. If <b>biBitCount</b> equals 16 or 32,
-		/// the optimal color palette starts immediately following the three <b>DWORD</b> masks.
+		/// the optimal color palette starts immediately following the three <b>uint32_t</b> masks.
 		/// <para/>
 		/// When the bitmap array immediately follows the <see cref="BITMAPINFO"/> structure, it is a packed bitmap.
 		/// Packed bitmaps are referenced by a single pointer. Packed bitmaps require that the
@@ -451,14 +451,14 @@ namespace FreeImageAPI
 	/// A DIB consists of two distinct parts: a <b>BITMAPINFO</b> structure describing the dimensions
 	/// and colors of the bitmap, and an array of bytes defining the pixels of the bitmap. The bits in
 	/// the array are packed together, but each scan line must be padded with zeroes to end on a
-	/// <b>LONG</b> data-type boundary. If the height of the bitmap is positive, the bitmap is a
+	/// <b>int32_t</b> data-type boundary. If the height of the bitmap is positive, the bitmap is a
 	/// bottom-up DIB and its origin is the lower-left corner. If the height is negative, the bitmap is
 	/// a top-down DIB and its origin is the upper left corner.
 	/// <para/>
 	/// A bitmap is packed when the bitmap array immediately follows the <b>BITMAPINFO</b> header.
 	/// Packed bitmaps are referenced by a single pointer. For packed bitmaps, the <b>biClrUsed</b>
 	/// member must be set to an even number when using the DIB_PAL_COLORS mode so that the DIB bitmap
-	/// array starts on a <b>DWORD</b> boundary.
+	/// array starts on a <b>uint32_t</b> boundary.
 	/// <para/>
 	/// <b>Note</b>  The <b>bmiColors</b> member should not contain palette indexes if the bitmap is to
 	/// be stored in a file or transferred to another application.
@@ -5588,7 +5588,7 @@ namespace FreeImageAPI
 		///
 		/// Rounding is done using the following formula:
 		///
-		/// dst_pixel = (BYTE) MIN(255, MAX(0, q)) where int q = int(src_pixel + 0.5);</param>
+		/// dst_pixel = (uint8_t) MIN(255, MAX(0, q)) where int q = int(src_pixel + 0.5);</param>
 		/// <returns>Handle to a FreeImage bitmap.</returns>
 		[DllImport(FreeImageLibrary, EntryPoint = "FreeImage_ConvertToStandardType")]
 		public static extern FIBITMAP ConvertToStandardType(FIBITMAP src, bool scale_linear);
@@ -5759,7 +5759,7 @@ namespace FreeImageAPI
 		/// Returns the tag description.
 		/// </summary>
 		/// <param name="tag">The tag field.</param>
-		/// <returns>The description or NULL if unavailable.</returns>
+		/// <returns>The description or nullptr if unavailable.</returns>
 		public static unsafe string GetTagDescription(FITAG tag) { return PtrToStr(GetTagDescription_(tag)); }
 		[DllImport(FreeImageLibrary, CharSet = CharSet.Ansi, EntryPoint = "FreeImage_GetTagDescription")]
 		private static unsafe extern byte* GetTagDescription_(FITAG tag);
@@ -17216,7 +17216,7 @@ namespace FreeImageAPI.Metadata
         /// </summary>
         /// <remarks>
         /// The character code used in the UserComment tag is identified based on an ID code in a fixed 8-byte
-        /// area at the start of the tag data area. The unused portion of the area is padded with NULL.
+        /// area at the start of the tag data area. The unused portion of the area is padded with nullptr.
         /// The ID code for the UserComment area may be a Defined code such as JIS or ASCII, or may be Undefined.
         /// <para/>
         /// <br/><b>Handling of null values</b><para/>
@@ -19824,7 +19824,7 @@ namespace FreeImageAPI.Metadata
         /// Gets or sets a character string recording the name of the method used
         /// for location finding. The first byte indicates the character code used,
         /// and this is followed by the name of the method. Since the Type is not ASCII,
-        /// NULL termination is not necessary.
+        /// nullptr termination is not necessary.
         /// </summary>
         /// <remarks>
         /// <b>Handling of null values</b><para/>
@@ -19850,7 +19850,7 @@ namespace FreeImageAPI.Metadata
         /// <summary>
         /// Gets or sets a character string recording the name of the GPS area.
         /// The first byte indicates the character code used, and this is followed by
-        /// the name of the GPS area. Since the Type is not ASCII, NULL termination is
+        /// the name of the GPS area. Since the Type is not ASCII, nullptr termination is
         /// not necessary. 
         /// </summary>
         /// <remarks>
@@ -21135,9 +21135,9 @@ namespace FreeImageAPI.Metadata
         /// projections, datums, etc.
         /// <para/>
         /// Special handling is required for <see cref="String"/>-valued keys. While it
-        /// is true that TIFF 6.0 permits multiple NULL-delimited strings within a single
+        /// is true that TIFF 6.0 permits multiple nullptr-delimited strings within a single
         /// ASCII tag, the secondary strings might not appear in the output of naive
-        /// <i>tiffdump</i> programs. For this reason, the NULL delimiter of each ASCII key
+        /// <i>tiffdump</i> programs. For this reason, the nullptr delimiter of each ASCII key
         /// value shall be converted to a "|" (pipe) character before being installed
         /// back into the <see cref="String"/> holding tag, so that a dump of the tag
         /// will look like this.
@@ -21145,7 +21145,7 @@ namespace FreeImageAPI.Metadata
         /// AsciiTag="first_value|second_value|etc...last_value|"
         /// <para/>
         /// A baseline GeoTIFF-reader must check for and convert the final "|" pipe 
-        /// character of a key back into a NULL before returning it to the client 
+        /// character of a key back into a nullptr before returning it to the client 
         /// software.
         /// <para/>
         /// <br/><b>Handling of null values</b><para/>
@@ -25353,7 +25353,7 @@ namespace FreeImageAPI
 
 		/// <summary>
 		/// Specifies that the bitmap is not compressed and that the color table consists of three
-		/// <b>DWORD</b> color masks that specify the red, green, and blue components, respectively,
+		/// <b>uint32_t</b> color masks that specify the red, green, and blue components, respectively,
 		/// of each pixel. This is valid when used with 16- and 32-bpp bitmaps.
 		/// </summary>
 		public const int BI_BITFIELDS = 3;
@@ -30450,7 +30450,7 @@ namespace FreeImageAPI
 		/// <param name="hWnd">Handle to the window whose DC is to be retrieved.
 		/// If this value is IntPtr.Zero, GetDC retrieves the DC for the entire screen. </param>
 		/// <returns>If the function succeeds, the return value is a handle to the DC for the specified window's client area.
-		/// If the function fails, the return value is NULL.</returns>
+		/// If the function fails, the return value is nullptr.</returns>
 		[DllImport("user32.dll")]
 		private static extern IntPtr GetDC(IntPtr hWnd);
 
@@ -30478,11 +30478,11 @@ namespace FreeImageAPI
 		/// pointed to by pbmi (either logical palette indexes or literal RGB values).</param>
 		/// <param name="ppvBits">Pointer to a variable that receives a pointer to the location of the DIB bit values.</param>
 		/// <param name="hSection">Handle to a file-mapping object that the function will use to create the DIB.
-		/// This parameter can be NULL.</param>
+		/// This parameter can be nullptr.</param>
 		/// <param name="dwOffset">Specifies the offset from the beginning of the file-mapping object referenced by hSection
-		/// where storage for the bitmap bit values is to begin. This value is ignored if hSection is NULL.</param>
+		/// where storage for the bitmap bit values is to begin. This value is ignored if hSection is nullptr.</param>
 		/// <returns>If the function succeeds, the return value is a handle to the newly created DIB,
-		/// and *ppvBits points to the bitmap bit values. If the function fails, the return value is NULL, and *ppvBits is NULL.</returns>
+		/// and *ppvBits points to the bitmap bit values. If the function fails, the return value is nullptr, and *ppvBits is nullptr.</returns>
 		[DllImport("gdi32.dll")]
 		private static extern IntPtr CreateDIBSection(
 			IntPtr hdc,

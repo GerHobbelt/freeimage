@@ -22,7 +22,7 @@ March 01st, 2015
 + [Herve Drolon] added fipImage::convertToRGBAF
 + [Herve Drolon] added fipImage::convertToRGBA16
 + [Herve Drolon] added fipImage::getImageMemorySize
-* [Herve Drolon] fixed returnd type of fipImage::getImageSize from LONG to unsigned
+* [Herve Drolon] fixed returnd type of fipImage::getImageSize from int32_t to unsigned
 
 July 17th, 2011
 + [Herve Drolon] added fipImage::convertToRGB16

@@ -222,6 +222,6 @@ diff --git a/Source/FreeImage/PluginPFM.cpp b/Source/FreeImage/PluginPFM.cpp
 +		if (dib) {
 +			FreeImage_Unload(dib);
 +		}
- 		if(NULL != text) {
+ 		if(nullptr != text) {
  			FreeImage_OutputMessageProc(s_format_id, text);
  		}

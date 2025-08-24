@@ -21,9 +21,9 @@ Index: freeimage-3.18.0+ds2/Source/FreeImage/PluginBMP.cpp
  #ifdef FREEIMAGE_BIGENDIAN
 -		} else if (bpp == 16) {
 +		} else if (dst_bpp == 16) {
- 			int padding = dst_pitch - dst_width * sizeof(WORD);
- 			WORD pad = 0;
- 			WORD pixel;
+ 			int padding = dst_pitch - dst_width * sizeof(uint16_t);
+ 			uint16_t pad = 0;
+ 			uint16_t pixel;
 @@ -1440,7 +1440,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_
  			}
  #endif
@@ -31,7 +31,7 @@ Index: freeimage-3.18.0+ds2/Source/FreeImage/PluginBMP.cpp
 -		} else if (bpp == 24) {
 +		} else if (dst_bpp == 24) {
  			int padding = dst_pitch - dst_width * sizeof(FILE_BGR);
- 			DWORD pad = 0;
+ 			uint32_t pad = 0;
  			FILE_BGR bgr;
 @@ -1461,7 +1461,7 @@ Save(FreeImageIO *io, FIBITMAP *dib, fi_
  					}
@@ -41,7 +41,7 @@ Index: freeimage-3.18.0+ds2/Source/FreeImage/PluginBMP.cpp
 +		} else if (dst_bpp == 32) {
  			FILE_BGRA bgra;
  			for(unsigned y = 0; y < dst_height; y++) {
- 				BYTE *line = FreeImage_GetScanLine(dib, y);
+ 				uint8_t *line = FreeImage_GetScanLine(dib, y);
 Index: freeimage-3.18.0+ds2/Source/FreeImage/PluginDDS.cpp
 ===================================================================
 --- freeimage-3.18.0+ds2.orig/Source/FreeImage/PluginDDS.cpp
