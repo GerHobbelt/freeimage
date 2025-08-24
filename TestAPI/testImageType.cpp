@@ -25,8 +25,8 @@
 // Local test functions
 // ----------------------------------------------------------
 
-FIBOOL testClone(const char *lpszPathName) {
-	FIBITMAP *dib1 = NULL, *dib2 = NULL; 
+BOOL testClone(const char *lpszPathName) {
+	FIBITMAP *dib1 = nullptr, *dib2 = nullptr; 
 
 	try {
 		FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(lpszPathName);
@@ -53,13 +53,13 @@ FIBOOL testClone(const char *lpszPathName) {
 void testAllocateCloneUnload(const char *lpszPathName) {
 	printf("testAllocateCloneUnload ...\n");
 
-	FIBOOL bResult = testClone(lpszPathName);
+	BOOL bResult = testClone(lpszPathName);
 	assert(bResult);
 }
 
-FIBOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, unsigned height) {
-	FIBITMAP *image = NULL;
-	FIBITMAP *clone = NULL;
+BOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, unsigned height) {
+	FIBITMAP *image = nullptr;
+	FIBITMAP *clone = nullptr;
 
 	unsigned x, y;
 
@@ -307,9 +307,9 @@ FIBOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, u
 
 		// test unload function
 		FreeImage_Unload(clone);
-		clone = NULL;
+		clone = nullptr;
 		FreeImage_Unload(image);
-		image = NULL;
+		image = nullptr;
 
 	} catch(int) {
 		if(image) FreeImage_Unload(image);
@@ -319,10 +319,10 @@ FIBOOL testAllocateCloneUnloadType(FREE_IMAGE_TYPE image_type, unsigned width, u
 	return TRUE;
 }
 
-FIBOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
-	FIBITMAP *dst = NULL;
-	FIBITMAP *chk = NULL;
-	FIBOOL bResult = TRUE;
+BOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
+	FIBITMAP *dst = nullptr;
+	FIBITMAP *chk = nullptr;
+	BOOL bResult = TRUE;
 
 	try {
 		// convert to type image_type
@@ -335,7 +335,7 @@ FIBOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
 
 		// destroy dst
 		FreeImage_Unload(dst);
-		dst = NULL;
+		dst = nullptr;
 
 		// load image
 		dst = FreeImage_Load(FIF_TIFF, "TestImageType.tif", TIFF_DEFAULT);
@@ -345,13 +345,13 @@ FIBOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
 		chk = FreeImage_ConvertToType(dst, FIT_BITMAP, TRUE);
 		if(!chk) throw(1);
 		FreeImage_Unload(dst);
-		dst = NULL;
+		dst = nullptr;
 
 		// save image as TIFF
 		bResult = FreeImage_Save(FIF_TIFF, chk, "TestImageType.tif", TIFF_DEFAULT);
 		if(!bResult) throw(1);
 		FreeImage_Unload(chk);
-		chk = NULL;
+		chk = nullptr;
 
 
 	} catch(int) {
@@ -363,11 +363,11 @@ FIBOOL testLoadSaveConvertImageType(FIBITMAP *src, FREE_IMAGE_TYPE image_type) {
 	return TRUE;
 }
 
-FIBOOL testLoadSaveConvertComplexType(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
-	FIBITMAP *dst = NULL;
-	FIBITMAP *chk_double = NULL;
-	FIBITMAP *chk = NULL;
-	FIBOOL bResult = TRUE;
+BOOL testLoadSaveConvertComplexType(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
+	FIBITMAP *dst = nullptr;
+	FIBITMAP *chk_double = nullptr;
+	FIBITMAP *chk = nullptr;
+	BOOL bResult = TRUE;
 
 	try {
 		// convert to type FICOMPLEX
@@ -380,7 +380,7 @@ FIBOOL testLoadSaveConvertComplexType(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL ch
 
 		// destroy dst
 		FreeImage_Unload(dst);
-		dst = NULL;
+		dst = nullptr;
 
 		// load image
 		dst = FreeImage_Load(FIF_TIFF, "TestImageType.tif", TIFF_DEFAULT);
@@ -391,19 +391,19 @@ FIBOOL testLoadSaveConvertComplexType(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL ch
 		chk_double = FreeImage_GetComplexChannel(dst, channel);
 		if(!chk_double) throw(1);
 		FreeImage_Unload(dst);
-		dst = NULL;
+		dst = nullptr;
 		
 		// convert to standard bitmap (linear scaling)
 		chk = FreeImage_ConvertToType(chk_double, FIT_BITMAP, TRUE);
 		if(!chk) throw(1);
 		FreeImage_Unload(chk_double);
-		chk_double = NULL;
+		chk_double = nullptr;
 
 		// save image as TIFF
 		bResult = FreeImage_Save(FIF_TIFF, chk, "TestImageType.tif", TIFF_DEFAULT);
 		if(!bResult) throw(1);
 		FreeImage_Unload(chk);
-		chk = NULL;
+		chk = nullptr;
 
 
 	} catch(int) {
@@ -420,7 +420,7 @@ FIBOOL testLoadSaveConvertComplexType(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL ch
 // ----------------------------------------------------------
 
 void testImageType(unsigned width, unsigned height) {
-	FIBOOL bResult = FALSE;
+	BOOL bResult = FALSE;
 
 	printf("testImageType ...\n");
 
@@ -452,13 +452,13 @@ void testImageType(unsigned width, unsigned height) {
 
 
 void testImageTypeTIFF(unsigned width, unsigned height) {
-	FIBOOL bResult = FALSE;
+	BOOL bResult = FALSE;
 
 	printf("testImageTypeTIFF ...\n");
 
 	// create a test 8-bit image
 	FIBITMAP *src = createZonePlateImage(width, height, 128);
-	assert(src != NULL);
+	assert(src != nullptr);
 
 	// save for further examination
 	bResult = FreeImage_Save(FIF_PNG, src, "zoneplate.png", PNG_DEFAULT);

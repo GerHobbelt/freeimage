@@ -204,7 +204,7 @@ private:
 	virtual bool DoSupportsNoPixels() const = 0;
 
 private:
-	/** Handle to a user plugin DLL (NULL for standard plugins) */
+	/** Handle to a user plugin DLL (nullptr for standard plugins) */
 	void* mInstance{ nullptr };
 	/** Enable/Disable switch */
 	bool mEnabled{ true };

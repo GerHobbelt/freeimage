@@ -40,7 +40,7 @@ void DLL_CALLCONV
 FreeImage_ConvertLine4To8(uint8_t *target, uint8_t *source, int width_in_pixels) {
 	unsigned count_new = 0;
 	unsigned count_org = 0;
-	FIBOOL hinibble = TRUE;
+	BOOL hinibble = TRUE;
 
 	while (count_new < (unsigned)width_in_pixels) {
 		if (hinibble) {

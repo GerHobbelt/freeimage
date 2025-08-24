@@ -116,11 +116,11 @@ struct MULTIBITMAPHEADER {
 	fi_handle handle;
 	CacheFile m_cachefile;
 	std::map<FIBITMAP *, int> locked_pages;
-	FIBOOL changed;
+	BOOL changed;
 	int page_count;
 	BlockList m_blocks;
 	std::string m_filename;
-	FIBOOL read_only;
+	BOOL read_only;
 	FREE_IMAGE_FORMAT cache_fif;
 	int load_flags;
 };
@@ -236,7 +236,7 @@ FreeImage_InternalGetPageCount(FIMULTIBITMAP *bitmap) {
 // =====================================================================
 
 FIMULTIBITMAP * DLL_CALLCONV
-FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, FIBOOL create_new, FIBOOL read_only, FIBOOL keep_cache_in_memory, int flags) {
+FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL create_new, BOOL read_only, BOOL keep_cache_in_memory, int flags) {
 
 	FILE *handle{};
 	try {
@@ -313,7 +313,7 @@ FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, FIBOOL cr
 FIMULTIBITMAP * DLL_CALLCONV
 FreeImage_OpenMultiBitmapFromHandle(FREE_IMAGE_FORMAT fif, FreeImageIO *io, fi_handle handle, int flags) {
 	try {
-		FIBOOL read_only = FALSE;	// modifications (if any) will be stored into the memory cache
+		BOOL read_only = FALSE;	// modifications (if any) will be stored into the memory cache
 
 		if (io && handle) {
 
@@ -357,13 +357,13 @@ FreeImage_OpenMultiBitmapFromHandle(FREE_IMAGE_FORMAT fif, FreeImageIO *io, fi_h
 	return nullptr;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_SaveMultiBitmapToHandle(FREE_IMAGE_FORMAT fif, FIMULTIBITMAP *bitmap, FreeImageIO *io, fi_handle handle, int flags) {
 	if (!bitmap || !bitmap->data || !io || !handle) {
 		return FALSE;
 	}
 
-	FIBOOL success = TRUE;
+	BOOL success = TRUE;
 
 	// retrieve the plugin list to find the node belonging to this plugin
 	
@@ -455,10 +455,10 @@ FreeImage_SaveMultiBitmapToHandle(FREE_IMAGE_FORMAT fif, FIMULTIBITMAP *bitmap, 
 }
 
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_CloseMultiBitmap(FIMULTIBITMAP *bitmap, int flags) {
 	if (bitmap) {
-		FIBOOL success = TRUE;
+		BOOL success = TRUE;
 
 		if (auto *header = FreeImage_GetMultiBitmapHeader(bitmap)) {
 
@@ -707,7 +707,7 @@ FreeImage_LockPage(FIMULTIBITMAP *bitmap, int page) {
 }
 
 void DLL_CALLCONV
-FreeImage_UnlockPage(FIMULTIBITMAP *bitmap, FIBITMAP *page, FIBOOL changed) {
+FreeImage_UnlockPage(FIMULTIBITMAP *bitmap, FIBITMAP *page, BOOL changed) {
 	if ((bitmap) && (page)) {
 		auto *header = FreeImage_GetMultiBitmapHeader(bitmap);
 
@@ -759,7 +759,7 @@ FreeImage_UnlockPage(FIMULTIBITMAP *bitmap, FIBITMAP *page, FIBOOL changed) {
 	}
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_MovePage(FIMULTIBITMAP *bitmap, int target, int source) {
 	if (bitmap) {
 		auto *header = FreeImage_GetMultiBitmapHeader(bitmap);
@@ -782,7 +782,7 @@ FreeImage_MovePage(FIMULTIBITMAP *bitmap, int target, int source) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_GetLockedPageNumbers(FIMULTIBITMAP *bitmap, int *pages, int *count) {
 	if ((bitmap) && (count)) {
 		auto *header = FreeImage_GetMultiBitmapHeader(bitmap);
@@ -815,7 +815,7 @@ FreeImage_GetLockedPageNumbers(FIMULTIBITMAP *bitmap, int *pages, int *count) {
 
 FIMULTIBITMAP * DLL_CALLCONV
 FreeImage_LoadMultiBitmapFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream, int flags) {
-	FIBOOL read_only = FALSE;	// modifications (if any) will be stored into the memory cache
+	BOOL read_only = FALSE;	// modifications (if any) will be stored into the memory cache
 
 	// retrieve the plugin list to find the node belonging to this plugin
 
@@ -861,7 +861,7 @@ FreeImage_LoadMultiBitmapFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream, int
 	return nullptr;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_SaveMultiBitmapToMemory(FREE_IMAGE_FORMAT fif, FIMULTIBITMAP *bitmap, FIMEMORY *stream, int flags) {
 	if (stream && stream->data) {
 		FreeImageIO io;

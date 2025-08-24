@@ -204,14 +204,14 @@ MimeType() {
 	return "image/vnd.wap.wbmp";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 		(depth == 1)
 		);
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_BITMAP) ? TRUE : FALSE;
 }
@@ -296,7 +296,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	return nullptr;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
     uint8_t *bits;	// pointer to dib data
 

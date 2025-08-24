@@ -23,7 +23,7 @@
 #include "TestSuite.h"
 
 void testSaveMemIO(const char *lpszPathName) {
-	FIMEMORY *hmem = NULL; 
+	FIMEMORY *hmem = nullptr; 
 
 	// load a regular file
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(lpszPathName);
@@ -107,7 +107,7 @@ void testLoadMemIO(const char *lpszPathName) {
 }
 
 void testAcquireMemIO(const char *lpszPathName) {
-	FIMEMORY *hmem = NULL; 
+	FIMEMORY *hmem = nullptr; 
 
 	// load a regular file
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(lpszPathName);
@@ -122,7 +122,7 @@ void testAcquireMemIO(const char *lpszPathName) {
 	FreeImage_Unload(dib);
 
 	// get the buffer from the memory stream
-	uint8_t *mem_buffer = NULL;
+	uint8_t *mem_buffer = nullptr;
 	uint32_t size_in_bytes = 0;
 
 	FreeImage_AcquireMemory(hmem, &mem_buffer, &size_in_bytes);

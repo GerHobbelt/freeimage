@@ -90,7 +90,7 @@ G3GetFileSize(FreeImageIO *io, fi_handle handle) {
     return fileSize;
 }
 
-static FIBOOL 
+static BOOL 
 G3ReadFile(FreeImageIO *io, fi_handle handle, uint8_t *tif_rawdata, tmsize_t tif_rawdatasize) {
 	return ((tmsize_t)(io->read_proc(tif_rawdata, (unsigned)tif_rawdatasize, 1, handle) * tif_rawdatasize) == tif_rawdatasize);
 }
@@ -216,7 +216,7 @@ MimeType() {
 	return "image/fax-g3";
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportDepth(int depth) {
 	return	FALSE;
 }

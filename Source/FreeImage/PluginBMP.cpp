@@ -148,7 +148,7 @@ Load uncompressed image pixels for 1-, 4-, 8-, 16-, 24- and 32-bit dib
 @param bit_count Image bit-depth (1-, 4-, 8-, 16-, 24- or 32-bit)
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 LoadPixelData(FreeImageIO *io, fi_handle handle, FIBITMAP *dib, int height, unsigned pitch, unsigned bit_count) {
 	unsigned count = 0;
 
@@ -205,7 +205,7 @@ Load image pixels for 4-bit RLE compressed dib
 @param dib Image to be loaded 
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 LoadPixelDataRLE4(FreeImageIO *io, fi_handle handle, int width, int height, FIBITMAP *dib) {
 	int status_byte = 0;
 	uint8_t second_byte = 0;
@@ -313,7 +313,7 @@ LoadPixelDataRLE4(FreeImageIO *io, fi_handle handle, int width, int height, FIBI
 			for (int y = 0; y < height; y++) {
 				uint8_t *dst = FreeImage_GetScanLine(dib, y);
 
-				FIBOOL hinibble = TRUE;
+				BOOL hinibble = TRUE;
 
 				for (int cols = 0; cols < width; cols++){
 					if (hinibble) {
@@ -344,7 +344,7 @@ Load image pixels for 8-bit RLE compressed dib
 @param dib Image to be loaded 
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 LoadPixelDataRLE8(FreeImageIO *io, fi_handle handle, int width, int height, FIBITMAP *dib) {
 	uint8_t status_byte = 0;
 	uint8_t second_byte = 0;
@@ -454,7 +454,7 @@ LoadPixelDataRLE8(FreeImageIO *io, fi_handle handle, int width, int height, FIBI
 static FIBITMAP *
 LoadWindowsBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_offset, int type) {
 	try {
-		FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 		// load the info header
 
@@ -670,7 +670,7 @@ LoadWindowsBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bit
 static FIBITMAP *
 LoadOS22XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_offset) {
 	try {
-		FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 		// load the info header
 
@@ -869,7 +869,7 @@ LoadOS22XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_
 static FIBITMAP *
 LoadOS21XBMP(FreeImageIO *io, fi_handle handle, int flags, unsigned bitmap_bits_offset) {
 	try {
-		FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 		BITMAPINFOOS2_1X_HEADER bios2_1x;
 
@@ -1031,7 +1031,7 @@ MimeType() {
 	return "image/bmp";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t bmp_signature1[] = { 0x42, 0x4D };
 	const uint8_t bmp_signature2[] = { 0x42, 0x41 };
@@ -1048,7 +1048,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 			(depth == 1) ||
@@ -1060,12 +1060,12 @@ SupportsExportDepth(int depth) {
 		);
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_BITMAP) ? TRUE : FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -1283,7 +1283,7 @@ RLEEncodeLine(uint8_t *target, const uint8_t *source, int size) {
 	return target_pos;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	if (dib && handle) {
 		// write the file header

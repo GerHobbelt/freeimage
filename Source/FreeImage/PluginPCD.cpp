@@ -52,7 +52,7 @@ YUV2RGB(int y, int cb, int cr, int &r, int &g, int &b) {
 	b = clamp(c31 * y + c32 * (cb - 156) + c33 * (cr - 137));
 }
 
-static FIBOOL
+static BOOL
 VerticalOrientation(FreeImageIO *io, fi_handle handle) {
 	char buffer[128];
 
@@ -96,17 +96,17 @@ MimeType() {
 	return "image/x-photo-cd";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -121,7 +121,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	int scan_line_add   = 1;
 	int start_scan_line = 0;
 	
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	// to make absolute seeks possible we store the current position in the file
 	

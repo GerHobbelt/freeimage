@@ -236,7 +236,7 @@ public:
  * conversions from 24-bit to 8-bit images, if the number of distinct colors
  * in the source image is not greater than the desired palette size. If the
  * number of colors in the source image is exceeded, the Quantize method of
- * this implementation stops the process and returns NULL.
+ * this implementation stops the process and returns nullptr.
  *
  * This implementation uses a very fast hash map implementation to collect
  * the source image's colors. It turned out that a customized implementation

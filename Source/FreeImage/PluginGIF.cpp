@@ -48,7 +48,7 @@
 
 
 struct GIFinfo {
-	FIBOOL read;
+	BOOL read;
 	//only really used when reading
 	size_t global_color_table_offset;
 	int global_color_table_size;
@@ -144,7 +144,7 @@ static int g_GifInterlaceIncrement[GIF_INTERLACE_PASSES] = {8, 8, 4, 2};
 // Helpers Functions
 // ==========================================================
 
-static FIBOOL 
+static BOOL 
 FreeImage_SetMetadataEx(FREE_IMAGE_MDMODEL model, FIBITMAP *dib, const char *key, uint16_t id, FREE_IMAGE_MDTYPE type, uint32_t count, uint32_t length, const void *value)
 {
 	bool bSuccess{};
@@ -167,7 +167,7 @@ FreeImage_SetMetadataEx(FREE_IMAGE_MDMODEL model, FIBITMAP *dib, const char *key
 	return bSuccess ? TRUE : FALSE;
 }
 
-static FIBOOL 
+static BOOL 
 FreeImage_GetMetadataEx(FREE_IMAGE_MDMODEL model, FIBITMAP *dib, const char *key, FREE_IMAGE_MDTYPE type, FITAG **tag)
 {
 	if (FreeImage_GetMetadata(model, dib, key, tag)) {
@@ -492,7 +492,7 @@ MimeType() {
 	return "image/gif";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t GIF89a[] = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };	// ASCII code for "GIF89a"
 	const uint8_t GIF87a[] = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };	// ASCII code for "GIF87a"
@@ -508,14 +508,14 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportDepth(int depth) {
 	return	(depth == 1) ||
 			(depth == 4) ||
 			(depth == 8);
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_BITMAP) ? TRUE : FALSE;
 }
@@ -523,7 +523,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 // ----------------------------------------------------------
 
 static void *DLL_CALLCONV 
-Open(FreeImageIO *io, fi_handle handle, FIBOOL read) {
+Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 	GIFinfo *info = new(std::nothrow) GIFinfo;
 	if (!info) {
 		return nullptr;
@@ -1066,7 +1066,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	return nullptr;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	if (!data) {
 		return FALSE;

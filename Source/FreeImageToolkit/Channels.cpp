@@ -26,7 +26,7 @@
 /** @brief Retrieves the red, green, blue or alpha channel of a BGR[A] image. 
 @param src Input image to be processed.
 @param channel Color channel to extract
-@return Returns the extracted channel if successful, returns NULL otherwise.
+@return Returns the extracted channel if successful, returns nullptr otherwise.
 */
 FIBITMAP * DLL_CALLCONV 
 FreeImage_GetChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
@@ -195,7 +195,7 @@ Both src and dst must have the same width and height.
 @param channel Color channel to modify
 @return Returns TRUE if successful, FALSE otherwise.
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetChannel(FIBITMAP *dst, FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 	int c;
 
@@ -357,7 +357,7 @@ FreeImage_SetChannel(FIBITMAP *dst, FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL chan
 /** @brief Retrieves the real part, imaginary part, magnitude or phase of a complex image.
 @param src Input image to be processed.
 @param channel Channel to extract
-@return Returns the extracted channel if successful, returns NULL otherwise.
+@return Returns the extracted channel if successful, returns nullptr otherwise.
 */
 FIBITMAP * DLL_CALLCONV 
 FreeImage_GetComplexChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
@@ -440,7 +440,7 @@ Both src and dst must have the same width and height.
 @param channel Channel to modify
 @return Returns TRUE if successful, FALSE otherwise.
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetComplexChannel(FIBITMAP *dst, FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 	unsigned x, y;
 	const double *src_bits{};

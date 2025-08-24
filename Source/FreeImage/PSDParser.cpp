@@ -229,7 +229,7 @@ psdWriteSize(FreeImageIO *io, fi_handle handle, const psdHeaderInfo& header, uin
 Return Exif metadata as a binary read-only buffer.
 The buffer is owned by the function and MUST NOT be freed by the caller.
 */
-static FIBOOL
+static BOOL
 psd_write_exif_profile_raw(FIBITMAP *dib, uint8_t **profile, unsigned *profile_size) {
     // marker identifying string for Exif = "Exif\0\0"
 	// used by JPEG not PSD
@@ -256,7 +256,7 @@ psd_write_exif_profile_raw(FIBITMAP *dib, uint8_t **profile, unsigned *profile_s
 	return FALSE;
 }
 
-static FIBOOL
+static BOOL
 psd_set_xmp_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned int datalen) {
 	// create a tag
 	bool bSuccess{};
@@ -279,7 +279,7 @@ psd_set_xmp_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned int datalen)
 Return XMP metadata as a binary read-only buffer.
 The buffer is owned by the function and MUST NOT be freed by the caller.
 */
-static FIBOOL
+static BOOL
 psd_get_xmp_profile(FIBITMAP *dib, uint8_t **profile, unsigned *profile_size) {
 	FITAG *tag_xmp{};
 	FreeImage_GetMetadata(FIMD_XMP, dib, g_TagLib_XMPFieldName, &tag_xmp);
@@ -994,7 +994,7 @@ Invert only color components, skipping Alpha/Black
 (Can be useful as public/utility function)
 */
 static
-FIBOOL invertColor(FIBITMAP* dib) {
+BOOL invertColor(FIBITMAP* dib) {
 	FREE_IMAGE_TYPE type = FreeImage_GetImageType(dib);
 	const unsigned Bpp = FreeImage_GetBPP(dib)/8;
 

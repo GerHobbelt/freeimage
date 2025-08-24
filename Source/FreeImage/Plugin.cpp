@@ -134,7 +134,7 @@ private:
 
 	void* DoOpen(FreeImageIO* io, fi_handle handle, bool open_for_reading) override {
 		if (mPlugin->open_proc) {
-			return mPlugin->open_proc(io, handle, static_cast<FIBOOL>(open_for_reading));
+			return mPlugin->open_proc(io, handle, static_cast<BOOL>(open_for_reading));
 		}
 		return nullptr;
 	}
@@ -271,7 +271,7 @@ private:
 
 	void* DoOpen(FreeImageIO* io, fi_handle handle, bool open_for_reading) override {
 		if (mPlugin->open_proc) {
-			return mPlugin->open_proc(mContext, io, handle, static_cast<FIBOOL>(open_for_reading));
+			return mPlugin->open_proc(mContext, io, handle, static_cast<BOOL>(open_for_reading));
 		}
 		return nullptr;
 	}
@@ -609,7 +609,7 @@ bool PluginsRegistrySingleton::DecRef()
 // =====================================================================
 
 void DLL_CALLCONV
-FreeImage_Initialise(FIBOOL load_local_plugins_only) {
+FreeImage_Initialise(BOOL load_local_plugins_only) {
 	// initialise the TagLib singleton
 	const TagLib& s = TagLib::instance();
 
@@ -621,7 +621,7 @@ FreeImage_Initialise(FIBOOL load_local_plugins_only) {
 			int count = 0;
 			char buffer[MAX_PATH + 200];
 			wchar_t current_dir[2 * _MAX_PATH], module[2 * _MAX_PATH];
-			FIBOOL bOk = FALSE;
+			BOOL bOk = FALSE;
 
 			// store the current directory. then set the directory to the application location
 
@@ -730,10 +730,10 @@ FreeImage_LoadU(FREE_IMAGE_FORMAT fif, const wchar_t *filename, int flags) {
 	return bitmap;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_SaveToHandle(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, FreeImageIO *io, fi_handle handle, int flags) {
 	// cannot save "header only" formats
-	FIBOOL result{FALSE};
+	BOOL result{FALSE};
 	if (!FreeImage_HasPixels(dib)) {
 		FreeImage_OutputMessageProc((int)fif, "FreeImage_SaveToHandle: cannot save \"header only\" formats");
 		return result;
@@ -749,12 +749,12 @@ FreeImage_SaveToHandle(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, FreeImageIO *io, fi
 }
 
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_Save(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, const char *filename, int flags) {
 	FreeImageIO io;
 	SetDefaultIO(&io);
 
-	FIBOOL success{FALSE};
+	BOOL success{FALSE};
 	if (auto *handle = fopen(filename, "w+b")) {
 		success = FreeImage_SaveToHandle(fif, dib, &io, (fi_handle)handle, flags);
 
@@ -766,12 +766,12 @@ FreeImage_Save(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, const char *filename, int f
 	return success;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_SaveU(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, const wchar_t *filename, int flags) {
 	FreeImageIO io;
 	SetDefaultIO(&io);
 
-	FIBOOL success{FALSE};
+	BOOL success{FALSE};
 #ifdef _WIN32	
 	if (auto *handle = _wfopen(filename, L"w+b")) {
 		success = FreeImage_SaveToHandle(fif, dib, &io, (fi_handle)handle, flags);
@@ -799,8 +799,8 @@ FreeImage_RegisterLocalPlugin2(FI_InitProc2 proc_address, void* ctx)
 	return FIF_UNKNOWN;
 }
 
-FIBOOL DLL_CALLCONV
-FreeImage_ResetLocalPlugin2(FREE_IMAGE_FORMAT fif, FI_InitProc2 proc_address, void* ctx, FIBOOL force)
+BOOL DLL_CALLCONV
+FreeImage_ResetLocalPlugin2(FREE_IMAGE_FORMAT fif, FI_InitProc2 proc_address, void* ctx, BOOL force)
 {
 	if (auto& plugins = PluginsRegistrySingleton::Instance()) {
 		return plugins->Put(fif, proc_address, ctx, force);
@@ -837,7 +837,7 @@ FreeImage_RegisterExternalPlugin(const char *path, const char *format, const cha
 #endif // _WIN32
 
 int DLL_CALLCONV
-FreeImage_SetPluginEnabled(FREE_IMAGE_FORMAT fif, FIBOOL enable) {
+FreeImage_SetPluginEnabled(FREE_IMAGE_FORMAT fif, BOOL enable) {
 	if (auto& plugins = PluginsRegistrySingleton::Instance()) {
 		if (auto *node = plugins->FindFromFIF(fif)) {
 			return node->SetEnabled(enable);
@@ -945,7 +945,7 @@ FreeImage_GetFIFRegExpr(FREE_IMAGE_FORMAT fif) {
 	return nullptr;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_FIFSupportsReading(FREE_IMAGE_FORMAT fif) {
 	if (auto& plugins = PluginsRegistrySingleton::Instance()) {
 		auto node = plugins->FindFromFIF(fif);
@@ -954,7 +954,7 @@ FreeImage_FIFSupportsReading(FREE_IMAGE_FORMAT fif) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_FIFSupportsWriting(FREE_IMAGE_FORMAT fif) {
 	if (auto& plugins = PluginsRegistrySingleton::Instance()) {
 		auto node = plugins->FindFromFIF(fif);
@@ -963,7 +963,7 @@ FreeImage_FIFSupportsWriting(FREE_IMAGE_FORMAT fif) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_FIFSupportsExportBPP(FREE_IMAGE_FORMAT fif, int depth) {
 	if (auto& plugins = PluginsRegistrySingleton::Instance()) {
 		auto node = plugins->FindFromFIF(fif);
@@ -972,7 +972,7 @@ FreeImage_FIFSupportsExportBPP(FREE_IMAGE_FORMAT fif, int depth) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_FIFSupportsExportType(FREE_IMAGE_FORMAT fif, FREE_IMAGE_TYPE type) {
 	if (auto& plugins = PluginsRegistrySingleton::Instance()) {
 		auto node = plugins->FindFromFIF(fif);
@@ -981,7 +981,7 @@ FreeImage_FIFSupportsExportType(FREE_IMAGE_FORMAT fif, FREE_IMAGE_TYPE type) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_FIFSupportsICCProfiles(FREE_IMAGE_FORMAT fif) {
 	if (auto& plugins = PluginsRegistrySingleton::Instance()) {
 		auto node = plugins->FindFromFIF(fif);
@@ -990,7 +990,7 @@ FreeImage_FIFSupportsICCProfiles(FREE_IMAGE_FORMAT fif) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_FIFSupportsNoPixels(FREE_IMAGE_FORMAT fif) {
 	if (auto& plugins = PluginsRegistrySingleton::Instance()) {
 		auto node = plugins->FindFromFIF(fif);

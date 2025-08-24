@@ -35,7 +35,7 @@ testBuildMPage(const char *src_filename, const char *dst_filename, FREE_IMAGE_FO
 
 		if(FreeImage_GetBPP(rescaled) != bpp) {
 			// convert to the requested bitdepth
-			FIBITMAP *tmp = NULL;
+			FIBITMAP *tmp = nullptr;
 			switch(bpp) {
 				case 8:
 					tmp = FreeImage_ConvertTo8Bits(rescaled);
@@ -44,7 +44,7 @@ testBuildMPage(const char *src_filename, const char *dst_filename, FREE_IMAGE_FO
 					tmp = FreeImage_ConvertTo24Bits(rescaled);
 					break;
 			}
-			assert(tmp != NULL);
+			assert(tmp != nullptr);
 			FreeImage_Unload(rescaled); 
 			rescaled = tmp;
 		}
@@ -61,18 +61,18 @@ testBuildMPage(const char *src_filename, const char *dst_filename, FREE_IMAGE_FO
 
 void testMPageCache(const char *src_filename, const char *dst_filename) {
 
-	FIBOOL keep_cache_in_memory = FALSE;
+	BOOL keep_cache_in_memory = FALSE;
 
 	// get the file type
 	FREE_IMAGE_FORMAT src_fif = FreeImage_GetFileType(src_filename);
 	// load the file
 	FIBITMAP *src = FreeImage_Load(src_fif, src_filename, 0); //24bit image 
-	assert(src != NULL);
+	assert(src != nullptr);
 
 	// convert to 24-bit
 	if(FreeImage_GetBPP(src) != 24) {
 		FIBITMAP *tmp = FreeImage_ConvertTo24Bits(src);
-		assert(tmp != NULL);
+		assert(tmp != nullptr);
 		FreeImage_Unload(src); 
 		src = tmp;
 	}
@@ -93,9 +93,9 @@ void testMPageCache(const char *src_filename, const char *dst_filename) {
 
 // --------------------------------------------------------------------------
 
-FIBOOL testCloneMultiPage(FREE_IMAGE_FORMAT fif, const char *input, const char *output, int output_flag) {
+BOOL testCloneMultiPage(FREE_IMAGE_FORMAT fif, const char *input, const char *output, int output_flag) {
 
-	FIBOOL bMemoryCache = TRUE;
+	BOOL bMemoryCache = TRUE;
 
 	// Open src file (read-only, use memory cache)
 	FIMULTIBITMAP *src = FreeImage_OpenMultiBitmap(fif, input, FALSE, TRUE, bMemoryCache);
@@ -134,9 +134,9 @@ FIBOOL testCloneMultiPage(FREE_IMAGE_FORMAT fif, const char *input, const char *
 
 void testLockDeleteMultiPage(const char *input) {
 
-	FIBOOL bCreateNew = FALSE;
-	FIBOOL bReadOnly = FALSE;
-	FIBOOL bMemoryCache = TRUE;
+	BOOL bCreateNew = FALSE;
+	BOOL bReadOnly = FALSE;
+	BOOL bMemoryCache = TRUE;
 
 	// Open src file (read/write, use memory cache)
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(input);

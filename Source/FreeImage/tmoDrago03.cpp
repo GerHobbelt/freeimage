@@ -64,7 +64,7 @@ Log mapping operator
 @param exposure Exposure parameter (default to 0)
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 ToneMappingDrago03(FIBITMAP *dib, const float maxLum, const float avgLum, float biasParam, const float exposure) {
 	const float LOG05 = -0.693147F;	// log(0.5) 
 
@@ -207,7 +207,7 @@ Custom gamma correction based on the ITU-R BT.709 standard
 @param gammaval Gamma value (2.2 is a good default value)
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 REC709GammaCorrection(FIBITMAP *dib, const float gammaval) {
 	if (FreeImage_GetImageType(dib) != FIT_RGBF)
 		return FALSE;
@@ -252,7 +252,7 @@ Apply the Adaptive Logarithmic Mapping operator to a HDR image and convert to 24
 @param src Input RGB16 or RGB[A]F image
 @param gamma Gamma correction (gamma > 0). 1 means no correction, 2.2 in the original paper.
 @param exposure Exposure parameter (0 means no correction, 0 in the original paper)
-@return Returns a 24-bit RGB image if successful, returns NULL otherwise
+@return Returns a 24-bit RGB image if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_TmoDrago03(FIBITMAP *src, double gamma, double exposure) {

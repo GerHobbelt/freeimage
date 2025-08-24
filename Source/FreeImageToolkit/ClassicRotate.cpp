@@ -315,7 +315,7 @@ Rotates an image by 90 degrees (counter clockwise).
 Precise rotation, no filters required.<br>
 Code adapted from CxImage (http://www.xdp.it/cximage.htm)
 @param src Pointer to source image to rotate
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 Rotate90(FIBITMAP *src) {
@@ -438,7 +438,7 @@ Rotate90(FIBITMAP *src) {
 Rotates an image by 180 degrees (counter clockwise). 
 Precise rotation, no filters required.
 @param src Pointer to source image to rotate
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 Rotate180(FIBITMAP *src) {
@@ -506,7 +506,7 @@ Rotates an image by 270 degrees (counter clockwise).
 Precise rotation, no filters required.<br>
 Code adapted from CxImage (http://www.xdp.it/cximage.htm)
 @param src Pointer to source image to rotate
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 Rotate270(FIBITMAP *src) {
@@ -631,7 +631,7 @@ Rotates an image by a given degree in range [-45 .. +45] (counter clockwise)
 using the 3-shear technique.
 @param src Pointer to source image to rotate
 @param dAngle Rotation angle
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 Rotate45(FIBITMAP *src, double dAngle, const void *bkcolor) {
@@ -749,7 +749,7 @@ Angle is unlimited, except for 1-bit images (limited to integer multiples of 90 
 3-shears technique is used.
 @param src Pointer to source image to rotate
 @param dAngle Rotation angle
-@return Returns a pointer to a newly allocated rotated image if successful, returns NULL otherwise
+@return Returns a pointer to a newly allocated rotated image if successful, returns nullptr otherwise
 */
 static FIBITMAP* 
 RotateAny(FIBITMAP *src, double dAngle, const void *bkcolor) {

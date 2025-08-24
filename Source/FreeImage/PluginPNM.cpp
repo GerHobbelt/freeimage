@@ -33,7 +33,7 @@ Get an integer value from the actual position pointed by handle
 static int
 GetInt(FreeImageIO *io, fi_handle handle) {
     char c = 0;
-	FIBOOL bFirstChar;
+	BOOL bFirstChar;
 
     // skip forward to start of next number
 
@@ -153,7 +153,7 @@ MimeType() {
 	return "image/freeimage-pnm";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t pbm_id1[] = { 0x50, 0x31 };
 	const uint8_t pbm_id2[] = { 0x50, 0x34 };
@@ -186,7 +186,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 			(depth == 1) ||
@@ -195,7 +195,7 @@ SupportsExportDepth(int depth) {
 		);
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (
 		(type == FIT_BITMAP)  ||
@@ -204,7 +204,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 	);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -222,7 +222,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		return nullptr;
 	}
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	try {
 		FREE_IMAGE_TYPE image_type = FIT_BITMAP;	// standard image: 1-, 8-, 24-bit
@@ -521,7 +521,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	return nullptr;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	// ----------------------------------------------------------
 	//   PNM Saving

@@ -91,7 +91,7 @@ FreeImage_LoadFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream, int flags) {
 }
 
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_SaveToMemory(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, FIMEMORY *stream, int flags) {
 	if (stream) {
 		FreeImageIO io;
@@ -114,7 +114,7 @@ FreeImage_SaveToMemory(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, FIMEMORY *stream, i
 // Memory stream buffer access
 // =====================================================================
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_AcquireMemory(FIMEMORY *stream, uint8_t **data, uint32_t *size_in_bytes) {
 	if (stream) {
 		FIMEMORYHEADER *mem_header = (FIMEMORYHEADER*)(stream->data);
@@ -138,7 +138,7 @@ Moves the memory pointer to a specified location
 @param origin Initial position
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_SeekMemory(FIMEMORY *stream, long offset, int origin) {
 	FreeImageIO io;
 	SetMemoryIO(&io);

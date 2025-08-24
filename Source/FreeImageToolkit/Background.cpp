@@ -32,7 +32,7 @@
  @return Returns TRUE if the palette of the image specified contains only
  greyscales, FALSE otherwise.
  */
-static FIBOOL
+static BOOL
 IsVisualGreyscaleImage(FIBITMAP *dib) {
 
 	switch (FreeImage_GetBPP(dib)) {
@@ -65,7 +65,7 @@ IsVisualGreyscaleImage(FIBITMAP *dib) {
  @param color The color to be searched in the palette.
  @param options Options that affect the color search process.
  @param color_type A pointer, that optionally specifies the image's color type as
- returned by FreeImage_GetColorType. If invalid or NULL, this function determines the
+ returned by FreeImage_GetColorType. If invalid or nullptr, this function determines the
  color type with FreeImage_GetColorType.
  @return Returns the specified color's palette index, the color's rgbReserved member
  if option FI_COLOR_ALPHA_IS_INDEX was specified or -1, if the color was not found
@@ -183,7 +183,7 @@ GetPaletteIndex(FIBITMAP *dib, const FIRGBA8 *color, int options, FREE_IMAGE_COL
  @return Returns TRUE on success, FALSE otherwise. This function fails if any of
  the color arguments is a null pointer.
  */
-static FIBOOL
+static BOOL
 GetAlphaBlendedColor(const FIRGBA8 *bgcolor, const FIRGBA8 *fgcolor, FIRGBA8 *blended) {
 	
 	if ((!bgcolor) || (!fgcolor) || (!blended)) {
@@ -209,9 +209,9 @@ GetAlphaBlendedColor(const FIRGBA8 *bgcolor, const FIRGBA8 *fgcolor, FIRGBA8 *bl
  @param color The color, the specified image should be filled with.
  @param options Options that affect the color search process for palletized images.
  @return Returns TRUE on success, FALSE otherwise. This function fails if any of
- the dib and color is NULL or the provided image is not a FIT_BITMAP image.
+ the dib and color is nullptr or the provided image is not a FIT_BITMAP image.
  */
-static FIBOOL
+static BOOL
 FillBackgroundBitmap(FIBITMAP *dib, const FIRGBA8 *color, int options) {
 
 	if ((!dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
@@ -233,7 +233,7 @@ FillBackgroundBitmap(FIBITMAP *dib, const FIRGBA8 *color, int options) {
 	uint8_t *src_bits = FreeImage_GetScanLine(dib, 0);
 	uint8_t *dst_bits = src_bits;	
 	
-	FIBOOL supports_alpha = ((bpp >= 24) || ((bpp == 8) && (color_type != FIC_PALETTE)));
+	BOOL supports_alpha = ((bpp >= 24) || ((bpp == 8) && (color_type != FIC_PALETTE)));
 	
 	// Check for RGBA case if bitmap supports alpha 
 	// blending (8-bit greyscale, 24- or 32-bit images)
@@ -407,7 +407,7 @@ FillBackgroundBitmap(FIBITMAP *dib, const FIRGBA8 *color, int options) {
                                     rgbReserved member are used and for 1-bit images, only
                                     the least significant bit (LSB) is used.
 
- This function fails if any of dib and color is NULL.
+ This function fails if any of dib and color is nullptr.
 
  @param dib The image to be filled.
  @param color A pointer to the color value to be used for filling the image. The
@@ -415,9 +415,9 @@ FillBackgroundBitmap(FIBITMAP *dib, const FIRGBA8 *color, int options) {
  image's color value, but never smaller than the size of an FIRGBA8 structure.
  @param options Options that affect the color search process for palletized images.
  @return Returns TRUE on success, FALSE otherwise. This function fails if any of
- dib and color is NULL.
+ dib and color is nullptr.
  */
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options) {
 
 	if (!FreeImage_HasPixels(dib)) {
@@ -469,7 +469,7 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options) {
  The palette specified through parameter palette is only copied to the newly created
  image, if its image type is FIT_BITMAP and the desired bit depth is smaller than or equal
  to 8 bits per pixel. In other words, the palette parameter is only taken into account for
- palletized images. However, if the preceding conditions match and if palette is not NULL,
+ palletized images. However, if the preceding conditions match and if palette is not nullptr,
  the memory pointed to by the palette pointer is assumed to be at least as large as size
  of a fully populated palette for the desired bit depth. So, for an 8-bit image, this size
  is 256 x sizeof(FIRGBA8), for an 4-bit image it is 16 x sizeof(FIRGBA8) and it is
@@ -477,7 +477,7 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options) {
  partial palettes.
 
  However, specifying a palette is not necessarily needed, even for palletized images. This
- function is capable of implicitly creating a palette, if parameter palette is NULL. If the
+ function is capable of implicitly creating a palette, if parameter palette is nullptr. If the
  specified background color is a greyscale value (red = green = blue) or if option
  FI_COLOR_ALPHA_IS_INDEX is specified, a greyscale palette is created. For a 1-bit image, only
  if the specified background color is either black or white, a monochrome palette, consisting
@@ -491,7 +491,7 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options) {
  member. The image is then filled with this palette index.
 
  This function returns a newly created image as function FreeImage_AllocateT does, if both
- parameters color and palette are NULL. If only color is NULL, the palette pointed to by
+ parameters color and palette are nullptr. If only color is nullptr, the palette pointed to by
  parameter palette is initially set for the new image, if a palletized image of type
  FIT_BITMAP is created. However, in the latter case, this function returns an image, whose
  pixels are all initialized with zeros so, the image will be filled with the color of the
@@ -508,7 +508,7 @@ FreeImage_FillBackground(FIBITMAP *dib, const void *color, int options) {
  @param red_mask Specifies the bits used to store the red components of a pixel.
  @param green_mask Specifies the bits used to store the green components of a pixel.
  @param blue_mask Specifies the bits used to store the blue components of a pixel.
- @return Returns a pointer to a newly allocated image on success, NULL otherwise.
+ @return Returns a pointer to a newly allocated image on success, nullptr otherwise.
  */
 FIBITMAP * DLL_CALLCONV
 FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, const void *color, int options, const FIRGBA8 *palette, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
@@ -664,14 +664,14 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
  The palette specified through parameter palette is only copied to the newly created
  image, if the desired bit depth is smaller than or equal to 8 bits per pixel. In other words,
  the palette parameter is only taken into account for palletized images. However, if the
- image to be created is a palletized image and if palette is not NULL, the memory pointed to
+ image to be created is a palletized image and if palette is not nullptr, the memory pointed to
  by the palette pointer is assumed to be at least as large as size of a fully populated
  palette for the desired bit depth. So, for an 8-bit image, this size is 256 x sizeof(FIRGBA8),
  for an 4-bit image it is 16 x sizeof(FIRGBA8) and it is 2 x sizeof(FIRGBA8) for a 1-bit
  image. In other words, this function does not support partial palettes.
 
  However, specifying a palette is not necessarily needed, even for palletized images. This
- function is capable of implicitly creating a palette, if parameter palette is NULL. If the
+ function is capable of implicitly creating a palette, if parameter palette is nullptr. If the
  specified background color is a greyscale value (red = green = blue) or if option
  FI_COLOR_ALPHA_IS_INDEX is specified, a greyscale palette is created. For a 1-bit image, only
  if the specified background color is either black or white, a monochrome palette, consisting
@@ -685,7 +685,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
  member. The image is then filled with this palette index.
 
  This function returns a newly created image as function FreeImage_Allocate does, if both
- parameters color and palette are NULL. If only color is NULL, the palette pointed to by
+ parameters color and palette are nullptr. If only color is nullptr, the palette pointed to by
  parameter palette is initially set for the new image, if a palletized image of type
  FIT_BITMAP is created. However, in the latter case, this function returns an image, whose
  pixels are all initialized with zeros so, the image will be filled with the color of the
@@ -700,7 +700,7 @@ FreeImage_AllocateExT(FREE_IMAGE_TYPE type, int width, int height, int bpp, cons
  @param red_mask Specifies the bits used to store the red components of a pixel.
  @param green_mask Specifies the bits used to store the green components of a pixel.
  @param blue_mask Specifies the bits used to store the blue components of a pixel.
- @return Returns a pointer to a newly allocated image on success, NULL otherwise.
+ @return Returns a pointer to a newly allocated image on success, nullptr otherwise.
  */
 FIBITMAP * DLL_CALLCONV
 FreeImage_AllocateEx(int width, int height, int bpp, const FIRGBA8 *color, int options, const FIRGBA8 *palette, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
@@ -723,7 +723,7 @@ FreeImage_AllocateEx(int width, int height, int bpp, const FIRGBA8 *color, int o
  right and bottom to value equal to or smaller than zero, my easily be substituted by a call
  to function FreeImage_Copy. Both these cases produce a new image, which is guaranteed not to
  be larger than the input image. Thus, since the specified color is not needed in these cases,
- the pointer color may be NULL.
+ the pointer color may be nullptr.
 
  Both parameters color and options work according to function FreeImage_FillBackground. So,
  please refer to the documentation of FreeImage_FillBackground to learn more about parameters
@@ -751,9 +751,9 @@ FreeImage_AllocateEx(int width, int height, int bpp, const FIRGBA8 *color, int o
  // cut off the 40 leftmost pixel columns
  dib3 = FreeImage_EnlargeCanvas(dib, -40, 0, 30, 0, &c, FI_COLOR_IS_RGB_COLOR);
 
- This function fails if either the input image is NULL or the pointer to the color is
- NULL, while at least on of left, top, right and bottom is greater than zero. This
- function also returns NULL, if the new image's size will be negative in either x- or
+ This function fails if either the input image is nullptr or the pointer to the color is
+ nullptr, while at least on of left, top, right and bottom is greater than zero. This
+ function also returns nullptr, if the new image's size will be negative in either x- or
  y-direction.
 
  @param dib The image to be enlarged or shrunken.
@@ -768,9 +768,9 @@ FreeImage_AllocateEx(int width, int height, int bpp, const FIRGBA8 *color, int o
  @param color The color, the enlarged sides of the image should be filled with.
  @param options Options that affect the color search process for palletized images.
  @return Returns a pointer to a newly allocated enlarged or shrunken image on success,
- NULL otherwise. This function fails if either the input image is NULL or the pointer to the
- color is NULL, while at least on of left, top, right and bottom is greater than zero. This
- function also returns NULL, if the new image's size will be negative in either x- or
+ nullptr otherwise. This function fails if either the input image is nullptr or the pointer to the
+ color is nullptr, while at least on of left, top, right and bottom is greater than zero. This
+ function also returns nullptr, if the new image's size will be negative in either x- or
  y-direction.
  */
 FIBITMAP * DLL_CALLCONV
@@ -789,7 +789,7 @@ FreeImage_EnlargeCanvas(FIBITMAP *src, int left, int top, int right, int bottom,
 
 	// Relay on FreeImage_Copy, if all parameters left, top, right and
 	// bottom are smaller than or equal zero. The color pointer may be
-	// NULL in this case.
+	// nullptr in this case.
 	if ((left <= 0) && (right <= 0) && (top <= 0) && (bottom <= 0)) {
 		return FreeImage_Copy(src, -left, -top,	width + right, height + bottom);
 	}

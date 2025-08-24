@@ -41,7 +41,7 @@
  HOW-TO : add a new TagInfo table
  --------------------------------------------------------------------------
  1) add a table identifier in the TagLib class definition (see enum MDMODEL)
- 2) declare the tag table as static and use a 0/NULL value as last entry
+ 2) declare the tag table as static and use a 0/nullptr value as last entry
  3) initialize the table in TagLib::TagLib
  4) provide a conversion in TagLib::getFreeImageModel
 */
@@ -1477,7 +1477,7 @@ TagLib::TagLib() {
 	addMetadataModel(TagLib::ANIMATION, animation_tag_table);
 }
 
-FIBOOL TagLib::addMetadataModel(MDMODEL md_model, TagInfo *tag_table) {
+BOOL TagLib::addMetadataModel(MDMODEL md_model, TagInfo *tag_table) {
 	// check that the model doesn't already exist
 	if ((_table_map.find(md_model) == _table_map.end()) && tag_table) {
 

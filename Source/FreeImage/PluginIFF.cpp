@@ -156,7 +156,7 @@ MimeType() {
 	return "image/x-iff";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	uint32_t type = 0;
 
@@ -183,12 +183,12 @@ Validate(FreeImageIO *io, fi_handle handle) {
 }
 
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return FALSE;
 }

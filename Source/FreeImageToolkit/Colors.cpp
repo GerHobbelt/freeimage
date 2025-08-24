@@ -46,7 +46,7 @@
 @param src Input image to be processed.
 @return Returns TRUE if successful, FALSE otherwise.
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_Invert(FIBITMAP *src) {
 
 	if (!FreeImage_HasPixels(src)) return FALSE;
@@ -147,7 +147,7 @@ plane (R,G, and B). Otherwise, the LUT is applied to the specified channel only.
 @return Returns TRUE if successful, FALSE otherwise.
 @see FREE_IMAGE_COLOR_CHANNEL
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_AdjustCurve(FIBITMAP *src, uint8_t *LUT, FREE_IMAGE_COLOR_CHANNEL channel) {
 	unsigned x, y;
 	uint8_t *bits{};
@@ -270,7 +270,7 @@ FreeImage_AdjustCurve(FIBITMAP *src, uint8_t *LUT, FREE_IMAGE_COLOR_CHANNEL chan
 less than one darkens it, and greater than one lightens it.
 @return Returns TRUE if successful, FALSE otherwise.
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_AdjustGamma(FIBITMAP *src, double gamma) {
 	uint8_t LUT[256];		// Lookup table
 
@@ -300,7 +300,7 @@ A value 0 means no change, less than 0 will make the image darker
 and greater than 0 will make the image brighter.
 @return Returns TRUE if successful, FALSE otherwise.
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_AdjustBrightness(FIBITMAP *src, double percentage) {
 	uint8_t LUT[256];		// Lookup table
 	double value;
@@ -326,7 +326,7 @@ A value 0 means no change, less than 0 will decrease the contrast
 and greater than 0 will increase the contrast of the image.
 @return Returns TRUE if successful, FALSE otherwise.
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_AdjustContrast(FIBITMAP *src, double percentage) {
 	uint8_t LUT[256];		// Lookup table
 	double value;
@@ -354,7 +354,7 @@ bit depth is not supported (nothing is done).
 @param channel Color channel to use
 @return Returns TRUE if succesful, returns FALSE if the image bit depth isn't supported.
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_GetHistogram(FIBITMAP *src, uint32_t *histo, FREE_IMAGE_COLOR_CHANNEL channel) {
 	uint8_t pixel;
 	uint8_t *bits{};
@@ -785,7 +785,7 @@ namespace
 } // namespace
 
 
-FIBOOL FreeImage_MakeHistogram(FIBITMAP* dib, uint32_t binsNumber, void* outMinVal, void* outMaxVal, uint32_t* histR, uint32_t strideR, uint32_t* histG, uint32_t strideG, uint32_t* histB, uint32_t strideB, uint32_t* histL, uint32_t strideL)
+BOOL FreeImage_MakeHistogram(FIBITMAP* dib, uint32_t binsNumber, void* outMinVal, void* outMaxVal, uint32_t* histR, uint32_t strideR, uint32_t* histG, uint32_t strideG, uint32_t* histB, uint32_t strideB, uint32_t* histL, uint32_t strideL)
 {
 	if (!FreeImage_HasPixels(dib) || binsNumber < 1) {
 		return FALSE;
@@ -994,7 +994,7 @@ FIBOOL FreeImage_MakeHistogram(FIBITMAP* dib, uint32_t binsNumber, void* outMinV
  compared to a blind lookup table.
  */
 int DLL_CALLCONV
-FreeImage_GetAdjustColorsLookupTable(uint8_t *LUT, double brightness, double contrast, double gamma, FIBOOL invert) {
+FreeImage_GetAdjustColorsLookupTable(uint8_t *LUT, double brightness, double contrast, double gamma, BOOL invert) {
 	double dblLUT[256];
 	double value;
 	int result = 0;
@@ -1104,8 +1104,8 @@ FreeImage_GetAdjustColorsLookupTable(uint8_t *LUT, double brightness, double con
  @return Returns TRUE on success, FALSE otherwise (e.g. when the bitdeph of the
  source dib cannot be handled).
  */
-FIBOOL DLL_CALLCONV
-FreeImage_AdjustColors(FIBITMAP *dib, double brightness, double contrast, double gamma, FIBOOL invert) {
+BOOL DLL_CALLCONV
+FreeImage_AdjustColors(FIBITMAP *dib, double brightness, double contrast, double gamma, BOOL invert) {
 	uint8_t LUT[256];
 
 	if (!FreeImage_HasPixels(dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
@@ -1158,7 +1158,7 @@ FreeImage_AdjustColors(FIBITMAP *dib, double brightness, double contrast, double
  @return Returns the total number of pixels changed. 
  */
 unsigned DLL_CALLCONV
-FreeImage_ApplyColorMapping(FIBITMAP *dib, FIRGBA8 *srccolors, FIRGBA8 *dstcolors, unsigned count, FIBOOL ignore_alpha, FIBOOL swap) {
+FreeImage_ApplyColorMapping(FIBITMAP *dib, FIRGBA8 *srccolors, FIRGBA8 *dstcolors, unsigned count, BOOL ignore_alpha, BOOL swap) {
 	unsigned result = 0;
 
 	if (!FreeImage_HasPixels(dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
@@ -1326,7 +1326,7 @@ FreeImage_ApplyColorMapping(FIBITMAP *dib, FIRGBA8 *srccolors, FIRGBA8 *dstcolor
  @return Returns the total number of pixels changed. 
  */
 unsigned DLL_CALLCONV
-FreeImage_SwapColors(FIBITMAP *dib, FIRGBA8 *color_a, FIRGBA8 *color_b, FIBOOL ignore_alpha) {
+FreeImage_SwapColors(FIBITMAP *dib, FIRGBA8 *color_a, FIRGBA8 *color_b, BOOL ignore_alpha) {
 	return FreeImage_ApplyColorMapping(dib, color_a, color_b, 1, ignore_alpha, TRUE);
 }
 
@@ -1359,7 +1359,7 @@ FreeImage_SwapColors(FIBITMAP *dib, FIRGBA8 *color_a, FIRGBA8 *color_b, FIBOOL i
  @return Returns the total number of pixels changed. 
  */
 unsigned DLL_CALLCONV
-FreeImage_ApplyPaletteIndexMapping(FIBITMAP *dib, uint8_t *srcindices,	uint8_t *dstindices, unsigned count, FIBOOL swap) {
+FreeImage_ApplyPaletteIndexMapping(FIBITMAP *dib, uint8_t *srcindices,	uint8_t *dstindices, unsigned count, BOOL swap) {
 	unsigned result = 0;
 
 	if (!FreeImage_HasPixels(dib) || (FreeImage_GetImageType(dib) != FIT_BITMAP)) {
@@ -1464,14 +1464,14 @@ FreeImage_SwapPaletteIndices(FIBITMAP *dib, uint8_t *index_a, uint8_t *index_b) 
 namespace
 {
 	template <typename DstTy_, typename SrcTy_>
-	FIBOOL StaticCastPixelValue(void* dst_pixel, const SrcTy_* src_pixel)
+	BOOL StaticCastPixelValue(void* dst_pixel, const SrcTy_* src_pixel)
 	{
 		*static_cast<DstTy_*>(dst_pixel) = static_cast<DstTy_>(*src_pixel);
 		return TRUE;
 	}
 
 	template <typename SrcTy_>
-	FIBOOL CastPixelValueImpl(const void* src_pixel, FREE_IMAGE_TYPE dst_type, void* dst_pixel)
+	BOOL CastPixelValueImpl(const void* src_pixel, FREE_IMAGE_TYPE dst_type, void* dst_pixel)
 	{
 		const SrcTy_* src = static_cast<const SrcTy_*>(src_pixel);
 		switch (dst_type) {
@@ -1506,7 +1506,7 @@ namespace
 
 } // namespace
 
-FIBOOL CastPixelValue(FREE_IMAGE_TYPE src_type, const void* src_pixel, FREE_IMAGE_TYPE dst_type, void* dst_pixel)
+BOOL CastPixelValue(FREE_IMAGE_TYPE src_type, const void* src_pixel, FREE_IMAGE_TYPE dst_type, void* dst_pixel)
 {
 	if (!src_pixel || !dst_pixel) {
 		return FALSE;

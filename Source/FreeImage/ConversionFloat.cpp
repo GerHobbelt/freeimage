@@ -29,7 +29,7 @@
 
 
 FIBITMAP * DLL_CALLCONV
-FreeImage_ConvertToFloat(FIBITMAP *dib, FIBOOL scale_linear) {
+FreeImage_ConvertToFloat(FIBITMAP *dib, BOOL scale_linear) {
 	FIBITMAP *src{};
 	FIBITMAP *dst{};
 

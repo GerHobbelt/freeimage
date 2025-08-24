@@ -318,7 +318,7 @@ Scan input dib format and return the equivalent PKPixelFormatGUID format for sav
 @return Returns TRUE if successful, returns FALSE otherwise
 */
 static ERR
-GetOutputPixelFormat(FIBITMAP *dib, PKPixelFormatGUID *guid_format, FIBOOL *bHasAlpha) {
+GetOutputPixelFormat(FIBITMAP *dib, PKPixelFormatGUID *guid_format, BOOL *bHasAlpha) {
 	const FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(dib);
 	const unsigned bpp = FreeImage_GetBPP(dib);
 	const FREE_IMAGE_COLOR_TYPE color_type = FreeImage_GetColorType(dib);
@@ -438,7 +438,7 @@ ReadProfile(WMPStream* pStream, unsigned cbByteCount, unsigned uOffset, std::uni
 Convert a DPKPROPVARIANT to a FITAG, then store the tag as FIMD_EXIF_MAIN
 @see ReadDescriptiveMetadata
 */
-static FIBOOL
+static BOOL
 ReadPropVariant(uint16_t tag_id, const DPKPROPVARIANT & varSrc, FIBITMAP *dib) {
 	uint32_t dwSize;
 
@@ -470,7 +470,7 @@ ReadPropVariant(uint16_t tag_id, const DPKPROPVARIANT & varSrc, FIBITMAP *dib) {
 
 			case DPKVT_LPWSTR:
 				bSuccess = bSuccess && FreeImage_SetTagType(tag.get(), FIDT_UNDEFINED);
-				dwSize = (uint32_t)(sizeof(U16) * (wcslen((wchar_t *) varSrc.VT.pwszVal) + 1)); // +1 for NULL term
+				dwSize = (uint32_t)(sizeof(U16) * (wcslen((wchar_t *) varSrc.VT.pwszVal) + 1)); // +1 for nullptr term
 				bSuccess = bSuccess && FreeImage_SetTagCount(tag.get(), dwSize);
 				bSuccess = bSuccess && FreeImage_SetTagLength(tag.get(), dwSize);
 				bSuccess = bSuccess && FreeImage_SetTagValue(tag.get(), varSrc.VT.pwszVal);
@@ -632,7 +632,7 @@ Convert a FITAG (coming from FIMD_EXIF_MAIN) to a DPKPROPVARIANT.
 No allocation is needed here, the function just copy pointers when needed. 
 @see WriteDescriptiveMetadata
 */
-static FIBOOL
+static BOOL
 WritePropVariant(FIBITMAP *dib, uint16_t tag_id, DPKPROPVARIANT & varDst) {
 	FITAG *tag{};
 
@@ -890,7 +890,7 @@ MimeType() {
 	return "image/vnd.ms-photo";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t jxr_signature[3] = { 0x49, 0x49, 0xBC };
 	uint8_t signature[3] = { 0, 0, 0 };
@@ -900,7 +900,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return (memcmp(jxr_signature, signature, 3) == 0);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 		(depth == 1)  ||
@@ -911,7 +911,7 @@ SupportsExportDepth(int depth) {
 		);
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (
 		(type == FIT_BITMAP) ||
@@ -924,12 +924,12 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 	);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsICCProfiles() {
 	return TRUE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -939,7 +939,7 @@ SupportsNoPixels() {
 // ==========================================================
 
 static void * DLL_CALLCONV
-Open(FreeImageIO *io, fi_handle handle, FIBOOL read) {
+Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 	WMPStream *pStream{};	// stream interface
 	if (io && handle) {
 		// allocate the FreeImageIO stream wrapper
@@ -1126,7 +1126,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		return nullptr;
 	}
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	try {
 		int width, height;	// image dimensions (in pixels)
@@ -1285,7 +1285,7 @@ Set encoder parameters
 @param bHasAlpha TRUE if an alpha layer is present
 */
 static void 
-SetEncoderParameters(CWMIStrCodecParam *wmiSCP, const PKPixelInfo *pixelInfo, int flags, FIBOOL bHasAlpha) {
+SetEncoderParameters(CWMIStrCodecParam *wmiSCP, const PKPixelInfo *pixelInfo, int flags, BOOL bHasAlpha) {
 	float fltImageQuality = 1.0F;
 
 	// all values have been set to zero by the API
@@ -1332,12 +1332,12 @@ SetEncoderParameters(CWMIStrCodecParam *wmiSCP, const PKPixelInfo *pixelInfo, in
 
 // --------------------------------------------------------------------------
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
-	FIBOOL bIsFlipped = FALSE;		// FreeImage DIB are upside-down relative to usual graphic conventions
+	BOOL bIsFlipped = FALSE;		// FreeImage DIB are upside-down relative to usual graphic conventions
 	PKPixelFormatGUID guid_format;	// image format
 	PKPixelInfo pixelInfo;			// image specifications
-	FIBOOL bHasAlpha = FALSE;			// is alpha layer present ?
+	BOOL bHasAlpha = FALSE;			// is alpha layer present ?
 
 	PKImageEncode *pEncoder{};		// encoder interface
 	ERR error_code = 0;					// error code as returned by the interface

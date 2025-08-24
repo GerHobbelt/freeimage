@@ -409,7 +409,7 @@ typedef struct tagCWMIStrCodecParam {
 typedef struct tagCWMImageBufferInfo {
     void* pv;           // pointer to scanline buffer
     size_t cLine;       // count of scanlines
-    size_t cbStride;    // count of BYTE for stride
+    size_t cbStride;    // count of uint8_t for stride
 #ifdef REENTRANT_MODE
     unsigned int uiFirstMBRow;     // Current First MB Row being decoded
     unsigned int uiLastMBRow;     // Current Last MB Row being decoded

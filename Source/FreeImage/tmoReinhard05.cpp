@@ -45,7 +45,7 @@ Tone mapping operator
 @return Returns TRUE if successful, returns FALSE otherwise
 @see LuminanceFromY
 */
-static FIBOOL 
+static BOOL 
 ToneMappingReinhard05(FIBITMAP *dib, FIBITMAP *Y, float f, float m, float a, float c) {
 	float Cav[3];		// channel average
 	float Lav = 0;		// average luminance
@@ -212,7 +212,7 @@ User parameters control intensity, contrast, and level of adaptation
 @param contrast Contrast in range [0.3:1) : default to 0
 @param adaptation Adaptation in range [0:1] : default to 1
 @param color_correction Color correction in range [0:1] : default to 0
-@return Returns a 24-bit RGB image if successful, returns NULL otherwise
+@return Returns a 24-bit RGB image if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_TmoReinhard05Ex(FIBITMAP *src, double intensity, double contrast, double adaptation, double color_correction) {
@@ -250,7 +250,7 @@ User parameters control intensity and contrast
 @param src Input RGBF image
 @param intensity Overall intensity in range [-8:8] : default to 0
 @param contrast Contrast in range [0.3:1) : default to 0
-@return Returns a 24-bit RGB image if successful, returns NULL otherwise
+@return Returns a 24-bit RGB image if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_TmoReinhard05(FIBITMAP *src, double intensity, double contrast) {

@@ -9,7 +9,7 @@
 #include <algorithm>
 
 
-FIBOOL FreeImage_FindMinMax(FIBITMAP* dib, double* min_brightness, double* max_brightness, void** min_ptr, void** max_ptr)
+BOOL FreeImage_FindMinMax(FIBITMAP* dib, double* min_brightness, double* max_brightness, void** min_ptr, void** max_ptr)
 {
 	if (!FreeImage_HasPixels(dib)) {
 		return FALSE;
@@ -174,7 +174,7 @@ namespace
 
 } // namespace
 
-FIBOOL FreeImage_FindMinMaxValue(FIBITMAP* dib, void* min_value, void* max_value)
+BOOL FreeImage_FindMinMaxValue(FIBITMAP* dib, void* min_value, void* max_value)
 {
 	if (!FreeImage_HasPixels(dib)) {
 		return FALSE;
@@ -263,7 +263,7 @@ FIBOOL FreeImage_FindMinMaxValue(FIBITMAP* dib, void* min_value, void* max_value
 }
 
 
-FIBOOL FreeImage_Fill(FIBITMAP* dib, const void* value_ptr, size_t value_size)
+BOOL FreeImage_Fill(FIBITMAP* dib, const void* value_ptr, size_t value_size)
 {
 	if (!FreeImage_HasPixels(dib)) {
 		return FALSE;

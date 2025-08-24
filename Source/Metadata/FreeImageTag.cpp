@@ -182,7 +182,7 @@ FreeImage_GetTagValue(FITAG *tag) {
 	return tag ? ((FITAGHEADER *)tag->data)->value : 0;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetTagKey(FITAG *tag, const char *key) {
 	if (tag && key) {
 		FITAGHEADER *tag_header = (FITAGHEADER *)tag->data;
@@ -194,7 +194,7 @@ FreeImage_SetTagKey(FITAG *tag, const char *key) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetTagDescription(FITAG *tag, const char *description) {
 	if (tag && description) {
 		FITAGHEADER *tag_header = (FITAGHEADER *)tag->data;
@@ -206,7 +206,7 @@ FreeImage_SetTagDescription(FITAG *tag, const char *description) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetTagID(FITAG *tag, uint16_t id) {
 	if (tag) {
 		FITAGHEADER *tag_header = (FITAGHEADER *)tag->data;
@@ -216,7 +216,7 @@ FreeImage_SetTagID(FITAG *tag, uint16_t id) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetTagType(FITAG *tag, FREE_IMAGE_MDTYPE type) {
 	if (tag) {
 		FITAGHEADER *tag_header = (FITAGHEADER *)tag->data;
@@ -226,7 +226,7 @@ FreeImage_SetTagType(FITAG *tag, FREE_IMAGE_MDTYPE type) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetTagCount(FITAG *tag, uint32_t count) {
 	if (tag) {
 		FITAGHEADER *tag_header = (FITAGHEADER *)tag->data;
@@ -236,7 +236,7 @@ FreeImage_SetTagCount(FITAG *tag, uint32_t count) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetTagLength(FITAG *tag, uint32_t length) {
 	if (tag) {
 		FITAGHEADER *tag_header = (FITAGHEADER *)tag->data;
@@ -246,7 +246,7 @@ FreeImage_SetTagLength(FITAG *tag, uint32_t length) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetTagValue(FITAG *tag, const void *value) {
 	if (tag && value) {
 		FITAGHEADER *tag_header = (FITAGHEADER *)tag->data;
@@ -338,7 +338,7 @@ FreeImage_GetTagMemorySize(FITAG *tag) {
 		if (tag_header->value) {
 			switch (tag_header->type) {
 				case FIDT_ASCII:
-					// for ASCII strings, the value of the count part of an ASCII tag entry includes the NULL.
+					// for ASCII strings, the value of the count part of an ASCII tag entry includes the nullptr.
 					// however, FreeImage adds another '\0' to be sure that this last character is present.
 					size += tag_header->length + 1;
 					break;

@@ -277,11 +277,11 @@ should be the end of the PNG stream at the return of the function.
 @param m_TotalBytesOfChunks
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 mng_CountPNGChunks(FreeImageIO *io, fi_handle handle, long inPos, unsigned *m_TotalBytesOfChunks) {
 	long mLOF;
 	long mPos;
-	FIBOOL mEnd = FALSE;
+	BOOL mEnd = FALSE;
 	uint32_t mLength = 0;
 	uint8_t mChunkName[5];
 
@@ -355,7 +355,7 @@ Retrieve the position of a chunk in a PNG stream
 @param next_pos [returned value] Start position of the next chunk
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 mng_FindChunk(FIMEMORY *hPngMemory, uint8_t *chunk_name, long offset, uint32_t *start_pos, uint32_t *next_pos) {
 	uint32_t mLength = 0;
 
@@ -417,7 +417,7 @@ Remove a chunk located at (start_pos, next_pos) in the PNG stream
 @param next_pos Start position of the next chunk
 @return Returns TRUE if successfull, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 mng_CopyRemoveChunks(FIMEMORY *hPngMemory, uint32_t start_pos, uint32_t next_pos) {
 	uint8_t *data{};
 	uint32_t size_in_bytes = 0;
@@ -462,7 +462,7 @@ Insert a chunk just before the inNextChunkName chunk
 @param next_pos Start position of the next chunk
 @return Returns TRUE if successfull, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 mng_CopyInsertChunks(FIMEMORY *hPngMemory, uint8_t *inNextChunkName, uint8_t *inInsertChunk, uint32_t inChunkLength, uint32_t start_pos, uint32_t next_pos) {
 	uint8_t *data{};
 	uint32_t size_in_bytes = 0;
@@ -504,9 +504,9 @@ mng_CopyInsertChunks(FIMEMORY *hPngMemory, uint8_t *inNextChunkName, uint8_t *in
 	return TRUE;
 }
 
-static FIBOOL 
+static BOOL 
 mng_RemoveChunk(FIMEMORY *hPngMemory, uint8_t *chunk_name) {
-	FIBOOL bResult = FALSE;
+	BOOL bResult = FALSE;
 
 	uint32_t start_pos = 0;
 	uint32_t next_pos = 0;
@@ -524,9 +524,9 @@ mng_RemoveChunk(FIMEMORY *hPngMemory, uint8_t *chunk_name) {
 	return TRUE;
 }
 
-static FIBOOL 
+static BOOL 
 mng_InsertChunk(FIMEMORY *hPngMemory, uint8_t *inNextChunkName, uint8_t *inInsertChunk, unsigned chunk_length) {
-	FIBOOL bResult = FALSE;
+	BOOL bResult = FALSE;
 
 	uint32_t start_pos = 0;
 	uint32_t next_pos = 0;
@@ -664,7 +664,7 @@ Read a tEXt chunk and extract the key/value pair.
 @param mLength Chunk length
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 mng_SetMetadata_tEXt(tEXtMAP &key_value_pair, const uint8_t *mChunk, uint32_t mLength) {
 	std::string key;
 	std::string value;
@@ -705,7 +705,7 @@ Load a FIBITMAP from a MNG or a JNG stream
 @param handle Stream handle
 @param Offset Start of the first chunk
 @param flags Loading flags
-@return Returns a dib if successful, returns NULL otherwise
+@return Returns a dib if successful, returns nullptr otherwise
 */
 FIBITMAP* 
 mng_ReadChunks(int format_id, FreeImageIO *io, fi_handle handle, long Offset, int flags = 0) {
@@ -718,7 +718,7 @@ mng_ReadChunks(int format_id, FreeImageIO *io, fi_handle handle, long Offset, in
 	uint8_t *PLTE_file_chunk{};	// whole PLTE chunk (lentgh, name, array, crc)
 	uint32_t PLTE_file_size = 0;		// size of PLTE chunk
 
-	FIBOOL m_HasGlobalPalette = FALSE; // may turn to TRUE in PLTE chunk
+	BOOL m_HasGlobalPalette = FALSE; // may turn to TRUE in PLTE chunk
 	unsigned m_TotalBytesOfChunks = 0;
 	FIBITMAP *dib{};
 	FIBITMAP *dib_alpha{};
@@ -752,14 +752,14 @@ mng_ReadChunks(int format_id, FreeImageIO *io, fi_handle handle, long Offset, in
 	uint32_t res_y = 2835;	// 72 dpi
 	FIRGBA8 rgbBkColor = {0, 0, 0, 0};
 	uint16_t bk_red, bk_green, bk_blue;
-	FIBOOL hasBkColor = FALSE;
-	FIBOOL mHasIDAT = FALSE;
+	BOOL hasBkColor = FALSE;
+	BOOL mHasIDAT = FALSE;
 
 	tEXtMAP key_value_pair;
 
 	// ---
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 	
 	// get the file size
 	const long mLOF = mng_LOF(io, handle);
@@ -767,7 +767,7 @@ mng_ReadChunks(int format_id, FreeImageIO *io, fi_handle handle, long Offset, in
 	io->seek_proc(handle, Offset, SEEK_SET);
 
 	try {
-		FIBOOL mEnd = FALSE;
+		BOOL mEnd = FALSE;
 
 		while (!mEnd) {
 			// start of the chunk
@@ -1106,7 +1106,7 @@ Write a FIBITMAP to a JNG stream
 @param flags Saving flags
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-FIBOOL 
+BOOL 
 mng_WriteJNG(int format_id, FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int flags) {
 	uint32_t jng_width = 0;
 	uint32_t jng_height = 0;
@@ -1226,7 +1226,7 @@ mng_WriteJNG(int format_id, FreeImageIO *io, FIBITMAP *dib, fi_handle handle, in
 			dib_alpha = nullptr;
 			// get the IDAT chunk
 			{		
-				FIBOOL bResult = FALSE;
+				BOOL bResult = FALSE;
 				uint32_t start_pos = 0;
 				uint32_t next_pos = 0;
 				long offset = 8;

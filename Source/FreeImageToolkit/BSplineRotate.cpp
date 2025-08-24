@@ -68,7 +68,7 @@ static void	PutRow(double *Image, long y, double *Line, long Width);
 static bool SamplesToCoefficients(double *Image, long Width, long Height, long spline_degree);
 static double InterpolatedValue(double *Bcoeff, long Width, long Height, double x, double y, long spline_degree);
 
-static FIBITMAP * Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, long spline_degree, FIBOOL use_mask);
+static FIBITMAP * Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, long spline_degree, BOOL use_mask);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Coefficients routines
@@ -518,10 +518,10 @@ InterpolatedValue(double *Bcoeff, long Width, long Height, double x, double y, l
  @param y_origin Output origin of the y-axis
  @param spline_degree Output degree of the B-spline model
  @param use_mask Whether or not to mask the image
- @return Returns the translated & rotated dib if successful, returns NULL otherwise
+ @return Returns the translated & rotated dib if successful, returns nullptr otherwise
 */
 static FIBITMAP * 
-Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, long spline_degree, FIBOOL use_mask) {
+Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, long spline_degree, BOOL use_mask) {
 	double	*ImageRasterArray;
 	double	p;
 	double	a11, a12, a21, a22;
@@ -644,10 +644,10 @@ Rotate8Bit(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x
  @param x_origin Output origin of the x-axis
  @param y_origin Output origin of the y-axis
  @param use_mask Whether or not to mask the image
- @return Returns the translated & rotated dib if successful, returns NULL otherwise
+ @return Returns the translated & rotated dib if successful, returns nullptr otherwise
 */
 FIBITMAP * DLL_CALLCONV 
-FreeImage_RotateEx(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, FIBOOL use_mask) {
+FreeImage_RotateEx(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, BOOL use_mask) {
 
 	int x, y, bpp;
 	int channel, nb_channels;

@@ -209,7 +209,7 @@ FreeImage_ZLibGUnzip(uint8_t *target, uint32_t target_size, uint8_t *source, uin
 
 /**
 Update a running crc from source and return the updated crc, using the ZLib library.
-If source is NULL, this function returns the required initial value for the crc.
+If source is nullptr, this function returns the required initial value for the crc.
 
 @param crc Running crc value
 @param source Source buffer

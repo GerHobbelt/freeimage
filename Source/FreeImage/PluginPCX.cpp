@@ -80,7 +80,7 @@ Note that a PCX file cannot be trusted by its signature.
 We use other information from the PCX header to improve the trust we have with this file.
 @return Returns TRUE if PCX signature is OK, returns FALSE otherwise
 */
-static FIBOOL 
+static BOOL 
 pcx_validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t pcx_signature = 0x0A;
 	uint8_t signature[4] = { 0, 0, 0, 0 };
@@ -124,7 +124,7 @@ Note that a scanline always has an even number of bytes
 @return
 */
 static unsigned
-readLine(FreeImageIO *io, fi_handle handle, uint8_t *buffer, unsigned length, FIBOOL bIsRLE, uint8_t * ReadBuf, int &ReadPos) {
+readLine(FreeImageIO *io, fi_handle handle, uint8_t *buffer, unsigned length, BOOL bIsRLE, uint8_t * ReadBuf, int &ReadPos) {
 	uint8_t count = 0;
 	uint8_t value = 0;
 	unsigned written = 0;
@@ -242,7 +242,7 @@ Extension() {
 	expression can be applied to the first few bytes (header) of
 	the bitmap. FreeImage is not capable of processing regular expression itself,
 	but FreeImageQt, the FreeImage Trolltech support library, can. If RegExpr
-	returns NULL, FreeImageQt will automatically bypass Trolltech's regular
+	returns nullptr, FreeImageQt will automatically bypass Trolltech's regular
 	expression support and use its internal functions to find the bitmap type.
 */
 
@@ -272,7 +272,7 @@ MimeType() {
 	because the end of the bitmap is not always known.
 */
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	return pcx_validate(io, handle);
 }
@@ -287,17 +287,17 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	returns FALSE if bitmap saving is not supported by the plugin at all.
 */
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -336,7 +336,7 @@ SupportsNoPixels() {
 
 	The last parameter (void *data) can contain a special data block used when
 	the file is read multi-paged. Because not every plugin supports multi-paging
-	not every plugin will use the data parameter and it will be set to NULL.However,
+	not every plugin will use the data parameter and it will be set to nullptr.However,
 	when the plugin does support multi-paging the parameter contains a pointer to a
 	block of data allocated by the Open function.
 */
@@ -345,20 +345,20 @@ static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	uint8_t *bits;			  // Pointer to dib data
 	FIRGBA8 *pal;		  // Pointer to dib palette
-	FIBOOL bIsRLE;		  // True if the file is run-length encoded
+	BOOL bIsRLE;		  // True if the file is run-length encoded
 
 	if (!handle) {
 		return nullptr;
 	}
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	try {
 		// check PCX identifier
 		// (note: should have been already validated using FreeImage_GetFileType but check again)
 		{
 			long start_pos = io->tell_proc(handle);
-			FIBOOL bValidated = pcx_validate(io, handle);
+			BOOL bValidated = pcx_validate(io, handle);
 			io->seek_proc(handle, start_pos, SEEK_SET);
 			if (!bValidated) {
 				throw FI_MSG_ERROR_MAGIC_NUMBER;

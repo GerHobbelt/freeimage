@@ -70,7 +70,7 @@ MimeType() {
 	return "video/x-mng";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t mng_signature[8] = { 138, 77, 78, 71, 13, 10, 26, 10 };
 	uint8_t signature[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -80,22 +80,22 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return (memcmp(mng_signature, signature, MNG_SIGNATURE_SIZE) == 0) ? TRUE : FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsICCProfiles() {
 	return TRUE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return FALSE;
 }
@@ -104,7 +104,7 @@ SupportsNoPixels() {
 // ----------------------------------------------------------
 
 static void * DLL_CALLCONV
-Open(FreeImageIO *io, fi_handle handle, FIBOOL read) {
+Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 	return nullptr;
 }
 

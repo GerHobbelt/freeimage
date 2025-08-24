@@ -67,17 +67,17 @@ public:
 		return _io->read_proc(buffer, (unsigned)size, (unsigned)count, _handle);
 	}
 
-    int seek(INT64 offset, int origin) override {
+    int seek(int64_t offset, int origin) override {
         //if (substream) return substream->seek(offset, origin);
 		return _io->seek_proc(_handle, (long)offset, origin);
 	}
 
-	INT64 tell() override {
+	int64_t tell() override {
 		//if (substream) return substream->tell();
         return _io->tell_proc(_handle);
     }
 	
-	INT64 size() override {
+	int64_t size() override {
 		return _fsize;
 	}
 
@@ -142,7 +142,7 @@ public:
 /**
 Convert a processed raw data array to a FIBITMAP
 @param RawProcessor LibRaw handle containing the processed raw image
-@return Returns the converted dib if successfull, returns NULL otherwise
+@return Returns the converted dib if successfull, returns nullptr otherwise
 */
 static FIBITMAP * 
 libraw_ConvertProcessedRawToDib(LibRaw *RawProcessor) {
@@ -199,7 +199,7 @@ libraw_ConvertProcessedRawToDib(LibRaw *RawProcessor) {
 /**
 Convert a processed raw image to a FIBITMAP
 @param image Processed raw image
-@return Returns the converted dib if successfull, returns NULL otherwise
+@return Returns the converted dib if successfull, returns nullptr otherwise
 @see libraw_LoadEmbeddedPreview
 */
 static FIBITMAP * 
@@ -257,7 +257,7 @@ libraw_ConvertProcessedImageToDib(libraw_processed_image_t *image) {
 Get the embedded JPEG preview image from RAW picture with included Exif Data. 
 @param RawProcessor Libraw handle
 @param flags JPEG load flags
-@return Returns the loaded dib if successfull, returns NULL otherwise
+@return Returns the loaded dib if successfull, returns nullptr otherwise
 */
 static FIBITMAP * 
 libraw_LoadEmbeddedPreview(LibRaw *RawProcessor, int flags) {
@@ -317,7 +317,7 @@ libraw_LoadEmbeddedPreview(LibRaw *RawProcessor, int flags) {
 Load raw data and convert to FIBITMAP
 @param RawProcessor Libraw handle
 @param bitspersample Output bitdepth (8- or 16-bit)
-@return Returns the loaded dib if successfull, returns NULL otherwise
+@return Returns the loaded dib if successfull, returns nullptr otherwise
 */
 static FIBITMAP * 
 libraw_LoadRawData(LibRaw *RawProcessor, int bitspersample) {
@@ -373,7 +373,7 @@ libraw_LoadRawData(LibRaw *RawProcessor, int bitspersample) {
 Load the Bayer matrix (unprocessed raw data) as a FIT_UINT16 image. 
 Note that some formats don't have a Bayer matrix (e.g. Foveon, Canon sRAW, demosaiced DNG files). 
 @param RawProcessor Libraw handle
-@return Returns the loaded dib if successfull, returns NULL otherwise
+@return Returns the loaded dib if successfull, returns nullptr otherwise
 */
 static FIBITMAP * 
 libraw_LoadUnprocessedData(LibRaw *RawProcessor) {
@@ -550,7 +550,7 @@ MimeType() {
 	return "image/x-dcraw";
 }
 
-static FIBOOL 
+static BOOL 
 HasMagicHeader(FreeImageIO *io, fi_handle handle) {
 	const unsigned signature_size = 32;
 	uint8_t signature[signature_size] = { 0 };
@@ -606,7 +606,7 @@ HasMagicHeader(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	// some RAW files have a magic signature (most of them have a TIFF signature)
 	// try to check this in order to speed up the file identification
@@ -625,7 +625,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 		LibRaw *RawProcessor = new(std::nothrow) LibRaw;
 
 		if (RawProcessor) {
-			FIBOOL bSuccess = TRUE;
+			BOOL bSuccess = TRUE;
 
 			// wrap the input datastream
 			LibRaw_freeimage_datastream datastream(io, handle);
@@ -646,22 +646,22 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsICCProfiles() {
 	return TRUE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -672,7 +672,7 @@ static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	LibRaw *RawProcessor{};
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	try {
 		// do not declare RawProcessor on the stack as it may be huge (300 KB)

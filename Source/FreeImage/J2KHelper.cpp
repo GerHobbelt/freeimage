@@ -69,7 +69,7 @@ _SeekProc(OPJ_OFF_T p_nb_bytes, FILE * p_user_data) {
 // --------------------------------------------------------------------------
 
 J2KFIO_t* 
-opj_freeimage_stream_create(FreeImageIO *io, fi_handle handle, FIBOOL bRead) {
+opj_freeimage_stream_create(FreeImageIO *io, fi_handle handle, BOOL bRead) {
 	if (!handle) {
 		return nullptr;
 	}
@@ -122,9 +122,9 @@ Convert a OpenJPEG image to a FIBITMAP
 @param format_id Plugin ID
 @param image OpenJPEG image
 @param header_only If TRUE, allocate a 'header only' FIBITMAP, otherwise allocate a full FIBITMAP
-@return Returns the converted image if successful, returns NULL otherwise
+@return Returns the converted image if successful, returns nullptr otherwise
 */
-FIBITMAP* J2KImageToFIBITMAP(int format_id, const opj_image_t *image, FIBOOL header_only) {
+FIBITMAP* J2KImageToFIBITMAP(int format_id, const opj_image_t *image, BOOL header_only) {
 	try {
 		// compute image width and height
 
@@ -140,7 +140,7 @@ FIBITMAP* J2KImageToFIBITMAP(int format_id, const opj_image_t *image, FIBOOL hea
 
 		int numcomps = image->numcomps;
 
-		FIBOOL bIsValid = TRUE;
+		BOOL bIsValid = TRUE;
 		for (int c = 0; c < numcomps - 1; c++) {
 			if ((image->comps[c].dx == image->comps[c+1].dx) && 
 				(image->comps[c].dy == image->comps[c+1].dy) &&
@@ -411,7 +411,7 @@ Convert a FIBITMAP to a OpenJPEG image
 @param format_id Plugin ID
 @param dib FreeImage image
 @param parameters Compression parameters
-@return Returns the converted image if successful, returns NULL otherwise
+@return Returns the converted image if successful, returns nullptr otherwise
 */
 opj_image_t* FIBITMAPToJ2KImage(int format_id, FIBITMAP *dib, const opj_cparameters_t *parameters) {
 	int prec, numcomps, x, y, index;

@@ -91,7 +91,7 @@ typedef struct tagSUNHEADER {
 // ==========================================================
 
 static void
-ReadData(FreeImageIO *io, fi_handle handle, uint8_t *buf, uint32_t length, FIBOOL rle) {
+ReadData(FreeImageIO *io, fi_handle handle, uint8_t *buf, uint32_t length, BOOL rle) {
 	// Read either Run-Length Encoded or normal image data
 
 	static uint8_t repchar, remaining= 0;
@@ -163,7 +163,7 @@ MimeType() {
 	return "image/x-cmu-raster";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t ras_signature[] = { 0x59, 0xA6, 0x6A, 0x95 };
 	uint8_t signature[4] = { 0, 0, 0, 0 };
@@ -173,17 +173,17 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return (memcmp(ras_signature, signature, sizeof(ras_signature)) == 0);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -195,8 +195,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	SUNHEADER header;	// Sun file header
 	uint16_t linelength;	// Length of raster line in bytes
 	uint16_t fill;			// Number of fill bytes per raster line
-	FIBOOL rle;			// TRUE if RLE file
-	FIBOOL isRGB;			// TRUE if file type is RT_FORMAT_RGB
+	BOOL rle;			// TRUE if RLE file
+	BOOL isRGB;			// TRUE if file type is RT_FORMAT_RGB
 	uint8_t fillchar;
 
 	FIBITMAP *dib{};
@@ -207,7 +207,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		return nullptr;
 	}
 
-	FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+	BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 	try {
 		// Read SUN raster header

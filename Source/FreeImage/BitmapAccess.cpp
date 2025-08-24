@@ -95,7 +95,7 @@ FI_STRUCT (FREEIMAGEHEADER) {
 	/** number of transparent colors */
 	int  transparency_count;
 	/** TRUE if the image is transparent */
-	FIBOOL transparent;
+	BOOL transparent;
 	//@}
 
 	/** space to hold ICC profile */
@@ -105,14 +105,14 @@ FI_STRUCT (FREEIMAGEHEADER) {
 	METADATAMAP *metadata;
 
 	/** FALSE if the FIBITMAP only contains the header and no pixel data */
-	FIBOOL has_pixels;
+	BOOL has_pixels;
 
 	/** optionally contains a thumbnail attached to the bitmap */
 	FIBITMAP *thumbnail;
 
 	/**@name external pixel buffer management */
 	//@{
-	/** pointer to user provided pixels, NULL otherwise */
+	/** pointer to user provided pixels, nullptr otherwise */
 	uint8_t *external_bits;
 	/** user provided pitch, 0 otherwise */
 	unsigned external_pitch;
@@ -211,7 +211,7 @@ This function includes a protection against malicious images, based on a KISS in
 @see FreeImage_AllocateBitmap
 */
 static size_t 
-FreeImage_GetInternalImageSize(FIBOOL header_only, unsigned width, unsigned height, unsigned bpp, FIBOOL need_masks) {
+FreeImage_GetInternalImageSize(BOOL header_only, unsigned width, unsigned height, unsigned bpp, BOOL need_masks) {
 	size_t dib_size = sizeof(FREEIMAGEHEADER);
 	dib_size += (dib_size % FIBITMAP_ALIGNMENT ? FIBITMAP_ALIGNMENT - dib_size % FIBITMAP_ALIGNMENT : 0);
 	dib_size += FIBITMAP_ALIGNMENT - sizeof(FIBITMAPINFOHEADER) % FIBITMAP_ALIGNMENT;
@@ -261,7 +261,7 @@ Helper for 16-bit FIT_BITMAP
 Returns a pointer to the bitmap's red-, green- and blue masks.
 @param dib The bitmap to obtain masks from.
 @return Returns a pointer to the bitmap's red-, green- and blue masks
-or NULL, if no masks are present (e.g. for 24 bit images).
+or nullptr, if no masks are present (e.g. for 24 bit images).
 */
 static FREEIMAGERGBMASKS *
 FreeImage_GetRGBMasks(FIBITMAP *dib) {
@@ -282,7 +282,7 @@ This enables the possibility to access buffers with, for instance, stricter alig
 like the ones used in low-level APIs like OpenCL or intrinsics.
 
 @param header_only If TRUE, allocate a 'header only' FIBITMAP, otherwise allocate a full FIBITMAP
-@param ext_bits Pointer to external user's pixel buffer if using wrapped buffer, NULL otherwise
+@param ext_bits Pointer to external user's pixel buffer if using wrapped buffer, nullptr otherwise
 @param ext_pitch Pointer to external user's pixel buffer pitch if using wrapped buffer, 0 otherwise
 @param type Image type
 @param width Image width
@@ -291,10 +291,10 @@ like the ones used in low-level APIs like OpenCL or intrinsics.
 @param red_mask Image red mask 
 @param green_mask Image green mask
 @param blue_mask Image blue mask
-@return Returns the allocated FIBITMAP if successful, returns NULL otherwise
+@return Returns the allocated FIBITMAP if successful, returns nullptr otherwise
 */
 static FIBITMAP * 
-FreeImage_AllocateBitmap(FIBOOL header_only, uint8_t *ext_bits, unsigned ext_pitch, FREE_IMAGE_TYPE type, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
+FreeImage_AllocateBitmap(BOOL header_only, uint8_t *ext_bits, unsigned ext_pitch, FREE_IMAGE_TYPE type, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
 
 	// check input variables
 	width = abs(width);
@@ -310,7 +310,7 @@ FreeImage_AllocateBitmap(FIBOOL header_only, uint8_t *ext_bits, unsigned ext_pit
 	}
 
 	// we only store the masks (and allocate memory for them) for 16-bit images of type FIT_BITMAP
-	FIBOOL need_masks = FALSE;
+	BOOL need_masks = FALSE;
 
 	// check pixel bit depth
 	switch (type) {
@@ -492,12 +492,12 @@ FreeImage_AllocateHeaderForBits(uint8_t *ext_bits, unsigned ext_pitch, FREE_IMAG
 }
 
 FIBITMAP * DLL_CALLCONV
-FreeImage_AllocateHeaderT(FIBOOL header_only, FREE_IMAGE_TYPE type, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
+FreeImage_AllocateHeaderT(BOOL header_only, FREE_IMAGE_TYPE type, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
 	return FreeImage_AllocateBitmap(header_only, nullptr, 0, type, width, height, bpp, red_mask, green_mask, blue_mask);
 }
 
 FIBITMAP * DLL_CALLCONV
-FreeImage_AllocateHeader(FIBOOL header_only, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
+FreeImage_AllocateHeader(BOOL header_only, int width, int height, int bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask) {
 	return FreeImage_AllocateBitmap(header_only, nullptr, 0, FIT_BITMAP, width, height, bpp, red_mask, green_mask, blue_mask);
 }
 
@@ -563,10 +563,10 @@ FreeImage_Clone(FIBITMAP *dib) {
 	const uint8_t *ext_bits = ((FREEIMAGEHEADER *)dib->data)->external_bits;
 	
 	// check for pixel availability ...
-	FIBOOL header_only = FreeImage_HasPixels(dib) ? FALSE : TRUE;
+	BOOL header_only = FreeImage_HasPixels(dib) ? FALSE : TRUE;
 
 	// check whether this image has masks defined ...
-	FIBOOL need_masks = (bpp == 16 && type == FIT_BITMAP) ? TRUE : FALSE;
+	BOOL need_masks = (bpp == 16 && type == FIT_BITMAP) ? TRUE : FALSE;
 
 	// allocate a new dib
 	FIBITMAP *new_dib = FreeImage_AllocateHeaderT(header_only, type, width, height, bpp,
@@ -680,7 +680,7 @@ FreeImage_GetThumbnail(FIBITMAP *dib) {
 	return dib ? ((FREEIMAGEHEADER *)dib->data)->thumbnail : nullptr;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_SetThumbnail(FIBITMAP *dib, FIBITMAP *thumbnail) {
 	if (!dib) {
 		return FALSE;
@@ -704,7 +704,7 @@ FreeImage_GetColorType(FIBITMAP* dib) {
 }
 
 FREE_IMAGE_COLOR_TYPE
-FreeImage_GetColorType2(FIBITMAP* dib, FIBOOL scan_alpha) {
+FreeImage_GetColorType2(FIBITMAP* dib, BOOL scan_alpha) {
 	FIRGBA8 *rgb;
 
 	const FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(dib);
@@ -855,14 +855,14 @@ FreeImage_GetImageType(FIBITMAP *dib) {
 
 // ----------------------------------------------------------
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_HasPixels(FIBITMAP *dib) {
 	return dib ? ((FREEIMAGEHEADER *)dib->data)->has_pixels : FALSE;
 }
 
 // ----------------------------------------------------------
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_HasRGBMasks(FIBITMAP *dib) {
 	return (dib && FreeImage_GetInfoHeader(dib)->biCompression == BI_BITFIELDS) ? TRUE : FALSE;
 }
@@ -914,7 +914,7 @@ FreeImage_GetBlueMask(FIBITMAP *dib) {
 
 // ----------------------------------------------------------
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_HasBackgroundColor(FIBITMAP *dib) {
 	if (dib) {
 		FIRGBA8 *bkgnd_color = &((FREEIMAGEHEADER *)dib->data)->bkgnd_color;
@@ -923,7 +923,7 @@ FreeImage_HasBackgroundColor(FIBITMAP *dib) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_GetBackgroundColor(FIBITMAP *dib, FIRGBA8 *bkcolor) {
 	if (dib && bkcolor) {
 		if (FreeImage_HasBackgroundColor(dib)) {
@@ -954,7 +954,7 @@ FreeImage_GetBackgroundColor(FIBITMAP *dib, FIRGBA8 *bkcolor) {
 	return FALSE;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetBackgroundColor(FIBITMAP *dib, FIRGBA8 *bkcolor) {
 	if (dib) {
 		FIRGBA8 *bkgnd_color = &((FREEIMAGEHEADER *)dib->data)->bkgnd_color;
@@ -975,7 +975,7 @@ FreeImage_SetBackgroundColor(FIBITMAP *dib, FIRGBA8 *bkcolor) {
 
 // ----------------------------------------------------------
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_IsTransparent(FIBITMAP *dib) {
 	if (dib) {
 		const FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(dib);
@@ -1005,7 +1005,7 @@ FreeImage_GetTransparencyTable(FIBITMAP *dib) {
 }
 
 void DLL_CALLCONV
-FreeImage_SetTransparent(FIBITMAP *dib, FIBOOL enabled) {
+FreeImage_SetTransparent(FIBITMAP *dib, BOOL enabled) {
 	if (dib) {
 		if ((FreeImage_GetBPP(dib) <= 8) || (FreeImage_GetBPP(dib) == 32)) {
 			((FREEIMAGEHEADER *)dib->data)->transparent = enabled;
@@ -1308,7 +1308,7 @@ FreeImage_FindFirstMetadata(FREE_IMAGE_MDMODEL model, FIBITMAP *dib, FITAG **tag
 	return nullptr;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_FindNextMetadata(FIMETADATA *mdhandle, FITAG **tag) {
 	if (!mdhandle) {
 		return FALSE;
@@ -1344,7 +1344,7 @@ FreeImage_FindCloseMetadata(FIMETADATA *mdhandle) {
 
 // ----------------------------------------------------------
 
-FIBOOL DLL_CALLCONV
+BOOL DLL_CALLCONV
 FreeImage_CloneMetadata(FIBITMAP *dst, FIBITMAP *src) {
 	if (!src || !dst) {
 		return FALSE;
@@ -1393,7 +1393,7 @@ FreeImage_CloneMetadata(FIBITMAP *dst, FIBITMAP *src) {
 
 // ----------------------------------------------------------
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetMetadata(FREE_IMAGE_MDMODEL model, FIBITMAP *dib, const char *key, FITAG *tag) {
 	if (!dib) {
 		return FALSE;
@@ -1484,7 +1484,7 @@ FreeImage_SetMetadata(FREE_IMAGE_MDMODEL model, FIBITMAP *dib, const char *key, 
 	return TRUE;
 }
 
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_GetMetadata(FREE_IMAGE_MDMODEL model, FIBITMAP *dib, const char *key, FITAG **tag) {
 	if (!dib || !key || !tag) {
 		return FALSE;
@@ -1516,7 +1516,7 @@ Build and set a FITAG whose type is FIDT_ASCII.
 @param value Tag value as a ASCII string
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_SetMetadataKeyValue(FREE_IMAGE_MDMODEL model, FIBITMAP *dib, const char *key, const char *value) {
 	if (!dib || !key || !value) {
 		return FALSE;
@@ -1572,8 +1572,8 @@ FreeImage_GetMemorySize(FIBITMAP *dib) {
 	auto *header = (FREEIMAGEHEADER *)dib->data;
 	auto *bih = FreeImage_GetInfoHeader(dib);
 
-	FIBOOL header_only = !header->has_pixels || header->external_bits;
-	FIBOOL need_masks = bih->biCompression == BI_BITFIELDS;
+	BOOL header_only = !header->has_pixels || header->external_bits;
+	BOOL need_masks = bih->biCompression == BI_BITFIELDS;
 	unsigned width = bih->biWidth;
 	unsigned height = bih->biHeight;
 	unsigned bpp = bih->biBitCount;

@@ -141,7 +141,7 @@ MimeType() {
 	return "image/x-exr";
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
 	const uint8_t exr_signature[] = { 0x76, 0x2F, 0x31, 0x01 };
 	uint8_t signature[] = { 0, 0, 0, 0 };
@@ -150,12 +150,12 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	return (memcmp(exr_signature, signature, 4) == 0);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return FALSE;
 }
 
-static FIBOOL DLL_CALLCONV 
+static BOOL DLL_CALLCONV 
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (
 		(type == FIT_FLOAT) ||
@@ -164,7 +164,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 	);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -180,7 +180,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	}
 
 	try {
-		FIBOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		BOOL header_only = (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 		// save the stream starting point
 		const long stream_start = io->tell_proc(handle);
@@ -439,7 +439,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 /**
 Set the preview image using the dib embedded thumbnail
 */
-static FIBOOL
+static BOOL
 SetPreviewImage(FIBITMAP *dib, Imf::Header& header) {
 	if (!FreeImage_GetThumbnail(dib)) {
 		return FALSE;
@@ -488,7 +488,7 @@ SetPreviewImage(FIBITMAP *dib, Imf::Header& header) {
 /**
 Save using EXR_LC compression (works only with RGB[A]F images)
 */
-static FIBOOL 
+static BOOL 
 SaveAsEXR_LC(C_OStream& ostream, FIBITMAP *dib, Imf::Header& header, int width, int height) {
 	int x, y;
 	Imf::RgbaChannels rgbaChannels;
@@ -545,10 +545,10 @@ SaveAsEXR_LC(C_OStream& ostream, FIBITMAP *dib, Imf::Header& header, int width, 
 
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	const char *channel_name[4] = { "R", "G", "B", "A" };
-	FIBOOL bIsFlipped = FALSE;
+	BOOL bIsFlipped = FALSE;
 	half *halfData{};
 
 	if (!dib || !handle) return FALSE;

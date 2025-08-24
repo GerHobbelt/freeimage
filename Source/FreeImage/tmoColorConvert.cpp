@@ -129,7 +129,7 @@ On output, pixel->red == Y, pixel->green == x, pixel->blue == y
 @param dib Input RGBF / Output Yxy image
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-FIBOOL 
+BOOL 
 ConvertInPlaceRGBFToYxy(FIBITMAP *dib) {
 	float result[3];
 
@@ -173,7 +173,7 @@ On input, pixel->red == Y, pixel->green == x, pixel->blue == y
 @param dib Input Yxy / Output RGBF image
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-FIBOOL 
+BOOL 
 ConvertInPlaceYxyToRGBF(FIBITMAP *dib) {
 	float result[3];
 	float X, Y, Z;
@@ -227,7 +227,7 @@ On input, pixel->red == Y, pixel->green == x, pixel->blue == y
 @param worldLum Average luminance (world adaptation luminance)
 @return Returns TRUE if successful, returns FALSE otherwise
 */
-FIBOOL 
+BOOL 
 LuminanceFromYxy(FIBITMAP *Yxy, float *maxLum, float *minLum, float *worldLum) {
 	if (FreeImage_GetImageType(Yxy) != FIT_RGBF)
 		return FALSE;
@@ -356,7 +356,7 @@ Get the maximum, minimum, average luminance and log average luminance from a Y i
 @return Returns TRUE if successful, returns FALSE otherwise
 @see ConvertRGBFToY, FreeImage_TmoReinhard05Ex
 */
-FIBOOL 
+BOOL 
 LuminanceFromY(FIBITMAP *dib, float *maxLum, float *minLum, float *Lav, float *Llav) {
 	if (FreeImage_GetImageType(dib) != FIT_FLOAT)
 		return FALSE;

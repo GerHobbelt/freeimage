@@ -33,13 +33,13 @@ For colour images, the computation is done separately for R, G, and B samples.
 
 @param fg Foreground image
 @param useFileBkg If TRUE and a file background is present, use it as the background color
-@param appBkColor If not equal to NULL, and useFileBkg is FALSE, use this color as the background color
-@param bg If not equal to NULL and useFileBkg is FALSE and appBkColor is NULL, use this as the background image
-@return Returns the composite image if successful, returns NULL otherwise
+@param appBkColor If not equal to nullptr, and useFileBkg is FALSE, use this color as the background color
+@param bg If not equal to nullptr and useFileBkg is FALSE and appBkColor is nullptr, use this as the background image
+@return Returns the composite image if successful, returns nullptr otherwise
 @see FreeImage_IsTransparent, FreeImage_HasBackgroundColor
 */
 FIBITMAP * DLL_CALLCONV
-FreeImage_Composite(FIBITMAP *fg, FIBOOL useFileBkg, FIRGBA8 *appBkColor, FIBITMAP *bg) {
+FreeImage_Composite(FIBITMAP *fg, BOOL useFileBkg, FIRGBA8 *appBkColor, FIBITMAP *bg) {
 	if (!FreeImage_HasPixels(fg)) return nullptr;
 
 	const int width  = FreeImage_GetWidth(fg);
@@ -77,11 +77,11 @@ FreeImage_Composite(FIBITMAP *fg, FIBOOL useFileBkg, FIRGBA8 *appBkColor, FIBITM
 	const FIRGBA8 *pal = FreeImage_GetPalette(fg);
 
 	// retrieve the alpha table from the foreground image
-	FIBOOL bIsTransparent = FreeImage_IsTransparent(fg);
+	BOOL bIsTransparent = FreeImage_IsTransparent(fg);
 	const uint8_t *trns = FreeImage_GetTransparencyTable(fg);
 
 	// retrieve the background color from the foreground image
-	FIBOOL bHasBkColor = FALSE;
+	BOOL bHasBkColor = FALSE;
 
 	if (useFileBkg && FreeImage_HasBackgroundColor(fg)) {
 		FreeImage_GetBackgroundColor(fg, &bkc);
@@ -192,7 +192,7 @@ channel(x, y) = channel(x, y) * alpha_channel(x, y) / 255
 @param dib Input/Output dib to be premultiplied
 @return Returns TRUE on success, FALSE otherwise (e.g. when the bitdepth of the source dib cannot be handled). 
 */
-FIBOOL DLL_CALLCONV 
+BOOL DLL_CALLCONV 
 FreeImage_PreMultiplyWithAlpha(FIBITMAP *dib) {
 	if (!FreeImage_HasPixels(dib)) return FALSE;
 	
@@ -230,7 +230,7 @@ FreeImage_PreMultiplyWithAlpha(FIBITMAP *dib) {
 
 
 
-FIBOOL FreeImage_DrawBitmap(FIBITMAP* dst, FIBITMAP* src, FREE_IMAGE_ALPHA_OPERATION alpha, int32_t left, int32_t top)
+BOOL FreeImage_DrawBitmap(FIBITMAP* dst, FIBITMAP* src, FREE_IMAGE_ALPHA_OPERATION alpha, int32_t left, int32_t top)
 {
 	if (!FreeImage_HasPixels(dst) || !FreeImage_HasPixels(src)) {
 		return FALSE;

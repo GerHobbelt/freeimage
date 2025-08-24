@@ -57,8 +57,8 @@ typedef struct tagTGAHEADER {
 
 typedef struct tagTGAEXTENSIONAREA {
 	uint16_t extension_size;		// Size in bytes of the extension area, always 495
-	char author_name[41];		// Name of the author. If not used, bytes should be set to NULL (\0) or spaces
-	char author_comments[324];	// A comment, organized as four lines, each consisting of 80 characters plus a NULL
+	char author_name[41];		// Name of the author. If not used, bytes should be set to nullptr (\0) or spaces
+	char author_comments[324];	// A comment, organized as four lines, each consisting of 80 characters plus a nullptr
 	uint16_t datetime_stamp[6];		// Date and time at which the image was created
 	char job_name[41];			// Job ID
 	uint16_t job_time[3];			// Hours, minutes and seconds spent creating the file (for billing, etc.)
@@ -110,11 +110,11 @@ public:
 	TargaThumbnail() : _data(nullptr, &free), _w(0), _h(0), _depth(0) { 
 	}
 
-	FIBOOL isNull() const {
+	BOOL isNull() const {
 		return !_data;
 	}
 
-	FIBOOL read(FreeImageIO *io, fi_handle handle, size_t size) {
+	BOOL read(FreeImageIO *io, fi_handle handle, size_t size) {
 		io->read_proc(&_w, 1, 1, handle);
 		io->read_proc(&_h, 1, 1, handle);
 
@@ -338,7 +338,7 @@ MimeType() {
 	return "image/x-tga";
 }
 
-static FIBOOL 
+static BOOL 
 isTARGA20(FreeImageIO *io, fi_handle handle) {
 	const unsigned sizeofSig = 18;
 	uint8_t signature[sizeofSig] = { 0 };
@@ -361,7 +361,7 @@ isTARGA20(FreeImageIO *io, fi_handle handle) {
 	return (memcmp(tga_signature, signature, sizeofSig) == 0);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) { 
 	if (isTARGA20(io, handle)) {
 		return TRUE;
@@ -425,7 +425,7 @@ Validate(FreeImageIO *io, fi_handle handle) {
 	}
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportDepth(int depth) {
 	return (
 		(depth == 8) ||
@@ -435,12 +435,12 @@ SupportsExportDepth(int depth) {
 		);
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsExportType(FREE_IMAGE_TYPE type) {
 	return (type == FIT_BITMAP) ? TRUE : FALSE;
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 SupportsNoPixels() {
 	return TRUE;
 }
@@ -451,7 +451,7 @@ SupportsNoPixels() {
 Used for all 32 and 24 bit loading of uncompressed images
 */
 static void 
-loadTrueColor(FIBITMAP* dib, int width, int height, int file_pixel_size, FreeImageIO* io, fi_handle handle, FIBOOL as24bit) {
+loadTrueColor(FIBITMAP* dib, int width, int height, int file_pixel_size, FreeImageIO* io, fi_handle handle, BOOL as24bit) {
 	const int pixel_size = as24bit ? 3 : file_pixel_size;
 
 	// input line cache
@@ -486,20 +486,20 @@ We use a specific overload based on bits-per-pixel for each type of pixel
 
 template <int nBITS>
 inline static void 
-_assignPixel(uint8_t* bits, const uint8_t* val, FIBOOL as24bit = FALSE) {
+_assignPixel(uint8_t* bits, const uint8_t* val, BOOL as24bit = FALSE) {
 	// static assert should go here
 	assert(FALSE);
 }
 
 template <>
 inline void 
-_assignPixel<8>(uint8_t* bits, const uint8_t* val, FIBOOL as24bit) {
+_assignPixel<8>(uint8_t* bits, const uint8_t* val, BOOL as24bit) {
 	*bits = *val;
 }
 
 template <>
 inline void 
-_assignPixel<16>(uint8_t* bits, const uint8_t* val, FIBOOL as24bit) {
+_assignPixel<16>(uint8_t* bits, const uint8_t* val, BOOL as24bit) {
 	uint16_t value(*reinterpret_cast<const uint16_t*>(val));
 
 #ifdef FREEIMAGE_BIGENDIAN
@@ -518,7 +518,7 @@ _assignPixel<16>(uint8_t* bits, const uint8_t* val, FIBOOL as24bit) {
 
 template <>
 inline void 
-_assignPixel<24>(uint8_t* bits, const uint8_t* val, FIBOOL as24bit) {
+_assignPixel<24>(uint8_t* bits, const uint8_t* val, BOOL as24bit) {
 	bits[FI_RGBA_BLUE]	= val[0];
 	bits[FI_RGBA_GREEN] = val[1];
 	bits[FI_RGBA_RED]	= val[2];
@@ -526,7 +526,7 @@ _assignPixel<24>(uint8_t* bits, const uint8_t* val, FIBOOL as24bit) {
 
 template <>
 inline void 
-_assignPixel<32>(uint8_t* bits, const uint8_t* val, FIBOOL as24bit) {
+_assignPixel<32>(uint8_t* bits, const uint8_t* val, BOOL as24bit) {
 	if (as24bit) {
 		_assignPixel<24>(bits, val, TRUE);
 
@@ -547,7 +547,7 @@ Generic RLE loader
 */
 template<int bPP>
 static void 
-loadRLE(FIBITMAP* dib, int width, int height, FreeImageIO* io, fi_handle handle, long eof, FIBOOL as24bit) {
+loadRLE(FIBITMAP* dib, int width, int height, FreeImageIO* io, fi_handle handle, long eof, BOOL as24bit) {
 	const int file_pixel_size = bPP/8;
 	const int pixel_size = as24bit ? 3 : file_pixel_size;
 
@@ -575,7 +575,7 @@ loadRLE(FIBITMAP* dib, int width, int height, FreeImageIO* io, fi_handle handle,
 
 		uint8_t rle = cache.getByte();
 
-		const FIBOOL has_rle = rle & 0x80;
+		const BOOL has_rle = rle & 0x80;
 		rle &= ~0x80; // remove type-bit
 
 		const uint8_t packet_count = rle + 1;
@@ -635,7 +635,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 	try {
 
-		const FIBOOL header_only =  (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
+		const BOOL header_only =  (flags & FIF_LOAD_NOPIXELS) == FIF_LOAD_NOPIXELS;
 
 		// remember the start offset
 		const long start_offset = io->tell_proc(handle);
@@ -658,7 +658,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #ifdef FREEIMAGE_BIGENDIAN
 			SwapFooter(&footer);
 #endif
-			FIBOOL hasExtensionArea = footer.extension_offset > 0;
+			BOOL hasExtensionArea = footer.extension_offset > 0;
 			if (hasExtensionArea) { 
 				TGAEXTENSIONAREA extensionarea;
 				io->seek_proc(handle, footer.extension_offset, SEEK_SET);
@@ -669,7 +669,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 #endif
 
 				uint32_t postage_stamp_offset = extensionarea.postage_stamp_offset;
-				FIBOOL hasThumbnail = (postage_stamp_offset > 0) && (postage_stamp_offset < (uint32_t)footer_offset);
+				BOOL hasThumbnail = (postage_stamp_offset > 0) && (postage_stamp_offset < (uint32_t)footer_offset);
 				if (hasThumbnail) {
 					io->seek_proc(handle, postage_stamp_offset, SEEK_SET);
 					thumbnail.read(io, handle, footer_offset - postage_stamp_offset);
@@ -1024,7 +1024,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 // --------------------------------------------------------------------------
 
-static FIBOOL 
+static BOOL 
 hasValidThumbnail(FIBITMAP* dib) {
 	FIBITMAP* thumbnail = FreeImage_GetThumbnail(dib);
 	
@@ -1042,7 +1042,7 @@ hasValidThumbnail(FIBITMAP* dib) {
 Writes the ready RLE packet to buffer
 */
 static inline void 
-flushPacket(uint8_t*& dest, unsigned pixel_size, uint8_t* packet_begin, uint8_t*& packet, uint8_t& packet_count, FIBOOL& has_rle) {
+flushPacket(uint8_t*& dest, unsigned pixel_size, uint8_t* packet_begin, uint8_t*& packet, uint8_t& packet_count, BOOL& has_rle) {
 	if (packet_count) {
 		const uint8_t type_bit = has_rle ? 0x80 : 0x0;
 		const uint8_t write_count = has_rle ? 1 : packet_count;
@@ -1110,7 +1110,7 @@ writeToPacket(uint8_t*& packet, const uint8_t* pixel, unsigned pixel_size) {
 	packet += pixel_size;
 }
 
-static inline FIBOOL 
+static inline BOOL 
 isEqualPixel(uint8_t* lhs, uint8_t* rhs, unsigned pixel_size) {
 	switch (pixel_size) {
 		case 1:
@@ -1142,7 +1142,7 @@ saveRLE(FIBITMAP* dib, FreeImageIO* io, fi_handle handle) {
 
 	constexpr uint8_t max_packet_size = 128;
 	uint8_t packet_count = 0;
-	FIBOOL has_rle = FALSE;
+	BOOL has_rle = FALSE;
 
 	// packet (compressed or not) to be written to line
 
@@ -1253,7 +1253,7 @@ saveRLE(FIBITMAP* dib, FreeImageIO* io, fi_handle handle) {
 	}//for height
 }
 
-static FIBOOL DLL_CALLCONV
+static BOOL DLL_CALLCONV
 Save(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data) {
 	if (!dib || !handle) {
 		return FALSE;

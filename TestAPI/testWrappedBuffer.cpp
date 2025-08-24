@@ -25,25 +25,25 @@
 // Local test functions
 // ----------------------------------------------------------
 
-static void testBasicWrapper(FIBOOL copySource, uint8_t *bits, FREE_IMAGE_TYPE type, int width, int height, int pitch, unsigned bpp) {
-	FIBITMAP *src = NULL;
-	FIBITMAP *clone = NULL;
-	FIBITMAP *dst = NULL;
+static void testBasicWrapper(BOOL copySource, uint8_t *bits, FREE_IMAGE_TYPE type, int width, int height, int pitch, unsigned bpp) {
+	FIBITMAP *src = nullptr;
+	FIBITMAP *clone = nullptr;
+	FIBITMAP *dst = nullptr;
 
 	// allocate a wrapper
 	src = FreeImage_ConvertFromRawBitsEx(copySource, bits, type, width, height, pitch, bpp, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, FALSE);
-	assert(src != NULL);
+	assert(src != nullptr);
 	
 	// test clone
 	clone = FreeImage_Clone(src);
-	assert(clone != NULL);
+	assert(clone != nullptr);
 
 	// test in-place processing
 	FreeImage_Invert(src);
 
 	// test processing
 	dst = FreeImage_ConvertToFloat(src);
-	assert(dst != NULL);
+	assert(dst != nullptr);
 
 	FreeImage_Unload(dst);
 	FreeImage_Unload(clone);
@@ -53,7 +53,7 @@ static void testBasicWrapper(FIBOOL copySource, uint8_t *bits, FREE_IMAGE_TYPE t
 }
 
 static void testViewport(FIBITMAP *dib) {
-	FIBITMAP *src = NULL;
+	FIBITMAP *src = nullptr;
 	
 	// define a viewport as [vp_x, vp_y, vp_width, vp_height]
 	// (assume the image is larger than the viewport)
@@ -80,7 +80,7 @@ static void testViewport(FIBITMAP *dib) {
 // ----------------------------------------------------------
 
 void testWrappedBuffer(const char *lpszPathName, int flags) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	// simulate a user provided buffer
 	// -------------------------------
@@ -88,7 +88,7 @@ void testWrappedBuffer(const char *lpszPathName, int flags) {
 	// load the dib
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(lpszPathName);
 	dib = FreeImage_Load(fif, lpszPathName, flags); 
-	assert(dib != NULL);
+	assert(dib != nullptr);
 
 	// get data info
 	FREE_IMAGE_TYPE type = FreeImage_GetImageType(dib);
@@ -114,8 +114,8 @@ void testWrappedBuffer(const char *lpszPathName, int flags) {
 }
 
 void testCreateView(const char *lpszPathName, int flags) {
-	FIBITMAP *dib = NULL;
-	FIBITMAP *view = NULL;
+	FIBITMAP *dib = nullptr;
+	FIBITMAP *view = nullptr;
 
 	// test working with views
 	// -------------------------------
@@ -123,7 +123,7 @@ void testCreateView(const char *lpszPathName, int flags) {
 	// load the dib
 	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(lpszPathName);
 	dib = FreeImage_Load(fif, lpszPathName, flags);
-	assert(dib != NULL);
+	assert(dib != nullptr);
 
 	// get data info
 	FREE_IMAGE_TYPE type = FreeImage_GetImageType(dib);

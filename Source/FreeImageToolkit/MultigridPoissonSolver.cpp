@@ -297,7 +297,7 @@ The dimension n must be of the form 2^j + 1 for some integer j. (j is actually t
 grid levels used in the solution, called ng below.) ncycle is the number of V-cycles to be
 used at each level.
 */
-static FIBOOL fmg_mglin(FIBITMAP *U, int n, int ncycle) {
+static BOOL fmg_mglin(FIBITMAP *U, int n, int ncycle) {
 	int j, jcycle, jj, jpost, jpre, nf, ngrid;
 
 	FIBITMAP **IRHO{};
@@ -459,7 +459,7 @@ NB: The input image is first stored inside a square image whose size is (2^j + 1
 where j is such that 2^j is the nearest larger dimension corresponding to MAX(image width, image height). 
 @param Laplacian Laplacian image
 @param ncycle Number of cycles in the multigrid algorithm (usually 2 or 3)
-@return Returns the solved PDE equations if successful, returns NULL otherwise
+@return Returns the solved PDE equations if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_MultigridPoissonSolver(FIBITMAP *Laplacian, int ncycle) {

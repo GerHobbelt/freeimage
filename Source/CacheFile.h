@@ -64,10 +64,10 @@ public :
 	CacheFile();
 	~CacheFile();
 	
-	FIBOOL open(const std::string& filename = "", FIBOOL keep_in_memory = TRUE);
+	BOOL open(const std::string& filename = "", BOOL keep_in_memory = TRUE);
 	void close();
 
-	FIBOOL readFile(uint8_t *data, int nr, int size);
+	BOOL readFile(uint8_t *data, int nr, int size);
 	int writeFile(uint8_t *data, int size);
 	void deleteFile(int nr);
 
@@ -75,8 +75,8 @@ private :
 	void cleanupMemCache();
 	int allocateBlock();
 	Block *lockBlock(int nr);
-	FIBOOL unlockBlock(int nr);
-	FIBOOL deleteBlock(int nr);
+	BOOL unlockBlock(int nr);
+	BOOL deleteBlock(int nr);
 
 private :
 	FILE *m_file;
@@ -87,7 +87,7 @@ private :
 	PageMap m_page_map;
 	int m_page_count;
 	Block *m_current_block;
-	FIBOOL m_keep_in_memory;
+	BOOL m_keep_in_memory;
 };
 
 #endif // FREEIMAGE_CACHEFILE_H

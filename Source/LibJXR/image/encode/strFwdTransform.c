@@ -491,7 +491,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
     Bool topORleft = (left || top);// rightORbottom = (right || bottom);
     Bool leftAdjacentColumn = (pSC->cColumn == 1), rightAdjacentColumn = (pSC->cColumn == pSC->cmbWidth - 1);
     // Bool topAdjacentRow =  (pSC->cRow == 1), bottomAdjacentRow = (pSC->cRow == pSC->cmbHeight - 1);
-    PixelI * p = NULL;// * pt = NULL;
+    PixelI * p = nullptr;// * pt = nullptr;
     Int i, j;
     Int iNumChromaFullPlanes = (Int)((YUV_420 == cfColorFormat || YUV_422 == cfColorFormat) ?
         1 : pSC->m_param.cNumChannels);
@@ -574,7 +574,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                         p = p1 + j;
                         strPre4(p + 5, p + 4, p + 64, p + 65);
                         strPre4(p + 7, p + 6, p + 66, p + 67);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 else
@@ -598,7 +598,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                         p = p1 + j;
                         strPre4(p + 74, p + 72, p + 80, p + 82);
                         strPre4(p + 75, p + 73, p + 81, p + 83);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 else
@@ -627,7 +627,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                     p = p0 + j;
                     strPre4(p + 15, p + 14, p + 74, p + 75);
                     strPre4(p + 13, p + 12, p + 72, p + 73);
-                    p = NULL;
+                    p = nullptr;
                 }
             }
 
@@ -643,7 +643,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                     p = p1 + j;
                     strPre4(p + 15, p + 13, p + 21, p + 23);
                     strPre4(p + 14, p + 12, p + 20, p + 22);
-                    p = NULL;
+                    p = nullptr;
                 }
             }
         }
@@ -703,13 +703,13 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                         p = p1;
                         strPre4(p - 128, p - 64, p +  0, p + 64);
                         strPre4(p - 112, p - 48, p + 16, p + 80);
-                        p = NULL;
+                        p = nullptr;
                     }
                     if (bottom || bHoriTileBoundary) {
                         p = p0 + 32;
                         strPre4(p - 128, p - 64, p +  0, p + 64);
                         strPre4(p - 112, p - 48, p + 16, p + 80);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 else
@@ -759,7 +759,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                         p = p1 + j;
                         strPre4(p + 5, p + 4, p + 32, p + 33);
                         strPre4(p + 7, p + 6, p + 34, p + 35);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 else
@@ -796,7 +796,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                     p = p0 + j;
                     strPre4(p + 15, p + 14, p + 42, p + 43);
                     strPre4(p + 13, p + 12, p + 40, p + 41);
-                    p = NULL;
+                    p = nullptr;
                 }
             }
 
@@ -928,7 +928,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                         p = p1 + j;
                         strPre4(p + 5, p + 4, p + 64, p + 65);
                         strPre4(p + 7, p + 6, p + 66, p + 67);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 else
@@ -952,7 +952,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                         p = p1 + j;
                         strPre4(p + 10, p + 8, p + 16, p + 18);
                         strPre4(p + 11, p + 9, p + 17, p + 19);
-                        p = NULL;
+                        p = nullptr;
                     }
                 }
                 else if (!bVertTileBoundary)
@@ -975,7 +975,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                     p = p0 + j;
                     strPre4(p + 15, p + 14, p + 74, p + 75);
                     strPre4(p + 13, p + 12, p + 72, p + 73);
-                    p = NULL;
+                    p = nullptr;
                 }
             }
 
@@ -992,7 +992,7 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
                     p = p1 + j;
                     strPre4(p + 15, p + 13, p + 21, p + 23);
                     strPre4(p + 14, p + 12, p + 20, p + 22);
-                    p = NULL;
+                    p = nullptr;
                 }
             }
         }    
@@ -1106,6 +1106,6 @@ Void transformMacroblock(CWMImageStrCodec * pSC)
             p0[-128] += ((p0[-96] + 1) >> 1);
         }
     }
-    assert(NULL == p);
+    assert(nullptr == p);
 }
 
