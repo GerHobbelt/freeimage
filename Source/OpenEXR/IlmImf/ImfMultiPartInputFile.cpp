@@ -521,7 +521,7 @@ MultiPartInputFile::Data::chunkOffsetReconstruction(OPENEXR_IMF_INTERNAL_NAMESPA
         {
             tileOffsets[i] = createTileOffsets(parts[i]->header);
         }else{
-            tileOffsets[i] = NULL;
+            tileOffsets[i] = nullptr;
             // (TODO) fix this so that it doesn't need to be revised for future compression types.
             switch(parts[i]->header.compression())
             {

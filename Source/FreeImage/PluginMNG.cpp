@@ -62,7 +62,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -72,8 +72,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE mng_signature[8] = { 138, 77, 78, 71, 13, 10, 26, 10 };
-	BYTE signature[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+	uint8_t mng_signature[8] = { 138, 77, 78, 71, 13, 10, 26, 10 };
+	uint8_t signature[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	io->read_proc(&signature, 1, MNG_SIGNATURE_SIZE, handle);
 
@@ -105,7 +105,7 @@ SupportsNoPixels() {
 
 static void * DLL_CALLCONV
 Open(FreeImageIO *io, fi_handle handle, BOOL read) {
-	return NULL;
+	return nullptr;
 }
 
 static void DLL_CALLCONV
@@ -118,7 +118,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 	// check the signature (8 bytes)
 	if(Validate(io, handle) == FALSE) {
-		return NULL;
+		return nullptr;
 	}
 	
 	// parse chunks and decode a jng or mng bitmap
@@ -140,10 +140,10 @@ InitMNG(Plugin *plugin, int format_id) {
 	plugin->regexpr_proc = RegExpr;
 	plugin->open_proc = Open;
 	plugin->close_proc = Close;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
+	plugin->save_proc = nullptr;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
