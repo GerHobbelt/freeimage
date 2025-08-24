@@ -3,7 +3,7 @@
 //
 // Design and implementation by
 // - Floris van den Berg (flvdberg@wxs.nl)
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 //
 // Contributors:
 // - see changes log named 'Whatsnew.txt', see header of each .h and .cpp file
@@ -148,24 +148,52 @@ FI_STRUCT (FIMULTIBITMAP) { void *data; };
 #endif
 
 #ifndef _MSC_VER
-// define portable types for 32-bit / 64-bit OS
-#include <inttypes.h>
-typedef int32_t BOOL;
-typedef uint8_t uint8_t;
-typedef uint16_t uint16_t;
-typedef uint32_t uint32_t;
-typedef int32_t int32_t;
-typedef int64_t int64_t;
-typedef uint64_t uint64_t;
+    // define portable types for 32-bit / 64-bit OS
+    #include <inttypes.h>
+    #ifndef BOOL
+        #define BOOL int32_t
+    #endif
+    #ifndef uint8_t
+        #define uint8_t uint8_t
+    #endif
+    #ifndef uint16_t
+        #define uint16_t uint16_t
+    #endif
+    #ifndef uint32_t
+        #define uint32_t uint32_t
+    #endif
+    #ifndef int32_t
+        #define int32_t int32_t
+    #endif
+    #ifndef int64_t
+        #define int64_t int64_t
+    #endif
+    #ifndef uint64_t
+        #define uint64_t uint64_t
+    #endif
 #else
-// MS is not C99 ISO compliant
-typedef long BOOL;
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned long uint32_t;
-typedef long int32_t;
-typedef signed __int64 int64_t;
-typedef unsigned __int64 uint64_t;
+    // MS is not C99 ISO compliant
+    #ifndef BOOL
+        #define BOOL long
+    #endif
+    #ifndef uint8_t
+        #define uint8_t unsigned char
+    #endif
+    #ifndef uint16_t
+        #define uint16_t unsigned short
+    #endif
+    #ifndef uint32_t
+        #define uint32_t unsigned long
+    #endif
+    #ifndef int32_t
+        #define int32_t long
+    #endif
+    #ifndef int64_t
+        #define int64_t signed __int64
+    #endif
+    #ifndef uint64_t
+        #define uint64_t unsigned __int64
+    #endif
 #endif // _MSC_VER
 
 #if (defined(_WIN32) || defined(__WIN32__))

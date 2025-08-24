@@ -127,12 +127,13 @@
     * associated assembler code, pass --enable-arm-neon=no to configure
     * or put -DPNG_ARM_NEON_OPT=0 in CPPFLAGS.
     */
-#  if (defined(__ARM_NEON__) || defined(__ARM_NEON)) && \
-   defined(PNG_ALIGNED_MEMORY_SUPPORTED)
-#     define PNG_ARM_NEON_OPT 2
-#  else
-#     define PNG_ARM_NEON_OPT 0
-#  endif
+// Hard defined out for now
+// #  if (defined(__ARM_NEON__) || defined(__ARM_NEON)) && \
+//    defined(PNG_ALIGNED_MEMORY_SUPPORTED)
+// #     define PNG_ARM_NEON_OPT 2
+// #  else
+ #     define PNG_ARM_NEON_OPT 0
+// #  endif
 #endif
 
 #if PNG_ARM_NEON_OPT > 0
@@ -521,7 +522,7 @@
     * <fp.h> if possible.
     */
 #    if !defined(__MATH_H__) && !defined(__MATH_H) && !defined(__cmath__)
-#      include <fp.h>
+//#      include <fp.h>
 #    endif
 #  else
 #    include <math.h>

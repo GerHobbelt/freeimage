@@ -132,7 +132,7 @@ halfToFloat (unsigned short y)
 //---------------------------------------------
 
 int
-main ()
+main (void)
 {
     cout.precision (9);
     cout.setf (ios_base::hex, ios_base::basefield);

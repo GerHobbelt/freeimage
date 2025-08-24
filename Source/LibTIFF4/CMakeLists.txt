@@ -98,21 +98,10 @@ target_sources(tiff PRIVATE
         tif_zip.c
         tif_zstd.c)
 
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.16)
-  set_property(SOURCE tif_jpeg.c tif_jpeg12.c PROPERTY SKIP_UNITY_BUILD_INCLUSION ON)
-endif ()
-
-# For all files (but tif_open.c, tif_unix.c and tif_win32.c), forbid the use
-# of _TIFFmalloc/_TIFFfree and require the use of their "Ext" versions
-target_compile_definitions(tiff PRIVATE TIFF_DO_NOT_USE_NON_EXT_ALLOC_FUNCTIONS)
-set_property(SOURCE tif_open.c APPEND PROPERTY COMPILE_DEFINITIONS ALLOW_TIFF_NON_EXT_ALLOC_FUNCTIONS)
-
 if(USE_WIN32_FILEIO)
   target_sources(tiff PRIVATE tif_win32.c)
-  set_property(SOURCE tif_win32.c APPEND PROPERTY COMPILE_DEFINITIONS ALLOW_TIFF_NON_EXT_ALLOC_FUNCTIONS)
 else()
   target_sources(tiff PRIVATE tif_unix.c)
-  set_property(SOURCE tif_unix.c APPEND PROPERTY COMPILE_DEFINITIONS ALLOW_TIFF_NON_EXT_ALLOC_FUNCTIONS)
 endif()
 
 target_include_directories(tiff
@@ -124,8 +113,8 @@ target_include_directories(tiff
         ${TIFF_INCLUDES}
 )
 
-# Windows specific resource preparation
-if (WIN32)
+# MSVC specific resource preparation
+if (WIN32 AND MSVC)
   message(STATUS "Include resource version information for LibTIFF")
   target_sources(tiff PRIVATE tif_win32_versioninfo.rc)
   source_group("Resource Files" FILES tif_win32_versioninfo.rc)
@@ -141,11 +130,7 @@ if(ZIP_SUPPORT)
 endif()
 if(ZIP_SUPPORT AND LIBDEFLATE_SUPPORT)
   target_link_libraries(tiff PRIVATE Deflate::Deflate)
-  if(Deflate_VERSION_STRING VERSION_GREATER_EQUAL "1.9")
-    string(APPEND tiff_requires_private " libdeflate")
-  else()
-    list(APPEND tiff_libs_private_list "${Deflate_LIBRARY}")
-  endif()
+  list(APPEND tiff_libs_private_list "${Deflate_LIBRARY}")
 endif()
 if(JPEG_SUPPORT)
   target_link_libraries(tiff PRIVATE JPEG::JPEG)
@@ -163,13 +148,9 @@ if(JBIG_SUPPORT)
 endif()
 if(LERC_SUPPORT)
   target_link_libraries(tiff PRIVATE LERC::LERC)
-  if(LERC_VERSION_STRING VERSION_GREATER_EQUAL "4.0")
-    if(NOT BUILD_SHARED_LIBS)
-      set_target_properties(tiff PROPERTIES COMPILE_DEFINITIONS LERC_STATIC)
-    endif()
-    string(APPEND tiff_requires_private " Lerc")
-  else()
-    list(APPEND tiff_libs_private_list "${LERC_LIBRARY}")
+  list(APPEND tiff_libs_private_list "${LERC_LIBRARY}")
+  if(NOT BUILD_SHARED_LIBS)
+    set_target_properties(tiff PROPERTIES COMPILE_DEFINITIONS LERC_STATIC)
   endif()
 endif()
 if(LZMA_SUPPORT)
@@ -239,7 +220,7 @@ if(CXX_SUPPORT)
           tiffio.hxx)
 
   # No .def file for this library.
-  if (WIN32 AND NOT MINGW)
+  if (WIN32)
       add_library(tiffxx STATIC ../placeholder.h)
   else()
       add_library(tiffxx ../placeholder.h)

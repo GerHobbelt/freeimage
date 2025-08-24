@@ -2,7 +2,7 @@
 // RAW camera image loader
 //
 // Design and implementation by 
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 //
 // This file is part of FreeImage 3
 //
@@ -18,6 +18,8 @@
 //
 // Use at your own risk!
 // ==========================================================
+
+#if INCLUDE_LIB_RAW
 
 #include "../LibRawLite/libraw/libraw.h"
 
@@ -798,3 +800,5 @@ InitRAW(Plugin *plugin, int format_id) {
 	plugin->supports_icc_profiles_proc = SupportsICCProfiles;
 	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }
+
+#endif
