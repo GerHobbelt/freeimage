@@ -20,10 +20,10 @@
 // Use at your own risk!
 // ==========================================================
 
-#include <tiffiop.h>
-
 #include "FreeImage.h"
 #include "Utilities.h"
+
+#include <tiffiop.h>
 
 // ==========================================================
 // Plugin Interface
@@ -302,7 +302,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					resY = (float) atof(optarg);
 					break;
 				case 'X':		// input width 
-					xsize = (uint32) atoi(optarg);
+					xsize = (uint32_t) atoi(optarg);
 					break;
 
 					// output-related options 

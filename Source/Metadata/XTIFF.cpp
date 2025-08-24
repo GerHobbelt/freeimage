@@ -267,7 +267,7 @@ tiff_read_exif_tag(TIFF *tif, uint32_t tag_id, FIBITMAP *dib, TagLib::MDMODEL md
 		// a count value is required for 'TIFFGetField'
 
 		if (TIFFFieldReadCount(fip) != TIFF_VARIABLE2) {
-			// a count is required, it will be of type uint16
+			// a count is required, it will be of type uint16_t
 			uint16_t value_count16 = 0;
 			if(TIFFGetField(tif, tag_id, &value_count16, &raw_data) != 1) {
 				// stop, ignore error

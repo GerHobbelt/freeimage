@@ -20,11 +20,10 @@
 // Use at your own risk!
 // ==========================================================
 
-#include <windows.h>
-#include <stdlib.h>
-
 #include "FreeImage.h"
 #include "Utilities.h"
+
+#include <stdlib.h>
 
 // ==========================================================
 

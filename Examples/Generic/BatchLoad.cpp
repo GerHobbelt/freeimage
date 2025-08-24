@@ -39,7 +39,9 @@
 
 #include <assert.h>
 #include <stdio.h>
+#if defined(_WIN32)
 #include <io.h>
+#endif
 #include <string.h>
 #include <stdlib.h>
 

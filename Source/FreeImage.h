@@ -26,6 +26,22 @@
 #ifndef FREEIMAGE_H
 #define FREEIMAGE_H
 
+#ifdef _WIN32
+#include <sdkddkver.h>
+//#define _WIN32_WINNT  _WIN32_WINNT_WINTHRESHOLD  /* Win10 */
+
+#include <winsock2.h>
+#include <windows.h>
+#include <ws2def.h>
+#include <windef.h>
+#include <stdint.h>
+#include <inttypes.h>
+#else
+// define portable types for 32-bit / 64-bit OS
+#include <stdint.h>
+#include <inttypes.h>
+#endif // _WIN32
+
 // Version information ------------------------------------------------------
 
 #define FREEIMAGE_MAJOR_VERSION   3
@@ -124,13 +140,6 @@ FI_STRUCT (FIMULTIBITMAP) { void *data; };
 
 // Types used in the library (directly copied from Windows) -----------------
 
-#if defined(__MINGW32__) && defined(_WINDOWS_H)
-#define _WINDOWS_	// prevent a bug in MinGW32
-#endif // __MINGW32__
-
-#ifndef _WINDOWS_
-#define _WINDOWS_
-
 #ifndef FALSE
 #define FALSE 0
 #endif
@@ -147,9 +156,12 @@ FI_STRUCT (FIMULTIBITMAP) { void *data; };
 #define SEEK_END  2
 #endif
 
-#ifndef _MSC_VER
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef _WIN32
 // define portable types for 32-bit / 64-bit OS
-#include <inttypes.h>
 typedef int32_t BOOL;
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
@@ -157,22 +169,15 @@ typedef uint32_t DWORD;
 typedef int32_t LONG;
 typedef int64_t INT64;
 typedef uint64_t UINT64;
-#else
-// MS is not C99 ISO compliant
-typedef long BOOL;
-typedef unsigned char BYTE;
-typedef unsigned short WORD;
-typedef unsigned long DWORD;
-typedef long LONG;
-typedef signed __int64 INT64;
-typedef unsigned __int64 UINT64;
 #endif // _MSC_VER
 
-#if (defined(_WIN32) || defined(__WIN32__))
+#if defined(_WIN32)
 #pragma pack(push, 1)
 #else
 #pragma pack(1)
 #endif // WIN32
+
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM)
 
 typedef struct tagRGBQUAD {
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_BGR
@@ -199,11 +204,15 @@ typedef struct tagRGBTRIPLE {
 #endif // FREEIMAGE_COLORORDER
 } RGBTRIPLE;
 
-#if (defined(_WIN32) || defined(__WIN32__))
+#endif
+
+#if defined(_WIN32)
 #pragma pack(pop)
 #else
 #pragma pack()
 #endif // WIN32
+
+#if !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM | WINAPI_PARTITION_GAMES)
 
 typedef struct tagBITMAPINFOHEADER{
   DWORD biSize;
@@ -217,18 +226,18 @@ typedef struct tagBITMAPINFOHEADER{
   LONG  biYPelsPerMeter; 
   DWORD biClrUsed; 
   DWORD biClrImportant;
-} BITMAPINFOHEADER, *PBITMAPINFOHEADER; 
+} BITMAPINFOHEADER, *PBITMAPINFOHEADER;
 
 typedef struct tagBITMAPINFO { 
   BITMAPINFOHEADER bmiHeader; 
   RGBQUAD          bmiColors[1];
 } BITMAPINFO, *PBITMAPINFO;
 
-#endif // _WINDOWS_
+#endif
 
 // Types used in the library (specific to FreeImage) ------------------------
 
-#if (defined(_WIN32) || defined(__WIN32__))
+#if defined(_WIN32)
 #pragma pack(push, 1)
 #else
 #pragma pack(1)
@@ -277,7 +286,7 @@ typedef struct tagFICOMPLEX {
     double i;
 } FICOMPLEX;
 
-#if (defined(_WIN32) || defined(__WIN32__))
+#if defined(_WIN32) 
 #pragma pack(pop)
 #else
 #pragma pack()
@@ -592,7 +601,7 @@ typedef unsigned (DLL_CALLCONV *FI_WriteProc) (void *buffer, unsigned size, unsi
 typedef int (DLL_CALLCONV *FI_SeekProc) (fi_handle handle, long offset, int origin);
 typedef long (DLL_CALLCONV *FI_TellProc) (fi_handle handle);
 
-#if (defined(_WIN32) || defined(__WIN32__))
+#if defined(_WIN32)
 #pragma pack(push, 1)
 #else
 #pragma pack(1)
@@ -605,7 +614,7 @@ FI_STRUCT(FreeImageIO) {
     FI_TellProc  tell_proc;     //! pointer to the function used to aquire the current position
 };
 
-#if (defined(_WIN32) || defined(__WIN32__))
+#if defined(_WIN32) 
 #pragma pack(pop)
 #else
 #pragma pack()
@@ -620,8 +629,8 @@ FI_STRUCT (FIMEMORY) { void *data; };
 
 // Plugin routines ----------------------------------------------------------
 
-#ifndef PLUGINS
-#define PLUGINS
+#ifndef FREEIMAGE_PLUGINS
+#define FREEIMAGE_PLUGINS
 
 typedef const char *(DLL_CALLCONV *FI_FormatProc)(void);
 typedef const char *(DLL_CALLCONV *FI_DescriptionProc)(void);
@@ -661,7 +670,7 @@ FI_STRUCT (Plugin) {
 
 typedef void (DLL_CALLCONV *FI_InitProc)(Plugin *plugin, int format_id);
 
-#endif // PLUGINS
+#endif // FREEIMAGE_PLUGINS
 
 
 // Load / Save flag constants -----------------------------------------------
@@ -780,10 +789,6 @@ typedef void (DLL_CALLCONV *FI_InitProc)(Plugin *plugin, int format_id);
 #define FI_RESCALE_TRUE_COLOR		0x01	//! for non-transparent greyscale images, convert to 24-bit if src bitdepth <= 8 (default is a 8-bit greyscale image). 
 #define FI_RESCALE_OMIT_METADATA	0x02	//! do not copy metadata to the rescaled image
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 // Init / Error routines ----------------------------------------------------
 

@@ -21,20 +21,17 @@
 // Use at your own risk!
 // ==========================================================
 
-extern "C" {
+#include "FreeImage.h"
+#include "Utilities.h"
+#include "FreeImageIO.h"
+
 #define XMD_H
-#undef FAR
 #include <setjmp.h>
 
 #include <jinclude.h>
 #include <jpeglib.h>
 #include <jerror.h>
 #include <transupp.h>
-}
-
-#include "FreeImage.h"
-#include "Utilities.h"
-#include "FreeImageIO.h"
 
 // ----------------------------------------------------------
 //   Source manager & Destination manager setup

@@ -30,20 +30,18 @@
 #pragma warning (disable : 4786) // identifier was truncated to 'number' characters
 #endif
 
-extern "C" {
 #define XMD_H
-#undef FAR
-#include <setjmp.h>
-
-#include <jinclude.h>
-#include <jpeglib.h>
-#include <jerror.h>
-}
 
 #include "FreeImage.h"
 #include "Utilities.h"
 
 #include "../Metadata/FreeImageTag.h"
+
+#include <setjmp.h>
+
+#include <jinclude.h>
+#include <jpeglib.h>
+#include <jerror.h>
 
 
 // ==========================================================

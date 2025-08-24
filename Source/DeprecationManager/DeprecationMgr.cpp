@@ -23,9 +23,6 @@
 #pragma warning (disable : 4786) // identifier was truncated to 'number' characters
 #endif 
 
-#ifdef _WIN32
-#include <windows.h>
-#endif // _WIN32
 #include "FreeImage.h"
 #include "Utilities.h"
 #include "DeprecationMgr.h"

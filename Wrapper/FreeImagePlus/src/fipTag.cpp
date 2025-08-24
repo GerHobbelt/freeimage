@@ -19,8 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
-#include <string.h>
 #include "FreeImagePlus.h"
+#include <string.h>
 
 fipTag::fipTag() {
 	_tag = FreeImage_CreateTag();

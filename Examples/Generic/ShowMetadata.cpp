@@ -37,9 +37,9 @@
 #include <sstream>
 #include <fstream>
 
-using namespace std;
-
 #include "FreeImage.h"
+
+using namespace std;
 
 // ----------------------------------------------------------
 

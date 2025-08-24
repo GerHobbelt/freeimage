@@ -9,9 +9,8 @@
 #ifndef TextureManager_H
 #define TextureManager_H
 
-#include <windows.h>
-#include <gl/gl.h>
 #include "FreeImage.h"
+#include <gl/gl.h>
 #include <map>
 
 class TextureManager
