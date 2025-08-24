@@ -42,6 +42,10 @@ namespace FreeImageAPI
 	public enum FREE_IMAGE_LOAD_FLAGS
 	{
 		/// <summary>
+		/// Load the image header only (not supported by all plugins, default to full loading)
+		/// </summary>
+		FIF_LOAD_NOPIXELS = 0x8000,
+		/// <summary>
 		/// Default option for all types.
 		/// </summary>
 		DEFAULT = 0,
