@@ -38,3 +38,23 @@ This branch is used to compile the FreeImage.DLL used in Quick Picto Viewer. It 
 
 Bugs or limitations identified:
 - images over 5000 mgpx saved as JXR might be malformed; only Freeimage opens them correctly; Windows Photo opens them [on Win10], but without an alpha channel; Affinity Photo 2.0 and paint.net v5.0 crash on open;
+
+---------------------
+
+Known issues:
+-----------------------------------------------------------------------------
+
+    - various CVEs identified and unpatched/fixed
+    - buffer overflows in PluginICO.cpp, PSDParser.cpp, PluginTIFF.cpp
+    - out of bounds accesses in PluginBMP, PluginPSD, PluginMNG and PluginPICT;
+    - integer wrap around and segmentation fault in Exif.cpp;
+    - incorrect behavior with extreme values for the tone-mapping algorithms;
+    - the jxr encoder cannot handle very large images [eg. >1300 mgpx];
+    - the bmp decoder/encoder cannot handle very large images [eg. >1300 mgpx];
+    - FreeImage_FlipVertical() does not work correctly with image objects created via FreeImage_CreateView();
+    - FreeImage_Copy() crashes with very large images [eg. over 5000 mgpx];
+    - FreeImage_Rescale() yields incorrect results for very large images [eg. >4000 mgpx];
+    - FreeImage_Rotate() cannot handle very large images [eg. >5000 mgpx];
+    - very old OpenEXR library - version 2.2.0;
+
+These issues have been fixed in the QPV branch on this repository.

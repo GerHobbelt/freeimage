@@ -342,6 +342,10 @@ FIBITMAP* CResizeEngine::scale(FIBITMAP *src, unsigned dst_width, unsigned dst_h
       dst = FreeImage_AllocateT(image_type, dst_width, dst_height, dst_bpp, 0, 0, 0);
    }
 
+	if (!dst) {
+		return nullptr;
+	}
+	
 	if (dst_bpp == 8) {
 		RGBQUAD * const dst_pal = FreeImage_GetPalette(dst);
 		if (color_type == FIC_MINISWHITE) {
