@@ -1,0 +1,72 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all,-pie
+export DEB_CFLAGS_MAINT_APPEND = -Wall -pedantic -fPIC
+export DEB_CXXFLAGS_MAINT_APPEND = -Wall -pedantic -fPIC
+
+# See Bug-Debian #845279.
+include /usr/share/dpkg/architecture.mk
+ifeq ($(origin CC),default)
+CC := $(DEB_HOST_GNU_TYPE)-gcc
+endif
+ifeq ($(origin CXX),default)
+CXX := $(DEB_HOST_GNU_TYPE)-g++
+endif
+export PKG_CONFIG ?= $(DEB_HOST_GNU_TYPE)-pkg-config
+
+# Installation paths.
+DESTDIR = $(CURDIR)/debian/tmp
+INSTALL_INCDIR = $(DESTDIR)/usr/include
+INSTALL_LIBDIR = $(DESTDIR)/usr/lib/$(DEB_HOST_MULTIARCH)
+
+%:
+	dh $@
+
+gen-src-list:
+	sh gensrclist.sh
+	$(MAKE) -f Makefile.gnu dos2unix
+	sh genfipsrclist.sh
+	$(MAKE) -f Makefile.fip dos2unix
+
+override_dh_autoreconf:
+	dh_autoreconf $(MAKE) -- -f $(CURDIR)/debian/rules gen-src-list
+
+override_dh_auto_build-arch:
+	$(MAKE) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)"
+	$(MAKE) -f Makefile.fip CC="$(CC)" CXX="$(CXX)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)"
+
+override_dh_auto_build-indep:
+	cd $(CURDIR)/Wrapper/FreeImagePlus/doc && doxygen FreeImagePlus.dox
+
+override_dh_auto_install-arch:
+	dh_auto_install -- INCDIR="$(INSTALL_INCDIR)" INSTALLDIR="$(INSTALL_LIBDIR)"
+	$(MAKE) -f Makefile.fip install INCDIR="$(INSTALL_INCDIR)" INSTALLDIR="$(INSTALL_LIBDIR)"
+
+override_dh_auto_install-indep:
+
+override_dh_auto_test-arch:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	echo "Building and running the FreeImage testsuite..."
+	cd $(CURDIR)/TestAPI && \
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -I$(CURDIR)/Dist *.cpp $(LDFLAGS) -L$(CURDIR)/Dist -lfreeimage -o testAPI && \
+	LD_LIBRARY_PATH=$(CURDIR)/Dist ./testAPI
+	echo "Building and running the FreeImagePlus testsuite..."
+	cd $(CURDIR)/Wrapper/FreeImagePlus/test && \
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -I$(CURDIR)/Dist *.cpp $(LDFLAGS) -L$(CURDIR)/Dist -lfreeimageplus -lfreeimage -o fipTest && \
+	LD_LIBRARY_PATH=$(CURDIR)/Dist ./fipTest
+endif
+
+override_dh_auto_clean:
+	dh_auto_clean
+	$(MAKE) -f Makefile.fip clean
+
+override_dh_install-indep:
+	dh_installdocs --indep
+
+override_dh_installdocs-indep:
+	dh_installdocs --indep
+	dh_doxygen --indep
+
+override_dh_installchangelogs:
+	dh_installchangelogs Whatsnew.txt
