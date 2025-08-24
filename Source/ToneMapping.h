@@ -2,7 +2,7 @@
 // High Dynamic Range bitmap conversion routines
 //
 // Design and implementation by
-// - Hervé Drolon (drolon@infonie.fr)
+// - Herve Drolon (drolon@infonie.fr)
 //
 // This file is part of FreeImage 3
 //
@@ -21,6 +21,8 @@
 
 #ifndef TONE_MAPPING_H
 #define TONE_MAPPING_H
+
+#include "FreeImage.h"
 
 #ifdef __cplusplus
 extern "C" {

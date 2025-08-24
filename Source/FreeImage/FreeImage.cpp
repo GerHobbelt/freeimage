@@ -3,7 +3,7 @@
 //
 // Design and implementation by
 // - Floris van den Berg (flvdberg@wxs.nl)
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 // - Karl-Heinz Bussian (khbussian@moss.de)
 //
 // This file is part of FreeImage 3
@@ -59,7 +59,7 @@ DllMain(HANDLE hModule, uint32_t ul_reason_for_call, LPVOID lpReserved) {
 
 #endif // FREEIMAGE_LIB
 
-#else // !_WIN32 
+#else // !_WIN32
 #ifndef FREEIMAGE_LIB
 
 void FreeImage_SO_Initialise() __attribute__((constructor));
@@ -105,7 +105,7 @@ FreeImage_IsLittleEndian() {
 //----------------------------------------------------------------------
 
 static FreeImage_OutputMessageFunction freeimage_outputmessage_proc = nullptr;
-static FreeImage_OutputMessageFunctionStdCall freeimage_outputmessagestdcall_proc = nullptr; 
+static FreeImage_OutputMessageFunctionStdCall freeimage_outputmessagestdcall_proc = nullptr;
 
 void DLL_CALLCONV
 FreeImage_SetOutputMessage(FreeImage_OutputMessageFunction omf) {
@@ -221,6 +221,6 @@ FreeImage_OutputMessageProc(int fif, const char *fmt, ...) {
 			freeimage_outputmessage_proc((FREE_IMAGE_FORMAT)fif, message);
 
 		if (freeimage_outputmessagestdcall_proc != nullptr)
-			freeimage_outputmessagestdcall_proc((FREE_IMAGE_FORMAT)fif, message); 
+			freeimage_outputmessagestdcall_proc((FREE_IMAGE_FORMAT)fif, message);
 	}
 }

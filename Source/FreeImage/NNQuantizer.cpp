@@ -22,18 +22,19 @@
 // -------
 // January 2001: Adaptation of the Neural-Net Quantization Algorithm
 //               for the FreeImage 2 library
-//               Author: Hervé Drolon (drolon@infonie.fr)
+//               Author: HervÃ© Drolon (drolon@infonie.fr)
 // March 2004:   Adaptation for the FreeImage 3 library (port to big endian processors)
-//               Author: Hervé Drolon (drolon@infonie.fr)
+//               Author: HervÃ© Drolon (drolon@infonie.fr)
 // April 2004:   Algorithm rewritten as a C++ class. 
 //               Fixed a bug in the algorithm with handling of 4-byte boundary alignment.
-//               Author: Hervé Drolon (drolon@infonie.fr)
+//               Author: HervÃ© Drolon (drolon@infonie.fr)
 ///////////////////////////////////////////////////////////////////////
 
 #include "Quantizers.h"
 #include "FreeImage.h"
 #include "Utilities.h"
 
+using namespace freeimage_constants;
 
 // Four primes near 500 - assume no image has a length so large
 // that it is divisible by all four primes
@@ -272,7 +273,7 @@ int NNQuantizer::contest(int b, int g, int r) {
 		*f++ -= betafreq;
 		*p++ += (betafreq << gammashift);
 	}
-	freq[bestpos] += beta;
+	freq[bestpos] += freeimage_constants::beta;
 	bias[bestpos] -= betagamma;
 	return bestbiaspos;
 }
