@@ -56,3 +56,8 @@ Last build:
 ### Travis build
 
 [![Build Status](https://travis-ci.org/imazen/freeimage.svg?branch=master)](https://travis-ci.org/imazen/freeimage)
+
+
+
+This is a fork of imazen/freeimage that's customized for our specific needs.
+

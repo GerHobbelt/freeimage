@@ -413,7 +413,7 @@ namespace FreeImageAPI
 
 		/// <summary>
 		/// Copies a range of elements from the unmanaged array starting at the specified
-		/// <typeparamref name="sourceIndex"/> and pastes them to <paramref name="array"/>
+		/// <paramref name="sourceIndex"/> and pastes them to <paramref name="array"/>
 		/// starting at the specified <paramref name="destinationIndex"/>.
 		/// The length and the indexes are specified as 32-bit integers.
 		/// </summary>
@@ -425,15 +425,6 @@ namespace FreeImageAPI
 		/// <param name="length">A 32-bit integer that represents the number of elements to copy.</param>
 		/// <exception cref="ArgumentNullException">
 		/// <paramref name="array"/> is a null reference (Nothing in Visual Basic).</exception>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// <paramref name="sourceIndex"/> is outside the range of valid indexes
-		/// for the unmanaged array or <paramref name="length"/> is greater than the number of elements
-		/// from <paramref name="index"/> to the end of the unmanaged array
-		/// <para>-or-</para>
-		/// <paramref name="destinationIndex"/> is outside the range of valid indexes
-		/// for the array or <paramref name="length"/> is greater than the number of elements
-		/// from <paramref name="index"/> to the end of the array.
-		/// </exception>
 		public void CopyTo(T[] array, int sourceIndex, int destinationIndex, int length)
 		{
 			EnsureNotDisposed();
@@ -474,7 +465,7 @@ namespace FreeImageAPI
 
 		/// <summary>
 		/// Copies a range of elements from the array starting at the specified
-		/// <typeparamref name="sourceIndex"/> and pastes them to the unmanaged array
+		/// <paramref name="sourceIndex"/> and pastes them to the unmanaged array
 		/// starting at the specified <paramref name="destinationIndex"/>.
 		/// The length and the indexes are specified as 32-bit integers.
 		/// </summary>
@@ -489,11 +480,11 @@ namespace FreeImageAPI
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// <paramref name="sourceIndex"/> is outside the range of valid indexes
 		/// for the array or <paramref name="length"/> is greater than the number of elements
-		/// from <paramref name="index"/> to the end of the array
+		/// of the array
 		/// <para>-or-</para>
 		/// <paramref name="destinationIndex"/> is outside the range of valid indexes
 		/// for the unmanaged array or <paramref name="length"/> is greater than the number of elements
-		/// from <paramref name="index"/> to the end of the unmanaged array.
+		/// of the unmanaged array.
 		/// </exception>
 		public void CopyFrom(T[] array, int sourceIndex, int destinationIndex, int length)
 		{
