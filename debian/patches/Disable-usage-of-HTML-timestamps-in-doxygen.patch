@@ -1,0 +1,22 @@
+From: Ghislain Antony Vaillant <ghisvail@gmail.com>
+Date: Tue, 10 Nov 2015 13:50:59 +0000
+Subject: Disable usage of HTML timestamps in doxygen.
+
+Improves package reproducibility.
+---
+ Wrapper/FreeImagePlus/doc/FreeImagePlus.dox | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox b/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox
+index 33fa374..d4ece42 100644
+--- a/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox
++++ b/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox
+@@ -888,7 +888,7 @@ HTML_COLORSTYLE_GAMMA  = 80
+ # page will contain the date and time when the page was generated. Setting 
+ # this to NO can help when comparing the output of multiple runs.
+ 
+-HTML_TIMESTAMP         = YES
++HTML_TIMESTAMP         = NO
+ 
+ # If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes, 
+ # files or namespaces will be aligned in HTML using tables. If set to 
