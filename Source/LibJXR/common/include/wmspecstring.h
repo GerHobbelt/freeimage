@@ -336,6 +336,8 @@ void __pfx_assume(int, const char *);
 // __specstrings defined. So we handle CE separately in wmasalce.h
 #if defined(UNDER_CE) || defined(NO_WINDOWS)
   #include "wmspecstringce.h"
+#else
+  #include <wmsal.h>
 #endif
 
 #endif //_WMSPECSTRING_H_
