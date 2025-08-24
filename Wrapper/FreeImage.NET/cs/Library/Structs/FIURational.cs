@@ -971,17 +971,17 @@ namespace FreeImageAPI
 			return String.Format(formatProvider, format, ((IConvertible)this).ToDouble(formatProvider));
 		}
 
-		#endregion
+        #endregion
 
-		#region IEquatable<FIURational> Member
+        #region IEquatable<FIURational> Member
 
-		/// <summary>
-		/// Tests whether the specified <see cref="FIURational"/> structure is equivalent to this <see cref="FIURational"/> structure.
-		/// </summary>
-		/// <param name="other">A <see cref="FIURational"/> structure to compare to this instance.</param>
-		/// <returns><b>true</b> if <paramref name="obj"/> is a <see cref="FIURational"/> structure
-		/// equivalent to this <see cref="FIURational"/> structure; otherwise, <b>false</b>.</returns>
-		public bool Equals(FIURational other)
+        /// <summary>
+        /// Tests whether the specified <see cref="FIURational"/> structure is equivalent to this <see cref="FIURational"/> structure.
+        /// </summary>
+        /// <param name="other">A <see cref="FIURational"/> structure to compare to this instance.</param>
+        /// <returns><b>true</b> if <paramref name="other"/> is a <see cref="FIURational"/> structure
+        /// equivalent to this <see cref="FIURational"/> structure; otherwise, <b>false</b>.</returns>
+        public bool Equals(FIURational other)
 		{
 			return (this == other);
 		}

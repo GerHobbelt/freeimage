@@ -10,9 +10,9 @@
 # ./thumbs.sh make
 
 
-# On Win (msvc 2013):
-# C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall x86_amd64
-# SET tbs_tools=msvc12
+# On Win (msvc 2015):
+# C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall x86_amd64
+# SET tbs_tools=msvc14
 # thumbs make
 
 # On Win (mingw32):
@@ -35,9 +35,9 @@
 [ $tbs_fi_png ]         || export tbs_fi_png=1
 [ $tbs_fi_jpeg ]        || export tbs_fi_jpeg=1
 [ $tbs_fi_tiff ]        || export tbs_fi_tiff=1
-[ $tbs_fi_webp ]        || export tbs_fi_webp=0
-[ $tbs_fi_raw ]         || export tbs_fi_raw=0
-[ $tbs_fi_openjp ]      || export tbs_fi_openjp=0
+[ $tbs_fi_webp ]        || export tbs_fi_webp=1
+[ $tbs_fi_raw ]         || export tbs_fi_raw=1
+[ $tbs_fi_openjp ]      || export tbs_fi_openjp=1
 
 
 # tbsd_* contains dep related settings
@@ -67,13 +67,13 @@ deps=()
 targ=()
 post=()
 
-[[ $tbsd_zlib_repo ]]          || export tbsd_zlib_repo="git clone https://github.com/imazen/zlib_shallow ; cd zlib_shallow && git reset --hard b041a7f485778d7f5a49ecb48b591325caa9ae81"
-[[ $tbsd_libpng_repo ]]        || export tbsd_libpng_repo="git clone https://github.com/imazen/libpng ; cd libpng && git reset --hard 62957cf48c945fffb62a80ae6bf88037b5697947"
-[[ $tbsd_libjpeg_turbo_repo ]] || export tbsd_libjpeg_turbo_repo="git clone https://github.com/imazen/libjpeg-turbo libjpeg_turbo ; cd libjpeg_turbo && git reset --hard 2bb3c77c6963dae603ed86a9a32f4ab5fbed2e9e"
-[[ $tbsd_libtiff_repo ]]       || export tbsd_libtiff_repo="git clone https://github.com/imazen/libtiff ; cd libtiff && git reset --hard 5bf56a4365fac0293b83fecab90e4bc588ea1e53"
-[[ $tbsd_libwebp_repo ]]       || export tbsd_libwebp_repo="git clone https://github.com/imazen/libwebp ; cd libwebp && git reset --hard fee09f582645bfac9ac90bda2f7303db8f45dbf2"
-[[ $tbsd_libraw_repo ]]        || export tbsd_libraw_repo="git clone https://github.com/imazen/libraw ; cd libraw && git reset --hard efcfb6014c38ff36ba9cae6f27bdc0612c3259d4"
-[[ $tbsd_openjpeg_repo ]]      || export tbsd_openjpeg_repo="git clone https://github.com/imazen/openjpeg ; cd openjpeg && git reset --hard 7370ab5f336a327b9ac54dae4fa2ac47b031ddd5"
+[[ $tbsd_zlib_repo ]]          || export tbsd_zlib_repo="git clone https://github.com/imazen/zlib_shallow ; cd zlib_shallow && git reset --hard b4d48d0d43f14c018bebc32131cb705ee108ae85"
+[[ $tbsd_libpng_repo ]]        || export tbsd_libpng_repo="git clone https://github.com/imazen/libpng ; cd libpng && git reset --hard c30013185858f2b09f11bc8323c7516340f35173"
+[[ $tbsd_libjpeg_turbo_repo ]] || export tbsd_libjpeg_turbo_repo="git clone https://github.com/imazen/libjpegturbo libjpeg_turbo ; cd libjpeg_turbo && git reset --hard 2ade31732a9f6eaf113beb48aba55aed1779557a"
+[[ $tbsd_libtiff_repo ]]       || export tbsd_libtiff_repo="git clone https://github.com/imazen/libtiff ; cd libtiff && git reset --hard fbb2ae7d7e828e8057da05b6ca3cfc28f15e0356"
+[[ $tbsd_libwebp_repo ]]       || export tbsd_libwebp_repo="git clone https://github.com/imazen/libwebp ; cd libwebp && git reset --hard 7ce8aaa082887c2a90d4282b6b459d26340341f3"
+[[ $tbsd_libraw_repo ]]        || export tbsd_libraw_repo="git clone https://github.com/imazen/libraw ; cd libraw && git reset --hard de82ddc131e323e7685e434a1cec97295592836f"
+[[ $tbsd_openjpeg_repo ]]      || export tbsd_openjpeg_repo="git clone https://github.com/imazen/openjpeg-offical ; cd openjpeg-offical && git reset --hard 3a8482014fd6777bf6f4f8f654d13dc7d080a093"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then cp="rsync"
 else cp="cp"
@@ -88,7 +88,7 @@ if [ $tbs_fi_png -gt 0 ]; then
 fi
 
 if [ $tbs_fi_jpeg -gt 0 ]; then
-  deps+=(libjpeg_turbo); targ+=(jpeg_static)
+  deps+=(libjpeg_turbo); targ+=(jpeg-static)
   post+=("for lib in \$(./thumbs.sh list_slib); do [ -f \$lib ] && $cp -u \$lib ../../deps/$jname; done")
 fi
 
@@ -240,8 +240,8 @@ target=
 # -----------
 
 case "$tbs_tools" in
-msvc12)
-  cm_tools="Visual Studio 12"
+msvc14)
+  cm_tools="Visual Studio 14"
   [ "$target" = "" ] && mstrg="FreeImage.sln" || mstrg="$target.vcxproj"
   make="msbuild.exe $mstrg //p:Configuration=$tbs_conf //v:m"
   
@@ -278,7 +278,7 @@ esac
 
 case "$tbs_arch" in
 x64)
-  [ $tbs_tools = msvc12 ] && cm_tools="$cm_tools Win64"
+  [ $tbs_tools = msvc14 ] && cm_tools="$cm_tools Win64"
   [ $tbs_tools = gnu -o $tbs_tools = mingw ] && c_flags+=" -m64" ;;
 x86)
   [ $tbs_tools = gnu -o $tbs_tools = mingw ] && c_flags+=" -m32" ;;
@@ -291,11 +291,11 @@ esac
 
 if [ $tbs_static_runtime -gt 0 ]
 then
-  [ $tbs_tools = msvc12 ] && cm_args+=(-DFREEIMAGE_DYNAMIC_C_RUNTIME:BOOL=OFF)
+  [ $tbs_tools = msvc14 ] && cm_args+=(-DFREEIMAGE_DYNAMIC_C_RUNTIME:BOOL=OFF)
   [ $tbs_tools = gnu ] && ld_flags+=" -static-libgcc -static-libstdc++"
   [ $tbs_tools = mingw ] && ld_flags+=" -static"
 else
-  [ $tbs_tools = msvc12 ] && cm_args+=(-DFREEIMAGE_DYNAMIC_C_RUNTIME:BOOL=ON)
+  [ $tbs_tools = msvc14 ] && cm_args+=(-DFREEIMAGE_DYNAMIC_C_RUNTIME:BOOL=ON)
 fi
 
 # -----------

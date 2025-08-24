@@ -12,19 +12,24 @@ set( FREEIMAGE_SOURCES
 	FreeImage/Conversion16_555.cpp FreeImage/Conversion16_565.cpp 
 	FreeImage/Conversion24.cpp FreeImage/Conversion32.cpp 
 	FreeImage/Conversion4.cpp FreeImage/Conversion8.cpp
-	FreeImage/ConversionFloat.cpp 
+	FreeImage/ConversionFloat.cpp
+        FreeImage/ConversionRGBAF.cpp
+        FreeImage/ConversionRGBA16.cpp
 	FreeImage/ConversionRGBF.cpp FreeImage/ConversionRGB16.cpp FreeImage/ConversionType.cpp 
 	FreeImage/ConversionUINT16.cpp
 	FreeImage/ConversionRGBAF.cpp
 	FreeImage/ConversionRGBA16.cpp
 	FreeImage/FreeImage.cpp FreeImage/FreeImageIO.cpp FreeImage/GetType.cpp 
 	FreeImage/Halftoning.cpp
+        FreeImage/LFPQuantizer.cpp
 	FreeImage/MemoryIO.cpp
 	FreeImage/MultiPage.cpp FreeImage/NNQuantizer.cpp 
 	FreeImage/PixelAccess.cpp FreeImage/Plugin.cpp FreeImage/PluginBMP.cpp 
 	FreeImage/PluginCUT.cpp FreeImage/PluginDDS.cpp
+        # FreeImage/PluginEXR.cpp
 	FreeImage/PluginGIF.cpp FreeImage/PluginHDR.cpp
 	FreeImage/PluginICO.cpp FreeImage/PluginIFF.cpp
+        
 	FreeImage/LFPQuantizer.cpp
 	FreeImage/PluginKOALA.cpp
 	FreeImage/PluginPCD.cpp FreeImage/PluginPCX.cpp FreeImage/PluginPFM.cpp 
@@ -61,6 +66,8 @@ set( FREEIMAGE_SOURCES
 	FreeImage/PluginJNG.cpp
 	FreeImage/PluginMNG.cpp
 	FreeImage/ZLibInterface.cpp
+
+        OpenEXR/Half/half.cpp 
 )
 IF(ENABLE_JXR)
   SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} FreeImage/PluginJXR.cpp)
@@ -76,6 +83,7 @@ IF(ENABLE_TIFF)
   SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} FreeImage/PluginG3.cpp)
   SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} FreeImage/PluginTIFF.cpp)
   SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} Metadata/XTIFF.cpp)
+  #SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} Half/half.cpp)
 ENDIF()
 IF(ENABLE_WEBP)
   SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} FreeImage/PluginWebP.cpp)

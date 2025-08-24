@@ -1,7 +1,10 @@
-version: 3.16.1.{build}
+version: 3.17.0.{build}
 shallow_clone: true
+os: Visual Studio 2015
 
-
+matrix: 
+  fast_finish: false
+      
 environment:
   pack_dlls: 1
   tbs_fi_tests: 1
@@ -17,20 +20,34 @@ environment:
   
   matrix:
     - tbs_arch: "x86"
-      tbs_tools: "msvc12"
+      tbs_tools: "msvc14"
       tbs_static_runtime: 0
+      tbs_clone_all: 1
     
     - tbs_arch: "x64"
-      tbs_tools: "msvc12"
+      tbs_tools: "msvc14"
       tbs_static_runtime: 0
+      tbs_clone_all: 1
+      
+    - tbs_arch: "x86"
+      tbs_tools: "msvc14"
+      tbs_static_runtime: 0
+      tbs_clone_all: 0
+      
+    - tbs_arch: "x64"
+      tbs_tools: "msvc14"
+      tbs_static_runtime: 0
+      tbs_clone_all: 0
     
     - tbs_arch: "x86"
       tbs_tools: "mingw"
       tbs_static_runtime: 1
+      tbs_clone_all: 0
     
     - tbs_arch: "x64"
       tbs_tools: "mingw"
       tbs_static_runtime: 1
+      tbs_clone_all: 0
 
 
 
@@ -49,55 +66,63 @@ install:
   - git clone https://github.com/imazen/gd-appveyor-helpers
   - ps: . .\gd-appveyor-helpers\appveyor_funcs.ps1
   
+  #NASM required if we're not fetching from nuget
+  - if [%tbs_clone_all%]==[1] (
+    curl -L -o nasminst.exe http://libgd.blob.core.windows.net/nasm/nasm-2.07-installer.exe && start /wait nasminst.exe /S)
+  - ps: $env:path="C:\Program Files (x86)\nasm;$($env:path)"
+  
   
   # fetch prebuilt deps
   - mkdir deps
   
-  - nuget install zlib-%tbs_tools%-%tbs_arch%-master -Version 1.2.7.2 -Source https://ci.appveyor.com/nuget/zlib-shallow-x0n34b3pfq1b
-  - ps: move zlib*\* deps -force
-  - if [%tbs_tools%]==[mingw] move deps\libzlibstatic.a deps\libz.a
-  - if [%tbs_tools%]==[msvc12] move deps\zlibstatic.lib deps\zlib.lib
-  - SET tbsd_zlib_built=1
-  - SET tbsd_zlib_incdir=deps
-  - SET tbsd_zlib_libdir=deps
+  - if [%tbs_clone_all%]==[0] (
+       nuget install zlib-%tbs_tools%-%tbs_arch%-master -Version 1.2.8.4 -Source https://ci.appveyor.com/nuget/zlib-shallow-x0n34b3pfq1b &&
+      powershell -Command "move zlib*\* deps -force" &&
+      (if [%tbs_tools%]==[msvc14] move deps\zlibstatic.lib deps\zlib.lib) &&
+      (if [%tbs_tools%]==[mingw] move deps\libzlibstatic.a deps\libz.a) &&
+      SET tbsd_zlib_built=1 && SET tbsd_zlib_incdir=deps && SET tbsd_zlib_libdir=deps)
+      
+      
   
-  - if [%tbs_fi_jpeg%]==[1] (
-      nuget install libjpeg-%tbs_tools%-%tbs_arch%-master -Version 1.3.43.57 -Source https://ci.appveyor.com/nuget/libjpeg-turbo-t70qw53csfhj &&
+  - if [%tbs_fi_jpeg%]==[1] if [%tbs_clone_all%]==[0] (
+      nuget install libjpeg-%tbs_tools%-%tbs_arch%-master -Version 1.4.80.21 -Source https://ci.appveyor.com/nuget/libjpegturbo-o6k4js4y7pjw &&
       powershell -Command "move libjpeg*\* deps -force" &&
-      (if [%tbs_tools%]==[msvc12] move deps\jpeg_static.lib deps\jpeg.lib) &&
+      (if [%tbs_tools%]==[msvc14] move deps\jpeg-static.lib deps\jpeg.lib) &&
       SET tbsd_libjpeg_turbo_built=1)
   
-  - if [%tbs_fi_png%]==[1] (
-      nuget install libpng-%tbs_tools%-%tbs_arch%-master -Version 1.6.14.31 -Source https://ci.appveyor.com/nuget/libpng-7hwq4pmmrc48 &&
+  - if [%tbs_fi_png%]==[1] if [%tbs_clone_all%]==[0] (
+      nuget install libpng-%tbs_tools%-%tbs_arch%-master -Version 1.6.18.44 -Source https://ci.appveyor.com/nuget/libpng-7hwq4pmmrc48 &&
       powershell -Command "move libpng*\* deps -force" &&
       (if [%tbs_tools%]==[mingw] move deps\libpng16.a deps\libpng.a) &&
-      (if [%tbs_tools%]==[msvc12] move deps\libpng16_static.lib deps\png.lib) &&
+      (if [%tbs_tools%]==[msvc14] move deps\libpng16_static.lib deps\png.lib) &&
       SET tbsd_libpng_built=1)
   
-  - if [%tbs_fi_tiff%]==[1] (
-      nuget install libtiff-%tbs_tools%-%tbs_arch%-master -Version 4.0.3.47 -Source https://ci.appveyor.com/nuget/libtiff-i3h8tqqy7o7b &&
+  - if [%tbs_fi_tiff%]==[1] if [%tbs_clone_all%]==[0] (
+      nuget install libtiff-%tbs_tools%-%tbs_arch%-master -Version 4.0.6.85 -Source https://ci.appveyor.com/nuget/libtiff-i3h8tqqy7o7b &&
       powershell -Command "move libtiff*\* deps -force" &&
-      (if [%tbs_tools%]==[msvc12] move deps\tiff_static.lib deps\tiff.lib) &&
+      (if [%tbs_tools%]==[msvc14] move deps\tiff_static.lib deps\tiff.lib) &&
       SET tbsd_libtiff_built=1)
   
-  - if [%tbs_fi_webp%]==[1] (
-      nuget install libwebp-%tbs_tools%-%tbs_arch%-master -Version 0.4.2.12 -Source https://ci.appveyor.com/nuget/libwebp-nebpf5jgkaqn &&
+  - if [%tbs_fi_webp%]==[1] if [%tbs_clone_all%]==[0] (
+      nuget install libwebp-%tbs_tools%-%tbs_arch%-master -Version 0.4.3.18 -Source https://ci.appveyor.com/nuget/libwebp-nebpf5jgkaqn &&
       powershell -Command "move libwebp*\* deps -force" &&
       SET tbsd_libwebp_built=1)
   
-  - if [%tbs_fi_raw%]==[1] (
-      nuget install libraw-%tbs_tools%-%tbs_arch%-master -Version 0.17.0.25 -Source https://ci.appveyor.com/nuget/libraw-er90wfvfpafj &&
+  - if [%tbs_fi_raw%]==[1] if [%tbs_clone_all%]==[0] (
+      nuget install libraw-%tbs_tools%-%tbs_arch%-master -Version 0.17.0.33 -Source https://ci.appveyor.com/nuget/libraw-er90wfvfpafj &&
       powershell -Command "move libraw*\* deps -force" &&
+      (if [%tbs_tools%]==[msvc14] move deps\raw_static.lib deps\raw.lib) &&
       SET tbsd_libraw_built=1)
   
-  - if [%tbs_fi_openjp%]==[1] (
-      nuget install openjpeg-%tbs_tools%-%tbs_arch%-master -Version 2.1.9 -Source https://ci.appveyor.com/nuget/openjpeg-h6qw5mcmk4dw &&
+  - if [%tbs_fi_openjp%]==[1] if [%tbs_clone_all%]==[0] (
+      nuget install openjpeg-%tbs_tools%-%tbs_arch%-master -Version 2.1.3 -Source https://ci.appveyor.com/nuget/openjpeg-offical-lq80qyghj7m5 &&
       powershell -Command "move openjpeg*\* deps -force" &&
       SET tbsd_openjpeg_built=1)
   
   - del deps\*.dll*
   
-  
+  - 7z a deps.zip .\deps\*
+  - ps: Push-AppveyorArtifact deps.zip
   
   # get upx (cinst broken; gets dos ver)
   #- if [%pack_dlls%]==[1] cinst upx
@@ -105,9 +130,13 @@ install:
       curl -L -o upx.zip http://libgd.blob.core.windows.net/upx/upx391w.zip &&
       7z e upx.zip *.exe -r )
   
+
   # get unit test data
   - curl -L -o utd.zip https://s3.amazonaws.com/public-unit-test-resources/FreeImage.NET/UnitTestData.zip
   - 7z x utd.zip -oWrapper\FreeImage.NET\cs
+  
+  
+  
   
   # get mingw-w64 (C:\mingw64)
   - ps: if($env:tbs_tools -eq 'mingw' -and $env:tbs_arch -eq 'x64') {
@@ -120,22 +149,22 @@ install:
       invoke '7z' 'x -oC:\ mw64-32.7z'; }
 
 
-
 build_script:
-  - '"C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall" %vcvar_arg%'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall" %vcvar_arg%'
   - if [%tbs_tools%]==[mingw] if [%tbs_arch%]==[x86] SET PATH=C:\mingw32\bin;%PATH%
   - if [%tbs_tools%]==[mingw] if [%tbs_arch%]==[x64] SET PATH=C:\mingw64\bin;%PATH%
   
   - SET zip=freeimage-%tbs_tools%-%tbs_arch%.zip
   - SET zipNet=FreeImageNET-%tbs_arch%.zip
   
-  - thumbs make
-  - if [%pack_dlls%]==[1] for /f "tokens=*" %%i in ('thumbs list_bin') do upx %%i
-  - for /f "tokens=*" %%i in ('thumbs list') do set files=%%i
+  - .\thumbs make
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - if [%pack_dlls%]==[1] for /f "tokens=*" %%i in ('.\thumbs list_bin') do upx %%i
+  - for /f "tokens=*" %%i in ('.\thumbs list') do set files=%%i
   - 7z a %zip% %files%
   - appveyor PushArtifact %zip%
   
-  - ps: $(.\thumbs list).split(' ') | %{copy $_ "Dist"}
+  - ps: $(.\thumbs.bat list).split(' ') | %{copy $_ "Dist"}
   
   
   # build .net wrappers
@@ -150,7 +179,7 @@ build_script:
       msbuild FreeImageIO.sln /p:Configuration=Release /v:m &&
       cd ..\..\..\.. )
   
-  - ps: if($env:tbs_tools -eq 'msvc12') {
+  - ps: if($env:tbs_tools -eq 'msvc14') {
       invoke '7z' "a $($env:zipNet)
         .\Dist\FreeImage.dll
         .\Wrapper\FreeImage.NET\cs\Library\bin\Release\FreeImageNET.dll
@@ -162,6 +191,7 @@ build_script:
   # build .net unit tests
   
   - cd Wrapper\FreeImage.NET\cs\UnitTest
+  - ..\nuget restore -PackagesDirectory ..\packages
   - msbuild UnitTest.csproj /p:Configuration=Release /v:m
   - cd ..\..\..\..
 
@@ -169,11 +199,11 @@ build_script:
 
 test_script:
   - SET fail=0
-  - thumbs check || SET fail=1 & ver > nul
+  - .\thumbs check || SET fail=1 & ver > nul
   - ps: Push-Ctest-Results 'build'
   - ps: Push-AppveyorArtifact build\Testing\Temporary\LastTest.log
   - exit %fail%
   
-  - ps: copy $(.\thumbs list_bin) "Wrapper\FreeImage.NET\cs\UnitTest\bin\Release\FreeImage.dll"
+  - ps: copy $(.\thumbs.bat list_bin) "Wrapper\FreeImage.NET\cs\UnitTest\bin\Release\FreeImage.dll"
   - if [%tbs_arch%]==[x86] nunit-console-x86 Wrapper\FreeImage.NET\cs\UnitTest\bin\Release\UnitTest.exe
   - if [%tbs_arch%]==[x64] nunit-console Wrapper\FreeImage.NET\cs\UnitTest\bin\Release\UnitTest.exe

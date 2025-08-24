@@ -179,10 +179,10 @@ namespace FreeImageAPI
 				Version wrapperVersion = GetWrapperVersion();
 				// No exception thrown, the library seems to be present
 				return
-                    (nativeVersion.Major > wrapperVersion.Major) ||
-                    ((nativeVersion.Major == wrapperVersion.Major) && (nativeVersion.Minor > wrapperVersion.Minor)) ||
-                    ((nativeVersion.Major == wrapperVersion.Major) && (nativeVersion.Minor == wrapperVersion.Minor) && (nativeVersion.Build >= wrapperVersion.Build));
-            }
+					(nativeVersion.Major > wrapperVersion.Major) ||
+					((nativeVersion.Major == wrapperVersion.Major) && (nativeVersion.Minor > wrapperVersion.Minor)) ||
+					((nativeVersion.Major == wrapperVersion.Major) && (nativeVersion.Minor == wrapperVersion.Minor) && (nativeVersion.Build >= wrapperVersion.Build));
+			}
 			catch (DllNotFoundException)
 			{
 				return false;
@@ -241,11 +241,11 @@ namespace FreeImageAPI
 		/// <param name="palette">The palette of the bitmap or <c>null</c>.</param>
 		/// <returns>Handle to a FreeImage bitmap.</returns>
 		/// <remarks>
-		/// This function is an extension to <see cref="Allocate"/>, which additionally supports
+		/// This function is an extension to Allocate, which additionally supports
 		/// specifying a palette to be set for the newly create image, as well as specifying a
 		/// background color, the newly created image should initially be filled with.
 		/// <para/>
-		/// Basically, this function internally relies on function <see cref="Allocate"/>, followed by a
+		/// Basically, this function internally relies on function Allocate, followed by a
 		/// call to <see cref="FillBackground&lt;T&gt;"/>. This is why both parameters
 		/// <paramref name="color"/> and <paramref name="options"/> behave the same as it is
 		/// documented for function <see cref="FillBackground&lt;T&gt;"/>.
@@ -273,7 +273,7 @@ namespace FreeImageAPI
 		/// specified by the background color's <see cref="RGBQUAD.rgbReserved"/> field.
 		/// The image is then filled with this palette index.
 		/// <para/>
-		/// This function returns a newly created image as function <see cref="Allocate"/> does, if both
+		/// This function returns a newly created image as function Allocate does, if both
 		/// parameters <paramref name="color"/> and <paramref name="palette"/> are <c>null</c>.
 		/// If only <paramref name="color"/> is <c>null</c>, the palette pointed to by
 		/// parameter <paramref name="palette"/> is initially set for the new image, if a palletized
@@ -307,11 +307,11 @@ namespace FreeImageAPI
 		/// eg: 0x0000FF</param>
 		/// <returns>Handle to a FreeImage bitmap.</returns>
 		/// <remarks>
-		/// This function is an extension to <see cref="Allocate"/>, which additionally supports
+		/// This function is an extension to Allocate, which additionally supports
 		/// specifying a palette to be set for the newly create image, as well as specifying a
 		/// background color, the newly created image should initially be filled with.
 		/// <para/>
-		/// Basically, this function internally relies on function <see cref="Allocate"/>, followed by a
+		/// Basically, this function internally relies on function Allocate, followed by a
 		/// call to <see cref="FillBackground&lt;T&gt;"/>. This is why both parameters
 		/// <paramref name="color"/> and <paramref name="options"/> behave the same as it is
 		/// documented for function <see cref="FillBackground&lt;T&gt;"/>.
@@ -339,7 +339,7 @@ namespace FreeImageAPI
 		/// specified by the background color's <see cref="RGBQUAD.rgbReserved"/> field.
 		/// The image is then filled with this palette index.
 		/// <para/>
-		/// This function returns a newly created image as function <see cref="Allocate"/> does, if both
+		/// This function returns a newly created image as function Allocate does, if both
 		/// parameters <paramref name="color"/> and <paramref name="palette"/> are <c>null</c>.
 		/// If only <paramref name="color"/> is <c>null</c>, the palette pointed to by
 		/// parameter <paramref name="palette"/> is initially set for the new image, if a palletized
@@ -393,11 +393,11 @@ namespace FreeImageAPI
 		/// <param name="palette">The palette of the bitmap or <c>null</c>.</param>
 		/// <returns>Handle to a FreeImage bitmap.</returns>
 		/// <remarks>
-		/// This function is an extension to <see cref="AllocateT"/>, which additionally supports
+		/// This function is an extension to AllocateT, which additionally supports
 		/// specifying a palette to be set for the newly create image, as well as specifying a
 		/// background color, the newly created image should initially be filled with.
 		/// <para/>
-		/// Basically, this function internally relies on function <see cref="AllocateT"/>, followed by a
+		/// Basically, this function internally relies on function AllocateT, followed by a
 		/// call to <see cref="FillBackground&lt;T&gt;"/>. This is why both parameters 
 		/// <paramref name="color"/> and <paramref name="options"/> behave the same as it is
 		/// documented for function <see cref="FillBackground&lt;T&gt;"/>. So, please refer to the
@@ -427,7 +427,7 @@ namespace FreeImageAPI
 		/// background color's <see cref="RGBQUAD.rgbReserved"/> field. The image is then filled with
 		/// this palette index.
 		/// <para/>
-		/// This function returns a newly created image as function <see cref="AllocateT"/> does, if both
+		/// This function returns a newly created image as function AllocateT does, if both
 		/// parameters <paramref name="color"/> and <paramref name="palette"/> are <c>null</c>.
 		/// If only <paramref name="color"/> is <c>null</c>, the palette pointed to by
 		/// parameter <paramref name="palette"/> is initially set for the new image, if a palletized
@@ -463,11 +463,11 @@ namespace FreeImageAPI
 		/// eg: 0x0000FF</param>
 		/// <returns>Handle to a FreeImage bitmap.</returns>
 		/// <remarks>
-		/// This function is an extension to <see cref="AllocateT"/>, which additionally supports
+		/// This function is an extension to AllocateT, which additionally supports
 		/// specifying a palette to be set for the newly create image, as well as specifying a
 		/// background color, the newly created image should initially be filled with.
 		/// <para/>
-		/// Basically, this function internally relies on function <see cref="AllocateT"/>, followed by a
+		/// Basically, this function internally relies on function AllocateT, followed by a
 		/// call to <see cref="FillBackground&lt;T&gt;"/>. This is why both parameters 
 		/// <paramref name="color"/> and <paramref name="options"/> behave the same as it is
 		/// documented for function <see cref="FillBackground&lt;T&gt;"/>. So, please refer to the
@@ -497,7 +497,7 @@ namespace FreeImageAPI
 		/// background color's <see cref="RGBQUAD.rgbReserved"/> field. The image is then filled with
 		/// this palette index.
 		/// <para/>
-		/// This function returns a newly created image as function <see cref="AllocateT"/> does, if both
+		/// This function returns a newly created image as function AllocateT does, if both
 		/// parameters <paramref name="color"/> and <paramref name="palette"/> are <c>null</c>.
 		/// If only <paramref name="color"/> is <c>null</c>, the palette pointed to by
 		/// parameter <paramref name="palette"/> is initially set for the new image, if a palletized
@@ -515,8 +515,8 @@ namespace FreeImageAPI
 
 			if (color.HasValue)
 			{
-                if (!CheckColorType(type, color.Value))
-                    return FIBITMAP.Zero;
+				if (!CheckColorType(type, color.Value))
+					return FIBITMAP.Zero;
 
 				GCHandle handle = new GCHandle();
 				try
@@ -599,11 +599,11 @@ namespace FreeImageAPI
 			// Unlock the bitmap
 			result.UnlockBits(data);
 			// Apply the bitmap resolution
-            if((GetResolutionX(dib) > 0) && (GetResolutionY(dib) > 0)) 
-            {
-                // SetResolution will throw an exception when zero values are given on input 
-                result.SetResolution(GetResolutionX(dib), GetResolutionY(dib));
-            }
+			if((GetResolutionX(dib) > 0) && (GetResolutionY(dib) > 0)) 
+			{
+				// SetResolution will throw an exception when zero values are given on input 
+				result.SetResolution(GetResolutionX(dib), GetResolutionY(dib));
+			}
 			// Check whether the bitmap has a palette
 			if (GetPalette(dib) != IntPtr.Zero)
 			{
@@ -4410,8 +4410,8 @@ namespace FreeImageAPI
 
 			if (color.HasValue)
 			{
-                if (!CheckColorType(GetImageType(dib), color.Value))
-                    return FIBITMAP.Zero;
+				if (!CheckColorType(GetImageType(dib), color.Value))
+					return FIBITMAP.Zero;
 
 				GCHandle handle = new GCHandle();
 				try

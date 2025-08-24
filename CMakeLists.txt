@@ -78,6 +78,10 @@ IF(ENABLE_PLUS)
   include_directories(AFTER Wrapper/FreeImagePlus Source/)
 ENDIF()
 
+IF(MSVC)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ENDIF()
+
 # Set default output dirs
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
