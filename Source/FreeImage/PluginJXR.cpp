@@ -19,6 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
+#if INCLUDE_LIB_JXR
+
 #include "FreeImage.h"
 #include "Utilities.h"
 #include "../Metadata/FreeImageTag.h"
@@ -1489,3 +1491,4 @@ InitJXR(Plugin *plugin, int format_id) {
 	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }
 
+#endif

@@ -3,7 +3,7 @@
 // Exif metadata model
 //
 // Design and implementation by
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 // - Mihail Naydenov (mnaydenov@users.sourceforge.net)
 // - Garrick Meeker (garrickmeeker@users.sourceforge.net)
 //
@@ -770,6 +770,7 @@ jpeg_read_exif_dir(FIBITMAP *dib, const uint8_t *tiffp, uint32_t dwOffsetIfd0, u
 	//
 
 	const uint16_t entriesCount0th = ReadUint16(msb_order, ifd0th);
+
 	const uint8_t* de_addr = DIR_ENTRY_ADDR(ifd0th, entriesCount0th);
 	if(de_addr+4 >= (uint8_t*)(dwLength + ifd0th - tiffp)) {
 		// Fix for CVE-2021-33367 from https://src.fedoraproject.org/rpms/freeimage/blob/f39/f/CVE-2021-33367.patch
@@ -1035,12 +1036,12 @@ RotateExif(FIBITMAP **dib) {
 		if((tag != nullptr) && (FreeImage_GetTagID(tag) == TAG_ORIENTATION)) {
 			const uint16_t orientation = *((uint16_t *)FreeImage_GetTagValue(tag));
 			switch (orientation) {
-				case 1:		// "top, left side" => 0°
+				case 1:		// "top, left side" => 0Â°
 					break;
 				case 2:		// "top, right side" => flip left-right
 					FreeImage_FlipHorizontal(*dib);
 					break;
-				case 3:		// "bottom, right side" => -180°
+				case 3:		// "bottom, right side" => -180Â°
 					rotated = FreeImage_Rotate(*dib, 180);
 					FreeImage_Unload(*dib);
 					*dib = rotated;
@@ -1048,24 +1049,24 @@ RotateExif(FIBITMAP **dib) {
 				case 4:		// "bottom, left side" => flip up-down
 					FreeImage_FlipVertical(*dib);
 					break;
-				case 5:		// "left side, top" => +90° + flip up-down
+				case 5:		// "left side, top" => +90Â° + flip up-down
 					rotated = FreeImage_Rotate(*dib, 90);
 					FreeImage_Unload(*dib);
 					*dib = rotated;
 					FreeImage_FlipVertical(*dib);
 					break;
-				case 6:		// "right side, top" => -90°
+				case 6:		// "right side, top" => -90Â°
 					rotated = FreeImage_Rotate(*dib, -90);
 					FreeImage_Unload(*dib);
 					*dib = rotated;
 					break;
-				case 7:		// "right side, bottom" => -90° + flip up-down
+				case 7:		// "right side, bottom" => -90Â° + flip up-down
 					rotated = FreeImage_Rotate(*dib, -90);
 					FreeImage_Unload(*dib);
 					*dib = rotated;
 					FreeImage_FlipVertical(*dib);
 					break;
-				case 8:		// "left side, bottom" => +90°
+				case 8:		// "left side, bottom" => +90Â°
 					rotated = FreeImage_Rotate(*dib, 90);
 					FreeImage_Unload(*dib);
 					*dib = rotated;
