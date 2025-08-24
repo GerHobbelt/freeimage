@@ -103,8 +103,8 @@ static void WriteCompression(TIFF *tiff, uint16_t bitspersample, uint16_t sample
 
 static BOOL tiff_read_iptc_profile(TIFF *tiff, FIBITMAP *dib);
 static BOOL tiff_read_xmp_profile(TIFF *tiff, FIBITMAP *dib);
-static BOOL tiff_read_exif_profile(TIFF *tiff, FIBITMAP *dib);
-static void ReadMetadata(TIFF *tiff, FIBITMAP *dib);
+static BOOL tiff_read_exif_profile(FreeImageIO *io, fi_handle handle, TIFF *tiff, FIBITMAP *dib);
+static void ReadMetadata(FreeImageIO *io, fi_handle handle, TIFF *tiff, FIBITMAP *dib);
 
 static BOOL tiff_write_iptc_profile(TIFF *tiff, FIBITMAP *dib);
 static BOOL tiff_write_xmp_profile(TIFF *tiff, FIBITMAP *dib);
@@ -122,9 +122,14 @@ static void ReadThumbnail(FreeImageIO *io, fi_handle handle, void *data, TIFF *t
 static int s_format_id;
 
 typedef struct {
+	//! FreeImage IO functions
     FreeImageIO *io;
+	//! FreeImage handle
 	fi_handle handle;
+	//! LibTIFF handle
 	TIFF *tif;
+	//! Count the number of thumbnails already read (used to avoid recursion on loading)
+	unsigned thumbnailCount;
 } fi_TIFFIO;
 
 // ----------------------------------------------------------
@@ -184,10 +189,8 @@ Open a TIFF file descriptor for reading or writing
 */
 TIFF *
 TIFFFdOpen(thandle_t handle, const char *name, const char *mode) {
-	TIFF *tif;
-	
 	// Open the file; the callback will set everything up
-	tif = TIFFClientOpen(name, mode, handle,
+	TIFF *tif = TIFFClientOpen(name, mode, handle,
 	    _tiffReadProc, _tiffWriteProc, _tiffSeekProc, _tiffCloseProc,
 	    _tiffSizeProc, _tiffMapProc, _tiffUnmapProc);
 
@@ -211,6 +214,14 @@ TIFFOpen(const char* name, const char* mode) {
 void*
 _TIFFmalloc(tmsize_t s) {
 	return malloc(s);
+}
+
+void* 
+_TIFFcalloc(tmsize_t nmemb, tmsize_t siz) {
+	if (nmemb == 0 || siz == 0) {
+		return ((void *)nullptr);
+	}
+	return calloc((size_t)nmemb, (size_t)siz);
 }
 
 void
@@ -452,11 +463,9 @@ CreateImageType(BOOL header_only, FREE_IMAGE_TYPE fit, int width, int height, ui
 			}
 			
 		}
-		else {
-
-			dib = FreeImage_AllocateHeader(header_only, width, height, MIN(bpp, 32), FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+		else if (bpp <= 32) {
+			dib = FreeImage_AllocateHeader(header_only, width, height, bpp, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 		}
-
 
 	} else {
 		// other bitmap types
@@ -640,39 +649,53 @@ WriteImageType(TIFF *tiff, FREE_IMAGE_TYPE fit) {
 /**
 Select the compression algorithm
 @param tiff LibTIFF TIFF Handle
-@param 
+@param tiff
+@param bitspersample
+@param samplesperpixel
+@param photometric
+@param flags
 */
 static void 
 WriteCompression(TIFF *tiff, uint16_t bitspersample, uint16_t samplesperpixel, uint16_t photometric, int flags) {
-	uint16_t compression;
+	uint16_t compression = COMPRESSION_LZW;
 	uint16_t bitsperpixel = bitspersample * samplesperpixel;
 
-	if(photometric == PHOTOMETRIC_LOGLUV) {
+	if (photometric == PHOTOMETRIC_LOGLUV) {
 		compression = COMPRESSION_SGILOG;
-	} else if ((flags & TIFF_PACKBITS) == TIFF_PACKBITS) {
+	}
+	else if ((flags & TIFF_PACKBITS) == TIFF_PACKBITS) {
 		compression = COMPRESSION_PACKBITS;
-	} else if ((flags & TIFF_DEFLATE) == TIFF_DEFLATE) {
-		compression = COMPRESSION_DEFLATE;
-	} else if ((flags & TIFF_ADOBE_DEFLATE) == TIFF_ADOBE_DEFLATE) {
+	}
+	else if ((flags & TIFF_DEFLATE) == TIFF_DEFLATE) {
+		// compression = COMPRESSION_DEFLATE is obsolete, writers should always use COMPRESSION_ADOBE_DEFLATE value
 		compression = COMPRESSION_ADOBE_DEFLATE;
-	} else if ((flags & TIFF_NONE) == TIFF_NONE) {
+	}
+	else if ((flags & TIFF_ADOBE_DEFLATE) == TIFF_ADOBE_DEFLATE) {
+		compression = COMPRESSION_ADOBE_DEFLATE;
+	}
+	else if ((flags & TIFF_NONE) == TIFF_NONE) {
 		compression = COMPRESSION_NONE;
-	} else if ((bitsperpixel == 1) && ((flags & TIFF_CCITTFAX3) == TIFF_CCITTFAX3)) {
+	}
+	else if ((bitsperpixel == 1) && ((flags & TIFF_CCITTFAX3) == TIFF_CCITTFAX3)) {
 		compression = COMPRESSION_CCITTFAX3;
-	} else if ((bitsperpixel == 1) && ((flags & TIFF_CCITTFAX4) == TIFF_CCITTFAX4)) {
+	}
+	else if ((bitsperpixel == 1) && ((flags & TIFF_CCITTFAX4) == TIFF_CCITTFAX4)) {
 		compression = COMPRESSION_CCITTFAX4;
-	} else if ((flags & TIFF_LZW) == TIFF_LZW) {
+	}
+	else if ((flags & TIFF_LZW) == TIFF_LZW) {
 		compression = COMPRESSION_LZW;
-	} else if ((flags & TIFF_JPEG) == TIFF_JPEG) {
-		if(((bitsperpixel == 8) && (photometric != PHOTOMETRIC_PALETTE)) || (bitsperpixel == 24)) {
+	}
+	else if ((flags & TIFF_JPEG) == TIFF_JPEG) {
+		if (((bitsperpixel == 8) && (photometric != PHOTOMETRIC_PALETTE)) || (bitsperpixel == 24)) {
 			compression = COMPRESSION_JPEG;
 			// RowsPerStrip must be multiple of 8 for JPEG
-			uint32_t rowsperstrip = (uint32_t) -1;
+			uint32_t rowsperstrip = (uint32_t)-1;
 			rowsperstrip = TIFFDefaultStripSize(tiff, rowsperstrip);
-            rowsperstrip = rowsperstrip + (8 - (rowsperstrip % 8));
+			rowsperstrip = rowsperstrip + (8 - (rowsperstrip % 8));
 			// overwrite previous RowsPerStrip
 			TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, rowsperstrip);
-		} else {
+		}
+		else {
 			// default to LZW
 			compression = COMPRESSION_LZW;
 		}
@@ -680,35 +703,35 @@ WriteCompression(TIFF *tiff, uint16_t bitspersample, uint16_t samplesperpixel, u
 	else {
 		// default compression scheme
 
-		switch(bitsperpixel) {
-			case 1:
-				compression = COMPRESSION_CCITTFAX4;
-				break;
+		switch (bitsperpixel) {
+		case 1:
+			compression = COMPRESSION_CCITTFAX4;
+			break;
 
-			case 4:
-			case 8:
-			case 16:
-			case 24:
-			case 32:
-				compression = COMPRESSION_LZW;
-				break;
-			case 48:
-			case 64:
-			case 96:
-			case 128:
-				compression = COMPRESSION_LZW;
-				break;
+		case 4:
+		case 8:
+		case 16:
+		case 24:
+		case 32:
+			compression = COMPRESSION_LZW;
+			break;
+		case 48:
+		case 64:
+		case 96:
+		case 128:
+			compression = COMPRESSION_LZW;
+			break;
 
-			default :
-				compression = COMPRESSION_NONE;
-				break;
+		default:
+			compression = COMPRESSION_NONE;
+			break;
 		}
 	}
 
 	TIFFSetField(tiff, TIFFTAG_COMPRESSION, compression);
 
-	if(compression == COMPRESSION_LZW) {
-		// This option is only meaningful with LZW compression: a predictor value of 2 
+	if ((compression == COMPRESSION_LZW) || (compression == COMPRESSION_ADOBE_DEFLATE)) {
+		// This option is only meaningful with LZW or ADOBE DEFLATE compression: a predictor value of 2 
 		// causes each scanline of the output image to undergo horizontal differencing 
 		// before it is encoded; a value of 1 forces each scanline to be encoded without differencing.
 
@@ -717,27 +740,30 @@ WriteCompression(TIFF *tiff, uint16_t bitspersample, uint16_t samplesperpixel, u
 		// and many palette-color images. But natural 24-bit color images and some 8-bit 
 		// grayscale images do much better with differencing.
 
-		if((bitspersample == 8) || (bitspersample == 16)) {
+		// set the default predictor value
+		TIFFSetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_NONE);
+
+		if ((bitspersample == 8) || (bitspersample == 16)) {
 			if ((bitsperpixel >= 8) && (photometric != PHOTOMETRIC_PALETTE)) {
-				TIFFSetField(tiff, TIFFTAG_PREDICTOR, 2);
-			} else {
-				TIFFSetField(tiff, TIFFTAG_PREDICTOR, 1);
+				TIFFSetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL);
 			}
-		} else {
-			TIFFSetField(tiff, TIFFTAG_PREDICTOR, 1);
+		}
+		else if ((photometric == PHOTOMETRIC_RGB) && (bitspersample == 32) && ((samplesperpixel == 3) || (samplesperpixel == 4))) {
+			// this is a RGB or RGBA float image, set a floating point predictor
+			TIFFSetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_FLOATINGPOINT);
 		}
 	}
-	else if((compression == COMPRESSION_CCITTFAX3) || (compression == COMPRESSION_CCITTFAX4)) {
+	else if ((compression == COMPRESSION_CCITTFAX3) || (compression == COMPRESSION_CCITTFAX4)) {
 		uint32_t imageLength = 0;
 		TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &imageLength);
 		// overwrite previous RowsPerStrip
 		TIFFSetField(tiff, TIFFTAG_ROWSPERSTRIP, imageLength);
 
-		if(compression == COMPRESSION_CCITTFAX3) {
+		if (compression == COMPRESSION_CCITTFAX3) {
 			// try to be compliant with the TIFF Class F specification
 			// that documents the TIFF tags specific to FAX applications
 			// see http://palimpsest.stanford.edu/bytopic/imaging/std/tiff-f.html
-			uint32_t group3options = GROUP3OPT_2DENCODING | GROUP3OPT_FILLBITS;	
+			uint32_t group3options = GROUP3OPT_2DENCODING | GROUP3OPT_FILLBITS;
 			TIFFSetField(tiff, TIFFTAG_GROUP3OPTIONS, group3options);	// 2d-encoded, has aligned EOL
 			TIFFSetField(tiff, TIFFTAG_FILLORDER, FILLORDER_LSB2MSB);	// lsb-to-msb fillorder
 		}
@@ -809,9 +835,9 @@ tiff_read_xmp_profile(TIFF *tiff, FIBITMAP *dib) {
 	@return Returns TRUE if successful, FALSE otherwise
 */
 static BOOL 
-tiff_read_exif_profile(TIFF *tiff, FIBITMAP *dib) {
+tiff_read_exif_profile(FreeImageIO *io, fi_handle handle, TIFF *tiff, FIBITMAP *dib) {
 	BOOL bResult = FALSE;
-    toff_t exif_offset = 0;
+	toff_t exif_offset = 0;
 
 	// read EXIF-TIFF tags
 	bResult = tiff_read_exif_tags(tiff, TagLib::EXIF_MAIN, dib);
@@ -819,13 +845,17 @@ tiff_read_exif_profile(TIFF *tiff, FIBITMAP *dib) {
 	// get the IFD offset
 	if(TIFFGetField(tiff, TIFFTAG_EXIFIFD, &exif_offset)) {
 
+		const long tell_pos = io->tell_proc(handle);
+		const uint16_t cur_dir = TIFFCurrentDirectory(tiff);
+
 		// read EXIF tags
-		if(!TIFFReadEXIFDirectory(tiff, exif_offset)) {
-			return FALSE;
+		if (TIFFReadEXIFDirectory(tiff, exif_offset)) {
+			// read all known exif tags
+			bResult = tiff_read_exif_tags(tiff, TagLib::EXIF_EXIF, dib);
 		}
 
-		// read all known exif tags
-		bResult = tiff_read_exif_tags(tiff, TagLib::EXIF_EXIF, dib);
+		io->seek_proc(handle, tell_pos, SEEK_SET);
+		TIFFSetDirectory(tiff, cur_dir);
 	}
 
 	return bResult;
@@ -835,7 +865,7 @@ tiff_read_exif_profile(TIFF *tiff, FIBITMAP *dib) {
 Read TIFF special profiles
 */
 static void 
-ReadMetadata(TIFF *tiff, FIBITMAP *dib) {
+ReadMetadata(FreeImageIO *io, fi_handle handle, TIFF *tiff, FIBITMAP *dib) {
 
 	// IPTC/NAA
 	tiff_read_iptc_profile(tiff, dib);
@@ -847,7 +877,7 @@ ReadMetadata(TIFF *tiff, FIBITMAP *dib) {
 	tiff_read_geotiff_profile(tiff, dib);
 
 	// Exif-TIFF
-	tiff_read_exif_profile(tiff, dib);
+	tiff_read_exif_profile(io, handle, tiff, dib);
 }
 
 // ----------------------------------------------------------
@@ -973,22 +1003,39 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {	
-	uint8_t tiff_id1[] = { 0x49, 0x49, 0x2A, 0x00 };	// Classic TIFF, little-endian
-	uint8_t tiff_id2[] = { 0x4D, 0x4D, 0x00, 0x2A };	// Classic TIFF, big-endian
-	uint8_t tiff_id3[] = { 0x49, 0x49, 0x2B, 0x00 };	// Big TIFF, little-endian
-	uint8_t tiff_id4[] = { 0x4D, 0x4D, 0x00, 0x2B };	// Big TIFF, big-endian
-	uint8_t signature[4] = { 0, 0, 0, 0 };
+	// TIFF signatures
+	static const uint8_t tiff_C_II[] = { 0x49, 0x49, 0x2A, 0x00 };	// Classic TIFF, little-endian
+	static const uint8_t tiff_C_MM[] = { 0x4D, 0x4D, 0x00, 0x2A };	// Classic TIFF, big-endian
+	static const uint8_t tiff_B_II[] = { 0x49, 0x49, 0x2B, 0x00 };	// Big TIFF, little-endian
+	static const uint8_t tiff_B_MM[] = { 0x4D, 0x4D, 0x00, 0x2B };	// Big TIFF, big-endian
 
-	io->read_proc(signature, 1, 4, handle);
+	// many camera raw files use a TIFF signature ...
+	// ... try to exclude any TIFF if it is a raw file
 
-	if(memcmp(tiff_id1, signature, 4) == 0)
+	// Canon (CR2), little-endian byte order signature
+	static const uint8_t CR2_II[] = { 0x49, 0x49, 0x2A, 0x00, 0x10, 0x00, 0x00, 0x00, 0x43, 0x52, 0x02, 0x00 };
+
+	uint8_t signature[16] = { 0 };
+
+	if (io->read_proc(signature, sizeof(uint8_t), 16, handle) != 16) {
+		return FALSE;
+	}
+
+	if (memcmp(tiff_C_II, signature, 4) == 0) {
+		if (memcmp(CR2_II, signature, 12) == 0) {
+			return FALSE;
+		}
 		return TRUE;
-	if(memcmp(tiff_id2, signature, 4) == 0)
+	}
+	if (memcmp(tiff_C_MM, signature, 4) == 0) {
 		return TRUE;
-	if(memcmp(tiff_id3, signature, 4) == 0)
+	}
+	if (memcmp(tiff_B_II, signature, 4) == 0) {
 		return TRUE;
-	if(memcmp(tiff_id4, signature, 4) == 0)
+	}
+	if (memcmp(tiff_B_MM, signature, 4) == 0) {
 		return TRUE;
+	}
 
 	return FALSE;
 }
@@ -1038,9 +1085,12 @@ static void * DLL_CALLCONV
 Open(FreeImageIO *io, fi_handle handle, BOOL read) {
 	// wrapper for TIFF I/O
 	fi_TIFFIO *fio = (fi_TIFFIO*)malloc(sizeof(fi_TIFFIO));
-	if(!fio) return nullptr;
+	if (!fio) {
+		return nullptr;
+	}
 	fio->io = io;
 	fio->handle = handle;
+	fio->thumbnailCount = 0;
 
 	if (read) {
 		fio->tif = TIFFFdOpen((thandle_t)fio, "", "r");
@@ -1091,10 +1141,32 @@ PageCount(FreeImageIO *io, fi_handle handle, void *data) {
 check for uncommon bitspersample values (e.g. 10, 12, ...)
 @param photometric TIFFTAG_PHOTOMETRIC tiff tag
 @param bitspersample TIFFTAG_BITSPERSAMPLE tiff tag
+@param samplesperpixel TIFFTAG_SAMPLESPERPIXEL tiff tag
 @return Returns FALSE if a uncommon bit-depth is encountered, returns TRUE otherwise
 */
 static BOOL 
-IsValidBitsPerSample(uint16_t photometric, uint16_t bitspersample) {
+IsValidBitsPerSample(uint16_t photometric, uint16_t bitspersample, uint16_t samplesperpixel) {
+	// get the pixel depth in bits
+	const uint16_t pixel_depth = bitspersample * samplesperpixel;
+
+	// check for a supported pixel depth
+	switch (pixel_depth) {
+		case 1:
+		case 4:
+		case 8:
+		case 16:
+		case 24:
+		case 32:
+		case 48:
+		case 64:
+		case 96:
+		case 128:
+			// OK, go on
+			break;
+		default:
+			// unsupported pixel depth
+			return FALSE;
+	}
 
 	switch(bitspersample) {
 		case 1:
@@ -1117,6 +1189,9 @@ IsValidBitsPerSample(uint16_t photometric, uint16_t bitspersample) {
 		case 32:
 			if((photometric == PHOTOMETRIC_MINISWHITE) || (photometric == PHOTOMETRIC_MINISBLACK) || (photometric == PHOTOMETRIC_LOGLUV)) { 
 				return TRUE;
+			} else if((photometric == PHOTOMETRIC_RGB) && (samplesperpixel == 3) || (samplesperpixel == 4)) {
+				// RGB[A]F
+				return TRUE;
 			} else {
 				return FALSE;
 			}
@@ -1132,6 +1207,8 @@ IsValidBitsPerSample(uint16_t photometric, uint16_t bitspersample) {
 		default:
 			return FALSE;
 	}
+	
+	return FALSE;
 }
 
 static TIFFLoadMethod  
@@ -1222,49 +1299,76 @@ static void
 ReadThumbnail(FreeImageIO *io, fi_handle handle, void *data, TIFF *tiff, FIBITMAP *dib) {
 	FIBITMAP* thumbnail = nullptr;
 
+	fi_TIFFIO *fio = (fi_TIFFIO*)data;
+
+	/*
+	Thumbnail loading can cause recursions because of the way 
+	functions TIFFLastDirectory and TIFFSetSubDirectory are working.
+	We use here a hack to count the number of times the ReadThumbnail function was called. 
+	We only allow one call, check for this
+	*/
+	if (fio->thumbnailCount > 0) {
+		return;
+	}
+	else {
+		// update the thumbnail count (used to avoid recursion)
+		fio->thumbnailCount++;
+	}
+	
 	// read exif thumbnail (IFD 1) ...
-
-	uint32_t exif_offset = 0;
+	
+	toff_t exif_offset = 0;
 	if(TIFFGetField(tiff, TIFFTAG_EXIFIFD, &exif_offset)) {
+		
+		// this code can cause unwanted recursion causing an overflow, because of the way TIFFLastDirectory work
+		// => this is checked using 
 
-		if(TIFFLastDirectory(tiff) != 0) {
+		if(!TIFFLastDirectory(tiff)) {
 			// save current position
-			long tell_pos = io->tell_proc(handle);
-			uint16_t cur_dir = TIFFCurrentDirectory(tiff);
-
+			const long tell_pos = io->tell_proc(handle);
+			const uint16_t cur_dir = TIFFCurrentDirectory(tiff);
+			
 			// load the thumbnail
-			int page = 1; 
+			int page = 1;
 			int flags = TIFF_DEFAULT;
 			thumbnail = Load(io, handle, page, flags, data);
-			// store the thumbnail (remember to release it later ...)
-			FreeImage_SetThumbnail(dib, thumbnail);
 
+			// store the thumbnail (remember to release it before return)
+			FreeImage_SetThumbnail(dib, thumbnail);
+		
 			// restore current position
 			io->seek_proc(handle, tell_pos, SEEK_SET);
 			TIFFSetDirectory(tiff, cur_dir);
 		}
 	}
-
+	
 	// ... or read the first subIFD
-
+	
 	if(!thumbnail) {
 		uint16_t subIFD_count = 0;
-		uint64* subIFD_offsets = nullptr;
-		// ### Theoretically this should also read the first subIFD from a Photoshop-created file with "pyramid".
-		// It does not however - the tag is there (using Tag Viewer app) but libtiff refuses to read it
+		toff_t* subIFD_offsets = nullptr;
+		
+		// This will also read the first (and only) subIFD from a Photoshop-created "pyramid" file.
+		// Subsequent, smaller images are 'nextIFD' in that subIFD. Currently we only load the first one. 
+		
 		if(TIFFGetField(tiff, TIFFTAG_SUBIFD, &subIFD_count, &subIFD_offsets)) {
 			if(subIFD_count > 0) {
 				// save current position
-				long tell_pos = io->tell_proc(handle);
-				uint16_t cur_dir = TIFFCurrentDirectory(tiff);
+				const long tell_pos = io->tell_proc(handle);
+				const uint16_t cur_dir = TIFFCurrentDirectory(tiff);
+
+				// this code can cause unwanted recursion causing an overflow, because of the way TIFFSetSubDirectory work
+				
 				if(TIFFSetSubDirectory(tiff, subIFD_offsets[0])) {
 					// load the thumbnail
 					int page = -1; 
 					int flags = TIFF_DEFAULT;
 					thumbnail = Load(io, handle, page, flags, data);
-					// store the thumbnail (remember to release it later ...)
+
+					// store the thumbnail (remember to release it before return)
 					FreeImage_SetThumbnail(dib, thumbnail);
 				}
+				
 				// restore current position
 				io->seek_proc(handle, tell_pos, SEEK_SET);
 				TIFFSetDirectory(tiff, cur_dir);
@@ -1273,17 +1377,17 @@ ReadThumbnail(FreeImageIO *io, fi_handle handle, void *data, TIFF *tiff, FIBITMA
 	}
 	
 	// ... or read Photoshop thumbnail
-
+	
 	if(!thumbnail) {
 		uint32_t ps_size = 0;
 		void *ps_data = nullptr;
-
+		
 		if(TIFFGetField(tiff, TIFFTAG_PHOTOSHOP, &ps_size, &ps_data)) {
 			FIMEMORY *handle = FreeImage_OpenMemory((uint8_t*)ps_data, ps_size);
-
+			
 			FreeImageIO io;
 			SetMemoryIO(&io);
-		
+			
 			psdParser parser;
 			parser.ReadImageResources(&io, handle, ps_size);
 
@@ -1291,9 +1395,8 @@ ReadThumbnail(FreeImageIO *io, fi_handle handle, void *data, TIFF *tiff, FIBITMA
 			
 			FreeImage_CloseMemory(handle);
 		}
-		
 	}
-
+	
 	// release thumbnail
 	FreeImage_Unload(thumbnail);
 }
@@ -1365,7 +1468,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		// check for unsupported formats
 		// ---------------------------------------------------------------------------------
 
-		if(IsValidBitsPerSample(photometric, bitspersample) == FALSE) {
+		if(IsValidBitsPerSample(photometric, bitspersample, samplesperpixel) == FALSE) {
 			FreeImage_OutputMessageProc(s_format_id, 
 				"Unable to handle this format: bitspersample = %d, samplesperpixel = %d, photometric = %d", 
 				(int)bitspersample, (int)samplesperpixel, (int)photometric);
@@ -1493,9 +1596,10 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// ---------------------------------------------------------------------------------
 			// 8-bit + 8-bit alpha layer loading
 			// ---------------------------------------------------------------------------------
+			const uint16_t dst_spp = 2;
 
 			// create a new 8-bit DIB
-			dib = CreateImageType(header_only, image_type, width, height, bitspersample, MIN<uint16_t>(2, samplesperpixel));
+			dib = CreateImageType(header_only, image_type, width, height, bitspersample, MIN(dst_spp, samplesperpixel));
 			if (dib == nullptr) {
 				throw FI_MSG_ERROR_MEMORY;
 			}
@@ -1529,13 +1633,20 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			if(planar_config == PLANARCONFIG_CONTIG && !header_only) {
 
-				uint8_t *buf = (uint8_t*)malloc(TIFFStripSize(tif) * sizeof(uint8_t));
+				const tmsize_t bufsz = TIFFStripSize(tif) * sizeof(uint8_t);
+				uint8_t *buf = (uint8_t*)malloc(bufsz);
 				if(buf == nullptr) {
 					throw FI_MSG_ERROR_MEMORY;
 				}
 
+				const uint32_t src_width = static_cast<uint32_t>(src_line / samplesperpixel);
 				for (uint32_t y = 0; y < height; y += rowsperstrip) {
-					int32 nrow = (y + rowsperstrip > height ? height - y : rowsperstrip);
+					const int32_t nrow = (y + rowsperstrip > height ? height - y : rowsperstrip);
+
+					if (nrow * src_width * dst_spp * sizeof(uint8_t) > static_cast<size_t>(bufsz)) {
+						free(buf);
+						throw FI_MSG_ERROR_CORRUPTED_IMAGE;
+					}
 
 					if (TIFFReadEncodedStrip(tif, TIFFComputeStrip(tif, y, 0), buf, nrow * src_line) == -1) {
 						free(buf);
@@ -1543,17 +1654,17 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					}
 					for (int l = 0; l < nrow; l++) {
 						uint8_t *p = bits;
-						uint8_t *b = buf + l * src_line;
+						const uint8_t *b = buf + l * src_line;
 
-						for(uint32_t x = 0; x < (uint32_t)(src_line / samplesperpixel); x++) {
+						for(uint32_t x = 0; x < src_width; x++) {
 							// copy the 8-bit layer
 							*p = b[0];
 							// convert the 8-bit alpha layer to a trns table
 							trns[ b[0] ] = b[1];
 
 							p++;
-							b += samplesperpixel;
-						}
+							b += dst_spp;
+						} 
 						bits -= dst_pitch;
 					}
 				}
@@ -1570,7 +1681,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				uint8_t *alpha = buf + stripsize;
 
 				for (uint32_t y = 0; y < height; y += rowsperstrip) {
-					int32 nrow = (y + rowsperstrip > height ? height - y : rowsperstrip);
+					int32_t nrow = (y + rowsperstrip > height ? height - y : rowsperstrip);
 
 					if (TIFFReadEncodedStrip(tif, TIFFComputeStrip(tif, y, 0), grey, nrow * src_line) == -1) {
 						free(buf);
@@ -1687,7 +1798,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					// - loop for strip blocks -
 					
 					for (uint32_t y = 0; y < height; y += rowsperstrip) {
-						const int32 strips = (y + rowsperstrip > height ? height - y : rowsperstrip);
+						const int32_t strips = (y + rowsperstrip > height ? height - y : rowsperstrip);
 
 						if (TIFFReadEncodedStrip(tif, TIFFComputeStrip(tif, y, 0), buf, strips * src_line) == -1) {
 							free(buf);
@@ -1750,7 +1861,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					// - loop for strip blocks -
 					
 					for (uint32_t y = 0; y < height; y += rowsperstrip) {
-						const int32 strips = (y + rowsperstrip > height ? height - y : rowsperstrip);
+						const int32_t strips = (y + rowsperstrip > height ? height - y : rowsperstrip);
 						
 						// - loop for channels (planes) -
 						
@@ -1887,7 +1998,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				if(planar_config == PLANARCONFIG_CONTIG) {
 
 					for (uint32_t y = 0; y < height; y += rowsperstrip) {
-						int32 strips = (y + rowsperstrip > height ? height - y : rowsperstrip);
+						int32_t strips = (y + rowsperstrip > height ? height - y : rowsperstrip);
 
 						if (TIFFReadEncodedStrip(tif, TIFFComputeStrip(tif, y, 0), buf, strips * src_line) == -1) {
 							// ignore errors as they can be frequent and not really valid errors, especially with fax images
@@ -1921,7 +2032,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 					// - loop for strip blocks -
 					
 					for (uint32_t y = 0; y < height; y += rowsperstrip) {
-						const int32 strips = (y + rowsperstrip > height ? height - y : rowsperstrip);
+						const int32_t strips = (y + rowsperstrip > height ? height - y : rowsperstrip);
 						
 						// - loop for channels (planes) -
 						
@@ -2017,7 +2128,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				}
 
 				// calculate src line and dst pitch
-				int dst_pitch = FreeImage_GetPitch(dib);
+				unsigned dst_pitch = FreeImage_GetPitch(dib);
 				uint32_t tileRowSize = (uint32_t)TIFFTileRowSize(tif);
 				uint32_t imageRowSize = (uint32_t)TIFFScanlineSize(tif);
 
@@ -2028,7 +2139,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				uint8_t *bits = FreeImage_GetScanLine(dib, height - 1);
 				
 				for (uint32_t y = 0; y < height; y += tileHeight) {						
-					int32 nrows = (y + tileHeight > height ? height - y : tileHeight);					
+					int32_t nrows = (y + tileHeight > height ? height - y : tileHeight);					
 
 					for (uint32_t x = 0, rowSize = 0; x < width; x += tileWidth, rowSize += tileRowSize) {
 						memset(tileBuffer, 0, tileSize);
@@ -2047,7 +2158,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						uint8_t *src_bits = tileBuffer;
 						uint8_t *dst_bits = bits + rowSize;
 						for(int k = 0; k < nrows; k++) {
-							memcpy(dst_bits, src_bits, src_line);
+							memcpy(dst_bits, src_bits, MIN(dst_pitch, src_line));
 							src_bits += tileRowSize;
 							dst_bits -= dst_pitch;
 						}
@@ -2105,7 +2216,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				}
 
 				for (uint32_t y = 0; y < height; y += rowsperstrip) {
-					int32 nrow = (y + rowsperstrip > height ? height - y : rowsperstrip);
+					int32_t nrow = (y + rowsperstrip > height ? height - y : rowsperstrip);
 
 					if (TIFFReadEncodedStrip(tif, TIFFComputeStrip(tif, y, 0), buf, nrow * src_line) == -1) {
 						free(buf);
@@ -2203,23 +2314,30 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			throw FI_MSG_ERROR_UNSUPPORTED_FORMAT;
 		}
-
-		// copy ICC profile data (must be done after FreeImage_Allocate)
-
-		FreeImage_CreateICCProfile(dib, iccBuf, iccSize);		
-		if (photometric == PHOTOMETRIC_SEPARATED && asCMYK) {
-			FreeImage_GetICCProfile(dib)->flags |= FIICC_COLOR_IS_CMYK;
-		}			
-
+		
 		// copy TIFF metadata (must be done after FreeImage_Allocate)
 
-		ReadMetadata(tif, dib);
+		ReadMetadata(io, handle, tif, dib);
+
+		// copy ICC profile data (must be done after FreeImage_Allocate)
+		
+		FreeImage_CreateICCProfile(dib, iccBuf, iccSize);
+		if (photometric == PHOTOMETRIC_SEPARATED) {
+			if (asCMYK) {
+				// set the ICC profile as CMYK
+				FreeImage_GetICCProfile(dib)->flags |= FIICC_COLOR_IS_CMYK;
+			}
+			else {
+				// if original image is CMYK but is converted to RGB, remove ICC profile from Exif-TIFF metadata
+				FreeImage_SetMetadata(FIMD_EXIF_MAIN, dib, "InterColorProfile", nullptr);
+			}
+		}
 
 		// copy TIFF thumbnail (must be done after FreeImage_Allocate)
 		
 		ReadThumbnail(io, handle, data, tif, dib);
 
-		return (FIBITMAP *)dib;
+		return dib;
 
 	} catch (const char *message) {			
 		if(dib)	{
@@ -2235,6 +2353,19 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 // --------------------------------------------------------------------------
 
+/**
+Save a single image into a TIF
+
+@param io FreeImage IO
+@param dib The dib to be saved
+@param handle FreeImage handle
+@param page Page number
+@param flags FreeImage TIFF save flag
+@param data TIFF plugin context
+@param ifd TIFF Image File Directory (0 means save image, > 0 && (page == -1) means save thumbnail)
+@param ifdCount 1 if no thumbnail to save, 2 if image + thumbnail to save
+@return Returns TRUE if successful, returns FALSE otherwise
+*/
 static BOOL 
 SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data, unsigned ifd, unsigned ifdCount) {
 	if (!dib || !handle || !data) {
@@ -2421,7 +2552,7 @@ SaveOneTIFF(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flag
 
 		if((ifd == 0) && (ifdCount > 1)) {
 			uint16_t nsubifd = 1;
-			uint64 subifd[1];
+			uint64_t subifd[1];
 			subifd[0] = 0;
 			TIFFSetField(out, TIFFTAG_SUBIFD, nsubifd, subifd);
 		}

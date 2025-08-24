@@ -105,8 +105,8 @@ copyFaxFile(FreeImageIO *io, fi_handle handle, TIFF* tifin, uint32_t xsize, int 
 	uint8_t *refbuf = nullptr;
 	uint32_t row;
 	uint16_t badrun;
-	uint16_t	badfaxrun;
-	uint32_t	badfaxlines;
+	uint16_t badfaxrun;
+	uint32_t badfaxlines;
 	int ok;
 
 	try {

@@ -2,7 +2,7 @@
 // JPEG2000 helpers
 //
 // Design and implementation by
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 //
 // This file is part of FreeImage 3
 //
@@ -127,6 +127,12 @@ FIBITMAP* J2KImageToFIBITMAP(int format_id, const opj_image_t *image, BOOL heade
 	FIBITMAP *dib = nullptr;
 
 	try {
+		// check the number of components
+		int numcomps = image->numcomps;
+		if (numcomps < 1) {
+			throw FI_MSG_ERROR_CORRUPTED_IMAGE;
+		}
+
 		// compute image width and height
 
 		//int w = int_ceildiv(image->x1 - image->x0, image->comps[0].dx);

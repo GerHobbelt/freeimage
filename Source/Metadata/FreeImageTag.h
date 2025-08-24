@@ -19,8 +19,8 @@
 // Use at your own risk!
 // ==========================================================
 
-#ifndef FREEIMAGETAG_H
-#define FREEIMAGETAG_H
+#ifndef FREEIMAGE_TAG_H
+#define FREEIMAGE_TAG_H
 
 // ==========================================================
 // Exif JPEG tags
@@ -48,37 +48,38 @@
 
 // LibTIF compression modes
 
-#define	    TAG_COMPRESSION_NONE		1	/* dump mode */
-#define	    TAG_COMPRESSION_CCITTRLE	2	/* CCITT modified Huffman RLE */
-#define	    TAG_COMPRESSION_CCITTFAX3	3	/* CCITT Group 3 fax encoding */
-#define     TAG_COMPRESSION_CCITT_T4        3       /* CCITT T.4 (TIFF 6 name) */
-#define	    TAG_COMPRESSION_CCITTFAX4	4	/* CCITT Group 4 fax encoding */
-#define     TAG_COMPRESSION_CCITT_T6        4       /* CCITT T.6 (TIFF 6 name) */
-#define	    TAG_COMPRESSION_LZW		5       /* Lempel-Ziv  & Welch */
-#define	    TAG_COMPRESSION_OJPEG		6	/* !6.0 JPEG */
-#define	    TAG_COMPRESSION_JPEG		7	/* %JPEG DCT compression */
-#define	    TAG_COMPRESSION_NEXT		32766	/* NeXT 2-bit RLE */
-#define	    TAG_COMPRESSION_CCITTRLEW	32771	/* #1 w/ word alignment */
-#define	    TAG_COMPRESSION_PACKBITS	32773	/* Macintosh RLE */
-#define	    TAG_COMPRESSION_THUNDERSCAN	32809	/* ThunderScan RLE */
+#define TAG_COMPRESSION_NONE		1	/* dump mode */
+#define TAG_COMPRESSION_CCITTRLE	2	/* CCITT modified Huffman RLE */
+#define TAG_COMPRESSION_CCITTFAX3	3	/* CCITT Group 3 fax encoding */
+#define TAG_COMPRESSION_CCITT_T4	3       /* CCITT T.4 (TIFF 6 name) */
+#define TAG_COMPRESSION_CCITTFAX4	4	/* CCITT Group 4 fax encoding */
+#define TAG_COMPRESSION_CCITT_T6	4       /* CCITT T.6 (TIFF 6 name) */
+#define TAG_COMPRESSION_LZW			5       /* Lempel-Ziv  & Welch */
+#define TAG_COMPRESSION_OJPEG		6	/* !6.0 JPEG */
+#define TAG_COMPRESSION_JPEG		7	/* %JPEG DCT compression */
+#define TAG_COMPRESSION_NEXT		32766	/* NeXT 2-bit RLE */
+#define TAG_COMPRESSION_CCITTRLEW	32771	/* #1 w/ word alignment */
+#define TAG_COMPRESSION_PACKBITS	32773	/* Macintosh RLE */
+#define TAG_COMPRESSION_THUNDERSCAN	32809	/* ThunderScan RLE */
 /* codes 32895-32898 are reserved for ANSI IT8 TIFF/IT <dkelly@apago.com) */
-#define	    TAG_COMPRESSION_IT8CTPAD	32895   /* IT8 CT w/padding */
-#define	    TAG_COMPRESSION_IT8LW		32896   /* IT8 Linework RLE */
-#define	    TAG_COMPRESSION_IT8MP		32897   /* IT8 Monochrome picture */
-#define	    TAG_COMPRESSION_IT8BL		32898   /* IT8 Binary line art */
+#define TAG_COMPRESSION_IT8CTPAD	32895   /* IT8 CT w/padding */
+#define TAG_COMPRESSION_IT8LW		32896   /* IT8 Linework RLE */
+#define TAG_COMPRESSION_IT8MP		32897   /* IT8 Monochrome picture */
+#define TAG_COMPRESSION_IT8BL		32898   /* IT8 Binary line art */
 /* compression codes 32908-32911 are reserved for Pixar */
-#define     TAG_COMPRESSION_PIXARFILM	32908   /* Pixar companded 10bit LZW */
-#define	    TAG_COMPRESSION_PIXARLOG	32909   /* Pixar companded 11bit ZIP */
-#define	    TAG_COMPRESSION_DEFLATE		32946	/* Deflate compression */
-#define     TAG_COMPRESSION_ADOBE_DEFLATE   8       /* Deflate compression,
-						   as recognized by Adobe */
+#define TAG_COMPRESSION_PIXARFILM	32908   /* Pixar companded 10bit LZW */
+#define TAG_COMPRESSION_PIXARLOG	32909   /* Pixar companded 11bit ZIP */
+#define TAG_COMPRESSION_DEFLATE		32946	/* Deflate compression */
+#define TAG_COMPRESSION_ADOBE_DEFLATE   8       /* Deflate compression, as recognized by Adobe */
 /* compression code 32947 is reserved for Oceana Matrix <dev@oceana.com> */
-#define     TAG_COMPRESSION_DCS             32947   /* Kodak DCS encoding */
-#define	    TAG_COMPRESSION_JBIG		34661	/* ISO JBIG */
-#define     TAG_COMPRESSION_SGILOG		34676	/* SGI Log Luminance RLE */
-#define     TAG_COMPRESSION_SGILOG24	34677	/* SGI Log 24-bit packed */
-#define     TAG_COMPRESSION_JP2000          34712   /* Leadtools JPEG2000 */
-#define	    TAG_COMPRESSION_LZMA		34925	/* LZMA2 */
+#define TAG_COMPRESSION_DCS         32947   /* Kodak DCS encoding */
+#define TAG_COMPRESSION_JBIG		34661	/* ISO JBIG */
+#define TAG_COMPRESSION_SGILOG		34676	/* SGI Log Luminance RLE */
+#define TAG_COMPRESSION_SGILOG24	34677	/* SGI Log 24-bit packed */
+#define TAG_COMPRESSION_JP2000      34712   /* Leadtools JPEG2000 */
+#define TAG_COMPRESSION_LZMA		34925	/* LZMA2 */
+#define TAG_COMPRESSION_ZSTD		50000	/* ZSTD: WARNING not registered in Adobe-maintained registry */
+#define TAG_COMPRESSION_WEBP		50001	/* WEBP: WARNING not registered in Adobe-maintained registry */
 
 // Tags relating to recording offset
 
@@ -225,6 +226,7 @@
 #define TAG_GPS_AREA_INFORMATION		0x001C
 #define TAG_GPS_DATE_STAMP				0x001D
 #define TAG_GPS_DIFFERENTIAL			0x001E
+#define TAG_GPS_HPOSITIONNING_ERROR		0x001F
 
 // ==========================================================
 // IPTC/NAA tags
@@ -368,6 +370,7 @@ public:
 		EXIF_MAKERNOTE_SONY,
 		EXIF_MAKERNOTE_SIGMA_SD1,
 		EXIF_MAKERNOTE_SIGMA_FOVEON,
+		EXIF_MAKERNOTE_APPLE_IOS,
 		IPTC,
 		GEOTIFF,
 		ANIMATION
@@ -485,7 +488,13 @@ BOOL jpegxr_read_exif_gps_profile(FIBITMAP *dib, const uint8_t *profile, unsigne
 BOOL tiff_get_ifd_profile(FIBITMAP *dib, FREE_IMAGE_MDMODEL md_model, uint8_t **ppbProfile, unsigned *uProfileLength);
 
 
-// JPEG / TIFF IPTC profile (see IPTC.cpp)
+// PSD Exif profile (see Exif.cpp)
+// --------------------------------------------------------------------------
+BOOL psd_read_exif_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned datalen);
+BOOL psd_read_exif_profile_raw(FIBITMAP *dib, const uint8_t *dataptr, unsigned datalen);
+
+
+// JPEG / PSD / TIFF IPTC profile (see IPTC.cpp)
 // --------------------------------------------------------------------------
 BOOL read_iptc_profile(FIBITMAP *dib, const uint8_t *dataptr, unsigned int datalen);
 BOOL write_iptc_profile(FIBITMAP *dib, uint8_t **profile, unsigned *profile_size);
@@ -495,6 +504,6 @@ BOOL write_iptc_profile(FIBITMAP *dib, uint8_t **profile, unsigned *profile_size
 #endif
 
 
-#endif // FREEIMAGETAG_H
+#endif // FREEIMAGE_TAG_H
 
 

@@ -3,7 +3,7 @@
 //
 // Design and implementation by
 // - Floris van den Berg (flvdberg@wxs.nl)
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 // - Jim Keir (jimkeir@users.sourceforge.net)
 //
 // This file is part of FreeImage 3
@@ -135,9 +135,10 @@ FreeImage_FlipVertical(FIBITMAP *src) {
 	if (!FreeImage_HasPixels(src)) return FALSE;
 
 	// swap the buffer
+	// use size_t in order to handle very large files
 
-	unsigned pitch  = FreeImage_GetPitch(src);
-	unsigned height = FreeImage_GetHeight(src);
+	size_t pitch  = FreeImage_GetPitch(src);
+	size_t height = FreeImage_GetHeight(src);
 
 	// copy between aligned memories
 	Mid = (uint8_t*)FreeImage_Aligned_Malloc(pitch * sizeof(uint8_t), FIBITMAP_ALIGNMENT);
@@ -145,10 +146,10 @@ FreeImage_FlipVertical(FIBITMAP *src) {
 
 	From = FreeImage_GetBits(src);
 	
-	unsigned line_s = 0;
-	unsigned line_t = (height-1) * pitch;
+	size_t line_s = 0;
+	size_t line_t = (height-1) * pitch;
 
-	for(unsigned y = 0; y < height/2; y++) {
+	for(size_t y = 0; y < height/2; y++) {
 
 		memcpy(Mid, From + line_s, pitch);
 		memcpy(From + line_s, From + line_t, pitch);

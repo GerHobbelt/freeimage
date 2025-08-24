@@ -521,8 +521,8 @@ tiff_read_exif_tag(TIFF *tif, uint32_t tag_id, FIBITMAP *dib, TagLib::MDMODEL md
 				// ... try to avoid this by using an explicit calculation for 'length'
 				length = strlen((char*)raw_data) + 1;
 			}
-			else {
-				// remember that raw_data = _TIFFmalloc(value_size * value_count);
+			else if(mem_alloc) {
+				// raw_data allocated by us as _TIFFmalloc(value_size * value_count);
 				const int value_size = TIFFDataWidth( TIFFFieldDataType(fip) );
 				length = value_size * value_count;
 			}
@@ -749,7 +749,7 @@ tiff_write_exif_tags(TIFF *tif, TagLib::MDMODEL md_model, FIBITMAP *dib) {
 				continue;
 			}
 			// type of storage may differ (e.g. rationnal array vs float array type)
-			if((unsigned)_TIFFDataSize(tif_tag_type) != FreeImage_TagDataWidth(tag_type)) {
+			if((unsigned)TIFFDataWidth(tif_tag_type) != FreeImage_TagDataWidth(tag_type)) {
 				// skip tag or _TIFFmemcpy will fail
 				continue;
 			}

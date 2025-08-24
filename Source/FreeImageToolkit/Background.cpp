@@ -193,9 +193,9 @@ GetAlphaBlendedColor(const RGBQUAD *bgcolor, const RGBQUAD *fgcolor, RGBQUAD *bl
 	uint8_t alpha = fgcolor->rgbReserved;
 	uint8_t not_alpha = ~alpha;
 	
-	blended->rgbRed   = (uint8_t)( ((uint16_t)fgcolor->rgbRed   * alpha + not_alpha * (uint16_t)bgcolor->rgbRed)   >> 8 );
+	blended->rgbRed = (uint8_t)( ((uint16_t)fgcolor->rgbRed * alpha + not_alpha * (uint16_t)bgcolor->rgbRed)   >> 8 );
 	blended->rgbGreen = (uint8_t)( ((uint16_t)fgcolor->rgbGreen * alpha + not_alpha * (uint16_t)bgcolor->rgbGreen) >> 8) ;
-	blended->rgbBlue  = (uint8_t)( ((uint16_t)fgcolor->rgbRed   * alpha + not_alpha * (uint16_t)bgcolor->rgbBlue)  >> 8 );
+	blended->rgbBlue = (uint8_t)(((uint16_t)fgcolor->rgbBlue * alpha + not_alpha * (uint16_t)bgcolor->rgbBlue) >> 8);
 	blended->rgbReserved = 0xFF;
 
 	return TRUE;

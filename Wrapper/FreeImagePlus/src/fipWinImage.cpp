@@ -121,6 +121,10 @@ HANDLE fipWinImage::copyToHandle() const {
 
 		// Allocate a DIB
 		hMem = GlobalAlloc(GHND, dib_size);
+		if (!hMem) {
+			return nullptr;
+		}
+
 		uint8_t *dib = (uint8_t*)GlobalLock(hMem);
 
 		memset(dib, 0, dib_size);
@@ -161,6 +165,10 @@ BOOL fipWinImage::copyFromHandle(HANDLE hMem) {
 	uint8_t *bits = nullptr;
 	uint32_t bitfields[3] = {0, 0, 0};
 
+	if(!hMem) {
+		return FALSE;
+	}
+
 	// Get a pointer to the bitmap
 	lpVoid = (uint8_t *)GlobalLock(hMem);
 
@@ -168,8 +176,9 @@ BOOL fipWinImage::copyFromHandle(HANDLE hMem) {
 	pHead = (BITMAPINFOHEADER *)lpVoid;
 
 	// Get a pointer to the palette
-	if(pHead->biBitCount < 16)
+	if(pHead->biBitCount < 16) {
 		pPalette = (RGBQUAD *)(((uint8_t *)pHead) + sizeof(BITMAPINFOHEADER));
+	}
 
 	// Get a pointer to the pixels
 	bits = ((uint8_t*)pHead + sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * pHead->biClrUsed);
@@ -206,10 +215,6 @@ BOOL fipWinImage::copyFromHandle(HANDLE hMem) {
 			GlobalUnlock(lpVoid);
 			return FALSE;
 		}
-
-		// Copy the bitmap header
-		memcpy(FreeImage_GetInfoHeader(_dib), pHead, sizeof(BITMAPINFOHEADER));
-
 
 		// Copy the palette
 		memcpy(FreeImage_GetPalette(_dib), pPalette, pHead->biClrUsed * sizeof(RGBQUAD));
@@ -285,14 +290,18 @@ BOOL fipWinImage::copyToClipboard(HWND hWndNewOwner) const {
 }
 
 BOOL fipWinImage::pasteFromClipboard() {
-	if(!IsClipboardFormatAvailable(CF_DIB))
+	if(!IsClipboardFormatAvailable(CF_DIB)) {
 		return FALSE;
+	}
 
 	if(OpenClipboard(nullptr)) {
+		BOOL bResult = FALSE;
 		HANDLE hDIB = GetClipboardData(CF_DIB);
-		copyFromHandle(hDIB);
+		if(hDIB) {
+			bResult = copyFromHandle(hDIB);
+		}
 		CloseClipboard();
-		return TRUE;
+		return bResult;
 	}
 	CloseClipboard();
 
@@ -314,24 +323,27 @@ BOOL fipWinImage::captureWindow(HWND hWndApplicationWindow, HWND hWndSelectedWin
 	yshift = 0;
 	xScreen = GetSystemMetrics(SM_CXSCREEN);
 	yScreen = GetSystemMetrics(SM_CYSCREEN);
-	if(r.right > xScreen)
-		   r.right = xScreen;
-	if(r.bottom > yScreen)
-		   r.bottom = yScreen;
-	if(r.left < 0) {
-		   xshift = -r.left;
-		   r.left = 0;
+	if(r.right > xScreen) {
+		r.right = xScreen;
 	}
-	if(r.top < 0){
-		   yshift = -r.top;
-		   r.top = 0;
+	if(r.bottom > yScreen) {
+		r.bottom = yScreen;
+	}
+	if(r.left < 0) {
+		xshift = -r.left;
+		r.left = 0;
+	}
+	if(r.top < 0) {
+		yshift = -r.top;
+		r.top = 0;
 	}
 	
 	int width  = r.right  - r.left;
 	int height = r.bottom - r.top;
 
-	if(width <= 0 || height <= 0)
+	if(width <= 0 || height <= 0) {
 		return FALSE;
+	}
 
 	// Hide the application window. 
 	ShowWindow(hWndApplicationWindow, SW_HIDE); 

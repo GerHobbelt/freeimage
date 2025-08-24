@@ -3,7 +3,7 @@
 //
 // Design and implementation by
 // - Floris van den Berg (flvdberg@wxs.nl)
-// - Hervé Drolon (drolon@infonie.fr)
+// - HervÃ© Drolon (drolon@infonie.fr)
 //
 // Contributors:
 // - see changes log named 'Whatsnew.txt', see header of each .h and .cpp file
@@ -29,7 +29,7 @@
 // Version information ------------------------------------------------------
 
 #define FREEIMAGE_MAJOR_VERSION   3
-#define FREEIMAGE_MINOR_VERSION   17
+#define FREEIMAGE_MINOR_VERSION   19
 #define FREEIMAGE_RELEASE_SERIAL  0
 
 // Compiler options ---------------------------------------------------------
@@ -75,7 +75,7 @@
 // or define any of FREEIMAGE_BIGENDIAN and FREEIMAGE_LITTLEENDIAN directly
 // to specify the desired endianness.
 #if (!defined(FREEIMAGE_BIGENDIAN) && !defined(FREEIMAGE_LITTLEENDIAN))
-	#if (defined(BYTE_ORDER) && BYTE_ORDER==BIG_ENDIAN) || (defined(__BYTE_ORDER) && __BYTE_ORDER==__BIG_ENDIAN) || defined(__BIG_ENDIAN__)
+#if (defined(BYTE_ORDER) && BYTE_ORDER==BIG_ENDIAN) || (defined(__BYTE_ORDER) && __BYTE_ORDER==__BIG_ENDIAN) || (defined(__BYTE_ORDER) && __BYTE_ORDER==__ORDER_BIG_ENDIAN__) || defined(__BIG_ENDIAN__)
 		#define FREEIMAGE_BIGENDIAN
 	#endif // BYTE_ORDER
 #endif // !FREEIMAGE_[BIG|LITTLE]ENDIAN
@@ -731,6 +731,9 @@ typedef void (DLL_CALLCONV *FI_InitProc)(Plugin *plugin, int format_id);
 #define PSD_DEFAULT         0
 #define PSD_CMYK			1		//! reads tags for separated CMYK (default is conversion to RGB)
 #define PSD_LAB				2		//! reads tags for CIELab (default is conversion to RGB)
+#define PSD_NONE			0x0100	//! save without any compression
+#define PSD_RLE				0x0200	//! save using RLE compression
+#define PSD_PSB             0x2000  //! save using Adobe Large Document Format (use | to combine with other save flags)
 #define RAS_DEFAULT         0
 #define RAW_DEFAULT         0		//! load the file as linear RGB 48-bit
 #define RAW_PREVIEW			1		//! try to load the embedded JPEG preview with included Exif Data or default to RGB 24-bit
@@ -744,7 +747,7 @@ typedef void (DLL_CALLCONV *FI_InitProc)(Plugin *plugin, int format_id);
 #define TIFF_DEFAULT        0
 #define TIFF_CMYK			0x0001	//! reads/stores tags for separated CMYK (use | to combine with compression flags)
 #define TIFF_PACKBITS       0x0100  //! save using PACKBITS compression
-#define TIFF_DEFLATE        0x0200  //! save using DEFLATE compression (a.k.a. ZLIB compression)
+#define TIFF_DEFLATE        0x0200  //! save using DEFLATE compression (a.k.a. ZLIB compression) - obsolete, will save as TIFF_ADOBE_DEFLATE
 #define TIFF_ADOBE_DEFLATE  0x0400  //! save using ADOBE DEFLATE compression
 #define TIFF_NONE           0x0800  //! save without any compression
 #define TIFF_CCITTFAX3		0x1000  //! save using CCITT Group 3 fax encoding
@@ -873,12 +876,18 @@ DLL_API void DLL_CALLCONV FreeImage_UnlockPage(FIMULTIBITMAP *bitmap, FIBITMAP *
 DLL_API BOOL DLL_CALLCONV FreeImage_MovePage(FIMULTIBITMAP *bitmap, int target, int source);
 DLL_API BOOL DLL_CALLCONV FreeImage_GetLockedPageNumbers(FIMULTIBITMAP *bitmap, int *pages, int *count);
 
-// Filetype request routines ------------------------------------------------
+// File type request routines ------------------------------------------------
 
 DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileType(const char *filename, int size FI_DEFAULT(0));
 DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeU(const wchar_t *filename, int size FI_DEFAULT(0));
 DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeFromHandle(FreeImageIO *io, fi_handle handle, int size FI_DEFAULT(0));
 DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeFromMemory(FIMEMORY *stream, int size FI_DEFAULT(0));
+
+DLL_API BOOL DLL_CALLCONV FreeImage_Validate(FREE_IMAGE_FORMAT fif, const char *filename);
+DLL_API BOOL DLL_CALLCONV FreeImage_ValidateU(FREE_IMAGE_FORMAT fif, const wchar_t *filename);
+DLL_API BOOL DLL_CALLCONV FreeImage_ValidateFromHandle(FREE_IMAGE_FORMAT fif, FreeImageIO *io, fi_handle handle);
+DLL_API BOOL DLL_CALLCONV FreeImage_ValidateFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream);
+
 
 // Image type request routine -----------------------------------------------
 
@@ -979,8 +988,11 @@ DLL_API void DLL_CALLCONV FreeImage_ConvertLine16To24_555(uint8_t *target, uint8
 DLL_API void DLL_CALLCONV FreeImage_ConvertLine16To24_565(uint8_t *target, uint8_t *source, int width_in_pixels);
 DLL_API void DLL_CALLCONV FreeImage_ConvertLine32To24(uint8_t *target, uint8_t *source, int width_in_pixels);
 DLL_API void DLL_CALLCONV FreeImage_ConvertLine1To32(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette);
+DLL_API void DLL_CALLCONV FreeImage_ConvertLine1To32MapTransparency(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette, uint8_t *table, int transparent_pixels);
 DLL_API void DLL_CALLCONV FreeImage_ConvertLine4To32(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette);
+DLL_API void DLL_CALLCONV FreeImage_ConvertLine4To32MapTransparency(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette, uint8_t *table, int transparent_pixels);
 DLL_API void DLL_CALLCONV FreeImage_ConvertLine8To32(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette);
+DLL_API void DLL_CALLCONV FreeImage_ConvertLine8To32MapTransparency(uint8_t *target, uint8_t *source, int width_in_pixels, RGBQUAD *palette, uint8_t *table, int transparent_pixels);
 DLL_API void DLL_CALLCONV FreeImage_ConvertLine16To32_555(uint8_t *target, uint8_t *source, int width_in_pixels);
 DLL_API void DLL_CALLCONV FreeImage_ConvertLine16To32_565(uint8_t *target, uint8_t *source, int width_in_pixels);
 DLL_API void DLL_CALLCONV FreeImage_ConvertLine24To32(uint8_t *target, uint8_t *source, int width_in_pixels);
