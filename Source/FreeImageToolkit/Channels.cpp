@@ -26,12 +26,12 @@
 /** @brief Retrieves the red, green, blue or alpha channel of a BGR[A] image. 
 @param src Input image to be processed.
 @param channel Color channel to extract
-@return Returns the extracted channel if successful, returns NULL otherwise.
+@return Returns the extracted channel if successful, returns nullptr otherwise.
 */
 FIBITMAP * DLL_CALLCONV 
 FreeImage_GetChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 
-	if(!FreeImage_HasPixels(src)) return NULL;
+	if(!FreeImage_HasPixels(src)) return nullptr;
 
 	FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(src);
 	unsigned bpp = FreeImage_GetBPP(src);
@@ -52,22 +52,22 @@ FreeImage_GetChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 				c = FI_RGBA_RED;
 				break;
 			case FICC_ALPHA:
-				if(bpp != 32) return NULL;
+				if(bpp != 32) return nullptr;
 				c = FI_RGBA_ALPHA;
 				break;
 			default:
-				return NULL;
+				return nullptr;
 		}
 
 		// allocate a 8-bit dib
 		unsigned width  = FreeImage_GetWidth(src);
 		unsigned height = FreeImage_GetHeight(src);
 		FIBITMAP *dst = FreeImage_Allocate(width, height, 8) ;
-		if(!dst) return NULL;
+		if(!dst) return nullptr;
 		// build a greyscale palette
 		RGBQUAD *pal = FreeImage_GetPalette(dst);
 		for(int i = 0; i < 256; i++) {
-			pal[i].rgbBlue = pal[i].rgbGreen = pal[i].rgbRed = (BYTE)i;
+			pal[i].rgbBlue = pal[i].rgbGreen = pal[i].rgbRed = (uint8_t)i;
 		}
 
 		// perform extraction
@@ -75,8 +75,8 @@ FreeImage_GetChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 		int bytespp = bpp / 8;	// bytes / pixel
 
 		for(unsigned y = 0; y < height; y++) {
-			BYTE *src_bits = FreeImage_GetScanLine(src, y);
-			BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
+			uint8_t *src_bits = FreeImage_GetScanLine(src, y);
+			uint8_t *dst_bits = FreeImage_GetScanLine(dst, y);
 			for(unsigned x = 0; x < width; x++) {
 				dst_bits[x] = src_bits[c];
 				src_bits += bytespp;
@@ -105,18 +105,18 @@ FreeImage_GetChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 				c = 0;
 				break;
 			case FICC_ALPHA:
-				if(bpp != 64) return NULL;
+				if(bpp != 64) return nullptr;
 				c = 3;
 				break;
 			default:
-				return NULL;
+				return nullptr;
 		}
 
 		// allocate a greyscale dib
 		unsigned width  = FreeImage_GetWidth(src);
 		unsigned height = FreeImage_GetHeight(src);
 		FIBITMAP *dst = FreeImage_AllocateT(FIT_UINT16, width, height) ;
-		if(!dst) return NULL;
+		if(!dst) return nullptr;
 
 		// perform extraction
 
@@ -153,18 +153,18 @@ FreeImage_GetChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 				c = 0;
 				break;
 			case FICC_ALPHA:
-				if(bpp != 128) return NULL;
+				if(bpp != 128) return nullptr;
 				c = 3;
 				break;
 			default:
-				return NULL;
+				return nullptr;
 		}
 
 		// allocate a greyscale dib
 		unsigned width  = FreeImage_GetWidth(src);
 		unsigned height = FreeImage_GetHeight(src);
 		FIBITMAP *dst = FreeImage_AllocateT(FIT_FLOAT, width, height) ;
-		if(!dst) return NULL;
+		if(!dst) return nullptr;
 
 		// perform extraction
 
@@ -185,7 +185,7 @@ FreeImage_GetChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 		return dst;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /** @brief Insert a greyscale dib into a RGB[A] image. 
@@ -252,8 +252,8 @@ FreeImage_SetChannel(FIBITMAP *dst, FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL chan
 		int bytespp = dst_bpp / 8;	// bytes / pixel
 
 		for(unsigned y = 0; y < dst_height; y++) {
-			BYTE *src_bits = FreeImage_GetScanLine(src, y);
-			BYTE *dst_bits = FreeImage_GetScanLine(dst, y);
+			uint8_t *src_bits = FreeImage_GetScanLine(src, y);
+			uint8_t *dst_bits = FreeImage_GetScanLine(dst, y);
 			for(unsigned x = 0; x < dst_width; x++) {
 				dst_bits[c] = src_bits[x];
 				dst_bits += bytespp;
@@ -357,24 +357,24 @@ FreeImage_SetChannel(FIBITMAP *dst, FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL chan
 /** @brief Retrieves the real part, imaginary part, magnitude or phase of a complex image.
 @param src Input image to be processed.
 @param channel Channel to extract
-@return Returns the extracted channel if successful, returns NULL otherwise.
+@return Returns the extracted channel if successful, returns nullptr otherwise.
 */
 FIBITMAP * DLL_CALLCONV 
 FreeImage_GetComplexChannel(FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 	unsigned x, y;
 	double mag, phase;
-	FICOMPLEX *src_bits = NULL;
-	double *dst_bits = NULL;
-	FIBITMAP *dst = NULL;
+	FICOMPLEX *src_bits = nullptr;
+	double *dst_bits = nullptr;
+	FIBITMAP *dst = nullptr;
 
-	if(!FreeImage_HasPixels(src)) return NULL;
+	if(!FreeImage_HasPixels(src)) return nullptr;
 
 	if(FreeImage_GetImageType(src) == FIT_COMPLEX) {
 		// allocate a dib of type FIT_DOUBLE
 		unsigned width  = FreeImage_GetWidth(src);
 		unsigned height = FreeImage_GetHeight(src);
 		dst = FreeImage_AllocateT(FIT_DOUBLE, width, height) ;
-		if(!dst) return NULL;
+		if(!dst) return nullptr;
 
 		// perform extraction
 
@@ -443,8 +443,8 @@ Both src and dst must have the same width and height.
 BOOL DLL_CALLCONV 
 FreeImage_SetComplexChannel(FIBITMAP *dst, FIBITMAP *src, FREE_IMAGE_COLOR_CHANNEL channel) {
 	unsigned x, y;
-	double *src_bits = NULL;
-	FICOMPLEX *dst_bits = NULL;
+	double *src_bits = nullptr;
+	FICOMPLEX *dst_bits = nullptr;
 
 	if(!FreeImage_HasPixels(src) || !FreeImage_HasPixels(dst)) return FALSE;
 

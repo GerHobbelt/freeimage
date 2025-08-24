@@ -31,6 +31,6 @@ FreeImage_RotateClassic(FIBITMAP *dib, double angle) {
 #ifdef _WIN32
 	DEPRECATE("FreeImage_RotateClassic()", "FreeImage_Rotate()")
 #endif // _WIN32
-	return FreeImage_Rotate(dib, angle, NULL);
+	return FreeImage_Rotate(dib, angle, nullptr);
 }
 
