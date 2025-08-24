@@ -1,0 +1,40 @@
+Description: fixed TIFF loader with loading of RGB[A]F float images
+ Reintroduce samplesperpixel arguments to IsValidBitsPerSample, removed in
+ https://sourceforge.net/p/freeimage/svn/1547/
+ Necessary to apply r1825, fixing CVE-2019-12213 and CVE-2019-12211.
+Author: Herve Drolon <drolon@infonie.fr>
+Origin: upstream, https://sourceforge.net/p/freeimage/svn/1670/
+--- a/Source/FreeImage/PluginTIFF.cpp	2019-12-16 13:57:55.000000000 +0100
++++ b/Source/FreeImage/PluginTIFF.cpp	2019-12-16 14:01:08.000000000 +0100
+@@ -1091,10 +1091,11 @@
+ check for uncommon bitspersample values (e.g. 10, 12, ...)
+ @param photometric TIFFTAG_PHOTOMETRIC tiff tag
+ @param bitspersample TIFFTAG_BITSPERSAMPLE tiff tag
++@param samplesperpixel TIFFTAG_SAMPLESPERPIXEL tiff tag
+ @return Returns FALSE if a uncommon bit-depth is encountered, returns TRUE otherwise
+ */
+ static BOOL 
+-IsValidBitsPerSample(uint16_t photometric, uint16_t bitspersample) {
++IsValidBitsPerSample(uint16_t photometric, uint16_t bitspersample, uint16_t samplesperpixel) {
+ 
+ 	switch(bitspersample) {
+ 		case 1:
+@@ -1116,6 +1117,9 @@
+ 			break;
+ 		case 32:
+ 			if((photometric == PHOTOMETRIC_MINISWHITE) || (photometric == PHOTOMETRIC_MINISBLACK) || (photometric == PHOTOMETRIC_LOGLUV)) { 
++               return TRUE;
++           } else if((photometric == PHOTOMETRIC_RGB) && (samplesperpixel == 3) || (samplesperpixel == 4)) {
++               // RGB[A]F
+ 				return TRUE;
+ 			} else {
+ 				return FALSE;
+@@ -1365,7 +1369,7 @@
+ 		// check for unsupported formats
+ 		// ---------------------------------------------------------------------------------
+ 
+-		if(IsValidBitsPerSample(photometric, bitspersample) == FALSE) {
++       if(IsValidBitsPerSample(photometric, bitspersample, samplesperpixel) == FALSE) {
+ 			FreeImage_OutputMessageProc(s_format_id, 
+ 				"Unable to handle this format: bitspersample = %d, samplesperpixel = %d, photometric = %d", 
+ 				(int)bitspersample, (int)samplesperpixel, (int)photometric);

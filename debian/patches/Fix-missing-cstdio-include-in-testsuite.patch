@@ -1,0 +1,20 @@
+From: Ghislain Antony Vaillant <ghisvail@gmail.com>
+Date: Wed, 4 Nov 2015 08:41:35 +0000
+Subject: Fix missing cstdio include in testsuite.
+
+---
+ Wrapper/FreeImagePlus/test/fipTest.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Wrapper/FreeImagePlus/test/fipTest.h b/Wrapper/FreeImagePlus/test/fipTest.h
+index 3b8d1de..e8f98fc 100644
+--- a/Wrapper/FreeImagePlus/test/fipTest.h
++++ b/Wrapper/FreeImagePlus/test/fipTest.h
+@@ -28,6 +28,7 @@
+ #include <sys/stat.h>
+ 
+ #include <iostream>
++#include <cstdio>
+ 
+ // --------------------------------------------------------------------------
+ // Memory IO test scripts

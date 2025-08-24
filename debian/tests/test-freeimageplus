@@ -1,0 +1,13 @@
+#!/bin/sh
+# Build and execute the upstream's testsuite for FreeImagePlus against the
+# installed  binaries.
+
+set -e
+
+# Fetch the upstream testsuite.
+cp -a Wrapper/FreeImagePlus/test "$ADTTMP"
+
+# Build using the installed FreeImagePlus package.
+cd "$ADTTMP/test" && \
+g++ *.cpp -lfreeimageplus -lfreeimage -o test-freeimageplus && \
+./test-freeimageplus

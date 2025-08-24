@@ -1,0 +1,134 @@
+Source: freeimage
+Maintainer: Debian Science Maintainers <debian-science-maintainers@lists.alioth.debian.org>
+Uploaders: Anton Gladky <gladk@debian.org>,
+           Ghislain Antony Vaillant <ghisvail@gmail.com>
+Section: libs
+Priority: optional
+Build-Depends: debhelper (>= 10),
+               dos2unix,
+               libjpeg-dev,
+               libjxr-dev,
+               libopenexr-dev,
+               libopenjp2-7-dev,
+               libpng-dev,
+               libraw-dev,
+               libtiff-dev,
+               libwebp-dev,
+               pkg-config,
+               zlib1g-dev
+Build-Depends-Indep: doxygen
+Standards-Version: 3.9.8
+Vcs-Browser: https://anonscm.debian.org/cgit/debian-science/packages/freeimage.git
+Vcs-Git: https://anonscm.debian.org/git/debian-science/packages/freeimage.git
+Homepage: http://freeimage.sourceforge.net/
+Testsuite: autopkgtest
+
+Package: libfreeimage-dev
+Architecture: any
+Section: libdevel
+Depends: libfreeimage3 (= ${binary:Version}),
+         ${misc:Depends}
+Description: Support library for graphics image formats (development files)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the headers and static libraries needed to develop
+ programs using FreeImage.
+
+Package: libfreeimage3
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Description: Support library for graphics image formats (library)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the FreeImage library.
+
+Package: libfreeimage3-dbg
+Architecture: any
+Multi-Arch: same
+Section: debug
+Priority: extra
+Depends: libfreeimage3 (= ${binary:Version}),
+         ${misc:Depends}
+Description: Support library for graphics image formats (debugging symbols)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the debugging symbols for the FreeImage library.
+
+Package: libfreeimageplus-dev
+Architecture: any
+Section: libdevel
+Depends: libfreeimage-dev (>= 3.17.0+ds1-1~exp2),
+         libfreeimageplus3 (= ${binary:Version}),
+         ${misc:Depends}
+Suggests: libfreeimageplus-doc
+Breaks: libfreeimage-dev (<< 3.17.0+ds1-1~exp2)
+Replaces: libfreeimage-dev (<< 3.17.0+ds1-1~exp2)
+Description: C++ wrappers for FreeImage (development files)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the headers and static libraries needed to develop
+ programs using FreeImagePlus.
+
+Package: libfreeimageplus-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends},
+         libjs-jquery
+Description: C++ wrappers for FreeImage (documentation)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the documentation for FreeImagePlus.
+
+Package: libfreeimageplus3
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Description: C++ wrappers for freeimage (library)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the FreeImagePlus library.
+
+Package: libfreeimageplus3-dbg
+Architecture: any
+Multi-Arch: same
+Section: debug
+Priority: extra
+Depends: libfreeimageplus3 (= ${binary:Version}),
+         ${misc:Depends}
+Description: C++ wrappers for FreeImage (debugging symbols)
+ FreeImage is an Open Source C/C++ library project for developers who would
+ like to support popular graphics image formats like PNG, BMP, JPEG, TIFF
+ and others as needed by today's multimedia applications. FreeImage is
+ easy to use, fast, multithreading safe, and cross-platform (works both
+ with Linux, 32 bit Windows and Mac OS X).
+ .
+ This package contains the debugging symbols for the FreeImagePlus library.
