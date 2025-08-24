@@ -31,9 +31,9 @@ static ALPHDecoder* ALPHNew(void) {
 
 // Clears and deallocates an alpha decoder instance.
 static void ALPHDelete(ALPHDecoder* const dec) {
-  if (dec != NULL) {
+  if (dec != nullptr) {
     VP8LDelete(dec->vp8l_dec_);
-    dec->vp8l_dec_ = NULL;
+    dec->vp8l_dec_ = nullptr;
     WebPSafeFree(dec);
   }
 }
@@ -54,7 +54,7 @@ static int ALPHInit(ALPHDecoder* const dec, const uint8_t* data,
   int rsrv;
   VP8Io* const io = &dec->io_;
 
-  assert(data != NULL && output != NULL && src_io != NULL);
+  assert(data != nullptr && output != nullptr && src_io != nullptr);
 
   VP8FiltersInit();
   dec->output_ = output;
@@ -80,7 +80,7 @@ static int ALPHInit(ALPHDecoder* const dec, const uint8_t* data,
 
   // Copy the necessary parameters from src_io to io
   VP8InitIo(io);
-  WebPInitCustomIo(NULL, io);
+  WebPInitCustomIo(nullptr, io);
   io->opaque = dec;
   io->width = src_io->width;
   io->height = src_io->height;
@@ -118,7 +118,7 @@ static int ALPHDecode(VP8Decoder* const dec, int row, int num_rows) {
     uint8_t* dst = dec->alpha_plane_ + row * width;
     assert(deltas <= &dec->alpha_data_[dec->alpha_data_size_]);
     if (alph_dec->filter_ != WEBP_FILTER_NONE) {
-      assert(WebPUnfilters[alph_dec->filter_] != NULL);
+      assert(WebPUnfilters[alph_dec->filter_] != nullptr);
       for (y = 0; y < num_rows; ++y) {
         WebPUnfilters[alph_dec->filter_](prev_line, deltas, dst, width);
         prev_line = dst;
@@ -135,7 +135,7 @@ static int ALPHDecode(VP8Decoder* const dec, int row, int num_rows) {
     }
     dec->alpha_prev_line_ = prev_line;
   } else {  // alph_dec->method_ == ALPHA_LOSSLESS_COMPRESSION
-    assert(alph_dec->vp8l_dec_ != NULL);
+    assert(alph_dec->vp8l_dec_ != nullptr);
     if (!VP8LDecodeAlphaImageStream(alph_dec, row + num_rows)) {
       return 0;
     }
@@ -151,24 +151,24 @@ static int AllocateAlphaPlane(VP8Decoder* const dec, const VP8Io* const io) {
   const int stride = io->width;
   const int height = io->crop_bottom;
   const uint64_t alpha_size = (uint64_t)stride * height;
-  assert(dec->alpha_plane_mem_ == NULL);
+  assert(dec->alpha_plane_mem_ == nullptr);
   dec->alpha_plane_mem_ =
       (uint8_t*)WebPSafeMalloc(alpha_size, sizeof(*dec->alpha_plane_));
-  if (dec->alpha_plane_mem_ == NULL) {
+  if (dec->alpha_plane_mem_ == nullptr) {
     return 0;
   }
   dec->alpha_plane_ = dec->alpha_plane_mem_;
-  dec->alpha_prev_line_ = NULL;
+  dec->alpha_prev_line_ = nullptr;
   return 1;
 }
 
 void WebPDeallocateAlphaMemory(VP8Decoder* const dec) {
-  assert(dec != NULL);
+  assert(dec != nullptr);
   WebPSafeFree(dec->alpha_plane_mem_);
-  dec->alpha_plane_mem_ = NULL;
-  dec->alpha_plane_ = NULL;
+  dec->alpha_plane_mem_ = nullptr;
+  dec->alpha_plane_ = nullptr;
   ALPHDelete(dec->alph_dec_);
-  dec->alph_dec_ = NULL;
+  dec->alph_dec_ = nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -180,16 +180,16 @@ const uint8_t* VP8DecompressAlphaRows(VP8Decoder* const dec,
   const int width = io->width;
   const int height = io->crop_bottom;
 
-  assert(dec != NULL && io != NULL);
+  assert(dec != nullptr && io != nullptr);
 
   if (row < 0 || num_rows <= 0 || row + num_rows > height) {
-    return NULL;
+    return nullptr;
   }
 
   if (!dec->is_alpha_decoded_) {
-    if (dec->alph_dec_ == NULL) {    // Initialize decoder.
+    if (dec->alph_dec_ == nullptr) {    // Initialize decoder.
       dec->alph_dec_ = ALPHNew();
-      if (dec->alph_dec_ == NULL) return NULL;
+      if (dec->alph_dec_ == nullptr) return nullptr;
       if (!AllocateAlphaPlane(dec, io)) goto Error;
       if (!ALPHInit(dec->alph_dec_, dec->alpha_data_, dec->alpha_data_size_,
                     io, dec->alpha_plane_)) {
@@ -203,13 +203,13 @@ const uint8_t* VP8DecompressAlphaRows(VP8Decoder* const dec,
       }
     }
 
-    assert(dec->alph_dec_ != NULL);
+    assert(dec->alph_dec_ != nullptr);
     assert(row + num_rows <= height);
     if (!ALPHDecode(dec, row, num_rows)) goto Error;
 
     if (dec->is_alpha_decoded_) {   // finished?
       ALPHDelete(dec->alph_dec_);
-      dec->alph_dec_ = NULL;
+      dec->alph_dec_ = nullptr;
       if (dec->alpha_dithering_ > 0) {
         uint8_t* const alpha = dec->alpha_plane_ + io->crop_top * width
                              + io->crop_left;
@@ -228,5 +228,5 @@ const uint8_t* VP8DecompressAlphaRows(VP8Decoder* const dec,
 
  Error:
   WebPDeallocateAlphaMemory(dec);
-  return NULL;
+  return nullptr;
 }

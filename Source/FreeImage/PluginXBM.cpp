@@ -47,7 +47,7 @@ The result stored in str is appended with a null character.
 @param n Maximum number of characters to read 
 @param io Pointer to the FreeImageIO structure
 @param handle Handle to the stream
-@return Returns str. NULL is returned to indicate an error or an end-of-file condition.
+@return Returns str. nullptr is returned to indicate an error or an end-of-file condition.
 */
 static char* 
 readLine(char *str, int n, FreeImageIO *io, fi_handle handle) {
@@ -58,7 +58,7 @@ readLine(char *str, int n, FreeImageIO *io, fi_handle handle) {
 		str[i++] = c;
 	} while((c != '\n') && (i < n));
 	if(count <= 0)
-		return NULL;
+		return nullptr;
 	str[i] = '\0';
 	return str;
 }
@@ -71,7 +71,7 @@ Get a char from the stream
 */
 static int 
 readChar(FreeImageIO *io, fi_handle handle) {
-	BYTE c;
+	uint8_t c;
 	io->read_proc(&c, 1, 1, handle);
 	return c;
 }
@@ -83,7 +83,7 @@ Read an XBM file into a buffer
 @param widthP (return value) Pointer to the bitmap width
 @param heightP (return value) Pointer to the bitmap height
 @param dataP (return value) Pointer to the bitmap buffer
-@return Returns NULL if OK, returns an error message otherwise
+@return Returns nullptr if OK, returns an error message otherwise
 */
 static const char* 
 readXBMFile(FreeImageIO *io, fi_handle handle, int *widthP, int *heightP, char **dataP) {
@@ -109,14 +109,14 @@ readXBMFile(FreeImageIO *io, fi_handle handle, int *widthP, int *heightP, char *
 	
 	while(!found_declaration && !eof) {
 
-		if( readLine(line, MAX_LINE, io, handle) == NULL) {
+		if( readLine(line, MAX_LINE, io, handle) == nullptr) {
 			eof = TRUE;
 		}
 		else {
 			if( strlen( line ) == MAX_LINE - 1 )
 				return( ERR_XBM_LINE );
 			if( sscanf(line, "#define %s %d", name_and_type, &v) == 2 ) {
-				if( ( t = strrchr( name_and_type, '_' ) ) == NULL )
+				if( ( t = strrchr( name_and_type, '_' ) ) == nullptr )
 					t = name_and_type;
 				else
 					t++;
@@ -251,7 +251,7 @@ readXBMFile(FreeImageIO *io, fi_handle handle, int *widthP, int *heightP, char *
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ==========================================================
@@ -281,7 +281,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -313,9 +313,9 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	char *buffer = NULL;
+	char *buffer = nullptr;
 	int width, height;
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	try {
 
@@ -335,11 +335,11 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		pal[1].rgbRed = pal[1].rgbGreen = pal[1].rgbBlue = 255;
 
 		// copy the bitmap
-		BYTE *bP = (BYTE*)buffer;
+		uint8_t *bP = (uint8_t*)buffer;
 		for(int y = 0; y < height; y++) {
-			BYTE count = 0;
-			BYTE mask = 1;
-			BYTE *bits = FreeImage_GetScanLine(dib, height - 1 - y);
+			uint8_t count = 0;
+			uint8_t mask = 1;
+			uint8_t *bits = FreeImage_GetScanLine(dib, height - 1 - y);
 
 			for(int x = 0; x < width; x++) {
 				if(count >= 8) {
@@ -367,7 +367,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		if(buffer)	free(buffer);
 		if(dib)		FreeImage_Unload(dib);
 		FreeImage_OutputMessageProc(s_format_id, text);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -384,16 +384,16 @@ InitXBM(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
+	plugin->save_proc = nullptr;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }
 

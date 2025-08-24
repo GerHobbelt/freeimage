@@ -496,7 +496,7 @@ start_input_gif (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
     source->interlaced_image = (*cinfo->mem->request_virt_sarray)
       ((j_common_ptr) cinfo, JPOOL_IMAGE, FALSE,
        (JDIMENSION) width, (JDIMENSION) height, (JDIMENSION) 1);
-    if (cinfo->progress != NULL) {
+    if (cinfo->progress != nullptr) {
       cd_progress_ptr progress = (cd_progress_ptr) cinfo->progress;
       progress->total_extra_passes++; /* count file input as separate pass */
     }
@@ -571,7 +571,7 @@ load_interlaced_image (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 
   /* Read the interlaced image into the virtual array we've created. */
   for (row = 0; row < cinfo->image_height; row++) {
-    if (progress != NULL) {
+    if (progress != nullptr) {
       progress->pub.pass_counter = (long) row;
       progress->pub.pass_limit = (long) cinfo->image_height;
       (*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
@@ -582,7 +582,7 @@ load_interlaced_image (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
       *sptr++ = (JSAMPLE) LZWReadByte(source);
     }
   }
-  if (progress != NULL)
+  if (progress != nullptr)
     progress->completed_extra_passes++;
 
   /* Replace method pointer so subsequent calls don't come here. */

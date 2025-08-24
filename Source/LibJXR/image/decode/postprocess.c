@@ -62,8 +62,8 @@ Int initPostProc(struct tagPostProcInfo * strPostProcInfo[MAX_CHANNELS][2], size
                 if((((mbWidth + 2) >> 16) * sizeof(struct tagPostProcInfo)) & 0xffff0000)
                     return ICERR_ERROR;
             strPostProcInfo[j][i] = (struct tagPostProcInfo *)malloc((mbWidth + 2) * sizeof(struct tagPostProcInfo));
-            assert(strPostProcInfo[j][i] != NULL);
-            if(strPostProcInfo[j][i] == NULL){
+            assert(strPostProcInfo[j][i] != nullptr);
+            if(strPostProcInfo[j][i] == nullptr){
                 return ICERR_ERROR;
             }
             strPostProcInfo[j][i] ++;
@@ -90,7 +90,7 @@ void termPostProc(struct tagPostProcInfo * strPostProcInfo[MAX_CHANNELS][2], siz
 
     for(j = 0; j < iNumChannels; j ++){
         for(i = 0; i < 2; i ++){
-            if(strPostProcInfo[j][i] != NULL){
+            if(strPostProcInfo[j][i] != nullptr){
                 free(strPostProcInfo[j][i] - 1);
             }
         }

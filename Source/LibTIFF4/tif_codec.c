@@ -105,7 +105,7 @@ const TIFFCodec _TIFFBuiltinCODECS[] = {
     {"ZSTD", COMPRESSION_ZSTD, TIFFInitZSTD},
     {"WEBP", COMPRESSION_WEBP, TIFFInitWebP},
     {"LERC", COMPRESSION_LERC, TIFFInitLERC},
-    {NULL, 0, NULL}};
+    {nullptr, 0, nullptr}};
 
 static int _notConfigured(TIFF *tif)
 {
@@ -147,11 +147,11 @@ int TIFFIsCODECConfigured(uint16_t scheme)
 {
     const TIFFCodec *codec = TIFFFindCODEC(scheme);
 
-    if (codec == NULL)
+    if (codec == nullptr)
     {
         return 0;
     }
-    if (codec->init == NULL)
+    if (codec->init == nullptr)
     {
         return 0;
     }

@@ -40,7 +40,7 @@ void LibRaw::unpacked_load_raw()
 void LibRaw::packed_load_raw()
 {
   int vbits = 0, bwide, rbits, bite, half, irow, row, col, val, i;
-  UINT64 bitbuf = 0;
+  uint64_t bitbuf = 0;
 
   bwide = raw_width * tiff_bps / 8;
   bwide += bwide & load_flags >> 7;

@@ -25,15 +25,15 @@
 HTreeGroup* VP8LHtreeGroupsNew(int num_htree_groups) {
   HTreeGroup* const htree_groups =
       (HTreeGroup*)WebPSafeMalloc(num_htree_groups, sizeof(*htree_groups));
-  if (htree_groups == NULL) {
-    return NULL;
+  if (htree_groups == nullptr) {
+    return nullptr;
   }
   assert(num_htree_groups <= MAX_HTREE_GROUPS);
   return htree_groups;
 }
 
 void VP8LHtreeGroupsFree(HTreeGroup* const htree_groups) {
-  if (htree_groups != NULL) {
+  if (htree_groups != nullptr) {
     WebPSafeFree(htree_groups);
   }
 }
@@ -90,9 +90,9 @@ static int BuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
   int offset[MAX_ALLOWED_CODE_LENGTH + 1];
 
   assert(code_lengths_size != 0);
-  assert(code_lengths != NULL);
-  assert((root_table != NULL && sorted != NULL) ||
-         (root_table == NULL && sorted == NULL));
+  assert(code_lengths != nullptr);
+  assert((root_table != nullptr && sorted != nullptr) ||
+         (root_table == nullptr && sorted == nullptr));
   assert(root_bits > 0);
 
   // Build histogram of code lengths.
@@ -121,7 +121,7 @@ static int BuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
   for (symbol = 0; symbol < code_lengths_size; ++symbol) {
     const int symbol_code_length = code_lengths[symbol];
     if (code_lengths[symbol] > 0) {
-      if (sorted != NULL) {
+      if (sorted != nullptr) {
         sorted[offset[symbol_code_length]++] = symbol;
       } else {
         offset[symbol_code_length]++;
@@ -131,7 +131,7 @@ static int BuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
 
   // Special case code with only one value.
   if (offset[MAX_ALLOWED_CODE_LENGTH] == 1) {
-    if (sorted != NULL) {
+    if (sorted != nullptr) {
       HuffmanCode code;
       code.bits = 0;
       code.value = (uint16_t)sorted[0];
@@ -158,7 +158,7 @@ static int BuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
       if (num_open < 0) {
         return 0;
       }
-      if (root_table == NULL) continue;
+      if (root_table == nullptr) continue;
       for (; count[len] > 0; --count[len]) {
         HuffmanCode code;
         code.bits = (uint8_t)len;
@@ -177,7 +177,7 @@ static int BuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
       if (num_open < 0) {
         return 0;
       }
-      if (root_table == NULL) continue;
+      if (root_table == nullptr) continue;
       for (; count[len] > 0; --count[len]) {
         HuffmanCode code;
         if ((key & mask) != low) {
@@ -215,9 +215,9 @@ int VP8LBuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
                           const int code_lengths[], int code_lengths_size) {
   int total_size;
   assert(code_lengths_size <= MAX_CODE_LENGTHS_SIZE);
-  if (root_table == NULL) {
-    total_size = BuildHuffmanTable(NULL, root_bits,
-                                   code_lengths, code_lengths_size, NULL);
+  if (root_table == nullptr) {
+    total_size = BuildHuffmanTable(nullptr, root_bits,
+                                   code_lengths, code_lengths_size, nullptr);
   } else if (code_lengths_size <= SORTED_SIZE_CUTOFF) {
     // use local stack-allocated array.
     uint16_t sorted[SORTED_SIZE_CUTOFF];
@@ -226,7 +226,7 @@ int VP8LBuildHuffmanTable(HuffmanCode* const root_table, int root_bits,
   } else {   // rare case. Use heap allocation.
     uint16_t* const sorted =
         (uint16_t*)WebPSafeMalloc(code_lengths_size, sizeof(*sorted));
-    if (sorted == NULL) return 0;
+    if (sorted == nullptr) return 0;
     total_size = BuildHuffmanTable(root_table, root_bits,
                                    code_lengths, code_lengths_size, sorted);
     WebPSafeFree(sorted);

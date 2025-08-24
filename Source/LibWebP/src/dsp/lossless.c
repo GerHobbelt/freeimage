@@ -203,8 +203,8 @@ static void PredictorInverseTransform_C(const VP8LTransform* const transform,
                                         const uint32_t* in, uint32_t* out) {
   const int width = transform->xsize_;
   if (y_start == 0) {  // First Row follows the L (mode=1) mode.
-    PredictorAdd0_C(in, NULL, 1, out);
-    PredictorAdd1_C(in + 1, NULL, width - 1, out + 1);
+    PredictorAdd0_C(in, nullptr, 1, out);
+    PredictorAdd1_C(in + 1, nullptr, width - 1, out + 1);
     in += width;
     out += width;
     ++y_start;
@@ -621,7 +621,7 @@ WEBP_DSP_INIT_FUNC(VP8LDspInit) {
   VP8LMapColor8b = MapAlpha_C;
 
   // If defined, use CPUInfo() to overwrite some pointers with faster versions.
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_HAVE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8LDspInitSSE2();
@@ -646,20 +646,20 @@ WEBP_DSP_INIT_FUNC(VP8LDspInit) {
 
 #if defined(WEBP_HAVE_NEON)
   if (WEBP_NEON_OMIT_C_CODE ||
-      (VP8GetCPUInfo != NULL && VP8GetCPUInfo(kNEON))) {
+      (VP8GetCPUInfo != nullptr && VP8GetCPUInfo(kNEON))) {
     VP8LDspInitNEON();
   }
 #endif
 
-  assert(VP8LAddGreenToBlueAndRed != NULL);
-  assert(VP8LTransformColorInverse != NULL);
-  assert(VP8LConvertBGRAToRGBA != NULL);
-  assert(VP8LConvertBGRAToRGB != NULL);
-  assert(VP8LConvertBGRAToBGR != NULL);
-  assert(VP8LConvertBGRAToRGBA4444 != NULL);
-  assert(VP8LConvertBGRAToRGB565 != NULL);
-  assert(VP8LMapColor32b != NULL);
-  assert(VP8LMapColor8b != NULL);
+  assert(VP8LAddGreenToBlueAndRed != nullptr);
+  assert(VP8LTransformColorInverse != nullptr);
+  assert(VP8LConvertBGRAToRGBA != nullptr);
+  assert(VP8LConvertBGRAToRGB != nullptr);
+  assert(VP8LConvertBGRAToBGR != nullptr);
+  assert(VP8LConvertBGRAToRGBA4444 != nullptr);
+  assert(VP8LConvertBGRAToRGB565 != nullptr);
+  assert(VP8LMapColor32b != nullptr);
+  assert(VP8LMapColor8b != nullptr);
 }
 #undef COPY_PREDICTOR_ARRAY
 

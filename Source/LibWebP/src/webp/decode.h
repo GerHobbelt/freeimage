@@ -41,7 +41,7 @@ WEBP_EXTERN int WebPGetDecoderVersion(void);
 // Retrieve basic header information: width, height.
 // This function will also validate the header, returning true on success,
 // false otherwise. '*width' and '*height' are only valid on successful return.
-// Pointers 'width' and 'height' can be passed NULL if deemed irrelevant.
+// Pointers 'width' and 'height' can be passed nullptr if deemed irrelevant.
 // Note: The following chunk sequences (before the raw VP8/VP8L data) are
 // considered valid by this function:
 // RIFF + VP8(L)
@@ -55,7 +55,7 @@ WEBP_EXTERN int WebPGetInfo(const uint8_t* data, size_t data_size,
 // with the dimensions in *width and *height. The ordering of samples in
 // memory is R, G, B, A, R, G, B, A... in scan order (endian-independent).
 // The returned pointer should be deleted calling WebPFree().
-// Returns NULL in case of error.
+// Returns nullptr in case of error.
 WEBP_EXTERN uint8_t* WebPDecodeRGBA(const uint8_t* data, size_t data_size,
                                     int* width, int* height);
 
@@ -84,7 +84,7 @@ WEBP_EXTERN uint8_t* WebPDecodeBGR(const uint8_t* data, size_t data_size,
 // planes are both (*width + 1) / 2 and (*height + 1)/ 2.
 // Upon return, the Y buffer has a stride returned as '*stride', while U and V
 // have a common stride returned as '*uv_stride'.
-// Return NULL in case of error.
+// Return nullptr in case of error.
 // (*) Also named Y'CbCr. See: http://en.wikipedia.org/wiki/YCbCr
 WEBP_EXTERN uint8_t* WebPDecodeYUV(const uint8_t* data, size_t data_size,
                                    int* width, int* height,
@@ -94,7 +94,7 @@ WEBP_EXTERN uint8_t* WebPDecodeYUV(const uint8_t* data, size_t data_size,
 // These five functions are variants of the above ones, that decode the image
 // directly into a pre-allocated buffer 'output_buffer'. The maximum storage
 // available in this buffer is indicated by 'output_buffer_size'. If this
-// storage is not sufficient (or an error occurred), NULL is returned.
+// storage is not sufficient (or an error occurred), nullptr is returned.
 // Otherwise, output_buffer is returned, for convenience.
 // The parameter 'output_stride' specifies the distance (in bytes)
 // between scanlines. Hence, output_buffer_size is expected to be at least
@@ -123,7 +123,7 @@ WEBP_EXTERN uint8_t* WebPDecodeBGRInto(
 // strides to be passed: one for the luma plane and one for each of the
 // chroma ones. The size of each plane buffer is passed as 'luma_size',
 // 'u_size' and 'v_size' respectively.
-// Pointer to the luma plane ('*luma') is returned or NULL if an error occurred
+// Pointer to the luma plane ('*luma') is returned or nullptr if an error occurred
 // during decoding (or because some buffers were found to be too small).
 WEBP_EXTERN uint8_t* WebPDecodeYUVInto(
     const uint8_t* data, size_t data_size,
@@ -269,7 +269,7 @@ typedef enum VP8StatusCode {
 //   WebPIDelete(idec);
 
 // Creates a new incremental decoder with the supplied buffer parameter.
-// This output_buffer can be passed NULL, in which case a default output buffer
+// This output_buffer can be passed nullptr, in which case a default output buffer
 // is used (with MODE_RGB). Otherwise, an internal reference to 'output_buffer'
 // is kept, which means that the lifespan of 'output_buffer' must be larger than
 // that of the returned WebPIDecoder object.
@@ -279,7 +279,7 @@ typedef enum VP8StatusCode {
 // stride of output_buffer.u.RGBA or output_buffer.u.YUVA, provided they remain
 // within valid bounds.
 // All other fields of WebPDecBuffer MUST remain constant between calls.
-// Returns NULL if the allocation failed.
+// Returns nullptr if the allocation failed.
 WEBP_EXTERN WebPIDecoder* WebPINewDecoder(WebPDecBuffer* output_buffer);
 
 // This function allocates and initializes an incremental-decoder object, which
@@ -287,11 +287,11 @@ WEBP_EXTERN WebPIDecoder* WebPINewDecoder(WebPDecBuffer* output_buffer);
 // buffer 'output_buffer'. The size of this buffer is at least
 // 'output_buffer_size' and the stride (distance in bytes between two scanlines)
 // is specified by 'output_stride'.
-// Additionally, output_buffer can be passed NULL in which case the output
+// Additionally, output_buffer can be passed nullptr in which case the output
 // buffer will be allocated automatically when the decoding starts. The
 // colorspace 'csp' is taken into account for allocating this buffer. All other
 // parameters are ignored.
-// Returns NULL if the allocation failed, or if some parameters are invalid.
+// Returns nullptr if the allocation failed, or if some parameters are invalid.
 WEBP_EXTERN WebPIDecoder* WebPINewRGB(
     WEBP_CSP_MODE csp,
     uint8_t* output_buffer, size_t output_buffer_size, int output_stride);
@@ -302,11 +302,11 @@ WEBP_EXTERN WebPIDecoder* WebPINewRGB(
 // 'luma_size' and its stride 'luma_stride'. Similarly, the chroma-u plane
 // is specified by the 'u', 'u_size' and 'u_stride' parameters, and the chroma-v
 // plane by 'v' and 'v_size'. And same for the alpha-plane. The 'a' pointer
-// can be pass NULL in case one is not interested in the transparency plane.
-// Conversely, 'luma' can be passed NULL if no preallocated planes are supplied.
+// can be pass nullptr in case one is not interested in the transparency plane.
+// Conversely, 'luma' can be passed nullptr if no preallocated planes are supplied.
 // In this case, the output buffer will be automatically allocated (using
 // MODE_YUVA) when decoding starts. All parameters are then ignored.
-// Returns NULL if the allocation failed or if a parameter is invalid.
+// Returns nullptr if the allocation failed or if a parameter is invalid.
 WEBP_EXTERN WebPIDecoder* WebPINewYUVA(
     uint8_t* luma, size_t luma_size, int luma_stride,
     uint8_t* u, size_t u_size, int u_stride,
@@ -338,20 +338,20 @@ WEBP_EXTERN VP8StatusCode WebPIAppend(
 WEBP_EXTERN VP8StatusCode WebPIUpdate(
     WebPIDecoder* idec, const uint8_t* data, size_t data_size);
 
-// Returns the RGB/A image decoded so far. Returns NULL if output params
+// Returns the RGB/A image decoded so far. Returns nullptr if output params
 // are not initialized yet. The RGB/A output type corresponds to the colorspace
 // specified during call to WebPINewDecoder() or WebPINewRGB().
 // *last_y is the index of last decoded row in raster scan order. Some pointers
-// (*last_y, *width etc.) can be NULL if corresponding information is not
-// needed. The values in these pointers are only valid on successful (non-NULL)
+// (*last_y, *width etc.) can be nullptr if corresponding information is not
+// needed. The values in these pointers are only valid on successful (non-nullptr)
 // return.
 WEBP_EXTERN uint8_t* WebPIDecGetRGB(
     const WebPIDecoder* idec, int* last_y,
     int* width, int* height, int* stride);
 
 // Same as above function to get a YUVA image. Returns pointer to the luma
-// plane or NULL in case of error. If there is no alpha information
-// the alpha pointer '*a' will be returned NULL.
+// plane or nullptr in case of error. If there is no alpha information
+// the alpha pointer '*a' will be returned nullptr.
 WEBP_EXTERN uint8_t* WebPIDecGetYUVA(
     const WebPIDecoder* idec, int* last_y,
     uint8_t** u, uint8_t** v, uint8_t** a,
@@ -362,14 +362,14 @@ WEBP_EXTERN uint8_t* WebPIDecGetYUVA(
 static WEBP_INLINE uint8_t* WebPIDecGetYUV(
     const WebPIDecoder* idec, int* last_y, uint8_t** u, uint8_t** v,
     int* width, int* height, int* stride, int* uv_stride) {
-  return WebPIDecGetYUVA(idec, last_y, u, v, NULL, width, height,
-                         stride, uv_stride, NULL);
+  return WebPIDecGetYUVA(idec, last_y, u, v, nullptr, width, height,
+                         stride, uv_stride, nullptr);
 }
 
 // Generic call to retrieve information about the displayable area.
-// If non NULL, the left/right/width/height pointers are filled with the visible
+// If non nullptr, the left/right/width/height pointers are filled with the visible
 // rectangular area so far.
-// Returns NULL in case the incremental decoder object is in an invalid state.
+// Returns nullptr in case the incremental decoder object is in an invalid state.
 // Otherwise returns the pointer to the internal representation. This structure
 // is read-only, tied to WebPIDecoder's lifespan and should not be modified.
 WEBP_EXTERN const WebPDecBuffer* WebPIDecodedArea(
@@ -479,20 +479,20 @@ static WEBP_INLINE int WebPInitDecoderConfig(WebPDecoderConfig* config) {
 // Instantiate a new incremental decoder object with the requested
 // configuration. The bitstream can be passed using 'data' and 'data_size'
 // parameter, in which case the features will be parsed and stored into
-// config->input. Otherwise, 'data' can be NULL and no parsing will occur.
-// Note that 'config' can be NULL too, in which case a default configuration
-// is used. If 'config' is not NULL, it must outlive the WebPIDecoder object
+// config->input. Otherwise, 'data' can be nullptr and no parsing will occur.
+// Note that 'config' can be nullptr too, in which case a default configuration
+// is used. If 'config' is not nullptr, it must outlive the WebPIDecoder object
 // as some references to its fields will be used. No internal copy of 'config'
 // is made.
 // The return WebPIDecoder object must always be deleted calling WebPIDelete().
-// Returns NULL in case of error (and config->status will then reflect
+// Returns nullptr in case of error (and config->status will then reflect
 // the error condition, if available).
 WEBP_EXTERN WebPIDecoder* WebPIDecode(const uint8_t* data, size_t data_size,
                                       WebPDecoderConfig* config);
 
 // Non-incremental version. This version decodes the full data at once, taking
 // 'config' into account. Returns decoding status (which should be VP8_STATUS_OK
-// if the decoding was successful). Note that 'config' cannot be NULL.
+// if the decoding was successful). Note that 'config' cannot be nullptr.
 WEBP_EXTERN VP8StatusCode WebPDecode(const uint8_t* data, size_t data_size,
                                      WebPDecoderConfig* config);
 

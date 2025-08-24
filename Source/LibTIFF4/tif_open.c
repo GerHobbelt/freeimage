@@ -120,11 +120,11 @@ static void _TIFFEmitErrorAboveMaxSingleMemAlloc(TIFF *tif,
 /** malloc() version that takes into account memory-specific open options */
 void *_TIFFmallocExt(TIFF *tif, tmsize_t s)
 {
-    if (tif != NULL && tif->tif_max_single_mem_alloc > 0 &&
+    if (tif != nullptr && tif->tif_max_single_mem_alloc > 0 &&
         s > tif->tif_max_single_mem_alloc)
     {
         _TIFFEmitErrorAboveMaxSingleMemAlloc(tif, "_TIFFmallocExt", s);
-        return NULL;
+        return nullptr;
     }
     return _TIFFmalloc(s);
 }
@@ -132,15 +132,15 @@ void *_TIFFmallocExt(TIFF *tif, tmsize_t s)
 /** calloc() version that takes into account memory-specific open options */
 void *_TIFFcallocExt(TIFF *tif, tmsize_t nmemb, tmsize_t siz)
 {
-    if (tif != NULL && tif->tif_max_single_mem_alloc > 0)
+    if (tif != nullptr && tif->tif_max_single_mem_alloc > 0)
     {
         if (nmemb <= 0 || siz <= 0 || nmemb > TIFF_TMSIZE_T_MAX / siz)
-            return NULL;
+            return nullptr;
         if (nmemb * siz > tif->tif_max_single_mem_alloc)
         {
             _TIFFEmitErrorAboveMaxSingleMemAlloc(tif, "_TIFFcallocExt",
                                                  nmemb * siz);
-            return NULL;
+            return nullptr;
         }
     }
     return _TIFFcalloc(nmemb, siz);
@@ -149,11 +149,11 @@ void *_TIFFcallocExt(TIFF *tif, tmsize_t nmemb, tmsize_t siz)
 /** realloc() version that takes into account memory-specific open options */
 void *_TIFFreallocExt(TIFF *tif, void *p, tmsize_t s)
 {
-    if (tif != NULL && tif->tif_max_single_mem_alloc > 0 &&
+    if (tif != nullptr && tif->tif_max_single_mem_alloc > 0 &&
         s > tif->tif_max_single_mem_alloc)
     {
         _TIFFEmitErrorAboveMaxSingleMemAlloc(tif, "_TIFFreallocExt", s);
-        return NULL;
+        return nullptr;
     }
     return _TIFFrealloc(p, s);
 }
@@ -173,7 +173,7 @@ TIFF *TIFFClientOpen(const char *name, const char *mode, thandle_t clientdata,
 {
     return TIFFClientOpenExt(name, mode, clientdata, readproc, writeproc,
                              seekproc, closeproc, sizeproc, mapproc, unmapproc,
-                             NULL);
+                             nullptr);
 }
 
 TIFF *TIFFClientOpenExt(const char *name, const char *mode,
@@ -231,8 +231,8 @@ TIFF *TIFFClientOpenExt(const char *name, const char *mode,
                         (uint64_t)opts->max_single_mem_alloc);
         goto bad2;
     }
-    tif = (TIFF *)_TIFFmallocExt(NULL, size_to_alloc);
-    if (tif == NULL)
+    tif = (TIFF *)_TIFFmallocExt(nullptr, size_to_alloc);
+    if (tif == nullptr)
     {
         _TIFFErrorEarly(opts, clientdata, module,
                         "%s: Out of memory (TIFF structure)", name);
@@ -266,8 +266,8 @@ TIFF *TIFFClientOpenExt(const char *name, const char *mode,
     if (!readproc || !writeproc || !seekproc || !closeproc || !sizeproc)
     {
         TIFFErrorExtR(tif, module,
-                      "One of the client procedures is NULL pointer.");
-        _TIFFfreeExt(NULL, tif);
+                      "One of the client procedures is nullptr pointer.");
+        _TIFFfreeExt(nullptr, tif);
         goto bad2;
     }
 

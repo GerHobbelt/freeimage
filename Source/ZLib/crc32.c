@@ -323,7 +323,7 @@ local void make_crc_table()
         z_word_t big[8][256];
 
         out = fopen("crc32.h", "w");
-        if (out == NULL) return;
+        if (out == nullptr) return;
 
         /* write out little-endian CRC table to crc32.h */
         fprintf(out,

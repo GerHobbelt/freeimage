@@ -557,7 +557,7 @@ static void YuvToRgb565Line(const uint8_t* y, const uint8_t* u,
   SUB2(t0, t2, t1, t3, diag1, diag2);         \
   AVER_UB2_UB(a, diag1, b, diag2, t0, t1);    \
   ILVRL_B2_UB(t1, t0, a, b);                  \
-  if (pbot_y != NULL) {                       \
+  if (pbot_y != nullptr) {                       \
     AVER_UB2_UB(c, diag2, d, diag1, t0, t1);  \
     ILVRL_B2_UB(t1, t0, c, d);                \
   }                                           \
@@ -581,7 +581,7 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bot_y,        \
   uint8_t* pbot_dst = bot_dst + XSTEP;                                   \
                                                                          \
   FUNC(top_y[0], uv0 & 0xff, (uv0 >> 16), top_dst);                      \
-  if (bot_y != NULL) {                                                   \
+  if (bot_y != nullptr) {                                                   \
     const uint32_t uv1 = (3 * l_uv + tl_uv + 0x00020002u) >> 2;          \
     FUNC(bot_y[0], uv1 & 0xff, (uv1 >> 16), bot_dst);                    \
   }                                                                      \
@@ -596,7 +596,7 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bot_y,        \
     ST_UB4(tu0, tu1, cu0, cu1, &temp_u[0], 16);                          \
     ST_UB4(tv0, tv1, cv0, cv1, &temp_v[0], 16);                          \
     FUNC##Line(ptop_y, &temp_u[ 0], &temp_v[0], ptop_dst, 32);           \
-    if (bot_y != NULL) {                                                 \
+    if (bot_y != nullptr) {                                                 \
       FUNC##Line(pbot_y, &temp_u[32], &temp_v[32], pbot_dst, 32);        \
     }                                                                    \
     ptop_y   += 32;                                                      \
@@ -624,7 +624,7 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bot_y,        \
     ST_UB4(tu0, tu1, cu0, cu1, &temp_u[0], 16);                          \
     ST_UB4(tv0, tv1, cv0, cv1, &temp_v[0], 16);                          \
     FUNC##Line(ptop_y, &temp_u[ 0], &temp_v[0], ptop_dst, size * 2);     \
-    if (bot_y != NULL) {                                                 \
+    if (bot_y != nullptr) {                                                 \
       FUNC##Line(pbot_y, &temp_u[32], &temp_v[32], pbot_dst, size * 2);  \
     }                                                                    \
     top_u += size;                                                       \
@@ -638,7 +638,7 @@ static void FUNC_NAME(const uint8_t* top_y, const uint8_t* bot_y,        \
     const uint32_t tmp0 = (3 * t0 + c0 + 0x00020002u) >> 2;              \
     FUNC(top_y[len - 1], tmp0 & 0xff, (tmp0 >> 16),                      \
                 top_dst + (len - 1) * XSTEP);                            \
-    if (bot_y != NULL) {                                                 \
+    if (bot_y != nullptr) {                                                 \
       const uint32_t tmp1 = (3 * c0 + t0 + 0x00020002u) >> 2;            \
       FUNC(bot_y[len - 1], tmp1 & 0xff, (tmp1 >> 16),                    \
            bot_dst + (len - 1) * XSTEP);                                 \

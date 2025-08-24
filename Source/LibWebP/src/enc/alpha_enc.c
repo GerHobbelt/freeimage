@@ -116,7 +116,7 @@ static int EncodeAlphaInternal(const uint8_t* const data, int width, int height,
   WebPFilterFunc filter_func;
   uint8_t header;
   const size_t data_size = width * height;
-  const uint8_t* output = NULL;
+  const uint8_t* output = nullptr;
   size_t output_size = 0;
   VP8LBitWriter tmp_bw;
 
@@ -127,7 +127,7 @@ static int EncodeAlphaInternal(const uint8_t* const data, int width, int height,
   assert(sizeof(header) == ALPHA_HEADER_LEN);
 
   filter_func = WebPFilters[filter];
-  if (filter_func != NULL) {
+  if (filter_func != nullptr) {
     filter_func(data, width, height, width, tmp_alpha);
     alpha_src = tmp_alpha;
   }  else {
@@ -245,7 +245,7 @@ static int ApplyFiltersAndEncode(const uint8_t* alpha, int width, int height,
 
   if (try_map != FILTER_TRY_NONE) {
     uint8_t* filtered_alpha =  (uint8_t*)WebPSafeMalloc(1ULL, data_size);
-    if (filtered_alpha == NULL) return 0;
+    if (filtered_alpha == nullptr) return 0;
 
     for (filter = WEBP_FILTER_NONE; ok && try_map; ++filter, try_map >>= 1) {
       if (try_map & 1) {
@@ -264,11 +264,11 @@ static int ApplyFiltersAndEncode(const uint8_t* alpha, int width, int height,
     WebPSafeFree(filtered_alpha);
   } else {
     ok = EncodeAlphaInternal(alpha, width, height, method, WEBP_FILTER_NONE,
-                             reduce_levels, effort_level, NULL, &best);
+                             reduce_levels, effort_level, nullptr, &best);
   }
   if (ok) {
 #if !defined(WEBP_DISABLE_STATS)
-    if (stats != NULL) {
+    if (stats != nullptr) {
       stats->lossless_features = best.stats.lossless_features;
       stats->histogram_bits = best.stats.histogram_bits;
       stats->transform_bits = best.stats.transform_bits;
@@ -297,7 +297,7 @@ static int EncodeAlpha(VP8Encoder* const enc,
   const int width = pic->width;
   const int height = pic->height;
 
-  uint8_t* quant_alpha = NULL;
+  uint8_t* quant_alpha = nullptr;
   const size_t data_size = width * height;
   uint64_t sse = 0;
   int ok = 1;
@@ -305,8 +305,8 @@ static int EncodeAlpha(VP8Encoder* const enc,
 
   // quick correctness checks
   assert((uint64_t)data_size == (uint64_t)width * height);  // as per spec
-  assert(enc != NULL && pic != NULL && pic->a != NULL);
-  assert(output != NULL && output_size != NULL);
+  assert(enc != nullptr && pic != nullptr && pic->a != nullptr);
+  assert(output != nullptr && output_size != nullptr);
   assert(width > 0 && height > 0);
   assert(pic->a_stride >= width);
   assert(filter >= WEBP_FILTER_NONE && filter <= WEBP_FILTER_FAST);
@@ -325,7 +325,7 @@ static int EncodeAlpha(VP8Encoder* const enc,
   }
 
   quant_alpha = (uint8_t*)WebPSafeMalloc(1ULL, data_size);
-  if (quant_alpha == NULL) {
+  if (quant_alpha == nullptr) {
     return 0;
   }
 
@@ -347,7 +347,7 @@ static int EncodeAlpha(VP8Encoder* const enc,
                                filter, reduce_levels, effort_level, output,
                                output_size, pic->stats);
 #if !defined(WEBP_DISABLE_STATS)
-    if (pic->stats != NULL) {  // need stats?
+    if (pic->stats != nullptr) {  // need stats?
       pic->stats->coded_size += (int)(*output_size);
       enc->sse_[3] = sse;
     }
@@ -364,7 +364,7 @@ static int EncodeAlpha(VP8Encoder* const enc,
 static int CompressAlphaJob(void* arg1, void* unused) {
   VP8Encoder* const enc = (VP8Encoder*)arg1;
   const WebPConfig* config = enc->config_;
-  uint8_t* alpha_data = NULL;
+  uint8_t* alpha_data = nullptr;
   size_t alpha_size = 0;
   const int effort_level = config->method;  // maps to [0..6]
   const WEBP_FILTER_TYPE filter =
@@ -388,13 +388,13 @@ static int CompressAlphaJob(void* arg1, void* unused) {
 void VP8EncInitAlpha(VP8Encoder* const enc) {
   WebPInitAlphaProcessing();
   enc->has_alpha_ = WebPPictureHasTransparency(enc->pic_);
-  enc->alpha_data_ = NULL;
+  enc->alpha_data_ = nullptr;
   enc->alpha_data_size_ = 0;
   if (enc->thread_level_ > 0) {
     WebPWorker* const worker = &enc->alpha_worker_;
     WebPGetWorkerInterface()->Init(worker);
     worker->data1 = enc;
-    worker->data2 = NULL;
+    worker->data2 = nullptr;
     worker->hook = CompressAlphaJob;
   }
 }
@@ -410,7 +410,7 @@ int VP8EncStartAlpha(VP8Encoder* const enc) {
       WebPGetWorkerInterface()->Launch(worker);
       return 1;
     } else {
-      return CompressAlphaJob(enc, NULL);   // just do the job right away
+      return CompressAlphaJob(enc, nullptr);   // just do the job right away
     }
   }
   return 1;
@@ -436,7 +436,7 @@ int VP8EncDeleteAlpha(VP8Encoder* const enc) {
     WebPGetWorkerInterface()->End(worker);
   }
   WebPSafeFree(enc->alpha_data_);
-  enc->alpha_data_ = NULL;
+  enc->alpha_data_ = nullptr;
   enc->alpha_data_size_ = 0;
   enc->has_alpha_ = 0;
   return ok;

@@ -206,7 +206,7 @@ int LibRaw::phase_one_correct()
   /* static */ const signed char dir[12][2] = {
       {-1, -1}, {-1, 1}, {1, -1},  {1, 1},  {-2, 0}, {0, -2},
       {0, 2},   {2, 0},  {-2, -2}, {-2, 2}, {2, -2}, {2, 2}};
-  float poly[8], num, cfrac, frac, mult[2], *yval[2] = {NULL, NULL};
+  float poly[8], num, cfrac, frac, mult[2], *yval[2] = {nullptr, nullptr};
   ushort *xval[2];
   int qmult_applied = 0, qlin_applied = 0;
   std::vector<unsigned> badCols;
@@ -579,7 +579,7 @@ unsigned LibRaw::ph1_bithuff(int nbits, ushort *huff)
 #define bitbuf tls->ph1_bits.bitbuf
 #define vbits tls->ph1_bits.vbits
 #else
-  static UINT64 bitbuf = 0;
+  static uint64_t bitbuf = 0;
   static int vbits = 0;
 #endif
   unsigned c;

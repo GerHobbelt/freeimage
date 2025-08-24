@@ -238,10 +238,10 @@ struct tiff
 
 struct TIFFOpenOptions
 {
-    TIFFErrorHandlerExtR errorhandler; /* may be NULL */
-    void *errorhandler_user_data;      /* may be NULL */
-    TIFFErrorHandlerExtR warnhandler;  /* may be NULL */
-    void *warnhandler_user_data;       /* may be NULL */
+    TIFFErrorHandlerExtR errorhandler; /* may be nullptr */
+    void *errorhandler_user_data;      /* may be nullptr */
+    TIFFErrorHandlerExtR warnhandler;  /* may be nullptr */
+    void *warnhandler_user_data;       /* may be nullptr */
     tmsize_t max_single_mem_alloc;     /* in bytes. 0 for unlimited */
 };
 

@@ -116,10 +116,10 @@ int VP8ApplyNearLossless(const WebPPicture* const picture, int quality,
   uint32_t* const copy_buffer =
       (uint32_t*)WebPSafeMalloc(xsize * 3, sizeof(*copy_buffer));
   const int limit_bits = VP8LNearLosslessBits(quality);
-  assert(argb_dst != NULL);
+  assert(argb_dst != nullptr);
   assert(limit_bits > 0);
   assert(limit_bits <= MAX_LIMIT_BITS);
-  if (copy_buffer == NULL) {
+  if (copy_buffer == nullptr) {
     return 0;
   }
   // For small icon images, don't attempt to apply near-lossless compression.

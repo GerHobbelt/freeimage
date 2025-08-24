@@ -526,7 +526,7 @@ static WEBP_INLINE void VE16_SSE2(uint8_t* dst, const uint8_t* top) {
 
 static WEBP_INLINE void VerticalPred_SSE2(uint8_t* dst,
                                           const uint8_t* top, int size) {
-  if (top != NULL) {
+  if (top != nullptr) {
     if (size == 8) {
       VE8uv_SSE2(dst, top);
     } else {
@@ -557,7 +557,7 @@ static WEBP_INLINE void HE16_SSE2(uint8_t* dst, const uint8_t* left) {
 
 static WEBP_INLINE void HorizontalPred_SSE2(uint8_t* dst,
                                             const uint8_t* left, int size) {
-  if (left != NULL) {
+  if (left != nullptr) {
     if (size == 8) {
       HE8uv_SSE2(dst, left);
     } else {
@@ -598,8 +598,8 @@ static WEBP_INLINE void TM_SSE2(uint8_t* dst, const uint8_t* left,
 
 static WEBP_INLINE void TrueMotion_SSE2(uint8_t* dst, const uint8_t* left,
                                         const uint8_t* top, int size) {
-  if (left != NULL) {
-    if (top != NULL) {
+  if (left != nullptr) {
+    if (top != nullptr) {
       TM_SSE2(dst, left, top, size);
     } else {
       HorizontalPred_SSE2(dst, left, size);
@@ -609,7 +609,7 @@ static WEBP_INLINE void TrueMotion_SSE2(uint8_t* dst, const uint8_t* left,
     // is equivalent to VE prediction where you just copy the top samples.
     // Note that if top samples are not available, the default value is
     // then 129, and not 127 as in the VerticalPred case.
-    if (top != NULL) {
+    if (top != nullptr) {
       VerticalPred_SSE2(dst, top, size);
     } else {
       Fill_SSE2(dst, 129, size);
@@ -645,13 +645,13 @@ static WEBP_INLINE void DC8uvNoTopLeft_SSE2(uint8_t* dst) {
 
 static WEBP_INLINE void DC8uvMode_SSE2(uint8_t* dst, const uint8_t* left,
                                        const uint8_t* top) {
-  if (top != NULL) {
-    if (left != NULL) {  // top and left present
+  if (top != nullptr) {
+    if (left != nullptr) {  // top and left present
       DC8uv_SSE2(dst, left, top);
     } else {  // top, but no left
       DC8uvNoLeft_SSE2(dst, top);
     }
-  } else if (left != NULL) {  // left but no top
+  } else if (left != nullptr) {  // left but no top
     DC8uvNoTop_SSE2(dst, left);
   } else {  // no top, no left, nothing.
     DC8uvNoTopLeft_SSE2(dst);
@@ -684,13 +684,13 @@ static WEBP_INLINE void DC16NoTopLeft_SSE2(uint8_t* dst) {
 
 static WEBP_INLINE void DC16Mode_SSE2(uint8_t* dst, const uint8_t* left,
                                       const uint8_t* top) {
-  if (top != NULL) {
-    if (left != NULL) {  // top and left present
+  if (top != nullptr) {
+    if (left != nullptr) {  // top and left present
       DC16_SSE2(dst, left, top);
     } else {  // top, but no left
       DC16NoLeft_SSE2(dst, top);
     }
-  } else if (left != NULL) {  // left but no top
+  } else if (left != nullptr) {  // left but no top
     DC16NoTop_SSE2(dst, left);
   } else {  // no top, no left, nothing.
     DC16NoTopLeft_SSE2(dst);
@@ -920,8 +920,8 @@ static void IntraChromaPreds_SSE2(uint8_t* dst, const uint8_t* left,
   TrueMotion_SSE2(C8TM8 + dst, left, top, 8);
   // V block
   dst += 8;
-  if (top != NULL) top += 8;
-  if (left != NULL) left += 16;
+  if (top != nullptr) top += 8;
+  if (left != nullptr) left += 16;
   DC8uvMode_SSE2(C8DC8 + dst, left, top);
   VerticalPred_SSE2(C8VE8 + dst, top, 8);
   HorizontalPred_SSE2(C8HE8 + dst, left, 8);
@@ -1245,7 +1245,7 @@ static WEBP_INLINE int DoQuantizeBlock_SSE2(int16_t in[16], int16_t out[16],
   coeff8 = _mm_sub_epi16(coeff8, sign8);
 
   // coeff = abs(in) + sharpen
-  if (sharpen != NULL) {
+  if (sharpen != nullptr) {
     const __m128i sharpen0 = _mm_loadu_si128((const __m128i*)&sharpen[0]);
     const __m128i sharpen8 = _mm_loadu_si128((const __m128i*)&sharpen[8]);
     coeff0 = _mm_add_epi16(coeff0, sharpen0);
@@ -1336,7 +1336,7 @@ static int QuantizeBlock_SSE2(int16_t in[16], int16_t out[16],
 
 static int QuantizeBlockWHT_SSE2(int16_t in[16], int16_t out[16],
                                  const VP8Matrix* const mtx) {
-  return DoQuantizeBlock_SSE2(in, out, NULL, mtx);
+  return DoQuantizeBlock_SSE2(in, out, nullptr, mtx);
 }
 
 static int Quantize2Blocks_SSE2(int16_t in[32], int16_t out[32],

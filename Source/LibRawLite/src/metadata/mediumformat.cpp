@@ -21,7 +21,7 @@
 void LibRaw::parse_phase_one(int base)
 {
   unsigned entries, tag, type, len, data, i, c;
-  INT64 save;
+  int64_t save;
   float romm_cam[3][3];
   char *cp;
 
@@ -333,11 +333,11 @@ void LibRaw::parse_phase_one(int base)
   }
 }
 
-void LibRaw::parse_mos(INT64 offset)
+void LibRaw::parse_mos(int64_t offset)
 {
   char data[40];
   int i, c, neut[4], planes = 0, frot = 0;
-  INT64 from;
+  int64_t from;
   unsigned skip;
   static const char *mod[] = {
       /* DM22, DM28, DM40, DM56 are somewhere here too */

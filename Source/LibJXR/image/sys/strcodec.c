@@ -177,7 +177,7 @@ void getTilePos(CWMImageStrCodec* pSC, size_t mbX, size_t mbY)
 //================================================================
 void initMRPtr(CWMImageStrCodec* pSC)
 {
-    size_t j, jend = (pSC->m_pNextSC != NULL);
+    size_t j, jend = (pSC->m_pNextSC != nullptr);
 
     for (j = 0; j <= jend; j++) {
         memcpy (pSC->p0MBbuffer, pSC->a0MBbuffer, sizeof (pSC->p0MBbuffer));
@@ -190,7 +190,7 @@ void advanceMRPtr(CWMImageStrCodec* pSC)
 {
     const COLORFORMAT cf = pSC->m_param.cfColorFormat;
     const int cpChroma = cblkChromas[cf] * 16;
-    size_t i, j, jend = (pSC->m_pNextSC != NULL);
+    size_t i, j, jend = (pSC->m_pNextSC != nullptr);
 
     assert(pSC->m_bSecondary == FALSE);
     for (j = 0; j <= jend; j++) {
@@ -210,7 +210,7 @@ void advanceMRPtr(CWMImageStrCodec* pSC)
 /* advance to next MB row */
 void advanceOneMBRow(CWMImageStrCodec *pSC)
 {
-	size_t i, j, jend = (pSC->m_pNextSC != NULL);
+	size_t i, j, jend = (pSC->m_pNextSC != nullptr);
 	CWMIPredInfo *pPredInfo;
 
 	for (j = 0; j <= jend; j++) {
@@ -226,7 +226,7 @@ void advanceOneMBRow(CWMImageStrCodec *pSC)
 void swapMRPtr(CWMImageStrCodec* pSC)
 {
     PixelI *pTemp[MAX_CHANNELS];
-    size_t j, jend = (pSC->m_pNextSC != NULL);
+    size_t j, jend = (pSC->m_pNextSC != nullptr);
 
     for (j = 0; j <= jend; j++) {
         memcpy (pTemp, pSC->a0MBbuffer, sizeof (pSC->a0MBbuffer));
@@ -256,7 +256,7 @@ ERR WMPFree(void** ppv)
 {
     if (*ppv) {
         free(*ppv);
-        *ppv = NULL;
+        *ppv = nullptr;
     }
 
     return WMP_errSuccess;
@@ -268,7 +268,7 @@ ERR WMPFree(void** ppv)
 ERR CreateWS_File(struct WMPStream** ppWS, const char* szFilename, const char* szMode)
 {
     ERR err = WMP_errSuccess;
-    struct WMPStream* pWS = NULL;
+    struct WMPStream* pWS = nullptr;
 
     Call(WMPAlloc((void** )ppWS, sizeof(**ppWS)));
     pWS = *ppWS;
@@ -287,7 +287,7 @@ ERR CreateWS_File(struct WMPStream** ppWS, const char* szFilename, const char* s
     FailIf(0 != fopen_s(&pWS->state.file.pFile, szFilename, szMode), WMP_errFileIO);
 #else
     pWS->state.file.pFile = fopen(szFilename, szMode);
-    FailIf(NULL == pWS->state.file.pFile, WMP_errFileIO);
+    FailIf(nullptr == pWS->state.file.pFile, WMP_errFileIO);
 #endif
 
 Cleanup:    
@@ -357,7 +357,7 @@ Cleanup:
 ERR CreateWS_Memory(struct WMPStream** ppWS, void* pv, size_t cb)
 {
     ERR err = WMP_errSuccess;
-    struct WMPStream* pWS = NULL;
+    struct WMPStream* pWS = nullptr;
 
     Call(WMPAlloc((void** )ppWS, sizeof(**ppWS)));
     pWS = *ppWS;
@@ -457,7 +457,7 @@ ERR GetPosWS_Memory(struct WMPStream* pWS, size_t* poffPos)
 ERR CreateWS_List(struct WMPStream** ppWS)
 {
     ERR err = WMP_errSuccess;
-    struct WMPStream* pWS = NULL;
+    struct WMPStream* pWS = nullptr;
 
     Call(WMPAlloc((void** )ppWS, sizeof(**ppWS) + PACKETLENGTH + sizeof(void *)));
     pWS = *ppWS;
@@ -470,7 +470,7 @@ ERR CreateWS_List(struct WMPStream** ppWS)
     pWS->state.buf.cbBufCount = 0;
 
     pWS->Close = CloseWS_List;
-    pWS->EOS = NULL; // doesn't get called
+    pWS->EOS = nullptr; // doesn't get called
 
     pWS->Read = ReadWS_List;
     pWS->Write = WriteWS_List;
@@ -552,7 +552,7 @@ ERR WriteWS_List(struct WMPStream* pWS, const void* pv, size_t cb)
         pv = (const void *)((U8 *)pv + cl);
         cb -= cl;
         if (pWS->state.buf.cbCur == PACKETLENGTH) { // allocate next packet in list
-            U8 *pBuf  = NULL;
+            U8 *pBuf  = nullptr;
             void **pPtrLoc = (void **)(pWS->state.buf.pbBuf - sizeof(void *));
             Call(WMPAlloc((void **)&pBuf, PACKETLENGTH + sizeof(void *)));
             pPtrLoc[0] = (void *)pBuf;
@@ -579,13 +579,13 @@ ERR SetPosWS_List(struct WMPStream* pWS, size_t offPos)
     pWS->state.buf.cbCur = 0;
     pWS->state.buf.cbBufCount = 0;
 
-    while (offPos >= PACKETLENGTH && pBuf != NULL) {
+    while (offPos >= PACKETLENGTH && pBuf != nullptr) {
         pBuf = (U8 *)(((void **)pBuf)[0]);
         offPos -= PACKETLENGTH;
         pWS->state.buf.cbBufCount++;
     }
 
-    if (pBuf == NULL)
+    if (pBuf == nullptr)
         goto Cleanup;
 
     pWS->state.buf.cbCur = offPos;
@@ -658,7 +658,7 @@ U32 getByteRead_SB(SimpleBitIO* pSB)
 ERR detach_SB(SimpleBitIO* pSB)
 {
     assert(0 == pSB->cBitLeft);
-    pSB->pWS = NULL;
+    pSB->pWS = nullptr;
 
     return WMP_errSuccess;
 }
@@ -738,7 +738,7 @@ Int allocateBitIOInfo(CWMImageStrCodec* pSC)
         size_t cb = sizeof(BitIOInfo) * cNumBitIO + (PACKETLENGTH * 4 - 1) + PACKETLENGTH * 4 * cNumBitIO;
         U8* pb = (U8*)malloc(cb);
 
-        if (NULL == pb) return ICERR_ERROR;
+        if (nullptr == pb) return ICERR_ERROR;
         memset(pb, 0, cb);
 
         pSC->m_ppBitIO = (BitIOInfo**)pb;
@@ -754,7 +754,7 @@ Int allocateBitIOInfo(CWMImageStrCodec* pSC)
         if(cNumBitIO > MAX_TILES * 4 || pSC->WMISCP.cNumOfSliceMinus1H >= MAX_TILES)
             return ICERR_ERROR;
         pSC->pIndexTable = malloc(cNumBitIO * (pSC->WMISCP.cNumOfSliceMinus1H + 1) * sizeof(size_t));
-        if(NULL == pSC->pIndexTable) return ICERR_ERROR;
+        if(nullptr == pSC->pIndexTable) return ICERR_ERROR;
     }
 
     pSC->cNumBitIO = cNumBitIO;
@@ -800,7 +800,7 @@ Int allocateTileInfo(CWMImageStrCodec * pSC)
     if(pSC->WMISCP.cNumOfSliceMinus1V >= MAX_TILES)
         return ICERR_ERROR;
     pSC->pTile = (CWMITile *)malloc((pSC->WMISCP.cNumOfSliceMinus1V + 1) * sizeof(CWMITile));
-    if(pSC->pTile == NULL)
+    if(pSC->pTile == nullptr)
         return ICERR_ERROR;
     memset(pSC->pTile, 0, (pSC->WMISCP.cNumOfSliceMinus1V + 1) * sizeof(CWMITile));
 
@@ -834,7 +834,7 @@ void freeTileInfo(CWMImageStrCodec * pSC)
         else
             freeQuantizer(pSC->pTile[0].pQuantizerHP);
 
-    if(pSC->pTile != NULL)
+    if(pSC->pTile != nullptr)
         free(pSC->pTile);
 }
 
@@ -845,7 +845,7 @@ Int allocateQuantizer(CWMIQuantizer * pQuantizer[MAX_CHANNELS], size_t cChannel,
     if(cQP > 16 || cChannel > MAX_CHANNELS)
         return ICERR_ERROR;
     pQuantizer[0] = (CWMIQuantizer *)malloc(cQP * sizeof(CWMIQuantizer) * cChannel);
-    if(pQuantizer[0] == NULL)
+    if(pQuantizer[0] == nullptr)
         return ICERR_ERROR;
 
     for(iCh = 1; iCh < cChannel; iCh ++)
@@ -856,7 +856,7 @@ Int allocateQuantizer(CWMIQuantizer * pQuantizer[MAX_CHANNELS], size_t cChannel,
 
 void freeQuantizer(CWMIQuantizer * pQuantizer[MAX_CHANNELS])
 {
-    if(pQuantizer[0] != NULL)
+    if(pQuantizer[0] != nullptr)
         free(pQuantizer[0]);
 }
 
@@ -1134,7 +1134,7 @@ ERR detachISRead(CWMImageStrCodec* pSC, BitIOInfo* pIO)
     cbRemain = (pIO->pbStart + PACKETLENGTH * 2) - (pIO->pbCurrent + pIO->cBitsUsed / 8);
     pWS->SetPos(pWS, pIO->offRef - cbRemain);
 
-    pIO->pWS = NULL;
+    pIO->pWS = nullptr;
 Cleanup:
     return err;
 }
@@ -1192,7 +1192,7 @@ ERR detachISWrite(CWMImageStrCodec* pSC, BitIOInfo* pIO)
     PERFTIMER_START(pSC->m_fMeasurePerf, pSC->m_ptEncDecPerf);
     Call(err);
 
-    pIO->pWS = NULL;
+    pIO->pWS = nullptr;
 Cleanup:
     return err;
 }

@@ -758,8 +758,8 @@ an otherwise too-large picture. Some CPU can be saved too, incidentally.
      CHECK(WebPDecode(data, data_size, &config) == VP8_STATUS_OK);
 
      // E.2) Decode image incrementally.
-     WebPIDecoder* const idec = WebPIDecode(NULL, NULL, &config);
-     CHECK(idec != NULL);
+     WebPIDecoder* const idec = WebPIDecode(nullptr, nullptr, &config);
+     CHECK(idec != nullptr);
      while (bytes_remaining > 0) {
        VP8StatusCode status = WebPIAppend(idec, input, bytes_read);
        if (status == VP8_STATUS_OK || status == VP8_STATUS_SUSPENDED) {

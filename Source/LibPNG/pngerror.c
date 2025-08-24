@@ -42,7 +42,7 @@ png_error,(png_const_structrp png_ptr, png_const_charp error_message),
 {
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
    char msg[16];
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       if ((png_ptr->flags &
          (PNG_FLAG_STRIP_ERROR_NUMBERS|PNG_FLAG_STRIP_ERROR_TEXT)) != 0)
@@ -80,7 +80,7 @@ png_error,(png_const_structrp png_ptr, png_const_charp error_message),
       }
    }
 #endif
-   if (png_ptr != NULL && png_ptr->error_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->error_fn != nullptr)
       (*(png_ptr->error_fn))(png_constcast(png_structrp,png_ptr),
           error_message);
 
@@ -92,12 +92,12 @@ png_error,(png_const_structrp png_ptr, png_const_charp error_message),
 PNG_FUNCTION(void,PNGAPI
 png_err,(png_const_structrp png_ptr),PNG_NORETURN)
 {
-   /* Prior to 1.5.2 the error_fn received a NULL pointer, expressed
+   /* Prior to 1.5.2 the error_fn received a nullptr pointer, expressed
     * erroneously as '\0', instead of the empty string "".  This was
     * apparently an error, introduced in libpng-1.2.20, and png_default_error
     * will crash in this case.
     */
-   if (png_ptr != NULL && png_ptr->error_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->error_fn != nullptr)
       (*(png_ptr->error_fn))(png_constcast(png_structrp,png_ptr), "");
 
    /* If the custom handler doesn't exist, or if it returns,
@@ -113,9 +113,9 @@ size_t
 png_safecat(png_charp buffer, size_t bufsize, size_t pos,
     png_const_charp string)
 {
-   if (buffer != NULL && pos < bufsize)
+   if (buffer != nullptr && pos < bufsize)
    {
-      if (string != NULL)
+      if (string != nullptr)
          while (*string != '\0' && pos < bufsize-1)
            buffer[pos++] = *string++;
 
@@ -217,7 +217,7 @@ void PNGAPI
 png_warning(png_const_structrp png_ptr, png_const_charp warning_message)
 {
    int offset = 0;
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
    if ((png_ptr->flags &
@@ -232,7 +232,7 @@ png_warning(png_const_structrp png_ptr, png_const_charp warning_message)
          }
       }
    }
-   if (png_ptr != NULL && png_ptr->warning_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->warning_fn != nullptr)
       (*(png_ptr->warning_fn))(png_constcast(png_structrp,png_ptr),
           warning_message + offset);
    else
@@ -304,7 +304,7 @@ png_formatted_warning(png_const_structrp png_ptr, png_warning_parameters p,
       /* '@' at end of string is now just printed (previously it was skipped);
        * it is an error in the calling code to terminate the string with @.
        */
-      if (p != NULL && *message == '@' && message[1] != '\0')
+      if (p != nullptr && *message == '@' && message[1] != '\0')
       {
          int parameter_char = *++message; /* Consume the '@' */
          static const char valid_parameters[] = "123456789";
@@ -457,7 +457,7 @@ png_format_buffer(png_const_structrp png_ptr, png_charp buffer, png_const_charp
       }
    }
 
-   if (error_message == NULL)
+   if (error_message == nullptr)
       buffer[iout] = '\0';
 
    else
@@ -482,7 +482,7 @@ png_chunk_error,(png_const_structrp png_ptr, png_const_charp error_message),
     PNG_NORETURN)
 {
    char msg[18+PNG_MAX_ERROR_TEXT];
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       png_error(png_ptr, error_message);
 
    else
@@ -498,7 +498,7 @@ void PNGAPI
 png_chunk_warning(png_const_structrp png_ptr, png_const_charp warning_message)
 {
    char msg[18+PNG_MAX_ERROR_TEXT];
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       png_warning(png_ptr, warning_message);
 
    else
@@ -578,7 +578,7 @@ png_fixed_error,(png_const_structrp png_ptr, png_const_charp name),PNG_NORETURN)
    char msg[fixed_message_ln+PNG_MAX_ERROR_TEXT];
    memcpy(msg, fixed_message, fixed_message_ln);
    iin = 0;
-   if (name != NULL)
+   if (name != nullptr)
       while (iin < (PNG_MAX_ERROR_TEXT-1) && name[iin] != 0)
       {
          msg[fixed_message_ln + iin] = name[iin];
@@ -606,12 +606,12 @@ png_set_longjmp_fn(png_structrp png_ptr, png_longjmp_ptr longjmp_fn,
     * compiled a built in jmp_buf is returned; this preserves the pre-1.6.0
     * semantics that this call will not fail.  If the size is larger, however,
     * the buffer is allocated and this may fail, causing the function to return
-    * NULL.
+    * nullptr.
     */
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
 
-   if (png_ptr->jmp_buf_ptr == NULL)
+   if (png_ptr->jmp_buf_ptr == nullptr)
    {
       png_ptr->jmp_buf_size = 0; /* not allocated */
 
@@ -623,8 +623,8 @@ png_set_longjmp_fn(png_structrp png_ptr, png_longjmp_ptr longjmp_fn,
          png_ptr->jmp_buf_ptr = png_voidcast(jmp_buf *,
              png_malloc_warn(png_ptr, jmp_buf_size));
 
-         if (png_ptr->jmp_buf_ptr == NULL)
-            return NULL; /* new NULL return on OOM */
+         if (png_ptr->jmp_buf_ptr == nullptr)
+            return nullptr; /* new nullptr return on OOM */
 
          png_ptr->jmp_buf_size = jmp_buf_size;
       }
@@ -652,7 +652,7 @@ png_set_longjmp_fn(png_structrp png_ptr, png_longjmp_ptr longjmp_fn,
       if (size != jmp_buf_size)
       {
          png_warning(png_ptr, "Application jmp_buf size changed");
-         return NULL; /* caller will probably crash: no choice here */
+         return nullptr; /* caller will probably crash: no choice here */
       }
    }
 
@@ -666,14 +666,14 @@ png_set_longjmp_fn(png_structrp png_ptr, png_longjmp_ptr longjmp_fn,
 void /* PRIVATE */
 png_free_jmpbuf(png_structrp png_ptr)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       jmp_buf *jb = png_ptr->jmp_buf_ptr;
 
       /* A size of 0 is used to indicate a local, stack, allocation of the
        * pointer; used here and in png.c
        */
-      if (jb != NULL && png_ptr->jmp_buf_size > 0)
+      if (jb != nullptr && png_ptr->jmp_buf_size > 0)
       {
 
          /* This stuff is so that a failure to free the error control structure
@@ -697,7 +697,7 @@ png_free_jmpbuf(png_structrp png_ptr)
 
       /* *Always* cancel everything out: */
       png_ptr->jmp_buf_size = 0;
-      png_ptr->jmp_buf_ptr = NULL;
+      png_ptr->jmp_buf_ptr = nullptr;
       png_ptr->longjmp_fn = 0;
    }
 }
@@ -705,7 +705,7 @@ png_free_jmpbuf(png_structrp png_ptr)
 
 /* This is the default error handling function.  Note that replacements for
  * this function MUST NOT RETURN, or the program will likely crash.  This
- * function is used by default, or if the program supplies NULL for the
+ * function is used by default, or if the program supplies nullptr for the
  * error function pointer in png_set_error_fn().
  */
 static PNG_FUNCTION(void /* PRIVATE */,
@@ -714,8 +714,8 @@ png_default_error,(png_const_structrp png_ptr, png_const_charp error_message),
 {
 #ifdef PNG_CONSOLE_IO_SUPPORTED
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
-   /* Check on NULL only added in 1.5.4 */
-   if (error_message != NULL && *error_message == PNG_LITERAL_SHARP)
+   /* Check on nullptr only added in 1.5.4 */
+   if (error_message != nullptr && *error_message == PNG_LITERAL_SHARP)
    {
       /* Strip "#nnnn " from beginning of error message. */
       int offset;
@@ -759,8 +759,8 @@ PNG_FUNCTION(void,PNGAPI
 png_longjmp,(png_const_structrp png_ptr, int val),PNG_NORETURN)
 {
 #ifdef PNG_SETJMP_SUPPORTED
-   if (png_ptr != NULL && png_ptr->longjmp_fn != NULL &&
-       png_ptr->jmp_buf_ptr != NULL)
+   if (png_ptr != nullptr && png_ptr->longjmp_fn != nullptr &&
+       png_ptr->jmp_buf_ptr != nullptr)
       png_ptr->longjmp_fn(*png_ptr->jmp_buf_ptr, val);
 #else
    PNG_UNUSED(png_ptr)
@@ -836,7 +836,7 @@ void PNGAPI
 png_set_error_fn(png_structrp png_ptr, png_voidp error_ptr,
     png_error_ptr error_fn, png_error_ptr warning_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->error_ptr = error_ptr;
@@ -856,8 +856,8 @@ png_set_error_fn(png_structrp png_ptr, png_voidp error_ptr,
 png_voidp PNGAPI
 png_get_error_ptr(png_const_structrp png_ptr)
 {
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
 
    return ((png_voidp)png_ptr->error_ptr);
 }
@@ -867,7 +867,7 @@ png_get_error_ptr(png_const_structrp png_ptr)
 void PNGAPI
 png_set_strip_error_numbers(png_structrp png_ptr, png_uint_32 strip_mode)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       png_ptr->flags &=
          ((~(PNG_FLAG_STRIP_ERROR_NUMBERS |
@@ -892,7 +892,7 @@ png_safe_error),(png_structp png_nonconst_ptr, png_const_charp error_message),
    /* An error is always logged here, overwriting anything (typically a warning)
     * that is already there:
     */
-   if (image != NULL)
+   if (image != nullptr)
    {
       png_safecat(image->message, (sizeof image->message), 0, error_message);
       image->warning_or_error |= PNG_IMAGE_ERROR;
@@ -901,7 +901,7 @@ png_safe_error),(png_structp png_nonconst_ptr, png_const_charp error_message),
        * C++ compilation too is pretty tricky: C++ wants a pointer to the first
        * element of a jmp_buf, but C doesn't tell us the type of that.
        */
-      if (image->opaque != NULL && image->opaque->error_buf != NULL)
+      if (image->opaque != nullptr && image->opaque->error_buf != nullptr)
          longjmp(png_control_jmp_buf(image->opaque), 1);
 
       /* Missing longjmp buffer, the following is to help debugging: */

@@ -584,8 +584,8 @@ static int PixarLogMakeTables(TIFF *tif, PixarLogState *sp)
     ToLinear16 = (uint16_t *)_TIFFmallocExt(tif, TSIZEP1 * sizeof(uint16_t));
     ToLinear8 =
         (unsigned char *)_TIFFmallocExt(tif, TSIZEP1 * sizeof(unsigned char));
-    if (FromLT2 == NULL || From14 == NULL || From8 == NULL ||
-        ToLinearF == NULL || ToLinear16 == NULL || ToLinear8 == NULL)
+    if (FromLT2 == nullptr || From14 == nullptr || From8 == nullptr ||
+        ToLinearF == nullptr || ToLinear16 == nullptr || ToLinear8 == nullptr)
     {
         if (FromLT2)
             _TIFFfreeExt(tif, FromLT2);
@@ -599,12 +599,12 @@ static int PixarLogMakeTables(TIFF *tif, PixarLogState *sp)
             _TIFFfreeExt(tif, ToLinear16);
         if (ToLinear8)
             _TIFFfreeExt(tif, ToLinear8);
-        sp->FromLT2 = NULL;
-        sp->From14 = NULL;
-        sp->From8 = NULL;
-        sp->ToLinearF = NULL;
-        sp->ToLinear16 = NULL;
-        sp->ToLinear8 = NULL;
+        sp->FromLT2 = nullptr;
+        sp->From14 = nullptr;
+        sp->From8 = nullptr;
+        sp->ToLinearF = nullptr;
+        sp->ToLinear16 = nullptr;
+        sp->ToLinear8 = nullptr;
         return 0;
     }
 
@@ -715,7 +715,7 @@ static int PixarLogGuessDataFmt(TIFFDirectory *td)
 
 static tmsize_t multiply_ms(tmsize_t m1, tmsize_t m2)
 {
-    return _TIFFMultiplySSize(NULL, m1, m2, NULL);
+    return _TIFFMultiplySSize(nullptr, m1, m2, nullptr);
 }
 
 static tmsize_t add_ms(tmsize_t m1, tmsize_t m2)
@@ -744,7 +744,7 @@ static int PixarLogSetupDecode(TIFF *tif)
     tmsize_t tbuf_size;
     uint32_t strip_height;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     /* This function can possibly be called several times by */
     /* PredictorSetupDecode() if this function succeeds but */
@@ -774,7 +774,7 @@ static int PixarLogSetupDecode(TIFF *tif)
         return (0); /* TODO: this is an error return without error report
                        through TIFFErrorExt */
     sp->tbuf = (uint16_t *)_TIFFmallocExt(tif, tbuf_size);
-    if (sp->tbuf == NULL)
+    if (sp->tbuf == nullptr)
         return (0);
     sp->tbuf_size = tbuf_size;
     if (sp->user_datafmt == PIXARLOGDATAFMT_UNKNOWN)
@@ -782,7 +782,7 @@ static int PixarLogSetupDecode(TIFF *tif)
     if (sp->user_datafmt == PIXARLOGDATAFMT_UNKNOWN)
     {
         _TIFFfreeExt(tif, sp->tbuf);
-        sp->tbuf = NULL;
+        sp->tbuf = nullptr;
         sp->tbuf_size = 0;
         TIFFErrorExtR(tif, module,
                       "PixarLog compression can't handle bits depth/data "
@@ -794,7 +794,7 @@ static int PixarLogSetupDecode(TIFF *tif)
     if (inflateInit(&sp->stream) != Z_OK)
     {
         _TIFFfreeExt(tif, sp->tbuf);
-        sp->tbuf = NULL;
+        sp->tbuf = nullptr;
         sp->tbuf_size = 0;
         TIFFErrorExtR(tif, module, "%s",
                       sp->stream.msg ? sp->stream.msg : "(null)");
@@ -816,7 +816,7 @@ static int PixarLogPreDecode(TIFF *tif, uint16_t s)
     PixarLogState *sp = DecoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     sp->stream.next_in = tif->tif_rawdata;
     assert(sizeof(sp->stream.avail_in) == 4); /* if this assert gets raised,
          we need to simplify this code to reflect a ZLib that is likely updated
@@ -865,7 +865,7 @@ static int PixarLogDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
     llen = sp->stride * td->td_imagewidth;
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     sp->stream.next_in = tif->tif_rawcp;
     sp->stream.avail_in = (uInt)tif->tif_rawcc;
@@ -991,7 +991,7 @@ static int PixarLogSetupEncode(TIFF *tif)
     PixarLogState *sp = EncoderState(tif);
     tmsize_t tbuf_size;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     /* for some reason, we can't do this in TIFFInitPixarLog */
 
@@ -1006,7 +1006,7 @@ static int PixarLogSetupEncode(TIFF *tif)
         return (0); /* TODO: this is an error return without error report
                        through TIFFErrorExt */
     sp->tbuf = (uint16_t *)_TIFFmallocExt(tif, tbuf_size);
-    if (sp->tbuf == NULL)
+    if (sp->tbuf == nullptr)
         return (0);
     if (sp->user_datafmt == PIXARLOGDATAFMT_UNKNOWN)
         sp->user_datafmt = PixarLogGuessDataFmt(td);
@@ -1041,7 +1041,7 @@ static int PixarLogPreEncode(TIFF *tif, uint16_t s)
     PixarLogState *sp = EncoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     sp->stream.next_out = tif->tif_rawdata;
     assert(sizeof(sp->stream.avail_out) == 4); /* if this assert gets raised,
          we need to simplify this code to reflect a ZLib that is likely updated
@@ -1498,7 +1498,7 @@ static void PixarLogCleanup(TIFF *tif)
     if (sp->tbuf)
         _TIFFfreeExt(tif, sp->tbuf);
     _TIFFfreeExt(tif, sp);
-    tif->tif_data = NULL;
+    tif->tif_data = nullptr;
 
     _TIFFSetDefaultCompressionState(tif);
 }
@@ -1590,9 +1590,9 @@ static int PixarLogVGetField(TIFF *tif, uint32_t tag, va_list ap)
 
 static const TIFFField pixarlogFields[] = {
     {TIFFTAG_PIXARLOGDATAFMT, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "", NULL},
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "", nullptr},
     {TIFFTAG_PIXARLOGQUALITY, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "", NULL}};
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, FALSE, FALSE, "", nullptr}};
 
 int TIFFInitPixarLog(TIFF *tif, int scheme)
 {
@@ -1617,7 +1617,7 @@ int TIFFInitPixarLog(TIFF *tif, int scheme)
      * Allocate state block so tag methods have storage to record values.
      */
     tif->tif_data = (uint8_t *)_TIFFmallocExt(tif, sizeof(PixarLogState));
-    if (tif->tif_data == NULL)
+    if (tif->tif_data == nullptr)
         goto bad;
     sp = (PixarLogState *)tif->tif_data;
     _TIFFmemset(sp, 0, sizeof(*sp));

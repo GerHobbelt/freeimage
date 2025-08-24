@@ -195,7 +195,7 @@ static int LogL16Decode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
 
     (void)s;
     assert(s == 0);
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     npixels = occ / sp->pixel_size;
 
@@ -268,7 +268,7 @@ static int LogLuvDecode24(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
 
     (void)s;
     assert(s == 0);
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     npixels = occ / sp->pixel_size;
 
@@ -325,7 +325,7 @@ static int LogLuvDecode32(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
     (void)s;
     assert(s == 0);
     sp = DecoderState(tif);
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     npixels = occ / sp->pixel_size;
 
@@ -445,7 +445,7 @@ static int LogL16Encode(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
 
     (void)s;
     assert(s == 0);
-    assert(sp != NULL);
+    assert(sp != nullptr);
     npixels = cc / sp->pixel_size;
 
     if (sp->user_datafmt == SGILOGDATAFMT_16BIT)
@@ -553,7 +553,7 @@ static int LogLuvEncode24(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
 
     (void)s;
     assert(s == 0);
-    assert(sp != NULL);
+    assert(sp != nullptr);
     npixels = cc / sp->pixel_size;
 
     if (sp->user_datafmt == SGILOGDATAFMT_RAW)
@@ -613,7 +613,7 @@ static int LogLuvEncode32(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
 
     (void)s;
     assert(s == 0);
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     npixels = cc / sp->pixel_size;
 
@@ -1335,7 +1335,7 @@ static int LogL16GuessDataFmt(TIFFDirectory *td)
 
 static tmsize_t multiply_ms(tmsize_t m1, tmsize_t m2)
 {
-    return _TIFFMultiplySSize(NULL, m1, m2, NULL);
+    return _TIFFMultiplySSize(nullptr, m1, m2, nullptr);
 }
 
 static int LogL16InitState(TIFF *tif)
@@ -1344,7 +1344,7 @@ static int LogL16InitState(TIFF *tif)
     TIFFDirectory *td = &tif->tif_dir;
     LogLuvState *sp = DecoderState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(td->td_photometric == PHOTOMETRIC_LOGL);
 
     if (td->td_samplesperpixel != 1)
@@ -1382,7 +1382,7 @@ static int LogL16InitState(TIFF *tif)
         sp->tbuflen = multiply_ms(td->td_imagewidth, td->td_imagelength);
     if (multiply_ms(sp->tbuflen, sizeof(int16_t)) == 0 ||
         (sp->tbuf = (uint8_t *)_TIFFmallocExt(
-             tif, sp->tbuflen * sizeof(int16_t))) == NULL)
+             tif, sp->tbuflen * sizeof(int16_t))) == nullptr)
     {
         TIFFErrorExtR(tif, module, "No space for SGILog translation buffer");
         return (0);
@@ -1449,7 +1449,7 @@ static int LogLuvInitState(TIFF *tif)
     TIFFDirectory *td = &tif->tif_dir;
     LogLuvState *sp = DecoderState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(td->td_photometric == PHOTOMETRIC_LOGLUV);
 
     /* for some reason, we can't do this in TIFFInitLogLuv */
@@ -1489,7 +1489,7 @@ static int LogLuvInitState(TIFF *tif)
         sp->tbuflen = multiply_ms(td->td_imagewidth, td->td_imagelength);
     if (multiply_ms(sp->tbuflen, sizeof(uint32_t)) == 0 ||
         (sp->tbuf = (uint8_t *)_TIFFmallocExt(
-             tif, sp->tbuflen * sizeof(uint32_t))) == NULL)
+             tif, sp->tbuflen * sizeof(uint32_t))) == nullptr)
     {
         TIFFErrorExtR(tif, module, "No space for SGILog translation buffer");
         return (0);
@@ -1686,7 +1686,7 @@ static void LogLuvCleanup(TIFF *tif)
     if (sp->tbuf)
         _TIFFfreeExt(tif, sp->tbuf);
     _TIFFfreeExt(tif, sp);
-    tif->tif_data = NULL;
+    tif->tif_data = nullptr;
 
     _TIFFSetDefaultCompressionState(tif);
 }
@@ -1773,9 +1773,9 @@ static int LogLuvVGetField(TIFF *tif, uint32_t tag, va_list ap)
 
 static const TIFFField LogLuvFields[] = {
     {TIFFTAG_SGILOGDATAFMT, 0, 0, TIFF_SHORT, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "SGILogDataFmt", NULL},
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "SGILogDataFmt", nullptr},
     {TIFFTAG_SGILOGENCODE, 0, 0, TIFF_SHORT, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "SGILogEncode", NULL}};
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "SGILogEncode", nullptr}};
 
 int TIFFInitSGILog(TIFF *tif, int scheme)
 {
@@ -1797,7 +1797,7 @@ int TIFFInitSGILog(TIFF *tif, int scheme)
      * Allocate state block so tag methods have storage to record values.
      */
     tif->tif_data = (uint8_t *)_TIFFmallocExt(tif, sizeof(LogLuvState));
-    if (tif->tif_data == NULL)
+    if (tif->tif_data == nullptr)
         goto bad;
     sp = (LogLuvState *)tif->tif_data;
     _TIFFmemset((void *)sp, 0, sizeof(*sp));

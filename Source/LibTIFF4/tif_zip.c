@@ -57,7 +57,7 @@
 #error "Antiquated ZLIB software; you must use version 1.0 or later"
 #endif
 
-#define SAFE_MSG(sp) ((sp)->stream.msg == NULL ? "" : (sp)->stream.msg)
+#define SAFE_MSG(sp) ((sp)->stream.msg == nullptr ? "" : (sp)->stream.msg)
 
 /*
  * State block for each open TIFF
@@ -101,7 +101,7 @@ static int ZIPSetupDecode(TIFF *tif)
     static const char module[] = "ZIPSetupDecode";
     ZIPState *sp = DecoderState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     /* if we were last encoding, terminate this mode */
     if (sp->state & ZSTATE_INIT_ENCODE)
@@ -134,7 +134,7 @@ static int ZIPPreDecode(TIFF *tif, uint16_t s)
     ZIPState *sp = DecoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     if ((sp->state & ZSTATE_INIT_DECODE) == 0)
         tif->tif_setupdecode(tif);
@@ -159,7 +159,7 @@ static int ZIPDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
     ZIPState *sp = DecoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(sp->state == ZSTATE_INIT_DECODE);
 
 #if LIBDEFLATE_SUPPORT
@@ -201,10 +201,10 @@ static int ZIPDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
         /* Go for decompression using libdeflate */
         {
             enum libdeflate_result res;
-            if (sp->libdeflate_dec == NULL)
+            if (sp->libdeflate_dec == nullptr)
             {
                 sp->libdeflate_dec = libdeflate_alloc_decompressor();
-                if (sp->libdeflate_dec == NULL)
+                if (sp->libdeflate_dec == nullptr)
                 {
                     break;
                 }
@@ -214,7 +214,7 @@ static int ZIPDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
 
             res = libdeflate_zlib_decompress(sp->libdeflate_dec, tif->tif_rawcp,
                                              (size_t)tif->tif_rawcc, op,
-                                             (size_t)occ, NULL);
+                                             (size_t)occ, nullptr);
 
             tif->tif_rawcp += tif->tif_rawcc;
             tif->tif_rawcc = 0;
@@ -293,7 +293,7 @@ static int ZIPSetupEncode(TIFF *tif)
     ZIPState *sp = EncoderState(tif);
     int cappedQuality;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     if (sp->state & ZSTATE_INIT_DECODE)
     {
         inflateEnd(&sp->stream);
@@ -324,7 +324,7 @@ static int ZIPPreEncode(TIFF *tif, uint16_t s)
     ZIPState *sp = EncoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     if (sp->state != ZSTATE_INIT_ENCODE)
         tif->tif_setupencode(tif);
 
@@ -350,7 +350,7 @@ static int ZIPEncode(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
     static const char module[] = "ZIPEncode";
     ZIPState *sp = EncoderState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(sp->state == ZSTATE_INIT_ENCODE);
 
     (void)s;
@@ -398,7 +398,7 @@ static int ZIPEncode(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
         /* Go for compression using libdeflate */
         {
             size_t nCompressedBytes;
-            if (sp->libdeflate_enc == NULL)
+            if (sp->libdeflate_enc == nullptr)
             {
                 /* To get results as good as zlib, we asked for an extra */
                 /* level of compression */
@@ -407,7 +407,7 @@ static int ZIPEncode(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
                     : sp->zipquality >= 6 && sp->zipquality <= 9
                         ? sp->zipquality + 1
                         : sp->zipquality);
-                if (sp->libdeflate_enc == NULL)
+                if (sp->libdeflate_enc == nullptr)
                 {
                     TIFFErrorExtR(tif, module, "Cannot allocate compressor");
                     break;
@@ -554,7 +554,7 @@ static void ZIPCleanup(TIFF *tif)
 #endif
 
     _TIFFfreeExt(tif, sp);
-    tif->tif_data = NULL;
+    tif->tif_data = nullptr;
 
     _TIFFSetDefaultCompressionState(tif);
 }
@@ -595,7 +595,7 @@ static int ZIPVSetField(TIFF *tif, uint32_t tag, va_list ap)
             if (sp->libdeflate_enc)
             {
                 libdeflate_free_compressor(sp->libdeflate_enc);
-                sp->libdeflate_enc = NULL;
+                sp->libdeflate_enc = nullptr;
             }
 #endif
 
@@ -648,9 +648,9 @@ static int ZIPVGetField(TIFF *tif, uint32_t tag, va_list ap)
 
 static const TIFFField zipFields[] = {
     {TIFFTAG_ZIPQUALITY, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "", NULL},
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "", nullptr},
     {TIFFTAG_DEFLATE_SUBCODEC, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
-     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "", NULL},
+     TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "", nullptr},
 };
 
 int TIFFInitZIP(TIFF *tif, int scheme)
@@ -678,12 +678,12 @@ int TIFFInitZIP(TIFF *tif, int scheme)
      * Allocate state block so tag methods have storage to record values.
      */
     tif->tif_data = (uint8_t *)_TIFFcallocExt(tif, sizeof(ZIPState), 1);
-    if (tif->tif_data == NULL)
+    if (tif->tif_data == nullptr)
         goto bad;
     sp = ZState(tif);
-    sp->stream.zalloc = NULL;
-    sp->stream.zfree = NULL;
-    sp->stream.opaque = NULL;
+    sp->stream.zalloc = nullptr;
+    sp->stream.zfree = nullptr;
+    sp->stream.opaque = nullptr;
     sp->stream.data_type = Z_BINARY;
 
     /*

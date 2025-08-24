@@ -201,7 +201,7 @@ compress_init (gif_dest_ptr dinfo, int i_bits)
   dinfo->cur_accum = 0;
   dinfo->cur_bits = 0;
   /* clear hash table */
-  if (dinfo->hash_code != NULL)
+  if (dinfo->hash_code != nullptr)
     clear_hash(dinfo);
   /* GIF specifies an initial Clear code */
   output(dinfo, dinfo->ClearCode);
@@ -251,7 +251,7 @@ put_3bytes (gif_dest_ptr dinfo, int val)
 LOCAL(void)
 emit_header (gif_dest_ptr dinfo, int num_colors, JSAMPARRAY colormap)
 /* Output the GIF file header, including color map */
-/* If colormap == NULL, synthesize a grayscale colormap */
+/* If colormap == nullptr, synthesize a grayscale colormap */
 {
   int BitsPerPixel, ColorMapSize, InitCodeSize, FlagByte;
   int cshift = dinfo->cinfo->data_precision - 8;
@@ -292,7 +292,7 @@ emit_header (gif_dest_ptr dinfo, int num_colors, JSAMPARRAY colormap)
   /* we reduce it to 8 bits by shifting */
   for (i = 0; i < ColorMapSize; i++) {
     if (i < num_colors) {
-      if (colormap != NULL) {
+      if (colormap != nullptr) {
 	if (dinfo->cinfo->out_color_space == JCS_RGB) {
 	  /* Normal case: RGB color map */
 	  putc(GETJSAMPLE(colormap[0][i]) >> cshift, dinfo->pub.output_file);
@@ -339,7 +339,7 @@ start_output_gif (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   if (cinfo->quantize_colors)
     emit_header(dest, cinfo->actual_number_of_colors, cinfo->colormap);
   else
-    emit_header(dest, 256, (JSAMPARRAY) NULL);
+    emit_header(dest, 256, (JSAMPARRAY) nullptr);
 }
 
 
@@ -556,8 +556,8 @@ jinit_write_gif (j_decompress_ptr cinfo, boolean is_lzw)
   } else {
     dest->pub.put_pixel_rows = put_raw_pixel_rows;
     /* Mark tables unused */
-    dest->hash_code = NULL;
-    dest->hash_value = NULL;
+    dest->hash_code = nullptr;
+    dest->hash_value = nullptr;
   }
 
   return &dest->pub;

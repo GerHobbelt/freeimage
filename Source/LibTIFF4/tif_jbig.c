@@ -51,7 +51,7 @@ static int JBIGDecode(TIFF *tif, uint8_t *buffer, tmsize_t size, uint16_t s)
 {
     struct jbg_dec_state decoder;
     int decodeStatus = 0;
-    unsigned char *pImage = NULL;
+    unsigned char *pImage = nullptr;
     unsigned long decodedSize;
     (void)s;
 
@@ -77,7 +77,7 @@ static int JBIGDecode(TIFF *tif, uint8_t *buffer, tmsize_t size, uint16_t s)
 #endif /* HAVE_JBG_NEWLEN */
 
     decodeStatus = jbg_dec_in(&decoder, (unsigned char *)tif->tif_rawcp,
-                              (size_t)tif->tif_rawcc, NULL);
+                              (size_t)tif->tif_rawcc, nullptr);
     if (JBG_EOK != decodeStatus)
     {
         /*
@@ -212,7 +212,7 @@ int TIFFInitJBIG(TIFF *tif, int scheme)
      */
     if (tif->tif_flags & TIFF_BUFFERMMAP)
     {
-        tif->tif_rawdata = NULL;
+        tif->tif_rawdata = nullptr;
         tif->tif_rawdatasize = 0;
         tif->tif_flags &= ~TIFF_BUFFERMMAP;
         tif->tif_flags |= TIFF_MYBUFFER;

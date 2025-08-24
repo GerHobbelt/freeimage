@@ -199,9 +199,9 @@ static VP8Encoder* InitVP8Encoder(const WebPConfig* const config,
   printf("===================================\n");
 #endif
   mem = (uint8_t*)WebPSafeMalloc(size, sizeof(*mem));
-  if (mem == NULL) {
+  if (mem == nullptr) {
     WebPEncodingSetError(picture, VP8_ENC_ERROR_OUT_OF_MEMORY);
-    return NULL;
+    return nullptr;
   }
   enc = (VP8Encoder*)mem;
   mem = (uint8_t*)WEBP_ALIGN(mem + sizeof(*enc));
@@ -216,7 +216,7 @@ static VP8Encoder* InitVP8Encoder(const WebPConfig* const config,
   mem += preds_size;
   enc->nz_ = 1 + (uint32_t*)WEBP_ALIGN(mem);
   mem += nz_size;
-  enc->lf_stats_ = lf_stats_size ? (LFStats*)WEBP_ALIGN(mem) : NULL;
+  enc->lf_stats_ = lf_stats_size ? (LFStats*)WEBP_ALIGN(mem) : nullptr;
   mem += lf_stats_size;
 
   // top samples (all 16-aligned)
@@ -224,7 +224,7 @@ static VP8Encoder* InitVP8Encoder(const WebPConfig* const config,
   enc->y_top_ = mem;
   enc->uv_top_ = enc->y_top_ + top_stride;
   mem += 2 * top_stride;
-  enc->top_derr_ = top_derr_size ? (DError*)mem : NULL;
+  enc->top_derr_ = top_derr_size ? (DError*)mem : nullptr;
   mem += top_derr_size;
   assert(mem <= (uint8_t*)enc + size);
 
@@ -253,7 +253,7 @@ static VP8Encoder* InitVP8Encoder(const WebPConfig* const config,
 
 static int DeleteVP8Encoder(VP8Encoder* enc) {
   int ok = 1;
-  if (enc != NULL) {
+  if (enc != nullptr) {
     ok = VP8EncDeleteAlpha(enc);
     VP8TBufferClear(&enc->tokens_);
     WebPSafeFree(enc);
@@ -283,7 +283,7 @@ static void FinalizePSNR(const VP8Encoder* const enc) {
 static void StoreStats(VP8Encoder* const enc) {
 #if !defined(WEBP_DISABLE_STATS)
   WebPAuxStats* const stats = enc->pic_->stats;
-  if (stats != NULL) {
+  if (stats != nullptr) {
     int i, s;
     for (i = 0; i < NUM_MB_SEGMENTS; ++i) {
       stats->segment_level[i] = enc->dqm_[i].fstrength_;
@@ -313,7 +313,7 @@ int WebPEncodingSetError(const WebPPicture* const pic,
 
 int WebPReportProgress(const WebPPicture* const pic,
                        int percent, int* const percent_store) {
-  if (percent_store != NULL && percent != *percent_store) {
+  if (percent_store != nullptr && percent != *percent_store) {
     *percent_store = percent;
     if (pic->progress_hook && !pic->progress_hook(percent, pic)) {
       // user abort requested
@@ -327,10 +327,10 @@ int WebPReportProgress(const WebPPicture* const pic,
 
 int WebPEncode(const WebPConfig* config, WebPPicture* pic) {
   int ok = 0;
-  if (pic == NULL) return 0;
+  if (pic == nullptr) return 0;
 
   WebPEncodingSetError(pic, VP8_ENC_OK);  // all ok so far
-  if (config == NULL) {  // bad params
+  if (config == nullptr) {  // bad params
     return WebPEncodingSetError(pic, VP8_ENC_ERROR_NULL_PARAMETER);
   }
   if (!WebPValidateConfig(config)) {
@@ -343,12 +343,12 @@ int WebPEncode(const WebPConfig* config, WebPPicture* pic) {
     return WebPEncodingSetError(pic, VP8_ENC_ERROR_BAD_DIMENSION);
   }
 
-  if (pic->stats != NULL) memset(pic->stats, 0, sizeof(*pic->stats));
+  if (pic->stats != nullptr) memset(pic->stats, 0, sizeof(*pic->stats));
 
   if (!config->lossless) {
-    VP8Encoder* enc = NULL;
+    VP8Encoder* enc = nullptr;
 
-    if (pic->use_argb || pic->y == NULL || pic->u == NULL || pic->v == NULL) {
+    if (pic->use_argb || pic->y == nullptr || pic->u == nullptr || pic->v == nullptr) {
       // Make sure we have YUVA samples.
       if (config->use_sharp_yuv || (config->preprocessing & 4)) {
         if (!WebPPictureSharpARGBToYUVA(pic)) {
@@ -374,7 +374,7 @@ int WebPEncode(const WebPConfig* config, WebPPicture* pic) {
     }
 
     enc = InitVP8Encoder(config, pic);
-    if (enc == NULL) return 0;  // pic->error is already set.
+    if (enc == nullptr) return 0;  // pic->error is already set.
     // Note: each of the tasks below account for 20% in the progress report.
     ok = VP8EncAnalyze(enc);
 
@@ -395,7 +395,7 @@ int WebPEncode(const WebPConfig* config, WebPPicture* pic) {
     ok &= DeleteVP8Encoder(enc);  // must always be called, even if !ok
   } else {
     // Make sure we have ARGB samples.
-    if (pic->argb == NULL && !WebPPictureYUVAToARGB(pic)) {
+    if (pic->argb == nullptr && !WebPPictureYUVAToARGB(pic)) {
       return 0;
     }
 

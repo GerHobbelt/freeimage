@@ -76,7 +76,7 @@ void LibRaw::parse_makernote_0xc634(int base, int uptag, unsigned dng_writer)
 
   short morder, sorder = order;
   char buf[10];
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
 
   fread(buf, 1, 10, ifp);
 
@@ -93,7 +93,7 @@ void LibRaw::parse_makernote_0xc634(int base, int uptag, unsigned dng_writer)
 
   unsigned entries, tag, type, len, save, c;
 
-  uchar *CanonCameraInfo = NULL;
+  uchar *CanonCameraInfo = nullptr;
   unsigned lenCanonCameraInfo = 0;
   unsigned typeCanonCameraInfo = 0;
 
@@ -192,7 +192,7 @@ void LibRaw::parse_makernote_0xc634(int base, int uptag, unsigned dng_writer)
 
     tiff_get(base, &tag, &type, &len, &save);
 
-    INT64 pos = ifp->tell();
+    int64_t pos = ifp->tell();
     if (len > 8 && pos + len > 2 * fsize)
     {
       fseek(ifp, save, SEEK_SET); // Recover tiff-read position!!
@@ -409,7 +409,7 @@ void LibRaw::parse_makernote(int base, int uptag)
   uchar *table_buf_0x940e;
   ushort table_buf_0x940e_len = 0;
 
-  INT64 fsize = ifp->size();
+  int64_t fsize = ifp->size();
 
   /*
        The MakerNote might have its own TIFF header (possibly with
@@ -525,7 +525,7 @@ void LibRaw::parse_makernote(int base, int uptag)
     tiff_get(base, &tag, &type, &len, &save);
     tag |= uptag << 16;
 
-    INT64 _pos = ftell(ifp);
+    int64_t _pos = ftell(ifp);
     if (len > 100 * 1024 * 1024)
 	goto next; // 100Mb tag? No!
     if (len > 8 && _pos + len > 2 * fsize)
@@ -537,7 +537,7 @@ void LibRaw::parse_makernote(int base, int uptag)
     {
       if ((tag == 0xff00) && tagtypeIs(LIBRAW_EXIFTAG_TYPE_LONG) && (len == 1))
       {
-        INT64 _pos1 = get4();
+        int64_t _pos1 = get4();
         if ((_pos1 < fsize) && (_pos1 > 0))
         {
           fseek(ifp, _pos1, SEEK_SET);
@@ -694,7 +694,7 @@ void LibRaw::parse_makernote(int base, int uptag)
     }
 
     if (is_Olympus) {
-      INT64 _pos2 = ftell(ifp);
+      int64_t _pos2 = ftell(ifp);
       if ((tag == 0x2010) || (tag == 0x2020) || (tag == 0x2030) ||
           (tag == 0x2031) || (tag == 0x2040) || (tag == 0x2050) ||
           (tag == 0x3000))

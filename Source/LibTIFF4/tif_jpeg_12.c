@@ -39,7 +39,7 @@ int TIFFReInitJPEG_12(TIFF *tif, const JPEGOtherSettings *otherSettings,
     new_tif_data =
         (uint8_t *)_TIFFreallocExt(tif, tif->tif_data, sizeof(JPEGState));
 
-    if (new_tif_data == NULL)
+    if (new_tif_data == nullptr)
     {
         TIFFErrorExtR(tif, "TIFFReInitJPEG_12",
                       "No space for JPEG state block");

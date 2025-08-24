@@ -63,7 +63,7 @@ static int CostModelBuild(CostModel* const m, int xsize, int cache_bits,
   int ok = 0;
   VP8LRefsCursor c = VP8LRefsCursorInit(refs);
   VP8LHistogram* const histo = VP8LAllocateHistogram(cache_bits);
-  if (histo == NULL) goto Error;
+  if (histo == nullptr) goto Error;
 
   // The following code is similar to VP8LHistogramCreate but converts the
   // distance to plane code.
@@ -213,7 +213,7 @@ static int CostIntervalIsInFreeList(const CostManager* const manager,
 
 static void CostManagerInitFreeList(CostManager* const manager) {
   int i;
-  manager->free_intervals_ = NULL;
+  manager->free_intervals_ = nullptr;
   for (i = 0; i < COST_MANAGER_MAX_FREE_LIST; ++i) {
     CostIntervalAddToFreeList(manager, &manager->intervals_[i]);
   }
@@ -221,7 +221,7 @@ static void CostManagerInitFreeList(CostManager* const manager) {
 
 static void DeleteIntervalList(CostManager* const manager,
                                const CostInterval* interval) {
-  while (interval != NULL) {
+  while (interval != nullptr) {
     const CostInterval* const next = interval->next_;
     if (!CostIntervalIsInFreeList(manager, interval)) {
       WebPSafeFree((void*)interval);
@@ -231,16 +231,16 @@ static void DeleteIntervalList(CostManager* const manager,
 }
 
 static void CostManagerClear(CostManager* const manager) {
-  if (manager == NULL) return;
+  if (manager == nullptr) return;
 
   WebPSafeFree(manager->costs_);
   WebPSafeFree(manager->cache_intervals_);
 
   // Clear the interval lists.
   DeleteIntervalList(manager, manager->head_);
-  manager->head_ = NULL;
+  manager->head_ = nullptr;
   DeleteIntervalList(manager, manager->recycled_intervals_);
-  manager->recycled_intervals_ = NULL;
+  manager->recycled_intervals_ = nullptr;
 
   // Reset pointers, count_ and cache_intervals_size_.
   memset(manager, 0, sizeof(*manager));
@@ -253,10 +253,10 @@ static int CostManagerInit(CostManager* const manager,
   int i;
   const int cost_cache_size = (pix_count > MAX_LENGTH) ? MAX_LENGTH : pix_count;
 
-  manager->costs_ = NULL;
-  manager->cache_intervals_ = NULL;
-  manager->head_ = NULL;
-  manager->recycled_intervals_ = NULL;
+  manager->costs_ = nullptr;
+  manager->cache_intervals_ = nullptr;
+  manager->head_ = nullptr;
+  manager->recycled_intervals_ = nullptr;
   manager->count_ = 0;
   manager->dist_array_ = dist_array;
   CostManagerInitFreeList(manager);
@@ -279,7 +279,7 @@ static int CostManagerInit(CostManager* const manager,
   assert(manager->cache_intervals_size_ <= MAX_LENGTH);
   manager->cache_intervals_ = (CostCacheInterval*)WebPSafeMalloc(
       manager->cache_intervals_size_, sizeof(*manager->cache_intervals_));
-  if (manager->cache_intervals_ == NULL) {
+  if (manager->cache_intervals_ == nullptr) {
     CostManagerClear(manager);
     return 0;
   }
@@ -306,7 +306,7 @@ static int CostManagerInit(CostManager* const manager,
   }
 
   manager->costs_ = (float*)WebPSafeMalloc(pix_count, sizeof(*manager->costs_));
-  if (manager->costs_ == NULL) {
+  if (manager->costs_ == nullptr) {
     CostManagerClear(manager);
     return 0;
   }
@@ -342,19 +342,19 @@ static WEBP_INLINE void UpdateCostPerInterval(CostManager* const manager,
 static WEBP_INLINE void ConnectIntervals(CostManager* const manager,
                                          CostInterval* const prev,
                                          CostInterval* const next) {
-  if (prev != NULL) {
+  if (prev != nullptr) {
     prev->next_ = next;
   } else {
     manager->head_ = next;
   }
 
-  if (next != NULL) next->previous_ = prev;
+  if (next != nullptr) next->previous_ = prev;
 }
 
 // Pop an interval in the manager.
 static WEBP_INLINE void PopInterval(CostManager* const manager,
                                     CostInterval* const interval) {
-  if (interval == NULL) return;
+  if (interval == nullptr) return;
 
   ConnectIntervals(manager, interval->previous_, interval->next_);
   if (CostIntervalIsInFreeList(manager, interval)) {
@@ -375,7 +375,7 @@ static WEBP_INLINE void UpdateCostAtIndex(CostManager* const manager, int i,
                                           int do_clean_intervals) {
   CostInterval* current = manager->head_;
 
-  while (current != NULL && current->start_ <= i) {
+  while (current != nullptr && current->start_ <= i) {
     CostInterval* const next = current->next_;
     if (current->end_ <= i) {
       if (do_clean_intervals) {
@@ -390,23 +390,23 @@ static WEBP_INLINE void UpdateCostAtIndex(CostManager* const manager, int i,
 }
 
 // Given a current orphan interval and its previous interval, before
-// it was orphaned (which can be NULL), set it at the right place in the list
+// it was orphaned (which can be nullptr), set it at the right place in the list
 // of intervals using the start_ ordering and the previous interval as a hint.
 static WEBP_INLINE void PositionOrphanInterval(CostManager* const manager,
                                                CostInterval* const current,
                                                CostInterval* previous) {
-  assert(current != NULL);
+  assert(current != nullptr);
 
-  if (previous == NULL) previous = manager->head_;
-  while (previous != NULL && current->start_ < previous->start_) {
+  if (previous == nullptr) previous = manager->head_;
+  while (previous != nullptr && current->start_ < previous->start_) {
     previous = previous->previous_;
   }
-  while (previous != NULL && previous->next_ != NULL &&
+  while (previous != nullptr && previous->next_ != nullptr &&
          previous->next_->start_ < current->start_) {
     previous = previous->next_;
   }
 
-  if (previous != NULL) {
+  if (previous != nullptr) {
     ConnectIntervals(manager, current, previous->next_);
   } else {
     ConnectIntervals(manager, current, manager->head_);
@@ -428,15 +428,15 @@ static WEBP_INLINE void InsertInterval(CostManager* const manager,
     UpdateCostPerInterval(manager, start, end, position, cost);
     return;
   }
-  if (manager->free_intervals_ != NULL) {
+  if (manager->free_intervals_ != nullptr) {
     interval_new = manager->free_intervals_;
     manager->free_intervals_ = interval_new->next_;
-  } else if (manager->recycled_intervals_ != NULL) {
+  } else if (manager->recycled_intervals_ != nullptr) {
     interval_new = manager->recycled_intervals_;
     manager->recycled_intervals_ = interval_new->next_;
   } else {  // malloc for good
     interval_new = (CostInterval*)WebPSafeMalloc(1, sizeof(*interval_new));
-    if (interval_new == NULL) {
+    if (interval_new == nullptr) {
       // Write down the interval if we cannot create it.
       UpdateCostPerInterval(manager, start, end, position, cost);
       return;
@@ -494,7 +494,7 @@ static WEBP_INLINE void PushInterval(CostManager* const manager,
                                  : cost_cache_intervals[i].end_);
     const float cost = (float)(distance_cost + cost_cache_intervals[i].cost_);
 
-    for (; interval != NULL && interval->start_ < end;
+    for (; interval != nullptr && interval->start_ < end;
          interval = interval_next) {
       interval_next = interval->next_;
 
@@ -583,7 +583,7 @@ static int BackwardReferencesHashChainDistanceOnly(
   int first_offset_is_constant = -1;  // initialized with 'impossible' value
   int reach = 0;
 
-  if (cost_model == NULL || cost_manager == NULL) goto Error;
+  if (cost_model == nullptr || cost_manager == nullptr) goto Error;
 
   cost_model->literal_ = (double*)(cost_model + 1);
   if (use_color_cache) {
@@ -766,12 +766,12 @@ int VP8LBackwardReferencesTraceBackwards(int xsize, int ysize,
                                          VP8LBackwardRefs* const refs_dst) {
   int ok = 0;
   const int dist_array_size = xsize * ysize;
-  uint16_t* chosen_path = NULL;
+  uint16_t* chosen_path = nullptr;
   int chosen_path_size = 0;
   uint16_t* dist_array =
       (uint16_t*)WebPSafeMalloc(dist_array_size, sizeof(*dist_array));
 
-  if (dist_array == NULL) goto Error;
+  if (dist_array == nullptr) goto Error;
 
   if (!BackwardReferencesHashChainDistanceOnly(
           xsize, ysize, argb, cache_bits, hash_chain, refs_src, dist_array)) {

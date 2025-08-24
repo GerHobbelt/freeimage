@@ -27,7 +27,7 @@
  */
 #include "tiffiop.h"
 
-TIFFErrorHandlerExt _TIFFwarningHandlerExt = NULL;
+TIFFErrorHandlerExt _TIFFwarningHandlerExt = nullptr;
 
 TIFFErrorHandler TIFFSetWarningHandler(TIFFErrorHandler handler)
 {

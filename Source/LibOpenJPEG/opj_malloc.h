@@ -43,14 +43,14 @@ The functions in opj_malloc.h are internal utilities used for memory management.
 /**
 Allocate an uninitialized memory block
 @param size Bytes to allocate
-@return Returns a void pointer to the allocated space, or NULL if there is insufficient memory available
+@return Returns a void pointer to the allocated space, or nullptr if there is insufficient memory available
 */
 #ifdef ALLOC_PERF_OPT
 void * OPJ_CALLCONV opj_malloc(size_t size);
 #else
 /* prevent assertion on overflow for MSVC */
 #ifdef _MSC_VER
-#define opj_malloc(size) ((size_t)(size) >= (size_t)-0x100 ? NULL : malloc(size))
+#define opj_malloc(size) ((size_t)(size) >= (size_t)-0x100 ? nullptr : malloc(size))
 #else
 #define opj_malloc(size) malloc(size)
 #endif
@@ -60,14 +60,14 @@ void * OPJ_CALLCONV opj_malloc(size_t size);
 Allocate a memory block with elements initialized to 0
 @param num Blocks to allocate
 @param size Bytes per block to allocate
-@return Returns a void pointer to the allocated space, or NULL if there is insufficient memory available
+@return Returns a void pointer to the allocated space, or nullptr if there is insufficient memory available
 */
 #ifdef ALLOC_PERF_OPT
 void * OPJ_CALLCONV opj_calloc(size_t _NumOfElements, size_t _SizeOfElements);
 #else
 /* prevent assertion on overflow for MSVC */
 #ifdef _MSC_VER
-#define opj_calloc(num, size) ((size_t)(num) != 0 && (size_t)(num) >= (size_t)-0x100 / (size_t)(size) ? NULL : calloc(num, size))
+#define opj_calloc(num, size) ((size_t)(num) != 0 && (size_t)(num) >= (size_t)-0x100 / (size_t)(size) ? nullptr : calloc(num, size))
 #else
 #define opj_calloc(num, size) calloc(num, size)
 #endif
@@ -76,7 +76,7 @@ void * OPJ_CALLCONV opj_calloc(size_t _NumOfElements, size_t _SizeOfElements);
 /**
 Allocate memory aligned to a 16 byte boundry
 @param size Bytes to allocate
-@return Returns a void pointer to the allocated space, or NULL if there is insufficient memory available
+@return Returns a void pointer to the allocated space, or nullptr if there is insufficient memory available
 */
 /* FIXME: These should be set with cmake tests, but we're currently not requiring use of cmake */
 #ifdef _WIN32
@@ -125,7 +125,7 @@ Allocate memory aligned to a 16 byte boundry
 	extern int posix_memalign(void**, size_t, size_t);
 
 	static INLINE void* __attribute__ ((malloc)) opj_aligned_malloc(size_t size){
-		void* mem = NULL;
+		void* mem = nullptr;
 		posix_memalign(&mem, 16, size);
 		return mem;
 	}
@@ -151,7 +151,7 @@ void * OPJ_CALLCONV opj_realloc(void * m, size_t s);
 #else
 /* prevent assertion on overflow for MSVC */
 #ifdef _MSC_VER
-#define opj_realloc(m, s) ((size_t)(s) >= (size_t)-0x100 ? NULL : realloc(m, s))
+#define opj_realloc(m, s) ((size_t)(s) >= (size_t)-0x100 ? nullptr : realloc(m, s))
 #else
 #define opj_realloc(m, s) realloc(m, s)
 #endif

@@ -71,13 +71,13 @@ static int ZSTDSetupDecode(TIFF *tif)
 {
     ZSTDState *sp = DecoderState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     /* if we were last encoding, terminate this mode */
     if (sp->state & LSTATE_INIT_ENCODE)
     {
         ZSTD_freeCStream(sp->cstream);
-        sp->cstream = NULL;
+        sp->cstream = nullptr;
         sp->state = 0;
     }
 
@@ -95,15 +95,15 @@ static int ZSTDPreDecode(TIFF *tif, uint16_t s)
     size_t zstd_ret;
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     if ((sp->state & LSTATE_INIT_DECODE) == 0)
         tif->tif_setupdecode(tif);
 
-    if (sp->dstream == NULL)
+    if (sp->dstream == nullptr)
     {
         sp->dstream = ZSTD_createDStream();
-        if (sp->dstream == NULL)
+        if (sp->dstream == nullptr)
         {
             TIFFErrorExtR(tif, module, "Cannot allocate decompression stream");
             return 0;
@@ -130,7 +130,7 @@ static int ZSTDDecode(TIFF *tif, uint8_t *op, tmsize_t occ, uint16_t s)
     size_t zstd_ret;
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(sp->state == LSTATE_INIT_DECODE);
 
     in_buffer.src = tif->tif_rawcp;
@@ -172,11 +172,11 @@ static int ZSTDSetupEncode(TIFF *tif)
 {
     ZSTDState *sp = EncoderState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     if (sp->state & LSTATE_INIT_DECODE)
     {
         ZSTD_freeDStream(sp->dstream);
-        sp->dstream = NULL;
+        sp->dstream = nullptr;
         sp->state = 0;
     }
 
@@ -194,14 +194,14 @@ static int ZSTDPreEncode(TIFF *tif, uint16_t s)
     size_t zstd_ret;
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
     if (sp->state != LSTATE_INIT_ENCODE)
         tif->tif_setupencode(tif);
 
-    if (sp->cstream == NULL)
+    if (sp->cstream == nullptr)
     {
         sp->cstream = ZSTD_createCStream();
-        if (sp->cstream == NULL)
+        if (sp->cstream == nullptr)
         {
             TIFFErrorExtR(tif, module, "Cannot allocate compression stream");
             return 0;
@@ -233,7 +233,7 @@ static int ZSTDEncode(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
     ZSTD_inBuffer in_buffer;
     size_t zstd_ret;
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     assert(sp->state == LSTATE_INIT_ENCODE);
 
     (void)s;
@@ -309,15 +309,15 @@ static void ZSTDCleanup(TIFF *tif)
     if (sp->dstream)
     {
         ZSTD_freeDStream(sp->dstream);
-        sp->dstream = NULL;
+        sp->dstream = nullptr;
     }
     if (sp->cstream)
     {
         ZSTD_freeCStream(sp->cstream);
-        sp->cstream = NULL;
+        sp->cstream = nullptr;
     }
     _TIFFfreeExt(tif, sp);
-    tif->tif_data = NULL;
+    tif->tif_data = nullptr;
 
     _TIFFSetDefaultCompressionState(tif);
 }
@@ -363,7 +363,7 @@ static int ZSTDVGetField(TIFF *tif, uint32_t tag, va_list ap)
 static const TIFFField ZSTDFields[] = {
     {TIFFTAG_ZSTD_LEVEL, 0, 0, TIFF_ANY, 0, TIFF_SETGET_INT,
      TIFF_SETGET_UNDEFINED, FIELD_PSEUDO, TRUE, FALSE, "ZSTD compression_level",
-     NULL},
+     nullptr},
 };
 
 int TIFFInitZSTD(TIFF *tif, int scheme)
@@ -387,7 +387,7 @@ int TIFFInitZSTD(TIFF *tif, int scheme)
      * Allocate state block so tag methods have storage to record values.
      */
     tif->tif_data = (uint8_t *)_TIFFmallocExt(tif, sizeof(ZSTDState));
-    if (tif->tif_data == NULL)
+    if (tif->tif_data == nullptr)
         goto bad;
     sp = LState(tif);
 
@@ -404,7 +404,7 @@ int TIFFInitZSTD(TIFF *tif, int scheme)
     sp->state = 0;
     sp->dstream = 0;
     sp->cstream = 0;
-    sp->out_buffer.dst = NULL;
+    sp->out_buffer.dst = nullptr;
     sp->out_buffer.size = 0;
     sp->out_buffer.pos = 0;
 

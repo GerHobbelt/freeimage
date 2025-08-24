@@ -316,8 +316,8 @@ void LibRaw::tiff_get(unsigned base, unsigned *tag, unsigned *type,
                       unsigned *len, unsigned *save)
 {
 #ifdef LIBRAW_IOSPACE_CHECK
-  INT64 pos = ftell(ifp);
-  INT64 fsize = ifp->size();
+  int64_t pos = ftell(ifp);
+  int64_t fsize = ifp->size();
   if (fsize < 12 || (fsize - pos) < 12)
     throw LIBRAW_EXCEPTION_IO_EOF;
 #endif

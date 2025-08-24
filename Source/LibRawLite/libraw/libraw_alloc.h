@@ -75,7 +75,7 @@ public:
       if (mems[i])
       {
         ::free(mems[i]);
-        mems[i] = NULL;
+        mems[i] = nullptr;
       }
   }
 
@@ -134,7 +134,7 @@ private:
       for (int i = 0; i < LIBRAW_MSIZE; i++)
         if (mems[i] == ptr)
         {
-          mems[i] = NULL;
+          mems[i] = nullptr;
           break;
         }
 #if defined(LIBRAW_USE_OPENMP)

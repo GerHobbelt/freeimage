@@ -281,7 +281,7 @@ void LibRaw::recycle_datastream()
       libraw_internal_data.internal_data.input_internal)
   {
     delete libraw_internal_data.internal_data.input;
-    libraw_internal_data.internal_data.input = NULL;
+    libraw_internal_data.internal_data.input = nullptr;
   }
   libraw_internal_data.internal_data.input_internal = 0;
 }
@@ -585,8 +585,8 @@ int LibRaw::find_ifd_by_offset(int o)
     return -1;
 }
 
-short LibRaw::tiff_sget (unsigned save, uchar *buf, unsigned buf_len, INT64 *tag_offset,
-                         unsigned *tag_id, unsigned *tag_type, INT64 *tag_dataoffset,
+short LibRaw::tiff_sget (unsigned save, uchar *buf, unsigned buf_len, int64_t *tag_offset,
+                         unsigned *tag_id, unsigned *tag_type, int64_t *tag_dataoffset,
                          unsigned *tag_datalen, int *tag_dataunitlen) {
   uchar *pos = buf + *tag_offset;
   if ((((*tag_offset) + 12) > buf_len) || (*tag_offset < 0)) { // abnormal, tag buffer overrun

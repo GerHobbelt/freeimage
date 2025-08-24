@@ -204,7 +204,7 @@ static void SetSegmentProbas(VP8Encoder* const enc) {
     ++p[mb->segment_];
   }
 #if !defined(WEBP_DISABLE_STATS)
-  if (enc->pic_->stats != NULL) {
+  if (enc->pic_->stats != nullptr) {
     for (n = 0; n < NUM_MB_SEGMENTS; ++n) {
       enc->pic_->stats->segment_size[n] = p[n];
     }
@@ -493,14 +493,14 @@ static void StoreSideInfo(const VP8EncIterator* const it) {
   const VP8MBInfo* const mb = it->mb_;
   WebPPicture* const pic = enc->pic_;
 
-  if (pic->stats != NULL) {
+  if (pic->stats != nullptr) {
     StoreSSE(it);
     enc->block_count_[0] += (mb->type_ == 0);
     enc->block_count_[1] += (mb->type_ == 1);
     enc->block_count_[2] += (mb->skip_ != 0);
   }
 
-  if (pic->extra_info != NULL) {
+  if (pic->extra_info != nullptr) {
     uint8_t* const info = &pic->extra_info[it->x_ + it->y_ * enc->mb_w_];
     switch (pic->extra_info_type) {
       case 1: *info = mb->type_; break;
@@ -526,7 +526,7 @@ static void StoreSideInfo(const VP8EncIterator* const it) {
 static void ResetSideInfo(const VP8EncIterator* const it) {
   VP8Encoder* const enc = it->enc_;
   WebPPicture* const pic = enc->pic_;
-  if (pic->stats != NULL) {
+  if (pic->stats != nullptr) {
     memset(enc->block_count_, 0, sizeof(enc->block_count_));
   }
   ResetSSE(enc);
@@ -538,7 +538,7 @@ static void ResetSSE(VP8Encoder* const enc) {
 static void StoreSideInfo(const VP8EncIterator* const it) {
   VP8Encoder* const enc = it->enc_;
   WebPPicture* const pic = enc->pic_;
-  if (pic->extra_info != NULL) {
+  if (pic->extra_info != nullptr) {
     if (it->x_ == 0 && it->y_ == 0) {   // only do it once, at start
       memset(pic->extra_info, 0,
              enc->mb_w_ * enc->mb_h_ * sizeof(*pic->extra_info));
@@ -584,7 +584,7 @@ static uint64_t OneStatPass(VP8Encoder* const enc, VP8RDLevel rd_opt,
   SetLoopParams(enc, s->q);
   do {
     VP8ModeScore info;
-    VP8IteratorImport(&it, NULL);
+    VP8IteratorImport(&it, nullptr);
     if (VP8Decimate(&it, &info, rd_opt)) {
       // Just record the number of skips and act like skip_proba is not used.
       ++enc->proba_.nb_skip_;
@@ -706,7 +706,7 @@ static int PostLoopFinalize(VP8EncIterator* const it, int ok) {
 
   if (ok) {      // All good. Finish up.
 #if !defined(WEBP_DISABLE_STATS)
-    if (enc->pic_->stats != NULL) {  // finalize byte counters...
+    if (enc->pic_->stats != nullptr) {  // finalize byte counters...
       int i, s;
       for (i = 0; i <= 2; ++i) {
         for (s = 0; s < NUM_MB_SEGMENTS; ++s) {
@@ -749,7 +749,7 @@ int VP8EncLoop(VP8Encoder* const enc) {
     const int dont_use_skip = !enc->proba_.use_skip_proba_;
     const VP8RDLevel rd_opt = enc->rd_opt_level_;
 
-    VP8IteratorImport(&it, NULL);
+    VP8IteratorImport(&it, nullptr);
     // Warning! order is important: first call VP8Decimate() and
     // *then* decide how to code the skip decision if there's one.
     if (!VP8Decimate(&it, &info, rd_opt) || dont_use_skip) {
@@ -814,7 +814,7 @@ int VP8EncTokenLoop(VP8Encoder* const enc) {
     VP8TBufferClear(&enc->tokens_);
     do {
       VP8ModeScore info;
-      VP8IteratorImport(&it, NULL);
+      VP8IteratorImport(&it, nullptr);
       if (--cnt < 0) {
         FinalizeTokenProbas(proba);
         VP8CalculateLevelCosts(proba);  // refresh cost tables for rd-opt

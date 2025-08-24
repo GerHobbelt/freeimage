@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
         }
     outputfile = optind < argc ? argv[optind] : "g3states.h";
     fd = fopen(outputfile, "w");
-    if (fd == NULL)
+    if (fd == nullptr)
     {
         fprintf(stderr, "%s: %s: Cannot create output file.\n", argv[0],
                 outputfile);

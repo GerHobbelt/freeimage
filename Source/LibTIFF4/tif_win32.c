@@ -64,8 +64,8 @@ static tmsize_t _tiffReadProc(thandle_t fd, void *buf, tmsize_t size)
      * chunks */
     uint8_t *ma;
     uint64_t mb;
-    DWORD n;
-    DWORD o;
+    uint32_t n;
+    uint32_t o;
     tmsize_t p;
     ma = (uint8_t *)buf;
     mb = size;
@@ -74,8 +74,8 @@ static tmsize_t _tiffReadProc(thandle_t fd, void *buf, tmsize_t size)
     {
         n = 0x80000000UL;
         if ((uint64_t)n > mb)
-            n = (DWORD)mb;
-        if (!ReadFile(fd, (LPVOID)ma, n, &o, NULL))
+            n = (uint32_t)mb;
+        if (!ReadFile(fd, (LPVOID)ma, n, &o, nullptr))
             return (0);
         ma += o;
         mb -= o;
@@ -93,8 +93,8 @@ static tmsize_t _tiffWriteProc(thandle_t fd, void *buf, tmsize_t size)
      * chunks */
     uint8_t *ma;
     uint64_t mb;
-    DWORD n;
-    DWORD o;
+    uint32_t n;
+    uint32_t o;
     tmsize_t p;
     ma = (uint8_t *)buf;
     mb = size;
@@ -103,8 +103,8 @@ static tmsize_t _tiffWriteProc(thandle_t fd, void *buf, tmsize_t size)
     {
         n = 0x80000000UL;
         if ((uint64_t)n > mb)
-            n = (DWORD)mb;
-        if (!WriteFile(fd, (LPVOID)ma, n, &o, NULL))
+            n = (uint32_t)mb;
+        if (!WriteFile(fd, (LPVOID)ma, n, &o, nullptr))
             return (0);
         ma += o;
         mb -= o;
@@ -118,7 +118,7 @@ static tmsize_t _tiffWriteProc(thandle_t fd, void *buf, tmsize_t size)
 static uint64_t _tiffSeekProc(thandle_t fd, uint64_t off, int whence)
 {
     LARGE_INTEGER offli;
-    DWORD dwMoveMethod;
+    uint32_t dwMoveMethod;
     offli.QuadPart = off;
     switch (whence)
     {
@@ -186,12 +186,12 @@ static int _tiffMapProc(thandle_t fd, void **pbase, toff_t *psize)
 
     /* By passing in 0 for the maximum file size, it specifies that we
        create a file mapping object for the full file size. */
-    hMapFile = CreateFileMapping(fd, NULL, PAGE_READONLY, 0, 0, NULL);
-    if (hMapFile == NULL)
+    hMapFile = CreateFileMapping(fd, nullptr, PAGE_READONLY, 0, 0, nullptr);
+    if (hMapFile == nullptr)
         return (0);
     *pbase = MapViewOfFile(hMapFile, FILE_MAP_READ, 0, 0, 0);
     CloseHandle(hMapFile);
-    if (*pbase == NULL)
+    if (*pbase == nullptr)
         return (0);
     *psize = size;
     return (1);
@@ -218,7 +218,7 @@ static void _tiffUnmapProc(thandle_t fd, void *base, toff_t size)
  */
 TIFF *TIFFFdOpen(int ifd, const char *name, const char *mode)
 {
-    return TIFFFdOpenExt(ifd, name, mode, NULL);
+    return TIFFFdOpenExt(ifd, name, mode, nullptr);
 }
 
 TIFF *TIFFFdOpenExt(int ifd, const char *name, const char *mode,
@@ -255,7 +255,7 @@ TIFF *TIFFFdOpenExt(int ifd, const char *name, const char *mode,
  */
 TIFF *TIFFOpen(const char *name, const char *mode)
 {
-    return TIFFOpenExt(name, mode, NULL);
+    return TIFFOpenExt(name, mode, nullptr);
 }
 
 TIFF *TIFFOpenExt(const char *name, const char *mode, TIFFOpenOptions *opts)
@@ -263,10 +263,10 @@ TIFF *TIFFOpenExt(const char *name, const char *mode, TIFFOpenOptions *opts)
     static const char module[] = "TIFFOpen";
     thandle_t fd;
     int m;
-    DWORD dwMode;
+    uint32_t dwMode;
     TIFF *tif;
 
-    m = _TIFFgetMode(opts, NULL, mode, module);
+    m = _TIFFgetMode(opts, nullptr, mode, module);
 
     switch (m)
     {
@@ -291,12 +291,12 @@ TIFF *TIFFOpenExt(const char *name, const char *mode, TIFFOpenOptions *opts)
 
     fd = (thandle_t)CreateFileA(
         name, (m == O_RDONLY) ? GENERIC_READ : (GENERIC_READ | GENERIC_WRITE),
-        FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, dwMode,
+        FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, dwMode,
         (m == O_RDONLY) ? FILE_ATTRIBUTE_READONLY : FILE_ATTRIBUTE_NORMAL,
-        NULL);
+        nullptr);
     if (fd == INVALID_HANDLE_VALUE)
     {
-        _TIFFErrorEarly(opts, NULL, module, "%s: Cannot open", name);
+        _TIFFErrorEarly(opts, nullptr, module, "%s: Cannot open", name);
         return ((TIFF *)0);
     }
 
@@ -311,7 +311,7 @@ TIFF *TIFFOpenExt(const char *name, const char *mode, TIFFOpenOptions *opts)
  */
 TIFF *TIFFOpenW(const wchar_t *name, const char *mode)
 {
-    return TIFFOpenWExt(name, mode, NULL);
+    return TIFFOpenWExt(name, mode, nullptr);
 }
 
 TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, TIFFOpenOptions *opts)
@@ -319,12 +319,12 @@ TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, TIFFOpenOptions *opts)
     static const char module[] = "TIFFOpenW";
     thandle_t fd;
     int m;
-    DWORD dwMode;
+    uint32_t dwMode;
     int mbsize;
     char *mbname;
     TIFF *tif;
 
-    m = _TIFFgetMode(opts, NULL, mode, module);
+    m = _TIFFgetMode(opts, nullptr, mode, module);
 
     switch (m)
     {
@@ -349,33 +349,33 @@ TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, TIFFOpenOptions *opts)
 
     fd = (thandle_t)CreateFileW(
         name, (m == O_RDONLY) ? GENERIC_READ : (GENERIC_READ | GENERIC_WRITE),
-        FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, dwMode,
+        FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, dwMode,
         (m == O_RDONLY) ? FILE_ATTRIBUTE_READONLY : FILE_ATTRIBUTE_NORMAL,
-        NULL);
+        nullptr);
     if (fd == INVALID_HANDLE_VALUE)
     {
-        _TIFFErrorEarly(opts, NULL, module, "%S: Cannot open", name);
+        _TIFFErrorEarly(opts, nullptr, module, "%S: Cannot open", name);
         return ((TIFF *)0);
     }
 
-    mbname = NULL;
-    mbsize = WideCharToMultiByte(CP_ACP, 0, name, -1, NULL, 0, NULL, NULL);
+    mbname = nullptr;
+    mbsize = WideCharToMultiByte(CP_ACP, 0, name, -1, nullptr, 0, nullptr, nullptr);
     if (mbsize > 0)
     {
         mbname = (char *)_TIFFmalloc(mbsize);
         if (!mbname)
         {
             _TIFFErrorEarly(
-                opts, NULL, module,
+                opts, nullptr, module,
                 "Can't allocate space for filename conversion buffer");
             return ((TIFF *)0);
         }
 
-        WideCharToMultiByte(CP_ACP, 0, name, -1, mbname, mbsize, NULL, NULL);
+        WideCharToMultiByte(CP_ACP, 0, name, -1, mbname, mbsize, nullptr, nullptr);
     }
 
     tif = TIFFFdOpenExt(thandle_to_int(fd),
-                        (mbname != NULL) ? mbname : "<unknown>", mode, opts);
+                        (mbname != nullptr) ? mbname : "<unknown>", mode, opts);
     if (!tif)
         CloseHandle(fd);
 
@@ -386,7 +386,7 @@ TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, TIFFOpenOptions *opts)
 
 static void Win32WarningHandler(const char *module, const char *fmt, va_list ap)
 {
-    if (module != NULL)
+    if (module != nullptr)
         fprintf(stderr, "%s: ", module);
     fprintf(stderr, "Warning, ");
     vfprintf(stderr, fmt, ap);
@@ -396,7 +396,7 @@ TIFFErrorHandler _TIFFwarningHandler = Win32WarningHandler;
 
 static void Win32ErrorHandler(const char *module, const char *fmt, va_list ap)
 {
-    if (module != NULL)
+    if (module != nullptr)
         fprintf(stderr, "%s: ", module);
     vfprintf(stderr, fmt, ap);
     fprintf(stderr, ".\n");

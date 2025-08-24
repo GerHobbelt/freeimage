@@ -186,22 +186,22 @@ static int LZWSetupDecode(TIFF *tif)
     LZWCodecState *sp = DecoderState(tif);
     int code;
 
-    if (sp == NULL)
+    if (sp == nullptr)
     {
         /*
          * Allocate state block so tag methods have storage to record
          * values.
          */
         tif->tif_data = (uint8_t *)_TIFFmallocExt(tif, sizeof(LZWCodecState));
-        if (tif->tif_data == NULL)
+        if (tif->tif_data == nullptr)
         {
             TIFFErrorExtR(tif, module, "No space for LZW state block");
             return (0);
         }
 
         sp = DecoderState(tif);
-        sp->dec_codetab = NULL;
-        sp->dec_decode = NULL;
+        sp->dec_codetab = nullptr;
+        sp->dec_decode = nullptr;
 
         /*
          * Setup predictor setup.
@@ -209,10 +209,10 @@ static int LZWSetupDecode(TIFF *tif)
         (void)TIFFPredictorInit(tif);
     }
 
-    if (sp->dec_codetab == NULL)
+    if (sp->dec_codetab == nullptr)
     {
         sp->dec_codetab = (code_t *)_TIFFmallocExt(tif, CSIZE * sizeof(code_t));
-        if (sp->dec_codetab == NULL)
+        if (sp->dec_codetab == nullptr)
         {
             TIFFErrorExtR(tif, module, "No space for LZW code table");
             return (0);
@@ -227,7 +227,7 @@ static int LZWSetupDecode(TIFF *tif)
             sp->dec_codetab[code].value = (unsigned char)code;
             sp->dec_codetab[code].repeated = true;
             sp->dec_codetab[code].length = 1;
-            sp->dec_codetab[code].next = NULL;
+            sp->dec_codetab[code].next = nullptr;
         } while (code--);
         /*
          * Zero-out the unused entries  */
@@ -248,11 +248,11 @@ static int LZWPreDecode(TIFF *tif, uint16_t s)
     LZWCodecState *sp = DecoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
-    if (sp->dec_codetab == NULL)
+    assert(sp != nullptr);
+    if (sp->dec_codetab == nullptr)
     {
         tif->tif_setupdecode(tif);
-        if (sp->dec_codetab == NULL)
+        if (sp->dec_codetab == nullptr)
             return (0);
     }
 
@@ -418,8 +418,8 @@ static int LZWDecode(TIFF *tif, uint8_t *op0, tmsize_t occ0, uint16_t s)
     code_t *free_entp, *maxcodep, *oldcodep;
 
     (void)s;
-    assert(sp != NULL);
-    assert(sp->dec_codetab != NULL);
+    assert(sp != nullptr);
+    assert(sp->dec_codetab != nullptr);
 
     if (sp->read_error)
     {
@@ -812,7 +812,7 @@ static int LZWDecodeCompat(TIFF *tif, uint8_t *op0, tmsize_t occ0, uint16_t s)
     code_t *codep, *free_entp, *maxcodep, *oldcodep;
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
     /*
      * Restart interrupted output operation.
@@ -1028,9 +1028,9 @@ static int LZWSetupEncode(TIFF *tif)
     static const char module[] = "LZWSetupEncode";
     LZWCodecState *sp = EncoderState(tif);
 
-    assert(sp != NULL);
+    assert(sp != nullptr);
     sp->enc_hashtab = (hash_t *)_TIFFmallocExt(tif, HSIZE * sizeof(hash_t));
-    if (sp->enc_hashtab == NULL)
+    if (sp->enc_hashtab == nullptr)
     {
         TIFFErrorExtR(tif, module, "No space for LZW hash table");
         return (0);
@@ -1046,9 +1046,9 @@ static int LZWPreEncode(TIFF *tif, uint16_t s)
     LZWCodecState *sp = EncoderState(tif);
 
     (void)s;
-    assert(sp != NULL);
+    assert(sp != nullptr);
 
-    if (sp->enc_hashtab == NULL)
+    if (sp->enc_hashtab == nullptr)
     {
         tif->tif_setupencode(tif);
     }
@@ -1128,10 +1128,10 @@ static int LZWEncode(TIFF *tif, uint8_t *bp, tmsize_t cc, uint16_t s)
     uint8_t *limit;
 
     (void)s;
-    if (sp == NULL)
+    if (sp == nullptr)
         return (0);
 
-    assert(sp->enc_hashtab != NULL);
+    assert(sp->enc_hashtab != nullptr);
 
     /*
      * Load local state.
@@ -1388,7 +1388,7 @@ static void LZWCleanup(TIFF *tif)
         _TIFFfreeExt(tif, EncoderState(tif)->enc_hashtab);
 
     _TIFFfreeExt(tif, tif->tif_data);
-    tif->tif_data = NULL;
+    tif->tif_data = nullptr;
 
     _TIFFSetDefaultCompressionState(tif);
 }
@@ -1402,11 +1402,11 @@ int TIFFInitLZW(TIFF *tif, int scheme)
      * Allocate state block so tag methods have storage to record values.
      */
     tif->tif_data = (uint8_t *)_TIFFmallocExt(tif, sizeof(LZWCodecState));
-    if (tif->tif_data == NULL)
+    if (tif->tif_data == nullptr)
         goto bad;
-    DecoderState(tif)->dec_codetab = NULL;
-    DecoderState(tif)->dec_decode = NULL;
-    EncoderState(tif)->enc_hashtab = NULL;
+    DecoderState(tif)->dec_codetab = nullptr;
+    DecoderState(tif)->dec_decode = nullptr;
+    EncoderState(tif)->enc_hashtab = nullptr;
     LZWState(tif)->rw_mode = tif->tif_mode;
 
     /*

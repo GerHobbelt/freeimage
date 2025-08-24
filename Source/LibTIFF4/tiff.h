@@ -77,13 +77,13 @@
 
 #ifndef TIFF_DISABLE_DEPRECATED
 typedef TIFF_MSC_DEPRECATED int8_t int8 TIFF_GCC_DEPRECATED;
-typedef TIFF_MSC_DEPRECATED uint8_t uint8 TIFF_GCC_DEPRECATED;
+typedef TIFF_MSC_DEPRECATED uint8_t uint8_t TIFF_GCC_DEPRECATED;
 
 typedef TIFF_MSC_DEPRECATED int16_t int16 TIFF_GCC_DEPRECATED;
-typedef TIFF_MSC_DEPRECATED uint16_t uint16 TIFF_GCC_DEPRECATED;
+typedef TIFF_MSC_DEPRECATED uint16_t uint16_t TIFF_GCC_DEPRECATED;
 
 typedef TIFF_MSC_DEPRECATED int32_t int32 TIFF_GCC_DEPRECATED;
-typedef TIFF_MSC_DEPRECATED uint32_t uint32 TIFF_GCC_DEPRECATED;
+typedef TIFF_MSC_DEPRECATED uint32_t uint32_t TIFF_GCC_DEPRECATED;
 
 typedef TIFF_MSC_DEPRECATED int64_t int64 TIFF_GCC_DEPRECATED;
 typedef TIFF_MSC_DEPRECATED uint64_t uint64 TIFF_GCC_DEPRECATED;
@@ -629,8 +629,8 @@ typedef enum
 #define TIFFTAG_EP_BATTERYLEVEL 33423             /* battery level (rational or ASCII) */
 #define TIFFTAG_EP_INTERLACE 34857                /* Number of multi-field images */
 /* TIFFTAG_EP_IPTC_NAA and TIFFTAG_RICHTIFFIPTC share the same tag number (33723)
- *   LibTIFF type is UNDEFINED or BYTE, but often times incorrectly specified as LONG,
- *   because TIFF/EP (ISO/DIS 12234-2) specifies type LONG or ASCII. */
+ *   LibTIFF type is UNDEFINED or uint8_t, but often times incorrectly specified as int32_t,
+ *   because TIFF/EP (ISO/DIS 12234-2) specifies type int32_t or ASCII. */
 #define TIFFTAG_EP_IPTC_NAA 33723                 /* Alias IPTC/NAA Newspaper Association RichTIFF */
 #define TIFFTAG_EP_TIMEZONEOFFSET 34858           /* Time zone offset relative to UTC */
 #define TIFFTAG_EP_SELFTIMERMODE 34859            /* Number of seconds capture was delayed from button press */

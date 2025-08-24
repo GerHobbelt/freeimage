@@ -22,7 +22,7 @@ png_set_bgr(png_structrp png_ptr)
 {
    png_debug(1, "in png_set_bgr");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->transformations |= PNG_BGR;
@@ -36,7 +36,7 @@ png_set_swap(png_structrp png_ptr)
 {
    png_debug(1, "in png_set_swap");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    if (png_ptr->bit_depth == 16)
@@ -51,7 +51,7 @@ png_set_packing(png_structrp png_ptr)
 {
    png_debug(1, "in png_set_packing");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    if (png_ptr->bit_depth < 8)
@@ -71,7 +71,7 @@ png_set_packswap(png_structrp png_ptr)
 {
    png_debug(1, "in png_set_packswap");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    if (png_ptr->bit_depth < 8)
@@ -85,7 +85,7 @@ png_set_shift(png_structrp png_ptr, png_const_color_8p true_bits)
 {
    png_debug(1, "in png_set_shift");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->transformations |= PNG_SHIFT;
@@ -121,7 +121,7 @@ png_set_filler(png_structrp png_ptr, png_uint_32 filler, int filler_loc)
 {
    png_debug(1, "in png_set_filler");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* In libpng 1.6 it is possible to determine whether this is a read or write
@@ -206,7 +206,7 @@ png_set_add_alpha(png_structrp png_ptr, png_uint_32 filler, int filler_loc)
 {
    png_debug(1, "in png_set_add_alpha");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_set_filler(png_ptr, filler, filler_loc);
@@ -224,7 +224,7 @@ png_set_swap_alpha(png_structrp png_ptr)
 {
    png_debug(1, "in png_set_swap_alpha");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->transformations |= PNG_SWAP_ALPHA;
@@ -238,7 +238,7 @@ png_set_invert_alpha(png_structrp png_ptr)
 {
    png_debug(1, "in png_set_invert_alpha");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->transformations |= PNG_INVERT_ALPHA;
@@ -251,7 +251,7 @@ png_set_invert_mono(png_structrp png_ptr)
 {
    png_debug(1, "in png_set_invert_mono");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->transformations |= PNG_INVERT_MONO;
@@ -804,7 +804,7 @@ png_set_user_transform_info(png_structrp png_ptr, png_voidp
 {
    png_debug(1, "in png_set_user_transform_info");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
 #ifdef PNG_READ_USER_TRANSFORM_SUPPORTED
@@ -832,8 +832,8 @@ png_set_user_transform_info(png_structrp png_ptr, png_voidp
 png_voidp PNGAPI
 png_get_user_transform_ptr(png_const_structrp png_ptr)
 {
-   if (png_ptr == NULL)
-      return (NULL);
+   if (png_ptr == nullptr)
+      return (nullptr);
 
    return png_ptr->user_transform_ptr;
 }
@@ -846,7 +846,7 @@ png_get_current_row_number(png_const_structrp png_ptr)
    /* See the comments in png.h - this is the sub-image row when reading an
     * interlaced image.
     */
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
       return png_ptr->row_number;
 
    return PNG_UINT_32_MAX; /* help the app not to fail silently */
@@ -855,7 +855,7 @@ png_get_current_row_number(png_const_structrp png_ptr)
 png_byte PNGAPI
 png_get_current_pass_number(png_const_structrp png_ptr)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
       return png_ptr->pass;
    return 8; /* invalid */
 }

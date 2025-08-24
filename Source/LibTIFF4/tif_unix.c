@@ -196,7 +196,7 @@ static void _tiffUnmapProc(thandle_t fd, void *base, toff_t size)
  */
 TIFF *TIFFFdOpen(int fd, const char *name, const char *mode)
 {
-    return TIFFFdOpenExt(fd, name, mode, NULL);
+    return TIFFFdOpenExt(fd, name, mode, nullptr);
 }
 
 TIFF *TIFFFdOpenExt(int fd, const char *name, const char *mode,
@@ -219,7 +219,7 @@ TIFF *TIFFFdOpenExt(int fd, const char *name, const char *mode,
  */
 TIFF *TIFFOpen(const char *name, const char *mode)
 {
-    return TIFFOpenExt(name, mode, NULL);
+    return TIFFOpenExt(name, mode, nullptr);
 }
 
 TIFF *TIFFOpenExt(const char *name, const char *mode, TIFFOpenOptions *opts)
@@ -228,7 +228,7 @@ TIFF *TIFFOpenExt(const char *name, const char *mode, TIFFOpenOptions *opts)
     int m, fd;
     TIFF *tif;
 
-    m = _TIFFgetMode(opts, NULL, mode, module);
+    m = _TIFFgetMode(opts, nullptr, mode, module);
     if (m == -1)
         return ((TIFF *)0);
 
@@ -240,14 +240,14 @@ TIFF *TIFFOpenExt(const char *name, const char *mode, TIFFOpenOptions *opts)
     fd = open(name, m, 0666);
     if (fd < 0)
     {
-        if (errno > 0 && strerror(errno) != NULL)
+        if (errno > 0 && strerror(errno) != nullptr)
         {
-            _TIFFErrorEarly(opts, NULL, module, "%s: %s", name,
+            _TIFFErrorEarly(opts, nullptr, module, "%s: %s", name,
                             strerror(errno));
         }
         else
         {
-            _TIFFErrorEarly(opts, NULL, module, "%s: Cannot open", name);
+            _TIFFErrorEarly(opts, nullptr, module, "%s: Cannot open", name);
         }
         return ((TIFF *)0);
     }
@@ -265,7 +265,7 @@ TIFF *TIFFOpenExt(const char *name, const char *mode, TIFFOpenOptions *opts)
  */
 TIFF *TIFFOpenW(const wchar_t *name, const char *mode)
 {
-    return TIFFOpenWExt(name, mode, NULL);
+    return TIFFOpenWExt(name, mode, nullptr);
 }
 TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, TIFFOpenOptions *opts)
 {
@@ -275,7 +275,7 @@ TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, TIFFOpenOptions *opts)
     char *mbname;
     TIFF *tif;
 
-    m = _TIFFgetMode(opts, NULL, mode, module);
+    m = _TIFFgetMode(opts, nullptr, mode, module);
     if (m == -1)
         return ((TIFF *)0);
 
@@ -287,27 +287,27 @@ TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, TIFFOpenOptions *opts)
     fd = _wopen(name, m, 0666);
     if (fd < 0)
     {
-        _TIFFErrorEarly(opts, NULL, module, "%ls: Cannot open", name);
+        _TIFFErrorEarly(opts, nullptr, module, "%ls: Cannot open", name);
         return ((TIFF *)0);
     }
 
-    mbname = NULL;
-    mbsize = WideCharToMultiByte(CP_ACP, 0, name, -1, NULL, 0, NULL, NULL);
+    mbname = nullptr;
+    mbsize = WideCharToMultiByte(CP_ACP, 0, name, -1, nullptr, 0, nullptr, nullptr);
     if (mbsize > 0)
     {
         mbname = _TIFFmalloc(mbsize);
         if (!mbname)
         {
             _TIFFErrorEarly(
-                opts, NULL, module,
+                opts, nullptr, module,
                 "Can't allocate space for filename conversion buffer");
             return ((TIFF *)0);
         }
 
-        WideCharToMultiByte(CP_ACP, 0, name, -1, mbname, mbsize, NULL, NULL);
+        WideCharToMultiByte(CP_ACP, 0, name, -1, mbname, mbsize, nullptr, nullptr);
     }
 
-    tif = TIFFFdOpenExt((int)fd, (mbname != NULL) ? mbname : "<unknown>", mode,
+    tif = TIFFFdOpenExt((int)fd, (mbname != nullptr) ? mbname : "<unknown>", mode,
                         opts);
 
     _TIFFfree(mbname);
@@ -321,7 +321,7 @@ TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, TIFFOpenOptions *opts)
 void *_TIFFmalloc(tmsize_t s)
 {
     if (s == 0)
-        return ((void *)NULL);
+        return ((void *)nullptr);
 
     return (malloc((size_t)s));
 }
@@ -329,7 +329,7 @@ void *_TIFFmalloc(tmsize_t s)
 void *_TIFFcalloc(tmsize_t nmemb, tmsize_t siz)
 {
     if (nmemb == 0 || siz == 0)
-        return ((void *)NULL);
+        return ((void *)nullptr);
 
     return calloc((size_t)nmemb, (size_t)siz);
 }
@@ -352,7 +352,7 @@ int _TIFFmemcmp(const void *p1, const void *p2, tmsize_t c)
 
 static void unixWarningHandler(const char *module, const char *fmt, va_list ap)
 {
-    if (module != NULL)
+    if (module != nullptr)
         fprintf(stderr, "%s: ", module);
     fprintf(stderr, "Warning, ");
     vfprintf(stderr, fmt, ap);
@@ -362,7 +362,7 @@ TIFFErrorHandler _TIFFwarningHandler = unixWarningHandler;
 
 static void unixErrorHandler(const char *module, const char *fmt, va_list ap)
 {
-    if (module != NULL)
+    if (module != nullptr)
         fprintf(stderr, "%s: ", module);
     vfprintf(stderr, fmt, ap);
     fprintf(stderr, ".\n");

@@ -66,13 +66,13 @@ void *TIFFGetClientInfo(TIFF *tif, const char *name)
 {
     TIFFClientInfoLink *psLink = tif->tif_clientinfo;
 
-    while (psLink != NULL && strcmp(psLink->name, name) != 0)
+    while (psLink != nullptr && strcmp(psLink->name, name) != 0)
         psLink = psLink->next;
 
-    if (psLink != NULL)
+    if (psLink != nullptr)
         return psLink->data;
     else
-        return NULL;
+        return nullptr;
 }
 
 void TIFFSetClientInfo(TIFF *tif, void *data, const char *name)
@@ -84,10 +84,10 @@ void TIFFSetClientInfo(TIFF *tif, void *data, const char *name)
     ** Do we have an existing link with this name?  If so, just
     ** set it.
     */
-    while (psLink != NULL && strcmp(psLink->name, name) != 0)
+    while (psLink != nullptr && strcmp(psLink->name, name) != 0)
         psLink = psLink->next;
 
-    if (psLink != NULL)
+    if (psLink != nullptr)
     {
         psLink->data = data;
         return;
@@ -99,10 +99,10 @@ void TIFFSetClientInfo(TIFF *tif, void *data, const char *name)
 
     psLink =
         (TIFFClientInfoLink *)_TIFFmallocExt(tif, sizeof(TIFFClientInfoLink));
-    assert(psLink != NULL);
+    assert(psLink != nullptr);
     psLink->next = tif->tif_clientinfo;
     psLink->name = (char *)_TIFFmallocExt(tif, (tmsize_t)(strlen(name) + 1));
-    assert(psLink->name != NULL);
+    assert(psLink->name != nullptr);
     strcpy(psLink->name, name);
     psLink->data = data;
 

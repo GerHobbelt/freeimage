@@ -24,8 +24,8 @@ int LibRaw::dcraw_process(void)
 void LibRaw::fuji_rotate() {}
 void LibRaw::convert_to_rgb_loop(float /*out_cam*/ [3][4]) {}
 libraw_processed_image_t *LibRaw::dcraw_make_mem_image(int *) {
-  return NULL;
+  return nullptr;
 }
-libraw_processed_image_t *LibRaw::dcraw_make_mem_thumb(int *){ return NULL;}
+libraw_processed_image_t *LibRaw::dcraw_make_mem_thumb(int *){ return nullptr;}
 void LibRaw::lin_interpolate_loop(int * /*code*/, int /*size*/) {}
 void LibRaw::scale_colors_loop(float /*scale_mul*/[4]) {}

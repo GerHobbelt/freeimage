@@ -977,7 +977,7 @@ void LibRaw::parseCanonMakernotes(unsigned tag, unsigned /*type*/, unsigned len,
     FORC3 cam_mul[c] = get2();
 
   } else if (tag == 0x00a9) {
-    INT64 save1 = ftell(ifp);
+    int64_t save1 = ftell(ifp);
     fseek(ifp, (0x1 << 1), SEEK_CUR);
     FORC4 imgdata.color.WB_Coeffs[LIBRAW_WBI_Auto][RGGB_2_RGBG(c)] = get2();
     Canon_WBpresets(0, 0);
@@ -1009,10 +1009,10 @@ void LibRaw::parseCanonMakernotes(unsigned tag, unsigned /*type*/, unsigned len,
   {
     float sraw_mul_max = 0.f;
     int bls = 0;
-    INT64 offsetChannelBlackLevel = 0L;
-    INT64 offsetChannelBlackLevel2 = 0L;
-    INT64 offsetWhiteLevels = 0L;
-    INT64 save1 = ftell(ifp);
+    int64_t offsetChannelBlackLevel = 0L;
+    int64_t offsetChannelBlackLevel2 = 0L;
+    int64_t offsetWhiteLevels = 0L;
+    int64_t save1 = ftell(ifp);
 
     switch (len)
     {

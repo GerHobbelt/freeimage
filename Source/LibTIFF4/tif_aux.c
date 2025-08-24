@@ -61,7 +61,7 @@ tmsize_t _TIFFMultiplySSize(TIFF *tif, tmsize_t first, tmsize_t second,
 {
     if (first <= 0 || second <= 0)
     {
-        if (tif != NULL && where != NULL)
+        if (tif != nullptr && where != nullptr)
         {
             TIFFErrorExtR(tif, where,
                           "Invalid argument to _TIFFMultiplySSize() in %s",
@@ -72,7 +72,7 @@ tmsize_t _TIFFMultiplySSize(TIFF *tif, tmsize_t first, tmsize_t second,
 
     if (first > TIFF_TMSIZE_T_MAX / second)
     {
-        if (tif != NULL && where != NULL)
+        if (tif != nullptr && where != nullptr)
         {
             TIFFErrorExtR(tif, where, "Integer overflow in %s", where);
         }
@@ -85,7 +85,7 @@ tmsize_t _TIFFCastUInt64ToSSize(TIFF *tif, uint64_t val, const char *module)
 {
     if (val > (uint64_t)TIFF_TMSIZE_T_MAX)
     {
-        if (tif != NULL && module != NULL)
+        if (tif != nullptr && module != nullptr)
         {
             TIFFErrorExtR(tif, module, "Integer overflow");
         }
@@ -97,8 +97,8 @@ tmsize_t _TIFFCastUInt64ToSSize(TIFF *tif, uint64_t val, const char *module)
 void *_TIFFCheckRealloc(TIFF *tif, void *buffer, tmsize_t nmemb,
                         tmsize_t elem_size, const char *what)
 {
-    void *cp = NULL;
-    tmsize_t count = _TIFFMultiplySSize(tif, nmemb, elem_size, NULL);
+    void *cp = nullptr;
+    tmsize_t count = _TIFFMultiplySSize(tif, nmemb, elem_size, nullptr);
     /*
      * Check for integer overflow.
      */
@@ -107,7 +107,7 @@ void *_TIFFCheckRealloc(TIFF *tif, void *buffer, tmsize_t nmemb,
         cp = _TIFFreallocExt(tif, buffer, count);
     }
 
-    if (cp == NULL)
+    if (cp == nullptr)
     {
         TIFFErrorExtR(tif, tif->tif_name,
                       "Failed to allocate memory for %s "
@@ -122,7 +122,7 @@ void *_TIFFCheckRealloc(TIFF *tif, void *buffer, tmsize_t nmemb,
 void *_TIFFCheckMalloc(TIFF *tif, tmsize_t nmemb, tmsize_t elem_size,
                        const char *what)
 {
-    return _TIFFCheckRealloc(tif, NULL, nmemb, elem_size, what);
+    return _TIFFCheckRealloc(tif, nullptr, nmemb, elem_size, what);
 }
 
 static int TIFFDefaultTransferFunction(TIFF *tif, TIFFDirectory *td)
@@ -137,7 +137,7 @@ static int TIFFDefaultTransferFunction(TIFF *tif, TIFFDirectory *td)
     n = ((tmsize_t)1) << td->td_bitspersample;
     nbytes = n * sizeof(uint16_t);
     tf[0] = (uint16_t *)_TIFFmallocExt(tif, nbytes);
-    if (tf[0] == NULL)
+    if (tf[0] == nullptr)
         return 0;
     tf[0][0] = 0;
     for (i = 1; i < n; i++)
@@ -149,11 +149,11 @@ static int TIFFDefaultTransferFunction(TIFF *tif, TIFFDirectory *td)
     if (td->td_samplesperpixel - td->td_extrasamples > 1)
     {
         tf[1] = (uint16_t *)_TIFFmallocExt(tif, nbytes);
-        if (tf[1] == NULL)
+        if (tf[1] == nullptr)
             goto bad;
         _TIFFmemcpy(tf[1], tf[0], nbytes);
         tf[2] = (uint16_t *)_TIFFmallocExt(tif, nbytes);
-        if (tf[2] == NULL)
+        if (tf[2] == nullptr)
             goto bad;
         _TIFFmemcpy(tf[2], tf[0], nbytes);
     }
@@ -175,7 +175,7 @@ static int TIFFDefaultRefBlackWhite(TIFF *tif, TIFFDirectory *td)
     int i;
 
     td->td_refblackwhite = (float *)_TIFFmallocExt(tif, 6 * sizeof(float));
-    if (td->td_refblackwhite == NULL)
+    if (td->td_refblackwhite == nullptr)
         return 0;
     if (td->td_photometric == PHOTOMETRIC_YCBCR)
     {
@@ -279,7 +279,7 @@ int TIFFVGetFieldDefaulted(TIFF *tif, uint32_t tag, va_list ap)
         case TIFFTAG_PREDICTOR:
         {
             TIFFPredictorState *sp = (TIFFPredictorState *)tif->tif_data;
-            if (sp == NULL)
+            if (sp == nullptr)
             {
                 TIFFErrorExtR(
                     tif, tif->tif_name,

@@ -249,7 +249,7 @@ typedef struct {
   int           percent0_;         // saved initial progress percent
 
   DError        left_derr_;        // left error diffusion (u/v)
-  DError*       top_derr_;         // top diffusion error - NULL if disabled
+  DError*       top_derr_;         // top diffusion error - nullptr if disabled
 
   uint8_t* y_left_;    // left luma samples (addressable from index -1 to 15).
   uint8_t* u_left_;    // left u samples (addressable from index -1 to 7)
@@ -276,7 +276,7 @@ void VP8IteratorSetCountDown(VP8EncIterator* const it, int count_down);
 // return true if iteration is finished
 int VP8IteratorIsDone(const VP8EncIterator* const it);
 // Import uncompressed samples from source.
-// If tmp_32 is not NULL, import boundary samples too.
+// If tmp_32 is not nullptr, import boundary samples too.
 // tmp_32 is a 32-bytes scratch buffer that must be aligned in memory.
 void VP8IteratorImport(VP8EncIterator* const it, uint8_t* const tmp_32);
 // export decimated samples
@@ -369,7 +369,7 @@ struct VP8Encoder {
 
   // transparency blob
   int has_alpha_;
-  uint8_t* alpha_data_;       // non-NULL if transparency is present
+  uint8_t* alpha_data_;       // non-nullptr if transparency is present
   uint32_t alpha_data_size_;
   WebPWorker alpha_worker_;
 
@@ -408,8 +408,8 @@ struct VP8Encoder {
   uint8_t*   y_top_;     // top luma samples.
   uint8_t*   uv_top_;    // top u/v samples.
                          // U and V are packed into 16 bytes (8 U + 8 V)
-  LFStats*   lf_stats_;  // autofilter stats (if NULL, autofilter is off)
-  DError*    top_derr_;  // diffusion error (NULL if disabled)
+  LFStats*   lf_stats_;  // autofilter stats (if nullptr, autofilter is off)
+  DError*    top_derr_;  // diffusion error (nullptr if disabled)
 };
 
 //------------------------------------------------------------------------------

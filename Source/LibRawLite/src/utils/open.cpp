@@ -17,7 +17,7 @@
 #include "../../internal/libraw_cameraids.h"
 
 #ifndef LIBRAW_NO_IOSTREAMS_DATASTREAM
-int LibRaw::open_file(const char *fname, INT64 max_buf_size)
+int LibRaw::open_file(const char *fname, int64_t max_buf_size)
 {
 	int big = 0;
 	if (max_buf_size == LIBRAW_OPEN_BIGFILE)
@@ -74,12 +74,12 @@ int LibRaw::open_file(const char *fname, INT64 max_buf_size)
 
 #if defined(WIN32) || defined(_WIN32)
 #ifndef LIBRAW_WIN32_UNICODEPATHS
-int LibRaw::open_file(const wchar_t *, INT64)
+int LibRaw::open_file(const wchar_t *, int64_t)
 {
   return LIBRAW_NOT_IMPLEMENTED;
 }
 #else
-int LibRaw::open_file(const wchar_t *fname, INT64 max_buf_size)
+int LibRaw::open_file(const wchar_t *fname, int64_t max_buf_size)
 {
 	int big = 0;
 	if (max_buf_size == LIBRAW_OPEN_BIGFILE)
@@ -168,7 +168,7 @@ int LibRaw::open_file(const char *fname)
         recycle();
         return LIBRAW_UNSUFFICIENT_MEMORY;
     }
-    if ((stream->size() > (INT64)LIBRAW_MAX_NONDNG_RAW_FILE_SIZE) && (stream->size() > (INT64)LIBRAW_MAX_DNG_RAW_FILE_SIZE))
+    if ((stream->size() > (int64_t)LIBRAW_MAX_NONDNG_RAW_FILE_SIZE) && (stream->size() > (int64_t)LIBRAW_MAX_DNG_RAW_FILE_SIZE))
     {
       delete stream;
       return LIBRAW_TOO_BIG;
@@ -199,7 +199,7 @@ int LibRaw::open_file(const wchar_t *fname)
         recycle();
         return LIBRAW_UNSUFFICIENT_MEMORY;
     }
-    if ((stream->size() > (INT64)LIBRAW_MAX_DNG_RAW_FILE_SIZE) && (stream->size() > (INT64)LIBRAW_MAX_NONDNG_RAW_FILE_SIZE))
+    if ((stream->size() > (int64_t)LIBRAW_MAX_DNG_RAW_FILE_SIZE) && (stream->size() > (int64_t)LIBRAW_MAX_NONDNG_RAW_FILE_SIZE))
     {
       delete stream;
       return LIBRAW_TOO_BIG;
@@ -218,7 +218,7 @@ int LibRaw::open_buffer(const void *buffer, size_t size)
   if (!buffer || buffer == (const void *)-1)
     return LIBRAW_IO_ERROR;
 
-  if ((size > (INT64)LIBRAW_MAX_DNG_RAW_FILE_SIZE) && (size > (INT64)LIBRAW_MAX_NONDNG_RAW_FILE_SIZE))   
+  if ((size > (int64_t)LIBRAW_MAX_DNG_RAW_FILE_SIZE) && (size > (int64_t)LIBRAW_MAX_NONDNG_RAW_FILE_SIZE))   
       return LIBRAW_TOO_BIG;
 
   LibRaw_buffer_datastream *stream;
@@ -461,7 +461,7 @@ int LibRaw::open_datastream(LibRaw_abstract_datastream *stream)
     return ENOENT;
   if (!stream->valid())
     return LIBRAW_IO_ERROR;
-  if ((stream->size() > (INT64)LIBRAW_MAX_DNG_RAW_FILE_SIZE) && (stream->size() > (INT64)LIBRAW_MAX_NONDNG_RAW_FILE_SIZE))
+  if ((stream->size() > (int64_t)LIBRAW_MAX_DNG_RAW_FILE_SIZE) && (stream->size() > (int64_t)LIBRAW_MAX_NONDNG_RAW_FILE_SIZE))
       return LIBRAW_TOO_BIG;
 
   recycle();
@@ -588,14 +588,14 @@ int LibRaw::open_datastream(LibRaw_abstract_datastream *stream)
 		  {
 			  int rowbytes11 = imgdata.sizes.raw_width / 11 * 16;
               int rowbytes14 = imgdata.sizes.raw_width / 14 * 16;
-              INT64 ds = INT64(libraw_internal_data.unpacker_data.data_size);
+              int64_t ds = int64_t(libraw_internal_data.unpacker_data.data_size);
               if (!ds)
                   ds = libraw_internal_data.internal_data.input->size() - libraw_internal_data.unpacker_data.data_offset;
               if ((imgdata.sizes.raw_width % 11) == 0 &&
-				  (INT64(imgdata.sizes.raw_height) * rowbytes11 == ds))
+				  (int64_t(imgdata.sizes.raw_height) * rowbytes11 == ds))
 				  load_raw = &LibRaw::panasonicC6_load_raw;
               else if ((imgdata.sizes.raw_width % 14) == 0 &&
-                (INT64(imgdata.sizes.raw_height) * rowbytes14 == ds))
+                (int64_t(imgdata.sizes.raw_height) * rowbytes14 == ds))
                   load_raw = &LibRaw::panasonicC6_load_raw;
               else
 				  imgdata.idata.raw_count = 0; // incorrect size
@@ -606,8 +606,8 @@ int LibRaw::open_datastream(LibRaw_abstract_datastream *stream)
 				  libraw_internal_data.unpacker_data.pana_bpp == 14 ? 9 : 10;
 			  int rowbytes = imgdata.sizes.raw_width / pixperblock * 16;
 			  if ((imgdata.sizes.raw_width % pixperblock) == 0 &&
-				  (INT64(imgdata.sizes.raw_height) * rowbytes ==
-					  INT64(libraw_internal_data.unpacker_data.data_size)))
+				  (int64_t(imgdata.sizes.raw_height) * rowbytes ==
+					  int64_t(libraw_internal_data.unpacker_data.data_size)))
 				  load_raw = &LibRaw::panasonicC7_load_raw;
 			  else
 				  imgdata.idata.raw_count = 0; // incorrect size
@@ -1203,7 +1203,7 @@ int LibRaw::open_datastream(LibRaw_abstract_datastream *stream)
     {
       if (C.profile)
         free(C.profile);
-	  INT64 profile_sz = MIN(INT64(C.profile_length), ID.input->size() - ID.profile_offset);
+	  int64_t profile_sz = MIN(int64_t(C.profile_length), ID.input->size() - ID.profile_offset);
 	  if (profile_sz > 0LL && profile_sz < LIBRAW_MAX_PROFILE_SIZE_MB * 1024LL * 1024LL)
 	  {
         C.profile = malloc(size_t(profile_sz));
@@ -1211,7 +1211,7 @@ int LibRaw::open_datastream(LibRaw_abstract_datastream *stream)
         ID.input->read(C.profile, size_t(profile_sz), 1);
 	  }
 	  else
-		  C.profile = NULL;
+		  C.profile = nullptr;
     }
 
     SET_PROC_FLAG(LIBRAW_PROGRESS_IDENTIFY);

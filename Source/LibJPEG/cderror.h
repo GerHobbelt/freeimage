@@ -37,7 +37,7 @@ typedef enum {
 
 #endif /* JMAKE_ENUM_LIST */
 
-JMESSAGE(JMSG_FIRSTADDONCODE=1000, NULL) /* Must be first entry! */
+JMESSAGE(JMSG_FIRSTADDONCODE=1000, nullptr) /* Must be first entry! */
 
 #ifdef BMP_SUPPORTED
 JMESSAGE(JERR_BMP_BADCMAP, "Unsupported BMP colormap format")

@@ -409,7 +409,7 @@ void LibRaw::identify()
 
   char head[64] = {0}, *cp;
   int hlen, fsize, flen, zero_fsize = 1, i, c;
-  INT64 fsize64;
+  int64_t fsize64;
   struct jhead jh;
 
   unsigned camera_count =
@@ -1213,7 +1213,7 @@ dng_skip:
     height = width - 1;
     pixel_aspect = 1;
 	// Prevent incorrect-sized fuji-rotated files
-	if (INT64(width)*INT64(height) > INT64(raw_width) * INT64(raw_height) * 8LL)
+	if (int64_t(width)*int64_t(height) > int64_t(raw_width) * int64_t(raw_height) * 8LL)
 		is_raw = 0;
   }
   else
@@ -1563,7 +1563,7 @@ void LibRaw::identify_process_dng_fields()
 				meta_offset = tiff_ifd[sidx].opcode2_offset;
 
 			sidx = IFDLEVELINDEX(iifd, LIBRAW_DNGFM_LINTABLE);
-			INT64 linoff = -1;
+			int64_t linoff = -1;
 			int linlen = 0;
 			if (sidx >= 0)
 			{
@@ -1573,7 +1573,7 @@ void LibRaw::identify_process_dng_fields()
 
 			if (linoff >= 0 && linlen > 0)
 			{
-				INT64 pos = ftell(ifp);
+				int64_t pos = ftell(ifp);
 				fseek(ifp, linoff, SEEK_SET);
 				linear_table(linlen);
 				fseek(ifp, pos, SEEK_SET);

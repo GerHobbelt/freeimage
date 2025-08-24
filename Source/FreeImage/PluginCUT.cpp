@@ -33,9 +33,9 @@
 #endif
 
 typedef struct tagCUTHEADER {
-	WORD width;
-	WORD height;
-	LONG dummy;
+	uint16_t width;
+	uint16_t height;
+	int32_t dummy;
 } CUTHEADER;
 
 #ifdef _WIN32
@@ -71,7 +71,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -103,10 +103,10 @@ SupportsNoPixels() {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	if(!handle) {
-		return NULL;
+		return nullptr;
 	}
 
 	try {
@@ -121,19 +121,19 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		}
 
 #ifdef FREEIMAGE_BIGENDIAN
-		SwapShort((WORD *)&header.width);
-		SwapShort((WORD *)&header.height);
+		SwapShort((uint16_t *)&header.width);
+		SwapShort((uint16_t *)&header.height);
 #endif
 
 		if ((header.width == 0) || (header.height == 0)) {
-			return NULL;
+			return nullptr;
 		}
 
 		// allocate a new bitmap
 
 		dib = FreeImage_AllocateHeader(header_only, header.width, header.height, 8);
 
-		if (dib == NULL) {
+		if (dib == nullptr) {
 			throw FI_MSG_ERROR_DIB_MEMORY;
 		}
 
@@ -142,7 +142,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		RGBQUAD *palette = FreeImage_GetPalette(dib);
 
 		for (int j = 0; j < 256; ++j) {
-			palette[j].rgbBlue = palette[j].rgbGreen = palette[j].rgbRed = (BYTE)j;
+			palette[j].rgbBlue = palette[j].rgbGreen = palette[j].rgbRed = (uint8_t)j;
 		}
 		
 		if(header_only) {
@@ -152,15 +152,15 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 		// unpack the RLE bitmap bits
 
-		BYTE *bits = FreeImage_GetScanLine(dib, header.height - 1);
+		uint8_t *bits = FreeImage_GetScanLine(dib, header.height - 1);
 
 		unsigned i = 0, k = 0;
 		unsigned pitch = FreeImage_GetPitch(dib);
 		unsigned size = header.width * header.height;
-		BYTE count = 0, run = 0;
+		uint8_t count = 0, run = 0;
 
 		while (i < size) {
-			if(io->read_proc(&count, 1, sizeof(BYTE), handle) != 1) {
+			if(io->read_proc(&count, 1, sizeof(uint8_t), handle) != 1) {
 				throw FI_MSG_ERROR_PARSING;
 			}
 
@@ -170,8 +170,8 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				// paint shop pro adds two useless bytes here...
 
-				io->read_proc(&count, 1, sizeof(BYTE), handle);
-				io->read_proc(&count, 1, sizeof(BYTE), handle);
+				io->read_proc(&count, 1, sizeof(uint8_t), handle);
+				io->read_proc(&count, 1, sizeof(uint8_t), handle);
 
 				continue;
 			}
@@ -179,7 +179,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			if (count & 0x80) {
 				count &= ~(0x80);
 
-				if(io->read_proc(&run, 1, sizeof(BYTE), handle) != 1) {
+				if(io->read_proc(&run, 1, sizeof(uint8_t), handle) != 1) {
 					throw FI_MSG_ERROR_PARSING;
 				}
 
@@ -190,7 +190,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				}
 			} else {
 				if(k + count <= header.width) {
-					if(io->read_proc(&bits[k], count, sizeof(BYTE), handle) != 1) {
+					if(io->read_proc(&bits[k], count, sizeof(uint8_t), handle) != 1) {
 						throw FI_MSG_ERROR_PARSING;
 					}
 				} else {
@@ -209,7 +209,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			FreeImage_Unload(dib);
 		}
 		FreeImage_OutputMessageProc(s_format_id, text);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -225,16 +225,16 @@ InitCUT(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
+	plugin->save_proc = nullptr;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 	plugin->supports_no_pixels_proc = SupportsNoPixels;
 }

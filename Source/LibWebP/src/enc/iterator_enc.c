@@ -26,7 +26,7 @@ static void InitLeft(VP8EncIterator* const it) {
   memset(it->u_left_, 129, 8);
   memset(it->v_left_, 129, 8);
   it->left_nz_[8] = 0;
-  if (it->top_derr_ != NULL) {
+  if (it->top_derr_ != nullptr) {
     memset(&it->left_derr_, 0, sizeof(it->left_derr_));
   }
 }
@@ -36,7 +36,7 @@ static void InitTop(VP8EncIterator* const it) {
   const size_t top_size = enc->mb_w_ * 16;
   memset(enc->y_top_, 127, 2 * top_size);
   memset(enc->nz_, 0, enc->mb_w_ * sizeof(*enc->nz_));
-  if (enc->top_derr_ != NULL) {
+  if (enc->top_derr_ != nullptr) {
     memset(enc->top_derr_, 0, enc->mb_w_ * sizeof(*enc->top_derr_));
   }
 }
@@ -88,7 +88,7 @@ void VP8IteratorInit(VP8Encoder* const enc, VP8EncIterator* const it) {
 
 int VP8IteratorProgress(const VP8EncIterator* const it, int delta) {
   VP8Encoder* const enc = it->enc_;
-  if (delta && enc->pic_->progress_hook != NULL) {
+  if (delta && enc->pic_->progress_hook != nullptr) {
     const int done = it->count_down0_ - it->count_down_;
     const int percent = (it->count_down0_ <= 0)
                       ? it->percent0_
@@ -144,7 +144,7 @@ void VP8IteratorImport(VP8EncIterator* const it, uint8_t* const tmp_32) {
   ImportBlock(usrc, pic->uv_stride, it->yuv_in_ + U_OFF_ENC, uv_w, uv_h, 8);
   ImportBlock(vsrc, pic->uv_stride, it->yuv_in_ + V_OFF_ENC, uv_w, uv_h, 8);
 
-  if (tmp_32 == NULL) return;
+  if (tmp_32 == nullptr) return;
 
   // Import source (uncompressed) samples into boundary.
   if (x == 0) {

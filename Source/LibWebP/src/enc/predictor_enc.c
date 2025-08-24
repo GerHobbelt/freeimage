@@ -71,7 +71,7 @@ static WEBP_INLINE void PredictBatch(int mode, int x_start, int y,
   if (x_start == 0) {
     if (y == 0) {
       // ARGB_BLACK.
-      VP8LPredictorsSub[0](current, NULL, 1, out);
+      VP8LPredictorsSub[0](current, nullptr, 1, out);
     } else {
       // Top one.
       VP8LPredictorsSub[2](current, upper, 1, out);
@@ -82,7 +82,7 @@ static WEBP_INLINE void PredictBatch(int mode, int x_start, int y,
   }
   if (y == 0) {
     // Left one.
-    VP8LPredictorsSub[1](current + x_start, NULL, num_pixels, out);
+    VP8LPredictorsSub[1](current + x_start, nullptr, num_pixels, out);
   } else {
     VP8LPredictorsSub[mode](current + x_start, upper + x_start, num_pixels,
                             out);

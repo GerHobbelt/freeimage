@@ -844,7 +844,7 @@
 2023-02-03  Even Rouault  <even.rouault@spatialys.com>
 
 	Merge branch 'TiffClose_NULL_ptr_dereferencing_fix_515' into 'master'
-	TIFFClose() avoid NULL pointer dereferencing. fix#515
+	TIFFClose() avoid nullptr pointer dereferencing. fix#515
 
 	Closes #515
 
@@ -852,7 +852,7 @@
 
 2023-02-03  Su_Laus  <sulau@freenet.de>
 
-	TIFFClose() avoid NULL pointer dereferencing. fix#515.
+	TIFFClose() avoid nullptr pointer dereferencing. fix#515.
 	Closes #515
 
 	tiffcrop correctly update buffersize after rotateImage() fix#520 rotateImage() set up a new buffer and calculates its size individually. Therefore, seg_buffs[] size needs to be updated accordingly. Before this fix, the seg_buffs buffer size was calculated with a different formula than within rotateImage().
@@ -1943,7 +1943,7 @@
 2022-08-09  Even Rouault  <even.rouault@spatialys.com>
 
 	Merge branch 'fix_225' into 'master'
-	Deal with RichTIFFIPTC tag written with LONG type (fixes #225)
+	Deal with RichTIFFIPTC tag written with int32_t type (fixes #225)
 
 	Closes #225
 
@@ -1975,7 +1975,7 @@
 
 2022-08-09  Even Rouault  <even.rouault@spatialys.com>
 
-	Deal with RichTIFFIPTC tag written with LONG type (fixes #225)
+	Deal with RichTIFFIPTC tag written with int32_t type (fixes #225)
 
 2022-08-07  Roger Leigh  <rleigh@codelibre.net>
 
@@ -2060,22 +2060,22 @@
 
 	The current definition is:
 
-	{ TIFFTAG_CLIPPATH, -1, -3, TIFF_BYTE, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 1, "ClipPath", NULL },
-	{ TIFFTAG_XCLIPPATHUNITS, 1, 1, TIFF_SLONG, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "XClipPathUnits", NULL },
-	{ TIFFTAG_XCLIPPATHUNITS, 1, 1, TIFF_SBYTE, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "XClipPathUnits", NULL },
-	{ TIFFTAG_YCLIPPATHUNITS, 1, 1, TIFF_SLONG, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "YClipPathUnits", NULL },
+	{ TIFFTAG_CLIPPATH, -1, -3, TIFF_BYTE, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 1, "ClipPath", nullptr },
+	{ TIFFTAG_XCLIPPATHUNITS, 1, 1, TIFF_SLONG, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "XClipPathUnits", nullptr },
+	{ TIFFTAG_XCLIPPATHUNITS, 1, 1, TIFF_SBYTE, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "XClipPathUnits", nullptr },
+	{ TIFFTAG_YCLIPPATHUNITS, 1, 1, TIFF_SLONG, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "YClipPathUnits", nullptr },
 
 	Whereas the correct definition according to TIFF Specification Supplement 1 (https://www.awaresystems.be/imaging/tiff/specification/TIFFPM6.pdf) should be:
 
-	{ TIFFTAG_CLIPPATH, -3, -3, TIFF_BYTE, 0, TIFF_SETGET_C32_UINT8, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 1, "ClipPath", NULL },
-	{ TIFFTAG_XCLIPPATHUNITS, 1, 1, TIFF_LONG, 0, TIFF_SETGET_UINT32, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "XClipPathUnits", NULL },
-	{ TIFFTAG_YCLIPPATHUNITS, 1, 1, TIFF_LONG, 0, TIFF_SETGET_UINT32, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "YClipPathUnits", NULL },
+	{ TIFFTAG_CLIPPATH, -3, -3, TIFF_BYTE, 0, TIFF_SETGET_C32_UINT8, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 1, "ClipPath", nullptr },
+	{ TIFFTAG_XCLIPPATHUNITS, 1, 1, TIFF_LONG, 0, TIFF_SETGET_UINT32, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "XClipPathUnits", nullptr },
+	{ TIFFTAG_YCLIPPATHUNITS, 1, 1, TIFF_LONG, 0, TIFF_SETGET_UINT32, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "YClipPathUnits", nullptr },
 
 	Also the set_get_field of the following tag should be corrected from
 
-	{ TIFFTAG_INTEROPERABILITYIFD, 1, 1, TIFF_IFD8, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "InteroperabilityIFDOffset", NULL },
+	{ TIFFTAG_INTEROPERABILITYIFD, 1, 1, TIFF_IFD8, 0, TIFF_SETGET_UNDEFINED, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "InteroperabilityIFDOffset", nullptr },
 	to
-	{ TIFFTAG_INTEROPERABILITYIFD, 1, 1, TIFF_IFD8, 0, TIFF_SETGET_IFD8, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "InteroperabilityIFDOffset", NULL },
+	{ TIFFTAG_INTEROPERABILITYIFD, 1, 1, TIFF_IFD8, 0, TIFF_SETGET_IFD8, TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 0, 0, "InteroperabilityIFDOffset", nullptr },
 
 	However, if those tags schould not be handled by LibTiff because they are deamed as abandoned or unwanted tags, those tags need to be defined with FIELD_IGNORE instead of FIELD_CUSTOM and keeping set_field_type  = TIFF_SETGET_UNDEFINED
 
@@ -2729,7 +2729,7 @@
 	repeated sequences (e.g. lots of bytes to 0).
 
 	With the following bench.c, execution time is 32% faster on a 8000x8000
-	4 bands uint16 predictor=2 image that has a 1.6x compression ratio. with
+	4 bands uint16_t predictor=2 image that has a 1.6x compression ratio. with
 	gcc 9.4.0, on x86_64
 
 	bench.c:
@@ -2746,7 +2746,7 @@
 	        exit(1);
 	    }
 	    TIFF* tif = TIFFOpen(argv[1], "r");
-	    if( tif == NULL )
+	    if( tif == nullptr )
 	    {
 	        fprintf(stderr, "Cannot open %s\n", argv[1]);
 	        exit(1);
@@ -2758,7 +2758,7 @@
 	    }
 	    int tilesize = (int)TIFFTileSize(tif);
 	    char* c = malloc(tilesize);
-	    if( c == NULL )
+	    if( c == nullptr )
 	    {
 	        fprintf(stderr, "Out of memory\n");
 	        exit(1);
@@ -3174,7 +3174,7 @@
 2021-12-29  Even Rouault  <even.rouault@spatialys.com>
 
 	Merge branch 'Fix_FieldName_NULL' into 'master'
-	Fix Issue #354 Segmentation Fault due to field_name=NULL
+	Fix Issue #354 Segmentation Fault due to field_name=nullptr
 
 	See merge request libtiff/libtiff!285
 
@@ -3195,7 +3195,7 @@
 
 2021-12-28  Su_Laus  <sulau@freenet.de>
 
-	Fix Issue #354 Segmentation Fault due to field_name=NULL.
+	Fix Issue #354 Segmentation Fault due to field_name=nullptr.
 
 2021-12-17  Even Rouault  <even.rouault@spatialys.com>
 
@@ -3208,7 +3208,7 @@
 
 2021-12-16  Even Rouault  <even.rouault@spatialys.com>
 
-	TIFFGetField(TIFFTAG_STRIPBYTECOUNTS/TIFFTAG_STRIPOFFSETS): return error if returned pointer is NULL (fixes #342)
+	TIFFGetField(TIFFTAG_STRIPBYTECOUNTS/TIFFTAG_STRIPOFFSETS): return error if returned pointer is nullptr (fixes #342)
 
 	tiff2pdf: validate TIFFGetField(input, TIFFTAG_STRIPBYTECOUNTS, &sbc) return (fixes #342)
 
@@ -4749,7 +4749,7 @@
 
 2020-12-12  Even Rouault  <even.rouault@spatialys.com>
 
-	DoubleToRational(): avoid casting NaN to uint32 (fixes #227)
+	DoubleToRational(): avoid casting NaN to uint32_t (fixes #227)
 
 2020-12-12  Even Rouault  <even.rouault@spatialys.com>
 
@@ -4774,15 +4774,15 @@
 	$ tiffdump foo.tif
 	Magic: 0x4949 <little-endian> Version: 0x2a <ClassicTIFF>
 	Directory 0: offset 25725448 (0x1888a08) next 0 (0)
-	SubFileType (254) LONG (4) 1<0>
-	ImageWidth (256) LONG (4) 1<640>
-	ImageLength (257) LONG (4) 1<20098>
+	SubFileType (254) int32_t (4) 1<0>
+	ImageWidth (256) int32_t (4) 1<640>
+	ImageLength (257) int32_t (4) 1<20098>
 	BitsPerSample (258) SHORT (3) 1<16>
 	Photometric (262) SHORT (3) 1<1>
 	SamplesPerPixel (277) SHORT (3) 1<1>
 	ResolutionUnit (296) SHORT (3) 1<2>
-	StripByteCounts (279) LONG (4) 1<1806>
-	StripOffsets (273) LONG (4) 896<8 648 1288 1928 2568 3208 3848 4488 5128 5768 6408 7048 7688 8328 8968 9608 10248 10888 11528 12168 12808 13448 14088 14728 ...>
+	StripByteCounts (279) int32_t (4) 1<1806>
+	StripOffsets (273) int32_t (4) 896<8 648 1288 1928 2568 3208 3848 4488 5128 5768 6408 7048 7688 8328 8968 9608 10248 10888 11528 12168 12808 13448 14088 14728 ...>
 
 2020-12-02  Even Rouault  <even.rouault@spatialys.com>
 
@@ -6023,7 +6023,7 @@
 	tiffcrop.c:4027:20: runtime error: left shift of 190 by 24 places cannot be represented in type 'int'
 
 	C treats (byte << 24) as an int expression.
-	casting explicitly to unsigned type uint32 avoids the problem.
+	casting explicitly to unsigned type uint32_t avoids the problem.
 
 	the same issue has been fixed elsewhere with a24213691616e7cd35aa3e2805493de80c7e4fcf
 
@@ -6552,7 +6552,7 @@
 2019-05-21  Even Rouault  <even.rouault@spatialys.com>
 
 	Merge branch 'bigtiff_write_bytecount_on_long_when_possible' into 'master'
-	Create TileByteCounts/StripByteCounts tag with SHORT (ClassicTIFF/BigTIFF) or  LONG (BigTIFF) type when possible
+	Create TileByteCounts/StripByteCounts tag with SHORT (ClassicTIFF/BigTIFF) or  int32_t (BigTIFF) type when possible
 
 	See merge request libtiff/libtiff!78
 
@@ -6611,9 +6611,9 @@
 
 2019-05-09  Even Rouault  <even.rouault@spatialys.com>
 
-	BigTIFF creation: write TileByteCounts/StripByteCounts tag with LONG when possible
+	BigTIFF creation: write TileByteCounts/StripByteCounts tag with int32_t when possible
 	In most situations of BigTIFF file, the tile/strip sizes are of reasonable size,
-	that is they fit on a 4-byte LONG. So in that case, use LONG instead of LONG8
+	that is they fit on a 4-byte int32_t. So in that case, use int32_t instead of LONG8
 	to save some space. For uncompressed file, it is easy to detect such situations
 	by checking at the TIFFTileSize64()/TIFFStripSize64() return. For compressed file,
 	we must take into account the fact that compression may sometimes result in
@@ -6800,7 +6800,7 @@
 2019-02-22  Thomas Bernard  <miniupnp@free.fr>
 
 	tiff2ps.c: fix warning caused by integer promotion.
-	uint8 value is promoted to int in (value << 24) so -fsanitize
+	uint8_t value is promoted to int in (value << 24) so -fsanitize
 	yield runtime errors :
 	tiff2ps.c:2969:33: runtime error: left shift of 246 by 24 places cannot be represented in type 'int'
 
@@ -6919,7 +6919,7 @@
 2019-02-01  Even Rouault  <even.rouault@spatialys.com>
 
 	Merge branch 'bug2833' into 'master'
-	TIFFWriteDirectoryTagTransferfunction() : fix NULL dereferencing
+	TIFFWriteDirectoryTagTransferfunction() : fix nullptr dereferencing
 
 	See merge request libtiff/libtiff!54
 
@@ -6943,10 +6943,10 @@
 
 2019-01-29  Thomas Bernard  <miniupnp@free.fr>
 
-	TIFFWriteDirectoryTagTransferfunction() : fix NULL dereferencing.
+	TIFFWriteDirectoryTagTransferfunction() : fix nullptr dereferencing.
 	http://bugzilla.maptools.org/show_bug.cgi?id=2833
 
-	we must check the pointer is not NULL before memcmp() the memory
+	we must check the pointer is not nullptr before memcmp() the memory
 
 2019-01-29  Thomas Bernard  <miniupnp@free.fr>
 
@@ -7185,7 +7185,7 @@
 
 2018-08-15  Even Rouault  <even.rouault@spatialys.com>
 
-	TIFFSetupStrips(): avoid potential uint32 overflow on 32-bit systems with large number of strips. Probably relates to http://bugzilla.maptools.org/show_bug.cgi?id=2788 / CVE-2018-10779
+	TIFFSetupStrips(): avoid potential uint32_t overflow on 32-bit systems with large number of strips. Probably relates to http://bugzilla.maptools.org/show_bug.cgi?id=2788 / CVE-2018-10779
 
 2018-08-07  Even Rouault  <even.rouault@spatialys.com>
 
@@ -7267,13 +7267,13 @@
 2018-04-12  Even Rouault  <even.rouault@mines-paris.org>
 
 	Merge branch 'master' into 'master'
-	Fix NULL pointer dereference in TIFFPrintDirectory (bugzilla 2778/CVE-2018-7456)
+	Fix nullptr pointer dereference in TIFFPrintDirectory (bugzilla 2778/CVE-2018-7456)
 
 	See merge request libtiff/libtiff!27
 
 2018-04-11  Hugo Lefeuvre  <hle@debian.org>
 
-	Fix NULL pointer dereference in TIFFPrintDirectory.
+	Fix nullptr pointer dereference in TIFFPrintDirectory.
 	The TIFFPrintDirectory function relies on the following assumptions,
 	supposed to be guaranteed by the specification:
 
@@ -7287,7 +7287,7 @@
 	While respect of (a) and (b) are essential for the well functioning of
 	TIFFPrintDirectory, no checks are realized neither by the callee nor
 	by TIFFPrintDirectory itself. Hence, following scenarios might happen
-	and trigger the NULL pointer dereference:
+	and trigger the nullptr pointer dereference:
 
 	(1) TIFF File of photometric type 4 or more has illegal Transfer
 	    Function field.
@@ -7815,7 +7815,7 @@
 
 2017-09-09  Even Rouault <even.rouault at spatialys.com>
 
-	* libtiff/tif_dirread.c: add NULL check to avoid likely false positive
+	* libtiff/tif_dirread.c: add nullptr check to avoid likely false positive
 	null-pointer dereference warning by CLang Static Analyzer. 
 
 2017-09-07  Even Rouault <even.rouault at spatialys.com>
@@ -7841,7 +7841,7 @@
 2017-08-23  Even Rouault <even.rouault at spatialys.com>
 
 	* libtiff/tif_dirwrite.c: replace assertion to tag value not fitting
-	on uint32 when selecting the value of SubIFD tag by runtime check
+	on uint32_t when selecting the value of SubIFD tag by runtime check
 	(in TIFFWriteDirectoryTagSubifd()).
 	Fixes http://bugzilla.maptools.org/show_bug.cgi?id=2728
 	Reported by team OWL337
@@ -8365,7 +8365,7 @@
 
 2017-01-11 Even Rouault <even.rouault at spatialys.com>
 
-	* libtiff/tif_getimage.c: add explicit uint32 cast in putagreytile to
+	* libtiff/tif_getimage.c: add explicit uint32_t cast in putagreytile to
 	avoid UndefinedBehaviorSanitizer warning.
 	Patch by Nicolás Peña.
 	Fixes http://bugzilla.maptools.org/show_bug.cgi?id=2658
@@ -8471,7 +8471,7 @@
 2016-12-13 Even Rouault <even.rouault at spatialys.com>
 
 	* libtiff/tif_fax3.h: revert change done on 2016-01-09 that made
-	Param member of TIFFFaxTabEnt structure a uint16 to reduce size of
+	Param member of TIFFFaxTabEnt structure a uint16_t to reduce size of
 	the binary. It happens that the Hylafax software uses the tables that
 	follow this typedef (TIFFFaxMainTable, TIFFFaxWhiteTable,
 	TIFFFaxBlackTable), although they are not in a public libtiff header.
@@ -8497,7 +8497,7 @@
 
 2016-12-03 Even Rouault <even.rouault at spatialys.com>
 
-	* tools/tiffcp.c: fix uint32 underflow/overflow that can cause heap-based
+	* tools/tiffcp.c: fix uint32_t underflow/overflow that can cause heap-based
 	buffer overflow.
 	Reported by Agostino Sarubbo.
 	Fixes http://bugzilla.maptools.org/show_bug.cgi?id=2610
@@ -8592,14 +8592,14 @@
 
 2016-12-02 Even Rouault <even.rouault at spatialys.com>
 
-	* tools/tiffcp.c: avoid uint32 underflow in cpDecodedStrips that
+	* tools/tiffcp.c: avoid uint32_t underflow in cpDecodedStrips that
 	can cause various issues, such as buffer overflows in the library.
 	Reported by Agostino Sarubbo.
 	Fixes http://bugzilla.maptools.org/show_bug.cgi?id=2598
 
 2016-12-02 Even Rouault <even.rouault at spatialys.com>
 
-	* libtiff/tif_read.c, libtiff/tiffiop.h: fix uint32 overflow in
+	* libtiff/tif_read.c, libtiff/tiffiop.h: fix uint32_t overflow in
 	TIFFReadEncodedStrip() that caused an integer division by zero.
 	Reported by Agostino Sarubbo.
 	Fixes http://bugzilla.maptools.org/show_bug.cgi?id=2596
@@ -8624,7 +8624,7 @@
 
 	* configure.ac: Update for 4.0.7 release.
 
-	* tools/tiffdump.c (ReadDirectory): Remove uint32 cast to
+	* tools/tiffdump.c (ReadDirectory): Remove uint32_t cast to
 	_TIFFmalloc() argument which resulted in Coverity report.  Added
 	more mutiplication overflow checks.
 
@@ -8644,7 +8644,7 @@
 2016-11-16 Even Rouault <even.rouault at spatialys.com>
 
 	* libtiff/tif_dirread.c: in TIFFFetchNormalTag(), do not dereference
-	NULL pointer when values of tags with TIFF_SETGET_C16_ASCII / TIFF_SETGET_C32_ASCII
+	nullptr pointer when values of tags with TIFF_SETGET_C16_ASCII / TIFF_SETGET_C32_ASCII
 	access are 0-byte arrays.
 	Fixes http://bugzilla.maptools.org/show_bug.cgi?id=2593 (regression introduced
 	by previous fix done on 2016-11-11 for CVE-2016-9297).
@@ -8696,12 +8696,12 @@
 	* libtiff/tif_dirread.c: reject images with OJPEG compression that
 	have no TileOffsets/StripOffsets tag, when OJPEG compression is
 	disabled. Prevent null pointer dereference in TIFFReadRawStrip1()
-	and other functions that expect td_stripbytecount to be non NULL.
+	and other functions that expect td_stripbytecount to be non nullptr.
 	Fixes http://bugzilla.maptools.org/show_bug.cgi?id=2585
 
 2016-11-11 Even Rouault <even.rouault at spatialys.com>
 
-	* tools/tiffcrop.c: fix multiple uint32 overflows in
+	* tools/tiffcrop.c: fix multiple uint32_t overflows in
 	writeBufferToSeparateStrips(), writeBufferToContigTiles() and
 	writeBufferToSeparateTiles() that could cause heap buffer overflows.
 	Reported by Henri Salo from Nixu Corporation.
@@ -8796,7 +8796,7 @@
 	* tools/tiffcp.c: fix read of undefined variable in case of missing
 	required tags. Found on test case of MSVR 35100.
 	* tools/tiffcrop.c: fix read of undefined buffer in
-	readContigStripsIntoBuffer() due to uint16 overflow. Probably not a
+	readContigStripsIntoBuffer() due to uint16_t overflow. Probably not a
 	security issue but I can be wrong. Reported as MSVR 35100 by Axel
 	Souchet from the MSRC Vulnerabilities & Mitigations team.
 
@@ -8979,7 +8979,7 @@
 2016-01-09  Even Rouault <even.rouault at spatialys.com>
 
 	* libtiff/tif_fax3.h: make Param member of TIFFFaxTabEnt structure
-	a uint16 to reduce size of the binary.
+	a uint16_t to reduce size of the binary.
 
 2016-01-03  Even Rouault <even.rouault at spatialys.com>
 
@@ -8988,7 +8988,7 @@
 
 2015-12-27  Even Rouault <even.rouault at spatialys.com>
 
-	* libtiff/tif_pixarlog.c: avoid zlib error messages to pass a NULL
+	* libtiff/tif_pixarlog.c: avoid zlib error messages to pass a nullptr
 	string to %s formatter, which is undefined behaviour in sprintf().
 
 2015-12-27  Even Rouault <even.rouault at spatialys.com>
@@ -9069,7 +9069,7 @@
 
 2015-11-18  Even Rouault <even.rouault at spatialys.com>
 
-	* libtiff/tif_dirread.c: initialize double* data at line 3693 to NULL
+	* libtiff/tif_dirread.c: initialize double* data at line 3693 to nullptr
 	to please MSVC 2013
 
 2015-11-17  Even Rouault <even.rouault at spatialys.com>
@@ -9558,7 +9558,7 @@
 2015-03-02  Even Rouault  <even.rouault@spatialys.com>
 
 	* tools/tiffdither.c: check memory allocations to avoid writing to
-	NULL pointer. Also check multiplication overflow. Fixes #2501,
+	nullptr pointer. Also check multiplication overflow. Fixes #2501,
 	CVE-2014-8128. Derived from patch by Petr Gajdos.
 
 2015-01-26  Even Rouault  <even.rouault@spatialys.com>
@@ -9591,7 +9591,7 @@
 
 2015-01-03  Even Rouault  <even.rouault@spatialys.com>
 
-	* libtiff/tif_dirread.c: in TIFFCheckDirOffset(), avoid uint16 overflow
+	* libtiff/tif_dirread.c: in TIFFCheckDirOffset(), avoid uint16_t overflow
 	when reading more than 65535 directories, and effectively error out when
 	reaching that limit.
 
@@ -9776,7 +9776,7 @@
 
 	* tools/tiff2pdf.c (t2p_read_tiff_init): TIFFTAG_TRANSFERFUNCTION
 	tag can return one channel, with the other two channels set to
-	NULL.  The tiff2pdf code was expecting that other two channels
+	nullptr.  The tiff2pdf code was expecting that other two channels
 	were duplicate pointers in the case where there is only one
 	channel.  Detect this condition in order to avoid a crash, and
 	presumably perform correctly with just one channel.
@@ -9811,7 +9811,7 @@
 	* tools/fax2ps.c: check malloc()/realloc() result (bug #2470)
 
 	* tools/tiffdump.c: detect cycle in TIFF directory chaining (bug #2463)
-	and avoid passing a NULL pointer to read() if seek() failed before (bug #2459)
+	and avoid passing a nullptr pointer to read() if seek() failed before (bug #2459)
 
 	* tools/tiffcrop.c: fix segfault if bad value passed to -Z option
 	(bug #2459) and add missing va_end in dump_info (#2459)
@@ -9820,7 +9820,7 @@
 
 2014-11-20  Even Rouault  <even.rouault@spatialys.com>
 	* libtiff/tif_jpeg.c: fix segfault in JPEGFixupTagsSubsampling() on
-	corrupted image where tif->tif_dir.td_stripoffset == NULL (bug #2471)
+	corrupted image where tif->tif_dir.td_stripoffset == nullptr (bug #2471)
 
 2014-11-20  Even Rouault  <even.rouault@spatialys.com>
 	* automake: updated to 1.14.1
@@ -9973,7 +9973,7 @@
 	* automake: Update Automake to 1.12.5 release.
 
 	* libtiff/tif_{unix,vms,win32}.c (_TIFFmalloc): ANSI C does not
-	require malloc() to return NULL pointer if requested allocation
+	require malloc() to return nullptr pointer if requested allocation
 	size is zero.  Assure that _TIFFmalloc does.
 
 2012-11-01  Frank Warmerdam  <warmerdam@pobox.com>
@@ -9984,7 +9984,7 @@
 
 2012-10-18  Frank Warmerdam  <warmerdam@google.com>
 
-	* tif_zip.c: Avoid crash on NULL error messages.
+	* tif_zip.c: Avoid crash on nullptr error messages.
 
 2012-09-22  Bob Friesenhahn  <bfriesen@simple.dallas.tx.us>
 
@@ -10204,7 +10204,7 @@
 	* libtiff/tif_dir.c, libtiff/tif_dirread.c: Extra caution around
 	assumption tag fetching is always successful.
 
-	* libtiff/tif_jpeg.c: Extra caution for case where sp is NULL.
+	* libtiff/tif_jpeg.c: Extra caution for case where sp is nullptr.
 
 2012-01-22  Bob Friesenhahn  <bfriesen@simple.dallas.tx.us>
 
@@ -10246,7 +10246,7 @@
 	* Update GNU libtool to 2.4.2.
 
 	* tools/tiffsplit.c (tiffcp): TIFFGetField count field should be
-	uint32 type for TIFFTAG_JPEGTABLES.  Patch by Christophe
+	uint32_t type for TIFFTAG_JPEGTABLES.  Patch by Christophe
 	Deroulers.
 
 2011-06-21  Frank Warmerdam  <warmerdam@pobox.com>
@@ -10262,13 +10262,13 @@
 	* libtiff/tif_ojpeg.c: plug leaks on OJPEG read failure path
 	* tools/rgb2ycbcr.c (cvtRaster): unchecked malloc
 	* libtiff/tif_jpeg.c, tools/tiff2pdf.c, tools/tiff2ps.c: mark
-	NULL-deref and possible overflow
+	nullptr-deref and possible overflow
 	* tools/tiff2pdf.c: remove decl+set of set-but-not-used local, "written"
 	* libtiff/tif_jpeg.c (JPEGInitializeLibJPEG): Remove declaration
 	and set of otherwise unused local, data_is_empty.
 	* libtiff/tif_jpeg.c (JPEGDecodeRaw) [JPEG_LIB_MK1_OR_12BIT]:
 	Diagnose out-of-memory failure and return 0 rather than
-	dereferencing NULL.
+	dereferencing nullptr.
 
 2011-05-24  Frank Warmerdam  <warmerdam@pobox.com>
 
@@ -10615,7 +10615,7 @@
 
 	* libtiff/tif_dirinfo.c: Don't use assertions in _TIFFFieldWithTag()
 	and _TIFFFieldWithName() if the tag is not found in the tag table.
-	This should be normal situation and returned NULL value should be
+	This should be normal situation and returned nullptr value should be
 	properly handled by the caller.
 
 2010-07-02  Andrey Kiselev  <dron@ak4719.spb.edu>
@@ -11313,7 +11313,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2008-05-24  Frank Warmerdam  <warmerdam@pobox.com>
 
-	* tif_codec.c: Avoid NULL pointer dereferencing for exotic
+	* tif_codec.c: Avoid nullptr pointer dereferencing for exotic
 	compression codec codes.
 
 	* tif_dirwrite.c: fix potential memory leak.
@@ -11378,10 +11378,10 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 	* libtiff/{tif_flush.c, tif_dirwrite.c, tiffio.h, tiffiop.h}:
 	TIFFRewriteField() renamed into _TIFFRewriteField() and moved out
 	from the public interface. Type of its 'count' parameter changed
-	from uint32 to tmsize_t.
+	from uint32_t to tmsize_t.
 
 	* /libtiff/tiffiop.h: Make tif_nfields and tif_nfieldscompat fields
-	of the tiff structure have the size_t type instead of uint32.
+	of the tiff structure have the size_t type instead of uint32_t.
 
 2008-04-09  Andrey Kiselev  <dron@ak4719.spb.edu>
 
@@ -11796,7 +11796,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2007-02-27  Andrey Kiselev  <dron@ak4719.spb.edu>
 
-	* libtiff/tif_dirread.c: Use uint32 type instead of tsize_t in byte
+	* libtiff/tif_dirread.c: Use uint32_t type instead of tsize_t in byte
 	counters in TIFFFetchData(). Should finally fix the issue
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=890
@@ -11834,7 +11834,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=1490
 
 	* libtiff/{tif_dirread.c, tif_read.c}: Type of the byte counters
-	changed from tsize_t to uint32 to be able to work with data arrays
+	changed from tsize_t to uint32_t to be able to work with data arrays
 	larger than 2GB. Fixes bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=890
@@ -11924,7 +11924,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2006-07-12  Frank Warmerdam  <warmerdam@pobox.com>
 
-	* tif_dirwrite.c: make sure to use uint32 for wordcount in
+	* tif_dirwrite.c: make sure to use uint32_t for wordcount in
 	TIFFWriteNormanTag if writecount is VARIABLE2 for ASCII fields.
 	It already seems to have been done for other field types.  Needed
 	for "tiffset" on files with geotiff ascii text.
@@ -12347,7 +12347,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 	* libtiff/tif_dirinfo.c: Change definitions for TIFFTAG_ICCPROFILE,
 	TIFFTAG_PHOTOSHOP, TIFFTAG_RICHTIFFIPTC, TIFFTAG_XMLPACKET: readcount
-	should be uint32 value.
+	should be uint32_t value.
 
 2006-01-02  Bob Friesenhahn  <bfriesen@simple.dallas.tx.us>
 
@@ -12590,7 +12590,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 2005-09-05  Frank Warmerdam  <warmerdam@pobox.com>
 
 	* libtiff/tif_dir.c: When prefreeing tv->value in TIFFSetFieldV
-	also set it to NULL to avoid double free when re-setting custom
+	also set it to nullptr to avoid double free when re-setting custom
 	string fields as per:
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=922
@@ -12635,7 +12635,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2005-07-25  Andrey Kiselev  <dron@ak4719.spb.edu>
 
-	* libtiff/tif_print.c: Fixed printing of the BYTE and SBYTE arrays.
+	* libtiff/tif_print.c: Fixed printing of the uint8_t and SBYTE arrays.
 
 	* tools/tiffdump.c: Added support for TIFF_IFD datatype.
 
@@ -12767,8 +12767,8 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=861
 
 	* libtiff/{tif_dirinfo.c, tif_print.c}: TIFFFetchByteArray() returns
-	uint16 array when fetching the BYTE and SBYTE filds, so we should
-	consider result as pointer to uint16 array and not as array of chars.
+	uint16_t array when fetching the uint8_t and SBYTE filds, so we should
+	consider result as pointer to uint16_t array and not as array of chars.
 	As per bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=831
@@ -12852,7 +12852,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2005-04-08  Andrey Kiselev  <dron@ak4719.spb.edu>
 
-	* libtiff/{tiffiop.h, tif_dir.c}: Use uint32 type for appropriate
+	* libtiff/{tiffiop.h, tif_dir.c}: Use uint32_t type for appropriate
 	values in _TIFFVSetField() function. Inspired by the bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=816
@@ -13130,7 +13130,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2004-12-10  Andrey Kiselev  <dron@ak4719.spb.edu>
 
-	* libtiff/tif_dirwrite.c: Always write TIFFTAG_SUBIFD using LONG type
+	* libtiff/tif_dirwrite.c: Always write TIFFTAG_SUBIFD using int32_t type
 	as per bugs
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=703
@@ -13172,7 +13172,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2004-11-29  Andrey Kiselev  <dron@ak4719.spb.edu>
 
-	* libtiff/tif_dir.c: Properly handle tags, which have the uint32
+	* libtiff/tif_dir.c: Properly handle tags, which have the uint32_t
 	counts. As per bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=693
@@ -13266,12 +13266,12 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=625
 
 	* libtiff/tif_dirread.c: Fixed problem when fetching BitsPerSample and
-	Compression tags of type LONG from broken TIFFS as per bug
+	Compression tags of type int32_t from broken TIFFS as per bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=662
 
 	* libtiff/tif_dirinfo.c: Fixed definition for TIFFTAG_RICHTIFFIPTC,
-	the writecount should have uint32 type. As per bug
+	the writecount should have uint32_t type. As per bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=662
 
@@ -13289,7 +13289,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 	 http://bugzilla.remotesensing.org/show_bug.cgi?id=648
 
 	* libtiff/{tif_jpeg.c, tif_ojpeg.c}: TIFFTAG_JPEGTABLES should have
-	uint32 count. Use this type everywhere.
+	uint32_t count. Use this type everywhere.
 
 2004-11-03  Frank Warmerdam  <warmerdam@pobox.com>
 
@@ -13587,7 +13587,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=576
 
 	* libtiff/tiff.h: Use _TIFF_DATA_TYPEDEFS_ guardian to switch off
-	defining int8/uint8/... etc. types. As per bug
+	defining int8/uint8_t/... etc. types. As per bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=607
 
@@ -13860,7 +13860,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=475
 
 	* libtiff/{tif_win32.c, tif_unix.c}: Check whether the pointer is
-	NULL before proceeding further as per bug
+	nullptr before proceeding further as per bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=474
 
@@ -13916,7 +13916,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2003-12-31  Andrey Kiselev  <dron@ak4719.spb.edu>
 
-	* libtiff/tif_win32.c: Fixed problem with _TIFFrealloc() when the NULL
+	* libtiff/tif_win32.c: Fixed problem with _TIFFrealloc() when the nullptr
 	pointer passed. Patch supplied by Larry Grill.
 
 	* libtiff/{tiff.h, tif_fax3.c}:Fixes for AMD 64 platform as
@@ -14209,7 +14209,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 2003-08-21  Andrey Kiselev  <dron@ak4719.spb.edu>
 
-	* tools/tiffmedian.c: int declaration replaced with the uint32 to
+	* tools/tiffmedian.c: int declaration replaced with the uint32_t to
 	support large images as per bug
 
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=382
@@ -14237,7 +14237,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 	reported by Ashley Dreier.
 
 	* libtiff/tif_print.c: Fixed problem with float tags reading, support
-	for printing RATIONAL and BYTE tags added.
+	for printing RATIONAL and uint8_t tags added.
 
 2003-08-05  Andrey Kiselev  <dron@ak4719.spb.edu>
 
@@ -14739,7 +14739,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 2002-04-20  Andrey Kiselev  <dron@ak4719.spb.edu>
 
 	* libtiff/tif_open.c: Pointers to custom procedures
-	in TIFFClientOpen() are checked to be not NULL-pointers.
+	in TIFFClientOpen() are checked to be not nullptr-pointers.
 
 2002-04-18  Andrey Kiselev  <dron@ak4719.spb.edu>
 
@@ -14861,7 +14861,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 2002-03-10  Andrey Kiselev  <dron@ak4719.spb.edu>
 
 	* libtiff/: tif_dirinfo.c, tif_dirwrite.c: Added possibility to
-	read broken TIFFs with LONG type used for TIFFTAG_COMPRESSION,
+	read broken TIFFs with int32_t type used for TIFFTAG_COMPRESSION,
 	TIFFTAG_BITSPERSAMPLE, TIFFTAG_PHOTOMETRIC.  Closes
 	http://bugzilla.remotesensing.org/show_bug.cgi?id=99
 
@@ -15173,7 +15173,7 @@ btiff/tif_win32.c: Replace custom Win32 memory api with generic
 
 	* libtiff/tif_dirinfo.c: Modified the TIFF_BYTE definition for
 	TIFFTAG_PHOTOSHOP to use a writecount of TIFF_VARIABLE2 (-3) to
-	force use of uint32 counts instead of short counts.
+	force use of uint32_t counts instead of short counts.
 
 	* libtiff/tif_dirwrite.c: Added support for TIFF_VARIABLE2 in the
 	case of writing TIFF_BYTE/TIFF_SBYTE fields.
@@ -15564,7 +15564,7 @@ Tue Apr 18 16:18:08 2000  Frank Warmerdam  <warmerda@esabot.atlsci.com>
 
 2000-03-27  Mike Welles	     <mike@onshore.com>
 
-	* fax2ps:  Modified printruns to take uint32 instead of uint16.
+	* fax2ps:  Modified printruns to take uint32_t instead of uint16_t.
 	Patch courtesy of Bernt Herd <herd@herdsoft.com>
 
 2000-03-20  Mike Welles	     <mike@onshore.com>
@@ -15584,7 +15584,7 @@ Tue Apr 18 16:18:08 2000  Frank Warmerdam  <warmerda@esabot.atlsci.com>
 
 2000-03-17  Frank Warmerdam  <warmerda@cs46980-c>
 
-	* tif_fax3.c: Fixed serious bug introduced during the uint16->uint32
+	* tif_fax3.c: Fixed serious bug introduced during the uint16_t->uint32_t
 	conversion for the run arrays.
 
 2000-03-03  Frank Warmerdam  <warmerda@cs46980-c.mtnk1.on.wave.home.com>
