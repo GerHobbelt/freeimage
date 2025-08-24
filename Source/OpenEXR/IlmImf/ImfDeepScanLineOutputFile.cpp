@@ -100,7 +100,7 @@ struct OutSliceInfo
     bool                         zero;
 
     OutSliceInfo (PixelType type = HALF,
-                  const char * base =NULL,
+                  const char * base =nullptr,
                   ptrdiff_t sampleStride = 0,
                   ptrdiff_t xStride = 0,
                   ptrdiff_t yStride =0,
@@ -248,7 +248,7 @@ struct DeepScanLineOutputFile::Data
 DeepScanLineOutputFile::Data::Data (int numThreads):
     lineOffsetsPosition (0),
     partNumber (-1) ,
-    _streamData(NULL),
+    _streamData(nullptr),
     _deleteStream(false)
 {
     //
@@ -1121,7 +1121,7 @@ DeepScanLineOutputFile::setFrameBuffer (const DeepFrameBuffer &frameBuffer)
             //
 
             slices.push_back (new OutSliceInfo (i.channel().type,
-                                                NULL,// base
+                                                nullptr,// base
                                                 0,// sampleStride,
                                                 0,// xStride
                                                 0,// yStride

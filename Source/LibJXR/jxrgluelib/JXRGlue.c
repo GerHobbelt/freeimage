@@ -55,7 +55,7 @@ ERR PKFree(void** ppv)
     if (ppv)
     {
         free(*ppv);
-        *ppv = NULL;
+        *ppv = nullptr;
     }
 
     return WMP_errSuccess;
@@ -68,9 +68,9 @@ ERR PKAllocAligned(void** ppv, size_t cb, size_t iAlign)
     size_t       iAlignmentCorrection;
     const size_t c_cbBlockSize = cb + sizeof(void*) + iAlign - 1;
 
-    *ppv = NULL;
+    *ppv = nullptr;
     pOrigPtr = calloc(1, c_cbBlockSize);
-    if (NULL == pOrigPtr)
+    if (nullptr == pOrigPtr)
         return WMP_errOutOfMemory;
 
     iAlignmentCorrection = iAlign - ((size_t)pOrigPtr % iAlign);
@@ -96,7 +96,7 @@ ERR PKFreeAligned(void** ppv)
         U8 **ppOrigPtr = (U8**)((U8*)(*ppv) - sizeof(void*));
         assert(*ppOrigPtr <= (U8*)ppOrigPtr); // Something's wrong if pOrigPtr points forward
         free(*ppOrigPtr);
-        *ppv = NULL;
+        *ppv = nullptr;
     }
     return WMP_errSuccess;
 }
@@ -264,7 +264,7 @@ const PKPixelFormatGUID* GetPixelFormatFromHash(const U8 uPFHash)
     }
 
     // If we reached this point, we did not find anything which matched the hash
-    return NULL;
+    return nullptr;
 }
 
 //----------------------------------------------------------------
@@ -286,7 +286,7 @@ static ERR GetIIDInfo(const char* szExt, const PKIIDInfo** ppInfo)
     };
     size_t i = 0;
 
-    *ppInfo = NULL;
+    *ppInfo = nullptr;
     for (i = 0; i < sizeof2(iidInfo); ++i)
     {
         if (0 == PKStrnicmp(szExt, iidInfo[i].szExt, strlen(iidInfo[i].szExt)))
@@ -306,7 +306,7 @@ ERR GetImageEncodeIID(const char* szExt, const PKIID** ppIID)
 {
     ERR err = WMP_errSuccess;
 
-    const PKIIDInfo* pInfo = NULL;
+    const PKIIDInfo* pInfo = nullptr;
 
     Call(GetIIDInfo(szExt, &pInfo));
     *ppIID = pInfo->pIIDEnc;
@@ -319,7 +319,7 @@ ERR GetImageDecodeIID(const char* szExt, const PKIID** ppIID)
 {
     ERR err = WMP_errSuccess;
 
-    const PKIIDInfo* pInfo = NULL;
+    const PKIIDInfo* pInfo = nullptr;
 
     Call(GetIIDInfo(szExt, &pInfo));
     *ppIID = pInfo->pIIDDec;
@@ -355,7 +355,7 @@ Cleanup:
 ERR PKCreateFactory(PKFactory** ppFactory, U32 uVersion)
 {
     ERR err = WMP_errSuccess;
-    PKFactory* pFactory = NULL;
+    PKFactory* pFactory = nullptr;
 
     UNREFERENCED_PARAMETER( uVersion );
 
@@ -402,15 +402,15 @@ ERR PKCodecFactory_CreateDecoderFromFile(const char* szFilename, PKImageDecode**
 {
     ERR err = WMP_errSuccess;
 
-    char *pExt = NULL;
-    const PKIID* pIID = NULL;
+    char *pExt = nullptr;
+    const PKIID* pIID = nullptr;
 
-    struct WMPStream* pStream = NULL;
-    PKImageDecode* pDecoder = NULL;
+    struct WMPStream* pStream = nullptr;
+    PKImageDecode* pDecoder = nullptr;
 
     // get file extension
     pExt = strrchr(szFilename, '.');
-    FailIf(NULL == pExt, WMP_errUnsupportedFormat);
+    FailIf(nullptr == pExt, WMP_errUnsupportedFormat);
 
     // get decode PKIID
     Call(GetImageDecodeIID(pExt, &pIID));
@@ -433,7 +433,7 @@ Cleanup:
 ERR PKCodecFactory_CreateFormatConverter(PKFormatConverter** ppFConverter)
 {
     ERR err = WMP_errSuccess;
-    PKFormatConverter* pFC = NULL;
+    PKFormatConverter* pFC = nullptr;
 
     Call(PKAlloc((void **) ppFConverter, sizeof(**ppFConverter)));
     pFC = *ppFConverter;
@@ -465,7 +465,7 @@ Cleanup:
 ERR PKCreateCodecFactory(PKCodecFactory** ppCFactory, U32 uVersion)
 {
     ERR err = WMP_errSuccess;
-    PKCodecFactory* pCFactory = NULL;
+    PKCodecFactory* pCFactory = nullptr;
 
     UNREFERENCED_PARAMETER( uVersion );
 
@@ -597,9 +597,9 @@ ERR PKImageEncode_WriteSource(
     U32 cbStrideFrom = 0;
     U32 cbStride = 0;
 
-    U8* pb = NULL;
+    U8* pb = nullptr;
 
-	// CWMTranscodingParam* pParam = NULL; 
+	// CWMTranscodingParam* pParam = nullptr; 
 
     // get pixel format
     Call(pFC->GetSourcePixelFormat(pFC, &enPFFrom));
@@ -682,7 +682,7 @@ ERR PKImageEncode_Transcode(
     U32 cbStrideFrom = 0;
     U32 cbStride = 0;
 
-    U8* pb = NULL;
+    U8* pb = nullptr;
 
     CWMTranscodingParam cParam = {0}; 
 
@@ -765,7 +765,7 @@ ERR PKImageEncode_Release(
 ERR PKImageEncode_Create(PKImageEncode** ppIE)
 {
     ERR err = WMP_errSuccess;
-    PKImageEncode* pIE = NULL;
+    PKImageEncode* pIE = nullptr;
 
     Call(PKAlloc((void **) ppIE, sizeof(**ppIE)));
 
@@ -908,7 +908,7 @@ ERR PKImageDecode_Create(
     PKImageDecode** ppID)
 {
     ERR err = WMP_errSuccess;
-    PKImageDecode* pID = NULL;
+    PKImageDecode* pID = nullptr;
 
     Call(PKAlloc((void **) ppID, sizeof(**ppID)));
 

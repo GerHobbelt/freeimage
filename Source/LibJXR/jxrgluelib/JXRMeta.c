@@ -424,7 +424,7 @@ ERR BufferCopyIFD(const U8* pbsrc, U32 cbsrc, U32 ofssrc, U8 endian, U8* pbdst, 
                         break;
                     }
                     count *= 2;
-                    // RATIONAL's fall through to be handled as LONG's
+                    // RATIONAL's fall through to be handled as int32_t's
                 case 4:
                     for ( j = 0; j < count; j++ )
                     {
@@ -672,7 +672,7 @@ ERR ReadBinaryData(__in_ecount(1) struct WMPStream* pWS,
                    U8 **ppbData)
 {
     ERR err = WMP_errSuccess;
-    U8 *pbData = NULL;
+    U8 *pbData = nullptr;
 
     Call(PKAlloc((void **) &pbData, uCount + 2)); // Allocate buffer to store data with space for an added ascii or unicode null
     if (uCount <= 4)
@@ -710,7 +710,7 @@ ERR ReadPropvar(__in_ecount(1) struct WMPStream* pWS,
                 __out_win DPKPROPVARIANT *pvar)
 {
     ERR err = WMP_errSuccess;
-    // U8 *pbData = NULL;
+    // U8 *pbData = nullptr;
 
     memset(pvar, 0, sizeof(*pvar));
     if (uCount == 0)
@@ -798,7 +798,7 @@ ERR WriteWmpDE(
                 U8 pad[4] = {0};
                 Call(pWS->SetPos(pWS, offPos));
 
-                if (NULL == pbData)
+                if (nullptr == pbData)
                     pbData = (U8*)&pDE->uValueOrOffset;
 
                 Call(pWS->Write(pWS, pbData, pDE->uCount));
@@ -825,7 +825,7 @@ ERR WriteWmpDE(
                 U16 uiShrt1 = 0;
                 U16 uiShrt2 = 0;
 
-                if (NULL == pbData)
+                if (nullptr == pbData)
                     pbData = (U8*)&pDE->uValueOrOffset;
 
                 if (pDE->uCount > 0)
@@ -866,7 +866,7 @@ ERR WriteWmpDE(
         case WMP_typLONG:
             if (pDE->uCount <= 1)
             {
-                if (NULL == pbData)
+                if (nullptr == pbData)
                     pbData = (U8*)&pDE->uValueOrOffset;
 
                 Call(PutULong(pWS, offPos, *(U32*)pbData)); offPos += 4;

@@ -43,7 +43,7 @@ void CalcMetadataSizeLPSTR(const DPKPROPVARIANT var,
 {
     if (DPKVT_EMPTY != var.vt)
     {
-        U32 uiLenWithNull = (U32)strlen(var.VT.pszVal) + 1; // +1 for NULL;
+        U32 uiLenWithNull = (U32)strlen(var.VT.pszVal) + 1; // +1 for nullptr;
         assert(DPKVT_LPSTR == var.vt);
 
         // We only use offset if size > 4
@@ -64,7 +64,7 @@ void CalcMetadataSizeLPWSTR(const DPKPROPVARIANT var,
 {
     if (DPKVT_EMPTY != var.vt)
     {
-        U32 uiCBWithNull = sizeof(U16) * ((U32)wcslen((wchar_t *) var.VT.pwszVal) + 1); // +1 for NULL term;
+        U32 uiCBWithNull = sizeof(U16) * ((U32)wcslen((wchar_t *) var.VT.pwszVal) + 1); // +1 for nullptr term;
         assert(DPKVT_LPWSTR == var.vt);
 
         // We only use offset if size > 4
@@ -112,20 +112,20 @@ ERR CalcMetadataOffsetSize(PKImageEncode* pIE,
 {
     ERR err = WMP_errSuccess;
 
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarImageDescription, pcInactiveMetadata, pcbMetadataSize, NULL);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarCameraMake, pcInactiveMetadata, pcbMetadataSize, NULL);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarCameraModel, pcInactiveMetadata, pcbMetadataSize, NULL);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarSoftware, pcInactiveMetadata, pcbMetadataSize, NULL);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarDateTime, pcInactiveMetadata, pcbMetadataSize, NULL);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarArtist, pcInactiveMetadata, pcbMetadataSize, NULL);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarCopyright, pcInactiveMetadata, pcbMetadataSize, NULL);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarImageDescription, pcInactiveMetadata, pcbMetadataSize, nullptr);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarCameraMake, pcInactiveMetadata, pcbMetadataSize, nullptr);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarCameraModel, pcInactiveMetadata, pcbMetadataSize, nullptr);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarSoftware, pcInactiveMetadata, pcbMetadataSize, nullptr);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarDateTime, pcInactiveMetadata, pcbMetadataSize, nullptr);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarArtist, pcInactiveMetadata, pcbMetadataSize, nullptr);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarCopyright, pcInactiveMetadata, pcbMetadataSize, nullptr);
     CalcMetadataSizeUI2(pIE->sDescMetadata.pvarRatingStars, pcInactiveMetadata, pcbMetadataSize);
     CalcMetadataSizeUI2(pIE->sDescMetadata.pvarRatingValue, pcInactiveMetadata, pcbMetadataSize);
-    CalcMetadataSizeLPWSTR(pIE->sDescMetadata.pvarCaption, pcInactiveMetadata, pcbMetadataSize, NULL);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarDocumentName, pcInactiveMetadata, pcbMetadataSize, NULL);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarPageName, pcInactiveMetadata, pcbMetadataSize, NULL);
+    CalcMetadataSizeLPWSTR(pIE->sDescMetadata.pvarCaption, pcInactiveMetadata, pcbMetadataSize, nullptr);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarDocumentName, pcInactiveMetadata, pcbMetadataSize, nullptr);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarPageName, pcInactiveMetadata, pcbMetadataSize, nullptr);
     CalcMetadataSizeUI4(pIE->sDescMetadata.pvarPageNumber, pcInactiveMetadata, pcbMetadataSize);
-    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarHostComputer, pcInactiveMetadata, pcbMetadataSize, NULL);
+    CalcMetadataSizeLPSTR(pIE->sDescMetadata.pvarHostComputer, pcInactiveMetadata, pcbMetadataSize, nullptr);
 
     return err;
 }
@@ -149,7 +149,7 @@ ERR CopyDescMetadata(DPKPROPVARIANT *pvarDst,
             
         case DPKVT_LPWSTR:
             pvarDst->vt = DPKVT_LPWSTR;
-            uiSize = sizeof(U16) * (wcslen((wchar_t *) varSrc.VT.pwszVal) + 1); // +1 for NULL term
+            uiSize = sizeof(U16) * (wcslen((wchar_t *) varSrc.VT.pwszVal) + 1); // +1 for nullptr term
             Call(PKAlloc((void **) &pvarDst->VT.pszVal, uiSize));
             memcpy(pvarDst->VT.pwszVal, varSrc.VT.pwszVal, uiSize);
             break;
@@ -246,14 +246,14 @@ ERR WriteDescMetadata(PKImageEncode *pIE,
             CalcMetadataSizeUI2(var, &uiTemp, &uiMetadataOffsetSize);
             pwmpDE->uCount = 1;
             pwmpDE->uValueOrOffset = var.VT.uiVal;
-            Call(WriteWmpDE(pWS, poffPos, pwmpDE, NULL, NULL));
+            Call(WriteWmpDE(pWS, poffPos, pwmpDE, nullptr, nullptr));
             break;
 
         case DPKVT_UI4:
             CalcMetadataSizeUI4(var, &uiTemp, &uiMetadataOffsetSize);
             pwmpDE->uCount = 1;
             pwmpDE->uValueOrOffset = var.VT.ulVal;
-            Call(WriteWmpDE(pWS, poffPos, pwmpDE, NULL, NULL));
+            Call(WriteWmpDE(pWS, poffPos, pwmpDE, nullptr, nullptr));
             break;
 
         default:
@@ -331,8 +331,8 @@ ERR WriteContainerPre(
     WmpDE wmpDE = {0};
     size_t i = 0;
 
-    U8* pbEXIFMetadata = NULL;
-    U8* pbGPSInfoMetadata = NULL;
+    U8* pbEXIFMetadata = nullptr;
+    U8* pbGPSInfoMetadata = nullptr;
 
     // const unsigned char Zero[0x20] = { 0 };
     const unsigned char Zero[sizeof(struct IFDEntry) * sizeof(wmpDEs) / sizeof(wmpDEs[0]) + sizeof(U32)] = { 0 };
@@ -565,7 +565,7 @@ ERR WriteContainerPre(
         }
         pDEMisc->uEXIFMetadataOffset += (pDEMisc->uEXIFMetadataOffset & 1);
         wmpDE.uValueOrOffset = pDEMisc->uEXIFMetadataOffset;
-        Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+        Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
         Call(PKAlloc((void **) &pbEXIFMetadata, pIE->cbEXIFMetadataByteCount));
         uiTemp = pDEMisc->uEXIFMetadataOffset;
@@ -599,7 +599,7 @@ ERR WriteContainerPre(
         }
         pDEMisc->uGPSInfoMetadataOffset += (pDEMisc->uGPSInfoMetadataOffset & 1);
         wmpDE.uValueOrOffset = pDEMisc->uGPSInfoMetadataOffset;
-        Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+        Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
         Call(PKAlloc((void **) &pbGPSInfoMetadata, pIE->cbGPSInfoMetadataByteCount));
         uiTemp = pDEMisc->uGPSInfoMetadataOffset;
@@ -612,44 +612,44 @@ ERR WriteContainerPre(
     wmpDE = wmpDEs[i++];
     assert(WMP_tagPixelFormat == wmpDE.uTag);
     wmpDE.uValueOrOffset = pDEMisc->uOffPixelFormat;
-    Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
     wmpDE = wmpDEs[i++];
     assert(WMP_tagTransformation == wmpDE.uTag);
     wmpDE.uValueOrOffset = pIE->WMP.oOrientation;
-    Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
     wmpDE = wmpDEs[i++];
     assert(WMP_tagImageWidth == wmpDE.uTag);
     wmpDE.uValueOrOffset = pIE->uWidth;
-    Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
     wmpDE = wmpDEs[i++];
     assert(WMP_tagImageHeight == wmpDE.uTag);
     wmpDE.uValueOrOffset = pIE->uHeight;
-    Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
     
     wmpDE = wmpDEs[i++];
     assert(WMP_tagWidthResolution == wmpDE.uTag);
     *((float *) &wmpDE.uValueOrOffset) = pIE->fResX;
-    Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
     wmpDE = wmpDEs[i++];
     assert(WMP_tagHeightResolution == wmpDE.uTag);
     *((float *) &wmpDE.uValueOrOffset) = pIE->fResY;
-    Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
    
     wmpDE = wmpDEs[i++];
     assert(WMP_tagImageOffset == wmpDE.uTag);
     wmpDE.uValueOrOffset = pDEMisc->uImageOffset;
-    Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
     // fix up in WriteContainerPost()
     wmpDE = wmpDEs[i++];
     assert(WMP_tagImageByteCount == wmpDE.uTag);
     pDEMisc->uOffImageByteCount = (U32)offPos;
     wmpDE.uValueOrOffset = 0;
-    Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
     if (pIE->WMP.bHasAlpha && pIE->WMP.wmiSCP.uAlphaMode == 2)
     {
@@ -658,14 +658,14 @@ ERR WriteContainerPre(
         assert(WMP_tagAlphaOffset == wmpDE.uTag);
         pDEMisc->uOffAlphaOffset = (U32)offPos;
         wmpDE.uValueOrOffset = 0;
-        Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+        Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
 
         // fix up in WriteContainerPost()
         wmpDE = wmpDEs[i++];
         assert(WMP_tagAlphaByteCount == wmpDE.uTag);
         pDEMisc->uOffAlphaByteCount = (U32)offPos;
         wmpDE.uValueOrOffset = 0;
-        Call(WriteWmpDE(pWS, &offPos, &wmpDE, NULL, NULL));
+        Call(WriteWmpDE(pWS, &offPos, &wmpDE, nullptr, nullptr));
     }
 
     //================
@@ -692,9 +692,9 @@ ERR WriteContainerPre(
     assert(pDEMisc->uImageOffset == offPos);
 
 Cleanup:
-    if (pbEXIFMetadata != NULL)
+    if (pbEXIFMetadata != nullptr)
         PKFree((void **) &pbEXIFMetadata);
-    if (pbGPSInfoMetadata != NULL)
+    if (pbGPSInfoMetadata != nullptr)
         PKFree((void **) &pbGPSInfoMetadata);
     return err;
 }
@@ -716,18 +716,18 @@ ERR WriteContainerPost(
 
     deImageByteCount.uValueOrOffset = pIE->WMP.nCbImage;
     offPos = pDEMisc->uOffImageByteCount;
-    Call(WriteWmpDE(pWS, &offPos, &deImageByteCount, NULL, NULL));
+    Call(WriteWmpDE(pWS, &offPos, &deImageByteCount, nullptr, nullptr));
 
     //Alpha
     if (pIE->WMP.bHasAlpha && pIE->WMP.wmiSCP.uAlphaMode == 2)
     {                
         deAlphaOffset.uValueOrOffset = pIE->WMP.nOffAlpha;
         offPos = pDEMisc->uOffAlphaOffset;
-        Call(WriteWmpDE(pWS, &offPos, &deAlphaOffset, NULL, NULL));
+        Call(WriteWmpDE(pWS, &offPos, &deAlphaOffset, nullptr, nullptr));
 
         deAlphaByteCount.uValueOrOffset = pIE->WMP.nCbAlpha + pIE->WMP.nOffAlpha;
         offPos = pDEMisc->uOffAlphaByteCount;
-        Call(WriteWmpDE(pWS, &offPos, &deAlphaByteCount, NULL, NULL));
+        Call(WriteWmpDE(pWS, &offPos, &deAlphaByteCount, nullptr, nullptr));
     }
 
 Cleanup:
@@ -1253,7 +1253,7 @@ ERR PKImageEncode_WritePixelsBanded_WMP(PKImageEncode* pIE, U32 cLine, U8* pbPix
         // Check if this is planar alpha: banded encode requires temp file
         if (pIE->WMP.bHasAlpha && pIE->WMP.wmiSCP.uAlphaMode == 2)
         {
-            FailIf(NULL == pPATempFile, WMP_errPlanarAlphaBandedEncRequiresTempFile);
+            FailIf(nullptr == pPATempFile, WMP_errPlanarAlphaBandedEncRequiresTempFile);
         }
     }
 
@@ -1370,7 +1370,7 @@ ERR PKImageEncode_Transcode_WMP(
     Bool fPlanarAlpha;
     PKPixelInfo PI;
 
-    struct WMPStream* pWSDec = NULL;
+    struct WMPStream* pWSDec = nullptr;
     struct WMPStream* pWSEnc= pIE->pStream;
 
     // pass through metadata
@@ -1500,7 +1500,7 @@ ERR PKImageEncode_Create_WMP(PKImageEncode** ppIE)
 {
     ERR err = WMP_errSuccess;
 
-    PKImageEncode* pIE = NULL;
+    PKImageEncode* pIE = nullptr;
 
     Call(PKImageEncode_Create(ppIE));
 
@@ -1838,7 +1838,7 @@ ERR PKImageDecode_Initialize_WMP(
 {
     ERR err = WMP_errSuccess;
 
-    CWMImageInfo* pII = NULL;
+    CWMImageInfo* pII = nullptr;
 
     //================================
     Call(PKImageDecode_Initialize(pID, pWS));
@@ -1905,7 +1905,7 @@ ERR PKImageDecode_GetRawStream_WMP(
     ERR err = WMP_errSuccess;
     struct WMPStream* pWS = pID->pStream;
 
-    *ppWS = NULL;
+    *ppWS = nullptr;
     Call(pWS->SetPos(pWS, pID->WMP.wmiDEMisc.uImageOffset));
     *ppWS = pWS;
 
@@ -1924,7 +1924,7 @@ ERR PKImageDecode_Copy_WMP(
     U32 linesperMBRow;
     CWMImageBufferInfo wmiBI = { 0 };
 #ifdef REENTRANT_MODE
-    U8 *pbLowMemAdj = NULL;
+    U8 *pbLowMemAdj = nullptr;
     U32 i, cMBRow;
     U32 cMBRowStart;
 #endif // REENTRANT_MODE
@@ -2195,7 +2195,7 @@ ERR PKImageDecode_Release_WMP(PKImageDecode** ppID)
     ERR             err = WMP_errSuccess;
     PKImageDecode  *pID;
 
-    if (NULL == ppID)
+    if (nullptr == ppID)
         goto Cleanup;
 
     pID = *ppID;
@@ -2228,7 +2228,7 @@ Cleanup:
 ERR PKImageDecode_Create_WMP(PKImageDecode** ppID)
 {
     ERR err = WMP_errSuccess;
-    PKImageDecode* pID = NULL;
+    PKImageDecode* pID = nullptr;
 
     Call(PKImageDecode_Create(ppID));
 

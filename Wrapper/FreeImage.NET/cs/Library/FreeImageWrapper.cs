@@ -94,7 +94,7 @@ namespace FreeImageAPI
 
 		/// <summary>
 		/// Specifies that the bitmap is not compressed and that the color table consists of three
-		/// <b>DWORD</b> color masks that specify the red, green, and blue components, respectively,
+		/// <b>uint32_t</b> color masks that specify the red, green, and blue components, respectively,
 		/// of each pixel. This is valid when used with 16- and 32-bpp bitmaps.
 		/// </summary>
 		public const int BI_BITFIELDS = 3;
@@ -5195,7 +5195,7 @@ namespace FreeImageAPI
 		/// <param name="hWnd">Handle to the window whose DC is to be retrieved.
 		/// If this value is IntPtr.Zero, GetDC retrieves the DC for the entire screen. </param>
 		/// <returns>If the function succeeds, the return value is a handle to the DC for the specified window's client area.
-		/// If the function fails, the return value is NULL.</returns>
+		/// If the function fails, the return value is nullptr.</returns>
 		[DllImport("user32.dll")]
 		private static extern IntPtr GetDC(IntPtr hWnd);
 
@@ -5223,11 +5223,11 @@ namespace FreeImageAPI
 		/// pointed to by pbmi (either logical palette indexes or literal RGB values).</param>
 		/// <param name="ppvBits">Pointer to a variable that receives a pointer to the location of the DIB bit values.</param>
 		/// <param name="hSection">Handle to a file-mapping object that the function will use to create the DIB.
-		/// This parameter can be NULL.</param>
+		/// This parameter can be nullptr.</param>
 		/// <param name="dwOffset">Specifies the offset from the beginning of the file-mapping object referenced by hSection
-		/// where storage for the bitmap bit values is to begin. This value is ignored if hSection is NULL.</param>
+		/// where storage for the bitmap bit values is to begin. This value is ignored if hSection is nullptr.</param>
 		/// <returns>If the function succeeds, the return value is a handle to the newly created DIB,
-		/// and *ppvBits points to the bitmap bit values. If the function fails, the return value is NULL, and *ppvBits is NULL.</returns>
+		/// and *ppvBits points to the bitmap bit values. If the function fails, the return value is nullptr, and *ppvBits is nullptr.</returns>
 		[DllImport("gdi32.dll")]
 		private static extern IntPtr CreateDIBSection(
 			IntPtr hdc,

@@ -224,7 +224,7 @@ Dump the content of a tcd structure
 /**
 Create a new TCD handle
 @param p_is_decoder FIXME DOC
-@return Returns a new TCD handle if successful returns NULL otherwise
+@return Returns a new TCD handle if successful returns nullptr otherwise
 */
 opj_tcd_t* opj_tcd_create(OPJ_BOOL p_is_decoder);
 

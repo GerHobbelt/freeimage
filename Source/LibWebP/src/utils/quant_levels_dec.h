@@ -23,7 +23,7 @@ extern "C" {
 // Apply post-processing to input 'data' of size 'width'x'height' assuming that
 // the source was quantized to a reduced number of levels.
 // Strength is in [0..100] and controls the amount of dithering applied.
-// Returns false in case of error (data is NULL, invalid parameters,
+// Returns false in case of error (data is nullptr, invalid parameters,
 // malloc failure, ...).
 int WebPDequantizeLevels(uint8_t* const data, int width, int height,
                          int strength);

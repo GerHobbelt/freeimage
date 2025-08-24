@@ -330,7 +330,7 @@ DeepTiledOutputFile::Data::Data (int numThreads):
     numYTiles(0),
     tileOffsetsPosition (0),
     partNumber(-1),
-    _streamData(NULL),
+    _streamData(nullptr),
     _deleteStream(true)
 {
     //

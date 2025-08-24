@@ -170,13 +170,13 @@ typedef struct {
 VP8LRefsCursor VP8LRefsCursorInit(const VP8LBackwardRefs* const refs);
 // Returns true if cursor is pointing at a valid position.
 static WEBP_INLINE int VP8LRefsCursorOk(const VP8LRefsCursor* const c) {
-  return (c->cur_pos != NULL);
+  return (c->cur_pos != nullptr);
 }
 // Move to next block of references. Internal, not to be called directly.
 void VP8LRefsCursorNextBlock(VP8LRefsCursor* const c);
-// Move to next position, or NULL. Should not be called if !VP8LRefsCursorOk().
+// Move to next position, or nullptr. Should not be called if !VP8LRefsCursorOk().
 static WEBP_INLINE void VP8LRefsCursorNext(VP8LRefsCursor* const c) {
-  assert(c != NULL);
+  assert(c != nullptr);
   assert(VP8LRefsCursorOk(c));
   if (++c->cur_pos == c->last_pos_) VP8LRefsCursorNextBlock(c);
 }

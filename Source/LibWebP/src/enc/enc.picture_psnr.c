@@ -67,12 +67,12 @@ int WebPPictureDistortion(const WebPPicture* src, const WebPPicture* ref,
   int has_alpha;
   int uv_w, uv_h;
 
-  if (src == NULL || ref == NULL ||
+  if (src == nullptr || ref == nullptr ||
       src->width != ref->width || src->height != ref->height ||
-      src->y == NULL || ref->y == NULL ||
-      src->u == NULL || ref->u == NULL ||
-      src->v == NULL || ref->v == NULL ||
-      result == NULL) {
+      src->y == nullptr || ref->y == nullptr ||
+      src->u == nullptr || ref->u == nullptr ||
+      src->v == nullptr || ref->v == nullptr ||
+      result == nullptr) {
     return 0;
   }
   // TODO(skal): provide distortion for ARGB too.
@@ -82,7 +82,7 @@ int WebPPictureDistortion(const WebPPicture* src, const WebPPicture* ref,
 
   has_alpha = !!(src->colorspace & WEBP_CSP_ALPHA_BIT);
   if (has_alpha != !!(ref->colorspace & WEBP_CSP_ALPHA_BIT) ||
-      (has_alpha && (src->a == NULL || ref->a == NULL))) {
+      (has_alpha && (src->a == nullptr || ref->a == nullptr))) {
     return 0;
   }
 

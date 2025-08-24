@@ -22,8 +22,8 @@
 
 void VP8InitBitReader(VP8BitReader* const br,
                       const uint8_t* const start, const uint8_t* const end) {
-  assert(br != NULL);
-  assert(start != NULL);
+  assert(br != nullptr);
+  assert(start != nullptr);
   assert(start <= end);
   br->range_   = 255 - 1;
   br->buf_     = start;
@@ -35,7 +35,7 @@ void VP8InitBitReader(VP8BitReader* const br,
 }
 
 void VP8RemapBitReader(VP8BitReader* const br, ptrdiff_t offset) {
-  if (br->buf_ != NULL) {
+  if (br->buf_ != nullptr) {
     br->buf_ += offset;
     br->buf_end_ += offset;
   }
@@ -74,7 +74,7 @@ const uint8_t kVP8NewRange[128] = {
 };
 
 void VP8LoadFinalBytes(VP8BitReader* const br) {
-  assert(br != NULL && br->buf_ != NULL);
+  assert(br != nullptr && br->buf_ != nullptr);
   // Only read 8bits at a time
   if (br->buf_ < br->buf_end_) {
     br->bits_ += 8;
@@ -128,8 +128,8 @@ void VP8LInitBitReader(VP8LBitReader* const br, const uint8_t* const start,
                        size_t length) {
   size_t i;
   vp8l_val_t value = 0;
-  assert(br != NULL);
-  assert(start != NULL);
+  assert(br != nullptr);
+  assert(start != nullptr);
   assert(length < 0xfffffff8u);   // can't happen with a RIFF chunk.
 
   br->len_ = length;
@@ -150,8 +150,8 @@ void VP8LInitBitReader(VP8LBitReader* const br, const uint8_t* const start,
 
 void VP8LBitReaderSetBuffer(VP8LBitReader* const br,
                             const uint8_t* const buf, size_t len) {
-  assert(br != NULL);
-  assert(buf != NULL);
+  assert(br != nullptr);
+  assert(buf != nullptr);
   assert(len < 0xfffffff8u);   // can't happen with a RIFF chunk.
   br->buf_ = buf;
   br->len_ = len;

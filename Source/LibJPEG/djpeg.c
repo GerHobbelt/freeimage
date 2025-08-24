@@ -46,7 +46,7 @@
 
 static const char * const cdjpeg_message_table[] = {
 #include "cderror.h"
-  NULL
+  nullptr
 };
 
 
@@ -176,7 +176,7 @@ parse_switches (j_decompress_ptr cinfo, int argc, char **argv,
 
   /* Set up default JPEG parameters. */
   requested_fmt = DEFAULT_FMT;	/* set default output file format */
-  outfilename = NULL;
+  outfilename = nullptr;
   cinfo->err->trace_level = 0;
 
   /* Scan command line options, adjust parameters */
@@ -186,7 +186,7 @@ parse_switches (j_decompress_ptr cinfo, int argc, char **argv,
     if (*arg != '-') {
       /* Not a switch, must be a file name argument */
       if (argn <= last_file_arg_seen) {
-	outfilename = NULL;	/* -outfile applies to just one input file */
+	outfilename = nullptr;	/* -outfile applies to just one input file */
 	continue;		/* ignore this name if previously processed */
       }
       break;			/* else done parsing switches */
@@ -272,7 +272,7 @@ parse_switches (j_decompress_ptr cinfo, int argc, char **argv,
 #ifdef QUANT_2PASS_SUPPORTED	/* otherwise can't quantize to supplied map */
 	FILE * mapfile;
 
-	if ((mapfile = fopen(argv[argn], READ_BINARY)) == NULL) {
+	if ((mapfile = fopen(argv[argn], READ_BINARY)) == nullptr) {
 	  fprintf(stderr, "%s: can't open %s\n", progname, argv[argn]);
 	  exit(EXIT_FAILURE);
 	}
@@ -430,7 +430,7 @@ main (int argc, char **argv)
   struct cdjpeg_progress_mgr progress;
 #endif
   int file_index;
-  djpeg_dest_ptr dest_mgr = NULL;
+  djpeg_dest_ptr dest_mgr = nullptr;
   FILE * input_file;
   FILE * output_file;
   JDIMENSION num_scanlines;
@@ -441,7 +441,7 @@ main (int argc, char **argv)
 #endif
 
   progname = argv[0];
-  if (progname == NULL || progname[0] == 0)
+  if (progname == nullptr || progname[0] == 0)
     progname = "djpeg";		/* in case C library doesn't provide it */
 
   /* Initialize the JPEG decompression object with default error handling. */
@@ -478,7 +478,7 @@ main (int argc, char **argv)
 
 #ifdef TWO_FILE_COMMANDLINE
   /* Must have either -outfile switch or explicit output file name */
-  if (outfilename == NULL) {
+  if (outfilename == nullptr) {
     if (file_index != argc-2) {
       fprintf(stderr, "%s: must name one input and one output file\n",
 	      progname);
@@ -502,7 +502,7 @@ main (int argc, char **argv)
 
   /* Open the input file. */
   if (file_index < argc) {
-    if ((input_file = fopen(argv[file_index], READ_BINARY)) == NULL) {
+    if ((input_file = fopen(argv[file_index], READ_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open %s\n", progname, argv[file_index]);
       exit(EXIT_FAILURE);
     }
@@ -512,8 +512,8 @@ main (int argc, char **argv)
   }
 
   /* Open the output file. */
-  if (outfilename != NULL) {
-    if ((output_file = fopen(outfilename, WRITE_BINARY)) == NULL) {
+  if (outfilename != nullptr) {
+    if ((output_file = fopen(outfilename, WRITE_BINARY)) == nullptr) {
       fprintf(stderr, "%s: can't open %s\n", progname, outfilename);
       exit(EXIT_FAILURE);
     }

@@ -466,14 +466,14 @@ OPJ_BOOL opj_t2_decode_packets( opj_t2_t *p_t2,
  *
  * @param       p_image         Source or destination image
  * @param       p_cp            Image coding parameters.
- * @return              a new T2 handle if successful, NULL otherwise.
+ * @return              a new T2 handle if successful, nullptr otherwise.
 */
 opj_t2_t* opj_t2_create(opj_image_t *p_image, opj_cp_t *p_cp)
 {
         /* create the t2 structure */
         opj_t2_t *l_t2 = (opj_t2_t*)opj_malloc(sizeof(opj_t2_t));
         if (!l_t2) {
-                return NULL;
+                return nullptr;
         }
         memset(l_t2,0,sizeof(opj_t2_t));
 
@@ -1306,7 +1306,7 @@ OPJ_BOOL opj_t2_init_seg(   opj_tcd_cblk_dec_t* cblk,
                 new_segs = (opj_tcd_seg_t*) opj_realloc(cblk->segs, cblk->m_current_max_segs * sizeof(opj_tcd_seg_t));
                 if(! new_segs) {
                         opj_free(cblk->segs);
-                        cblk->segs = NULL;
+                        cblk->segs = nullptr;
                         cblk->m_current_max_segs = 0;
                         /* opj_event_msg(p_manager, EVT_ERROR, "Not enough memory to initialize segment %d\n", l_nb_segs); */
                         return OPJ_FALSE;

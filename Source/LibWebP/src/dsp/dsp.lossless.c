@@ -643,7 +643,7 @@ static double BitsEntropy(const uint32_t* const array, int n,
     }
   }
   retval += VP8LFastSLog2(sum);
-  if (trivial_symbol != NULL) {
+  if (trivial_symbol != nullptr) {
     *trivial_symbol = (nonzeros == 1) ? nonzero_code : VP8L_NON_TRIVIAL_SYM;
   }
   return BitsEntropyRefine(nonzeros, sum, max_val, retval);
@@ -718,11 +718,11 @@ double VP8LGetCombinedEntropy(const uint32_t* const X,
 double VP8LHistogramEstimateBits(const VP8LHistogram* const p) {
   return
       VP8LPopulationCost(
-          p->literal_, VP8LHistogramNumCodes(p->palette_code_bits_), NULL)
-      + VP8LPopulationCost(p->red_, NUM_LITERAL_CODES, NULL)
-      + VP8LPopulationCost(p->blue_, NUM_LITERAL_CODES, NULL)
-      + VP8LPopulationCost(p->alpha_, NUM_LITERAL_CODES, NULL)
-      + VP8LPopulationCost(p->distance_, NUM_DISTANCE_CODES, NULL)
+          p->literal_, VP8LHistogramNumCodes(p->palette_code_bits_), nullptr)
+      + VP8LPopulationCost(p->red_, NUM_LITERAL_CODES, nullptr)
+      + VP8LPopulationCost(p->blue_, NUM_LITERAL_CODES, nullptr)
+      + VP8LPopulationCost(p->alpha_, NUM_LITERAL_CODES, nullptr)
+      + VP8LPopulationCost(p->distance_, NUM_DISTANCE_CODES, nullptr)
       + VP8LExtraCost(p->literal_ + NUM_LITERAL_CODES, NUM_LENGTH_CODES)
       + VP8LExtraCost(p->distance_, NUM_DISTANCE_CODES);
 }
@@ -730,11 +730,11 @@ double VP8LHistogramEstimateBits(const VP8LHistogram* const p) {
 double VP8LHistogramEstimateBitsBulk(const VP8LHistogram* const p) {
   return
       BitsEntropy(p->literal_, VP8LHistogramNumCodes(p->palette_code_bits_),
-                  NULL)
-      + BitsEntropy(p->red_, NUM_LITERAL_CODES, NULL)
-      + BitsEntropy(p->blue_, NUM_LITERAL_CODES, NULL)
-      + BitsEntropy(p->alpha_, NUM_LITERAL_CODES, NULL)
-      + BitsEntropy(p->distance_, NUM_DISTANCE_CODES, NULL)
+                  nullptr)
+      + BitsEntropy(p->red_, NUM_LITERAL_CODES, nullptr)
+      + BitsEntropy(p->blue_, NUM_LITERAL_CODES, nullptr)
+      + BitsEntropy(p->alpha_, NUM_LITERAL_CODES, nullptr)
+      + BitsEntropy(p->distance_, NUM_DISTANCE_CODES, nullptr)
       + VP8LExtraCost(p->literal_ + NUM_LITERAL_CODES, NUM_LENGTH_CODES)
       + VP8LExtraCost(p->distance_, NUM_DISTANCE_CODES);
 }
@@ -890,10 +890,10 @@ static void PredictorInverseTransform(const VP8LTransform* const transform,
   const int width = transform->xsize_;
   if (y_start == 0) {  // First Row follows the L (mode=1) mode.
     int x;
-    const uint32_t pred0 = Predictor0(data[-1], NULL);
+    const uint32_t pred0 = Predictor0(data[-1], nullptr);
     AddPixelsEq(data, pred0);
     for (x = 1; x < width; ++x) {
-      const uint32_t pred1 = Predictor1(data[x - 1], NULL);
+      const uint32_t pred1 = Predictor1(data[x - 1], nullptr);
       AddPixelsEq(data + x, pred1);
     }
     data += width;
@@ -1810,7 +1810,7 @@ WEBP_TSAN_IGNORE_FUNCTION void VP8LDspInit(void) {
   VP8LMapColor8b = MapAlpha;
 
   // If defined, use CPUInfo() to overwrite some pointers with faster versions.
-  if (VP8GetCPUInfo != NULL) {
+  if (VP8GetCPUInfo != nullptr) {
 #if defined(WEBP_USE_SSE2)
     if (VP8GetCPUInfo(kSSE2)) {
       VP8LDspInitSSE2();

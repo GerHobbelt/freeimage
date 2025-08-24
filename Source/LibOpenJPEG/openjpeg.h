@@ -335,9 +335,9 @@ typedef struct opj_cparameters {
 	char infile[OPJ_PATH_LEN];
 	/** output file name */
 	char outfile[OPJ_PATH_LEN];
-	/** DEPRECATED. Index generation is now handeld with the opj_encode_with_info() function. Set to NULL */
+	/** DEPRECATED. Index generation is now handeld with the opj_encode_with_info() function. Set to nullptr */
 	int index_on;
-	/** DEPRECATED. Index generation is now handeld with the opj_encode_with_info() function. Set to NULL */
+	/** DEPRECATED. Index generation is now handeld with the opj_encode_with_info() function. Set to nullptr */
 	char index[OPJ_PATH_LEN];
 	/** subimage encoding: origin image offset in x direction */
 	int image_offset_x0;
@@ -970,7 +970,7 @@ OPJ_API const char * OPJ_CALLCONV opj_version(void);
  * @param numcmpts      number of components
  * @param cmptparms     components parameters
  * @param clrspc        image color space
- * @return returns      a new image structure if successful, returns NULL otherwise
+ * @return returns      a new image structure if successful, returns nullptr otherwise
  * */
 OPJ_API opj_image_t* OPJ_CALLCONV opj_image_create(OPJ_UINT32 numcmpts, opj_image_cmptparm_t *cmptparms, OPJ_COLOR_SPACE clrspc);
 
@@ -988,7 +988,7 @@ OPJ_API void OPJ_CALLCONV opj_image_destroy(opj_image_t *image);
  * @param	cmptparms   the components parameters
  * @param	clrspc      the image color space
  *
- * @return	a new image structure if successful, NULL otherwise.
+ * @return	a new image structure if successful, nullptr otherwise.
 */
 OPJ_API opj_image_t* OPJ_CALLCONV opj_image_tile_create(OPJ_UINT32 numcmpts, opj_image_cmptparm_t *cmptparms, OPJ_COLOR_SPACE clrspc);
 
@@ -1136,7 +1136,7 @@ OPJ_API OPJ_BOOL OPJ_CALLCONV opj_set_error_handler(opj_codec_t * p_codec,
  * Creates a J2K/JP2 decompression structure
  * @param format 		Decoder to select
  *
- * @return Returns a handle to a decompressor if successful, returns NULL otherwise
+ * @return Returns a handle to a decompressor if successful, returns nullptr otherwise
  * */
 OPJ_API opj_codec_t* OPJ_CALLCONV opj_create_decompress(OPJ_CODEC_FORMAT format);
 
@@ -1311,7 +1311,7 @@ OPJ_API OPJ_BOOL OPJ_CALLCONV opj_decode_tile_data(	opj_codec_t *p_codec,
 /**
  * Creates a J2K/JP2 compression structure
  * @param 	format 		Coder to select
- * @return 				Returns a handle to a compressor if successful, returns NULL otherwise
+ * @return 				Returns a handle to a compressor if successful, returns nullptr otherwise
  */
 OPJ_API opj_codec_t* OPJ_CALLCONV opj_create_compress(OPJ_CODEC_FORMAT format);
 

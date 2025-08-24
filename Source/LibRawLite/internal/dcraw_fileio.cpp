@@ -36,7 +36,7 @@ it under the terms of the one of three licenses as you choose:
  */
 void CLASS bad_pixels (const char *cfname)
 {
-  FILE *fp=NULL;
+  FILE *fp=nullptr;
 #ifndef LIBRAW_LIBRARY_BUILD
   char *fname, *cp, line[128];
   int len, time, row, col, r, c, rad, tot, n, fixed=0;

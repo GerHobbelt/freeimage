@@ -367,7 +367,7 @@ OPJ_BOOL opj_jp2_default_validation (	opj_jp2_t * jp2,
  *
  * @param	p_id	the id of the handler to fetch.
  *
- * @return	the given handler or NULL if it could not be found.
+ * @return	the given handler or nullptr if it could not be found.
  */
 static const opj_jp2_header_handler_t * opj_jp2_img_find_handler (OPJ_UINT32 p_id);
 
@@ -376,7 +376,7 @@ static const opj_jp2_header_handler_t * opj_jp2_img_find_handler (OPJ_UINT32 p_i
  *
  * @param	p_id	the id of the handler to fetch.
  *
- * @return	the given handler or NULL if it could not be found.
+ * @return	the given handler or nullptr if it could not be found.
  */
 static const opj_jp2_header_handler_t * opj_jp2_find_handler (OPJ_UINT32 p_id );
 
@@ -751,7 +751,7 @@ void opj_jp2_free_pclr(opj_jp2_color_t *color)
 
 	if(color->jp2_pclr->cmap) opj_free(color->jp2_pclr->cmap);
 
-    opj_free(color->jp2_pclr); color->jp2_pclr = NULL;
+    opj_free(color->jp2_pclr); color->jp2_pclr = nullptr;
 }
 
 static OPJ_BOOL opj_jp2_check_color(opj_image_t *image, opj_jp2_color_t *color, opj_event_mgr_t *p_manager)
@@ -986,7 +986,7 @@ OPJ_BOOL opj_jp2_read_pclr(	opj_jp2_t *jp2,
 	jp2_pclr->entries = entries;
 	jp2_pclr->nr_entries = nr_entries;
 	jp2_pclr->nr_channels = (OPJ_BYTE) l_value;
-	jp2_pclr->cmap = NULL;
+	jp2_pclr->cmap = nullptr;
 
 	jp2->color.jp2_pclr = jp2_pclr;
 
@@ -1034,7 +1034,7 @@ OPJ_BOOL opj_jp2_read_cmap(	opj_jp2_t * jp2,
     (void)p_cmap_header_size;
 
 	/* Need nr_channels: */
-	if(jp2->color.jp2_pclr == NULL) {
+	if(jp2->color.jp2_pclr == nullptr) {
 		opj_event_msg(p_manager, EVT_ERROR, "Need to read a PCLR box before the CMAP box.\n");
 		return OPJ_FALSE;
 	}
@@ -1121,7 +1121,7 @@ void opj_jp2_apply_cdef(opj_image_t *image, opj_jp2_color_t *color)
 
 	if(color->jp2_cdef->info) opj_free(color->jp2_cdef->info);
 
-	opj_free(color->jp2_cdef); color->jp2_cdef = NULL;
+	opj_free(color->jp2_cdef); color->jp2_cdef = nullptr;
 
 }/* jp2_apply_cdef() */
 
@@ -1323,7 +1323,7 @@ OPJ_BOOL opj_jp2_decode(opj_jp2_t *jp2,
 	    if(jp2->color.icc_profile_buf) {
 		    p_image->icc_profile_buf = jp2->color.icc_profile_buf;
 		    p_image->icc_profile_len = jp2->color.icc_profile_len;
-		    jp2->color.icc_profile_buf = NULL;
+		    jp2->color.icc_profile_buf = nullptr;
 	    }
     }
 
@@ -1594,7 +1594,7 @@ void opj_jp2_setup_encoder(	opj_jp2_t *jp2,
 	jp2->numcl = 1;
 	jp2->cl = (OPJ_UINT32*) opj_malloc(jp2->numcl * sizeof(OPJ_UINT32));
     if (!jp2->cl){
-        jp2->cl = NULL;
+        jp2->cl = nullptr;
         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory when setup the JP2 encoder\n");
         return;
     }
@@ -1605,7 +1605,7 @@ void opj_jp2_setup_encoder(	opj_jp2_t *jp2,
 	jp2->numcomps = image->numcomps;	/* NC */
 	jp2->comps = (opj_jp2_comps_t*) opj_malloc(jp2->numcomps * sizeof(opj_jp2_comps_t));
     if (!jp2->comps) {
-        jp2->comps = NULL;
+        jp2->comps = nullptr;
         opj_event_msg(p_manager, EVT_ERROR, "Not enough memory when setup the JP2 encoder\n");
         return;
     }
@@ -1956,7 +1956,7 @@ const opj_jp2_header_handler_t * opj_jp2_find_handler (OPJ_UINT32 p_id)
 			return &jp2_header[i];
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -1976,7 +1976,7 @@ static const opj_jp2_header_handler_t * opj_jp2_img_find_handler (OPJ_UINT32 p_i
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -2413,7 +2413,7 @@ void opj_jp2_destroy(opj_jp2_t *jp2)
 		if (jp2->color.jp2_cdef) {
 			if (jp2->color.jp2_cdef->info) {
 				opj_free(jp2->color.jp2_cdef->info);
-				jp2->color.jp2_cdef->info = NULL;
+				jp2->color.jp2_cdef->info = nullptr;
 			}
 
 			opj_free(jp2->color.jp2_cdef);
@@ -2423,19 +2423,19 @@ void opj_jp2_destroy(opj_jp2_t *jp2)
 		if (jp2->color.jp2_pclr) {
 			if (jp2->color.jp2_pclr->cmap) {
 				opj_free(jp2->color.jp2_pclr->cmap);
-				jp2->color.jp2_pclr->cmap = NULL;
+				jp2->color.jp2_pclr->cmap = nullptr;
 			}
 			if (jp2->color.jp2_pclr->channel_sign) {
 				opj_free(jp2->color.jp2_pclr->channel_sign);
-				jp2->color.jp2_pclr->channel_sign = NULL;
+				jp2->color.jp2_pclr->channel_sign = nullptr;
 			}
 			if (jp2->color.jp2_pclr->channel_size) {
 				opj_free(jp2->color.jp2_pclr->channel_size);
-				jp2->color.jp2_pclr->channel_size = NULL;
+				jp2->color.jp2_pclr->channel_size = nullptr;
 			}
 			if (jp2->color.jp2_pclr->entries) {
 				opj_free(jp2->color.jp2_pclr->entries);
-				jp2->color.jp2_pclr->entries = NULL;
+				jp2->color.jp2_pclr->entries = nullptr;
 			}
 
 			opj_free(jp2->color.jp2_pclr);
@@ -2513,7 +2513,7 @@ OPJ_BOOL opj_jp2_get_tile(	opj_jp2_t *p_jp2,
 	if(p_jp2->color.icc_profile_buf) {
 		p_image->icc_profile_buf = p_jp2->color.icc_profile_buf;
 		p_image->icc_profile_len = p_jp2->color.icc_profile_len;
-		p_jp2->color.icc_profile_buf = NULL;
+		p_jp2->color.icc_profile_buf = nullptr;
 	}
 
 	return OPJ_TRUE;
@@ -2543,10 +2543,10 @@ opj_jp2_t* opj_jp2_create(OPJ_BOOL p_is_decoder)
 		}
 
 		/* Color structure */
-		jp2->color.icc_profile_buf = NULL;
+		jp2->color.icc_profile_buf = nullptr;
 		jp2->color.icc_profile_len = 0;
-		jp2->color.jp2_cdef = NULL;
-		jp2->color.jp2_pclr = NULL;
+		jp2->color.jp2_cdef = nullptr;
+		jp2->color.jp2_pclr = nullptr;
 		jp2->color.jp2_has_colr = 0;
 
 		/* validation list creation */

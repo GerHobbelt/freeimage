@@ -85,7 +85,7 @@ png_write_info_before_PLTE(png_structrp png_ptr, png_const_inforp info_ptr)
 {
    png_debug(1, "in png_write_info_before_PLTE");
 
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
    if ((png_ptr->mode & PNG_WROTE_INFO_BEFORE_PLTE) == 0)
@@ -196,7 +196,7 @@ png_write_info(png_structrp png_ptr, png_const_inforp info_ptr)
 
    png_debug(1, "in png_write_info");
 
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
    png_write_info_before_PLTE(png_ptr, info_ptr);
@@ -339,7 +339,7 @@ png_write_info(png_structrp png_ptr, png_const_inforp info_ptr)
 }
 
 /* Writes the end of the PNG file.  If you don't want to write comments or
- * time information, you can pass NULL for info.  If you already wrote these
+ * time information, you can pass nullptr for info.  If you already wrote these
  * in png_write_info(), do not write them again here.  If you have long
  * comments, I suggest writing them here, and compressing them.
  */
@@ -348,7 +348,7 @@ png_write_end(png_structrp png_ptr, png_inforp info_ptr)
 {
    png_debug(1, "in png_write_end");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    if ((png_ptr->mode & PNG_HAVE_IDAT) == 0)
@@ -360,7 +360,7 @@ png_write_end(png_structrp png_ptr, png_inforp info_ptr)
 #endif
 
    /* See if user wants us to write information chunks */
-   if (info_ptr != NULL)
+   if (info_ptr != nullptr)
    {
 #ifdef PNG_WRITE_TEXT_SUPPORTED
       int i; /* local index variable */
@@ -483,10 +483,10 @@ png_create_write_struct,(png_const_charp user_png_ver, png_voidp error_ptr,
 {
 #ifndef PNG_USER_MEM_SUPPORTED
    png_structrp png_ptr = png_create_png_struct(user_png_ver, error_ptr,
-       error_fn, warn_fn, NULL, NULL, NULL);
+       error_fn, warn_fn, nullptr, nullptr, nullptr);
 #else
    return png_create_write_struct_2(user_png_ver, error_ptr, error_fn,
-       warn_fn, NULL, NULL, NULL);
+       warn_fn, nullptr, nullptr, nullptr);
 }
 
 /* Alternate initialize png_ptr structure, and allocate any memory needed */
@@ -498,7 +498,7 @@ png_create_write_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
    png_structrp png_ptr = png_create_png_struct(user_png_ver, error_ptr,
        error_fn, warn_fn, mem_ptr, malloc_fn, free_fn);
 #endif /* USER_MEM */
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       /* Set the zlib control values to defaults; they can be overridden by the
        * application after the struct has been created.
@@ -546,7 +546,7 @@ png_create_write_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
        * do it itself) avoiding setting the default function if it is not
        * required.
        */
-      png_set_write_fn(png_ptr, NULL, NULL, NULL);
+      png_set_write_fn(png_ptr, nullptr, nullptr, nullptr);
    }
 
    return png_ptr;
@@ -567,7 +567,7 @@ png_write_rows(png_structrp png_ptr, png_bytepp row,
 
    png_debug(1, "in png_write_rows");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* Loop through the rows */
@@ -587,7 +587,7 @@ png_write_image(png_structrp png_ptr, png_bytepp image)
    int pass, num_pass; /* pass variables */
    png_bytepp rp; /* points to current row */
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_debug(1, "in png_write_image");
@@ -683,7 +683,7 @@ png_write_row(png_structrp png_ptr, png_const_bytep row)
    /* 1.5.6: moved from png_struct to be a local structure: */
    png_row_info row_info;
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_debug2(1, "in png_write_row (row %u, pass %d)",
@@ -881,7 +881,7 @@ png_write_row(png_structrp png_ptr, png_const_bytep row)
    /* Find a filter if necessary, filter the row and write it out. */
    png_write_find_filter(png_ptr, &row_info);
 
-   if (png_ptr->write_row_fn != NULL)
+   if (png_ptr->write_row_fn != nullptr)
       (*(png_ptr->write_row_fn))(png_ptr, png_ptr->row_number, png_ptr->pass);
 }
 
@@ -892,7 +892,7 @@ png_set_flush(png_structrp png_ptr, int nrows)
 {
    png_debug(1, "in png_set_flush");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->flush_dist = (nrows < 0 ? 0 : nrows);
@@ -904,14 +904,14 @@ png_write_flush(png_structrp png_ptr)
 {
    png_debug(1, "in png_write_flush");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* We have already written out all of the data */
    if (png_ptr->row_number >= png_ptr->num_rows)
       return;
 
-   png_compress_IDAT(png_ptr, NULL, 0, Z_SYNC_FLUSH);
+   png_compress_IDAT(png_ptr, nullptr, 0, Z_SYNC_FLUSH);
    png_ptr->flush_rows = 0;
    png_flush(png_ptr);
 }
@@ -931,21 +931,21 @@ png_write_destroy(png_structrp png_ptr)
    if ((png_ptr->flags & PNG_FLAG_ZSTREAM_INITIALIZED) != 0)
       deflateEnd(&png_ptr->zstream);
 
-   /* Free our memory.  png_free checks NULL for us. */
+   /* Free our memory.  png_free checks nullptr for us. */
    png_free_buffer_list(png_ptr, &png_ptr->zbuffer_list);
    png_free(png_ptr, png_ptr->row_buf);
-   png_ptr->row_buf = NULL;
+   png_ptr->row_buf = nullptr;
 #ifdef PNG_WRITE_FILTER_SUPPORTED
    png_free(png_ptr, png_ptr->prev_row);
    png_free(png_ptr, png_ptr->sub_row);
    png_free(png_ptr, png_ptr->up_row);
    png_free(png_ptr, png_ptr->avg_row);
    png_free(png_ptr, png_ptr->paeth_row);
-   png_ptr->prev_row = NULL;
-   png_ptr->sub_row = NULL;
-   png_ptr->up_row = NULL;
-   png_ptr->avg_row = NULL;
-   png_ptr->paeth_row = NULL;
+   png_ptr->prev_row = nullptr;
+   png_ptr->sub_row = nullptr;
+   png_ptr->up_row = nullptr;
+   png_ptr->avg_row = nullptr;
+   png_ptr->paeth_row = nullptr;
 #endif
 
 #ifdef PNG_WRITE_WEIGHTED_FILTER_SUPPORTED
@@ -953,13 +953,13 @@ png_write_destroy(png_structrp png_ptr)
    png_reset_filter_heuristics(png_ptr);
    png_free(png_ptr, png_ptr->filter_costs);
    png_free(png_ptr, png_ptr->inv_filter_costs);
-   png_ptr->filter_costs = NULL;
-   png_ptr->inv_filter_costs = NULL;
+   png_ptr->filter_costs = nullptr;
+   png_ptr->inv_filter_costs = nullptr;
 #endif
 
 #ifdef PNG_SET_UNKNOWN_CHUNKS_SUPPORTED
    png_free(png_ptr, png_ptr->chunk_list);
-   png_ptr->chunk_list = NULL;
+   png_ptr->chunk_list = nullptr;
 #endif
 
    /* The error handling and memory handling information is left intact at this
@@ -969,7 +969,7 @@ png_write_destroy(png_structrp png_ptr)
 }
 
 /* Free all memory used by the write.
- * In libpng 1.6.0 this API changed quietly to no longer accept a NULL value for
+ * In libpng 1.6.0 this API changed quietly to no longer accept a nullptr value for
  * *png_ptr_ptr.  Prior to 1.6.0 it would accept such a value and it would free
  * the passed in info_structs but it would quietly fail to free any of the data
  * inside them.  In 1.6.0 it quietly does nothing (it has to be quiet because it
@@ -980,15 +980,15 @@ png_destroy_write_struct(png_structpp png_ptr_ptr, png_infopp info_ptr_ptr)
 {
    png_debug(1, "in png_destroy_write_struct");
 
-   if (png_ptr_ptr != NULL)
+   if (png_ptr_ptr != nullptr)
    {
       png_structrp png_ptr = *png_ptr_ptr;
 
-      if (png_ptr != NULL) /* added in libpng 1.6.0 */
+      if (png_ptr != nullptr) /* added in libpng 1.6.0 */
       {
          png_destroy_info_struct(png_ptr, info_ptr_ptr);
 
-         *png_ptr_ptr = NULL;
+         *png_ptr_ptr = nullptr;
          png_write_destroy(png_ptr);
          png_destroy_png_struct(png_ptr);
       }
@@ -1001,7 +1001,7 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
 {
    png_debug(1, "in png_set_filter");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
 #ifdef PNG_MNG_FEATURES_SUPPORTED
@@ -1053,11 +1053,11 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
        * it should start out with all of the filters, and then add and
        * remove them after the start of compression.
        */
-      if (png_ptr->row_buf != NULL)
+      if (png_ptr->row_buf != nullptr)
       {
 #ifdef PNG_WRITE_FILTER_SUPPORTED
          if ((png_ptr->do_filter & PNG_FILTER_SUB) != 0 &&
-             png_ptr->sub_row == NULL)
+             png_ptr->sub_row == nullptr)
          {
             png_ptr->sub_row = (png_bytep)png_malloc(png_ptr,
                 (png_ptr->rowbytes + 1));
@@ -1065,9 +1065,9 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
          }
 
          if ((png_ptr->do_filter & PNG_FILTER_UP) != 0 &&
-              png_ptr->up_row == NULL)
+              png_ptr->up_row == nullptr)
          {
-            if (png_ptr->prev_row == NULL)
+            if (png_ptr->prev_row == nullptr)
             {
                png_warning(png_ptr, "Can't add Up filter after starting");
                png_ptr->do_filter = (png_byte)(png_ptr->do_filter &
@@ -1083,9 +1083,9 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
          }
 
          if ((png_ptr->do_filter & PNG_FILTER_AVG) != 0 &&
-              png_ptr->avg_row == NULL)
+              png_ptr->avg_row == nullptr)
          {
-            if (png_ptr->prev_row == NULL)
+            if (png_ptr->prev_row == nullptr)
             {
                png_warning(png_ptr, "Can't add Average filter after starting");
                png_ptr->do_filter = (png_byte)(png_ptr->do_filter &
@@ -1101,9 +1101,9 @@ png_set_filter(png_structrp png_ptr, int method, int filters)
          }
 
          if ((png_ptr->do_filter & PNG_FILTER_PAETH) != 0 &&
-             png_ptr->paeth_row == NULL)
+             png_ptr->paeth_row == nullptr)
          {
-            if (png_ptr->prev_row == NULL)
+            if (png_ptr->prev_row == nullptr)
             {
                png_warning(png_ptr, "Can't add Paeth filter after starting");
                png_ptr->do_filter &= (png_byte)(~PNG_FILTER_PAETH);
@@ -1145,23 +1145,23 @@ png_reset_filter_heuristics(png_structrp png_ptr)
     */
    png_ptr->num_prev_filters = 0;
    png_ptr->heuristic_method = PNG_FILTER_HEURISTIC_UNWEIGHTED;
-   if (png_ptr->prev_filters != NULL)
+   if (png_ptr->prev_filters != nullptr)
    {
       png_bytep old = png_ptr->prev_filters;
-      png_ptr->prev_filters = NULL;
+      png_ptr->prev_filters = nullptr;
       png_free(png_ptr, old);
    }
-   if (png_ptr->filter_weights != NULL)
+   if (png_ptr->filter_weights != nullptr)
    {
       png_uint_16p old = png_ptr->filter_weights;
-      png_ptr->filter_weights = NULL;
+      png_ptr->filter_weights = nullptr;
       png_free(png_ptr, old);
    }
 
-   if (png_ptr->inv_filter_weights != NULL)
+   if (png_ptr->inv_filter_weights != nullptr)
    {
       png_uint_16p old = png_ptr->inv_filter_weights;
-      png_ptr->inv_filter_weights = NULL;
+      png_ptr->inv_filter_weights = nullptr;
       png_free(png_ptr, old);
    }
 
@@ -1172,7 +1172,7 @@ static int
 png_init_filter_heuristics(png_structrp png_ptr, int heuristic_method,
    int num_weights)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return 0;
 
    /* Clear out the arrays */
@@ -1216,7 +1216,7 @@ png_init_filter_heuristics(png_structrp png_ptr, int heuristic_method,
       /* If, in the future, there are other filter methods, this would
        * need to be based on png_ptr->filter.
        */
-      if (png_ptr->filter_costs == NULL)
+      if (png_ptr->filter_costs == nullptr)
       {
          png_ptr->filter_costs = (png_uint_16p)png_malloc(png_ptr,
              (png_uint_32)((sizeof (png_uint_16)) * PNG_FILTER_VALUE_LAST));
@@ -1377,7 +1377,7 @@ png_set_compression_level(png_structrp png_ptr, int level)
 {
    png_debug(1, "in png_set_compression_level");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->zlib_level = level;
@@ -1388,7 +1388,7 @@ png_set_compression_mem_level(png_structrp png_ptr, int mem_level)
 {
    png_debug(1, "in png_set_compression_mem_level");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->zlib_mem_level = mem_level;
@@ -1399,7 +1399,7 @@ png_set_compression_strategy(png_structrp png_ptr, int strategy)
 {
    png_debug(1, "in png_set_compression_strategy");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* The flag setting here prevents the libpng dynamic selection of strategy.
@@ -1414,7 +1414,7 @@ png_set_compression_strategy(png_structrp png_ptr, int strategy)
 void PNGAPI
 png_set_compression_window_bits(png_structrp png_ptr, int window_bits)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* Prior to 1.6.0 this would warn but then set the window_bits value, this
@@ -1443,7 +1443,7 @@ png_set_compression_method(png_structrp png_ptr, int method)
 {
    png_debug(1, "in png_set_compression_method");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    /* This would produce an invalid PNG file if it worked, but it doesn't and
@@ -1462,7 +1462,7 @@ png_set_text_compression_level(png_structrp png_ptr, int level)
 {
    png_debug(1, "in png_set_text_compression_level");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->zlib_text_level = level;
@@ -1473,7 +1473,7 @@ png_set_text_compression_mem_level(png_structrp png_ptr, int mem_level)
 {
    png_debug(1, "in png_set_text_compression_mem_level");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->zlib_text_mem_level = mem_level;
@@ -1484,7 +1484,7 @@ png_set_text_compression_strategy(png_structrp png_ptr, int strategy)
 {
    png_debug(1, "in png_set_text_compression_strategy");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->zlib_text_strategy = strategy;
@@ -1496,7 +1496,7 @@ png_set_text_compression_strategy(png_structrp png_ptr, int strategy)
 void PNGAPI
 png_set_text_compression_window_bits(png_structrp png_ptr, int window_bits)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    if (window_bits > 15)
@@ -1519,7 +1519,7 @@ png_set_text_compression_method(png_structrp png_ptr, int method)
 {
    png_debug(1, "in png_set_text_compression_method");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    if (method != 8)
@@ -1533,7 +1533,7 @@ png_set_text_compression_method(png_structrp png_ptr, int method)
 void PNGAPI
 png_set_write_status_fn(png_structrp png_ptr, png_write_status_ptr write_row_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->write_row_fn = write_row_fn;
@@ -1546,7 +1546,7 @@ png_set_write_user_transform_fn(png_structrp png_ptr, png_user_transform_ptr
 {
    png_debug(1, "in png_set_write_user_transform_fn");
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
 
    png_ptr->transformations |= PNG_USER_TRANSFORM;
@@ -1560,7 +1560,7 @@ void PNGAPI
 png_write_png(png_structrp png_ptr, png_inforp info_ptr,
     int transforms, voidp params)
 {
-   if (png_ptr == NULL || info_ptr == NULL)
+   if (png_ptr == nullptr || info_ptr == nullptr)
       return;
 
    if ((info_ptr->valid & PNG_INFO_IDAT) == 0)
@@ -1688,16 +1688,16 @@ png_image_write_init(png_imagep image)
    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, image,
           png_safe_error, png_safe_warning);
 
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
       png_infop info_ptr = png_create_info_struct(png_ptr);
 
-      if (info_ptr != NULL)
+      if (info_ptr != nullptr)
       {
          png_controlp control = png_voidcast(png_controlp,
             png_malloc_warn(png_ptr, (sizeof *control)));
 
-         if (control != NULL)
+         if (control != nullptr)
          {
             memset(control, 0, (sizeof *control));
 
@@ -1713,7 +1713,7 @@ png_image_write_init(png_imagep image)
          png_destroy_info_struct(png_ptr, &info_ptr);
       }
 
-      png_destroy_write_struct(&png_ptr, NULL);
+      png_destroy_write_struct(&png_ptr, nullptr);
    }
 
    return png_image_error(image, "png_image_write_: out of memory");
@@ -1999,7 +1999,7 @@ png_image_set_PLTE(png_image_write_control *display)
    const int entries = image->colormap_entries > 256 ? 256 :
       (int)image->colormap_entries;
 
-   /* NOTE: the caller must check for cmap != NULL and entries != 0 */
+   /* NOTE: the caller must check for cmap != nullptr and entries != 0 */
    const png_uint_32 format = image->format;
    const int channels = PNG_IMAGE_SAMPLE_CHANNELS(format);
 
@@ -2132,7 +2132,7 @@ png_image_set_PLTE(png_image_write_control *display)
 
    if (num_trans > 0)
       png_set_tRNS(image->opaque->png_ptr, image->opaque->info_ptr, tRNS,
-         num_trans, NULL);
+         num_trans, nullptr);
 
    image->colormap_entries = entries;
 }
@@ -2165,7 +2165,7 @@ png_image_write_main(png_voidp argument)
    /* Set the required transforms then write the rows in the correct order. */
    if ((format & PNG_FORMAT_FLAG_COLORMAP) != 0)
    {
-      if (display->colormap != NULL && image->colormap_entries > 0)
+      if (display->colormap != nullptr && image->colormap_entries > 0)
       {
          png_uint_32 entries = image->colormap_entries;
 
@@ -2306,7 +2306,7 @@ png_image_write_main(png_voidp argument)
          result = png_safe_execute(image, png_write_image_16bit, display);
       else
          result = png_safe_execute(image, png_write_image_8bit, display);
-      display->local_row = NULL;
+      display->local_row = nullptr;
 
       png_free(png_ptr, row);
 
@@ -2340,9 +2340,9 @@ png_image_write_to_stdio(png_imagep image, FILE *file, int convert_to_8bit,
    const void *buffer, png_int_32 row_stride, const void *colormap)
 {
    /* Write the image to the given (FILE*). */
-   if (image != NULL && image->version == PNG_IMAGE_VERSION)
+   if (image != nullptr && image->version == PNG_IMAGE_VERSION)
    {
-      if (file != NULL)
+      if (file != nullptr)
       {
          if (png_image_write_init(image) != 0)
          {
@@ -2376,7 +2376,7 @@ png_image_write_to_stdio(png_imagep image, FILE *file, int convert_to_8bit,
             "png_image_write_to_stdio: invalid argument");
    }
 
-   else if (image != NULL)
+   else if (image != nullptr)
       return png_image_error(image,
          "png_image_write_to_stdio: incorrect PNG_IMAGE_VERSION");
 
@@ -2390,13 +2390,13 @@ png_image_write_to_file(png_imagep image, const char *file_name,
    const void *colormap)
 {
    /* Write the image to the named file. */
-   if (image != NULL && image->version == PNG_IMAGE_VERSION)
+   if (image != nullptr && image->version == PNG_IMAGE_VERSION)
    {
-      if (file_name != NULL)
+      if (file_name != nullptr)
       {
          FILE *fp = fopen(file_name, "wb");
 
-         if (fp != NULL)
+         if (fp != nullptr)
          {
             if (png_image_write_to_stdio(image, fp, convert_to_8bit, buffer,
                row_stride, colormap) != 0)
@@ -2443,7 +2443,7 @@ png_image_write_to_file(png_imagep image, const char *file_name,
             "png_image_write_to_file: invalid argument");
    }
 
-   else if (image != NULL)
+   else if (image != nullptr)
       return png_image_error(image,
          "png_image_write_to_file: incorrect PNG_IMAGE_VERSION");
 

@@ -188,9 +188,9 @@ program under the GPL.
 
 #endif
 
-/* Define NULL (for *very* old compilers). */
-#ifndef NULL
-# define NULL (0)
+/* Define nullptr (for *very* old compilers). */
+#ifndef nullptr
+# define nullptr (0)
 #endif
 
 /*
@@ -278,7 +278,7 @@ main(argc, argv)
 	case 3:
 		output_name = argv[2];
 		out = fopen(output_name, "w");
-		if ( out == NULL ) {
+		if ( out == nullptr ) {
 		  fprintf(stderr, "%s: Cannot open output file %s\n",
 			  program_name, output_name);
 		  exit(1);
@@ -286,7 +286,7 @@ main(argc, argv)
 		/* falls through */
 	case 2:
 		in = fopen(argv[1], "r");
-		if ( in == NULL ) {
+		if ( in == nullptr ) {
 		  fprintf(stderr, "%s: Cannot open input file %s\n",
 			  program_name, argv[1]);
 		  exit(1);
@@ -300,13 +300,13 @@ main(argc, argv)
 	if ( filename )
 	  fprintf(out, "#line 1 \"%s\"\n", filename);
 	buf = malloc(bufsize);
-	if ( buf == NULL )
+	if ( buf == nullptr )
 	   {
 		fprintf(stderr, "Unable to allocate read buffer!\n");
 		exit(1);
 	   }
 	line = buf;
-	while ( fgets(line, (unsigned)(buf + bufsize - line), in) != NULL )
+	while ( fgets(line, (unsigned)(buf + bufsize - line), in) != nullptr )
 	   {
 test:		line += strlen(line);
 		switch ( test1(buf) )
@@ -319,7 +319,7 @@ test:		line += strlen(line);
 			more = ++line;
 f:			if ( line >= buf + (bufsize - 1) ) /* overflow check */
 			  goto wl;
-			if ( fgets(line, (unsigned)(buf + bufsize - line), in) == NULL )
+			if ( fgets(line, (unsigned)(buf + bufsize - line), in) == nullptr )
 			  goto wl;
 			switch ( *skipspace(ppdirforward(more), 1) )
 			  {
@@ -577,7 +577,7 @@ convert1(buf, out, header, convert_varargs)
 	  ;
 top:	p = endfn;
 	breaks = (char **)malloc(sizeof(char *) * num_breaks * 2);
-	if ( breaks == NULL )
+	if ( breaks == nullptr )
 	   {	/* Couldn't allocate break table, give up */
 		fprintf(stderr, "Unable to allocate break table!\n");
 		fputs(buf, out);
@@ -588,9 +588,9 @@ top:	p = endfn;
 	/* Parse the argument list */
 	do
 	   {	int level = 0;
-		char *lp = NULL;
-		char *rp = NULL;
-		char *end = NULL;
+		char *lp = nullptr;
+		char *rp = nullptr;
+		char *end = nullptr;
 
 		if ( bp >= btop )
 		   {	/* Filled up break table. */
@@ -601,7 +601,7 @@ top:	p = endfn;
 		   }
 		*bp++ = p;
 		/* Find the end of the argument */
-		for ( ; end == NULL; p++ )
+		for ( ; end == nullptr; p++ )
 		   {	switch(*p)
 			   {
 			   case ',':
