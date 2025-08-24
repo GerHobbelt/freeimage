@@ -131,8 +131,8 @@ namespace FreeImageAPI
 		/// <term>16</term>
 		/// <description>
 		/// The bitmap has a maximum of 2^16 colors. If the <b>biCompression</b> member of the
-		/// <b>BITMAPINFOHEADER</b> is BI_RGB, the <b>bmiColors</b> member of <b>BITMAPINFO</b> is NULL.
-		/// Each <b>WORD</b> in the bitmap array represents a single pixel. The relative intensities
+		/// <b>BITMAPINFOHEADER</b> is BI_RGB, the <b>bmiColors</b> member of <b>BITMAPINFO</b> is nullptr.
+		/// Each <b>uint16_t</b> in the bitmap array represents a single pixel. The relative intensities
 		/// of red, green, and blue are represented with five bits for each color component.
 		/// The value for blue is in the least significant five bits, followed by five bits each for
 		/// green and red. The most significant bit is not used. The <b>bmiColors</b> color table is used
@@ -140,12 +140,12 @@ namespace FreeImageAPI
 		/// specified by the <b>biClrUsed</b> member of the <b>BITMAPINFOHEADER</b>.
 		/// <para/>
 		/// If the <b>biCompression</b> member of the <b>BITMAPINFOHEADER</b> is BI_BITFIELDS, the
-		/// <b>bmiColors</b> member contains three <b>DWORD</b> color masks that specify the red, green,
-		/// and blue components, respectively, of each pixel. Each <b>WORD</b> in the bitmap array represents
+		/// <b>bmiColors</b> member contains three <b>uint32_t</b> color masks that specify the red, green,
+		/// and blue components, respectively, of each pixel. Each <b>uint16_t</b> in the bitmap array represents
 		/// a single pixel.
 		/// <para/>
 		/// <b>Windows NT/Windows 2000/XP:</b> When the <b>biCompression</b> member is BI_BITFIELDS,
-		/// bits set in each <b>DWORD</b> mask must be contiguous and should not overlap the bits
+		/// bits set in each <b>uint32_t</b> mask must be contiguous and should not overlap the bits
 		/// of another mask. All the bits in the pixel do not have to be used.
 		/// <para/>
 		/// <b>Windows 95/98/Me:</b> When the <b>biCompression</b> member is BI_BITFIELDS, the system
@@ -159,7 +159,7 @@ namespace FreeImageAPI
 		/// <term>24</term>
 		/// <description>
 		/// The bitmap has a maximum of 2^24 colors, and the <b>bmiColors</b> member of <b>BITMAPINFO</b>
-		/// is NULL. Each 3-byte triplet in the bitmap array represents the relative intensities of blue,
+		/// is nullptr. Each 3-byte triplet in the bitmap array represents the relative intensities of blue,
 		/// green, and red, respectively, for a pixel. The <b>bmiColors</b> color table is used for
 		/// optimizing colors used on palette-based devices, and must contain the number of entries
 		/// specified by the <b>biClrUsed</b> member of the <b>BITMAPINFOHEADER</b>.
@@ -170,19 +170,19 @@ namespace FreeImageAPI
 		/// <term>32</term>
 		/// <description>
 		/// The bitmap has a maximum of 2^32 colors. If the <b>biCompression</b> member of the
-		/// <b>BITMAPINFOHEADER</b> is BI_RGB, the <b>bmiColors</b> member of <b>BITMAPINFO</b> is NULL.
-		/// Each <b>DWORD</b> in the bitmap array represents the relative intensities of blue, green, and red,
-		/// respectively, for a pixel. The high byte in each <b>DWORD</b> is not used. The <b>bmiColors</b>
+		/// <b>BITMAPINFOHEADER</b> is BI_RGB, the <b>bmiColors</b> member of <b>BITMAPINFO</b> is nullptr.
+		/// Each <b>uint32_t</b> in the bitmap array represents the relative intensities of blue, green, and red,
+		/// respectively, for a pixel. The high byte in each <b>uint32_t</b> is not used. The <b>bmiColors</b>
 		/// color table is used for optimizing colors used on palette-based devices, and must contain the 
 		/// number of entries specified by the <b>biClrUsed</b> member of the <b>BITMAPINFOHEADER</b>.
 		/// <para/>
 		/// If the <b>biCompression</b> member of the <b>BITMAPINFOHEADER</b> is BI_BITFIELDS,
-		/// the <b>bmiColors</b> member contains three <b>DWORD</b> color masks that specify the red, green,
-		/// and blue components, respectively, of each pixel. Each <b>DWORD</b> in the bitmap array represents
+		/// the <b>bmiColors</b> member contains three <b>uint32_t</b> color masks that specify the red, green,
+		/// and blue components, respectively, of each pixel. Each <b>uint32_t</b> in the bitmap array represents
 		/// a single pixel.
 		/// <para/>
 		/// <b>Windows NT/ 2000:</b> When the <b>biCompression</b> member is BI_BITFIELDS, bits set in each
-		/// <b>DWORD</b> mask must be contiguous and should not overlap the bits of another mask. All the
+		/// <b>uint32_t</b> mask must be contiguous and should not overlap the bits of another mask. All the
 		/// bits in the pixel do not need to be used.
 		/// <para/>
 		/// <b>Windows 95/98/Me:</b> When the <b>biCompression</b> member is BI_BITFIELDS, the system
@@ -223,7 +223,7 @@ namespace FreeImageAPI
 		/// <item>
 		/// <term>BI_BITFIELDS</term>
 		/// <description>Specifies that the bitmap is not compressed and that the color table consists
-		/// of three <b>DWORD</b> color masks that specify the red, green, and blue components, respectively,
+		/// of three <b>uint32_t</b> color masks that specify the red, green, and blue components, respectively,
 		/// of each pixel. This is valid when used with 16- and 32-bpp bitmaps.</description>
 		/// </item>
 		/// 
@@ -268,7 +268,7 @@ namespace FreeImageAPI
 		/// member specifies the actual number of colors the graphics engine or device driver accesses.
 		/// If <b>biBitCount</b> is 16 or greater, the <b>biClrUsed</b> member specifies the size of the color
 		/// table used to optimize performance of the system color palettes. If <b>biBitCount</b> equals 16 or 32,
-		/// the optimal color palette starts immediately following the three <b>DWORD</b> masks.
+		/// the optimal color palette starts immediately following the three <b>uint32_t</b> masks.
 		/// <para/>
 		/// When the bitmap array immediately follows the <see cref="BITMAPINFO"/> structure, it is a packed bitmap.
 		/// Packed bitmaps are referenced by a single pointer. Packed bitmaps require that the

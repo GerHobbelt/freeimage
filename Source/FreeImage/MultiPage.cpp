@@ -124,7 +124,7 @@ FreeImage_GetMultiBitmapHeader(FIMULTIBITMAP *bitmap) {
 
 static BlockListIterator DLL_CALLCONV
 FreeImage_FindBlock(FIMULTIBITMAP *bitmap, int position) {
-	assert(NULL != bitmap);
+	assert(nullptr != bitmap);
 
 	MULTIBITMAPHEADER *header = FreeImage_GetMultiBitmapHeader(bitmap);
 
@@ -133,7 +133,7 @@ FreeImage_FindBlock(FIMULTIBITMAP *bitmap, int position) {
 	int prev_count = 0;
 	int count = 0;
 	BlockListIterator i;
-	BlockTypeS *current_block = NULL;
+	BlockTypeS *current_block = nullptr;
 
 	for (i = header->m_blocks.begin(); i != header->m_blocks.end(); ++i) {
 		prev_count = count;
@@ -219,7 +219,7 @@ FreeImage_InternalGetPageCount(FIMULTIBITMAP *bitmap) {
 
    			void *data = FreeImage_Open(header->node, header->io, header->handle, TRUE);
 
-			int page_count = (header->node->m_plugin->pagecount_proc != NULL) ? header->node->m_plugin->pagecount_proc(header->io, header->handle, data) : 1;
+			int page_count = (header->node->m_plugin->pagecount_proc != nullptr) ? header->node->m_plugin->pagecount_proc(header->io, header->handle, data) : 1;
 
 			FreeImage_Close(header->node, header->io, header->handle, data);
 
@@ -237,7 +237,7 @@ FreeImage_InternalGetPageCount(FIMULTIBITMAP *bitmap) {
 FIMULTIBITMAP * DLL_CALLCONV
 FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL create_new, BOOL read_only, BOOL keep_cache_in_memory, int flags) {
 
-	FILE *handle = NULL;
+	FILE *handle = nullptr;
 	try {
 		// sanity check on the parameters
 
@@ -259,8 +259,8 @@ FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL crea
 
 				if (!create_new) {
 					handle = fopen(filename, "rb");
-					if (handle == NULL) {
-						return NULL;
+					if (handle == nullptr) {
+						return nullptr;
 					}
 				}
 
@@ -274,7 +274,7 @@ FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL crea
 				header->handle = handle;						
 				header->changed = FALSE;						
 				header->read_only = read_only;
-				header->m_cachefile = NULL;
+				header->m_cachefile = nullptr;
 				header->cache_fif = fif;
 				header->load_flags = flags;
 
@@ -306,7 +306,7 @@ FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL crea
 					} else {
 						// an error occured ...
 						fclose(handle);
-						return NULL;
+						return nullptr;
 					}
 				}
 				// return the multibitmap
@@ -321,7 +321,7 @@ FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL crea
 	}
 	if (handle)
 		fclose(handle);
-	return NULL;
+	return nullptr;
 }
 
 FIMULTIBITMAP * DLL_CALLCONV
@@ -342,13 +342,13 @@ FreeImage_OpenMultiBitmapFromHandle(FREE_IMAGE_FORMAT fif, FreeImageIO *io, fi_h
 					std::unique_ptr<MULTIBITMAPHEADER> header (new MULTIBITMAPHEADER);
 					std::unique_ptr<FreeImageIO> tmp_io (new FreeImageIO (*io));
 					header->io = tmp_io.get();
-					header->m_filename = NULL;
+					header->m_filename = nullptr;
 					header->node = node;
 					header->fif = fif;
 					header->handle = handle;						
 					header->changed = FALSE;						
 					header->read_only = read_only;	
-					header->m_cachefile = NULL;
+					header->m_cachefile = nullptr;
 					header->cache_fif = fif;
 					header->load_flags = flags;
 							
@@ -381,7 +381,7 @@ FreeImage_OpenMultiBitmapFromHandle(FREE_IMAGE_FORMAT fif, FreeImageIO *io, fi_h
 	} catch (std::bad_alloc &) {
 		/** @todo report error */
 	}
-	return NULL;
+	return nullptr;
 }
 
 BOOL DLL_CALLCONV
@@ -404,7 +404,7 @@ FreeImage_SaveMultiBitmapToHandle(FREE_IMAGE_FORMAT fif, FIMULTIBITMAP *bitmap, 
 			// dst data
 			void *data = FreeImage_Open(node, io, handle, FALSE);
 			// src data
-			void *data_read = NULL;
+			void *data_read = nullptr;
 			
 			if(header->handle) {
 				// open src
@@ -444,9 +444,9 @@ FreeImage_SaveMultiBitmapToHandle(FREE_IMAGE_FORMAT fif, FIMULTIBITMAP *bitmap, 
 							
 							// read the compressed data
 							
-							BYTE *compressed_data = (BYTE*)malloc(ref->m_size * sizeof(BYTE));
+							uint8_t *compressed_data = (uint8_t*)malloc(ref->m_size * sizeof(uint8_t));
 							
-							header->m_cachefile->readFile((BYTE *)compressed_data, ref->m_reference, ref->m_size);
+							header->m_cachefile->readFile((uint8_t *)compressed_data, ref->m_reference, ref->m_size);
 							
 							// uncompress the data
 							
@@ -510,7 +510,7 @@ FreeImage_CloseMultiBitmap(FIMULTIBITMAP *bitmap, int flags) {
 					FILE *f = fopen(spool_name.c_str(), "w+b");
 				
 					// saves changes
-					if (f == NULL) {
+					if (f == nullptr) {
 						FreeImage_OutputMessageProc(header->fif, "Failed to open %s, %s", spool_name.c_str(), strerror(errno));
 						success = FALSE;
 					} else {
@@ -622,25 +622,25 @@ FreeImage_GetPageCount(FIMULTIBITMAP *bitmap) {
 static BlockReference* 
 FreeImage_SavePageToBlock(MULTIBITMAPHEADER *header, FIBITMAP *data) {
 	if (header->read_only || !header->locked_pages.empty())
-		return NULL;
+		return nullptr;
 
-	DWORD compressed_size = 0;
-	BYTE *compressed_data = NULL;
+	uint32_t compressed_size = 0;
+	uint8_t *compressed_data = nullptr;
 
 	// compress the bitmap data
 
 	// open a memory handle
 	FIMEMORY *hmem = FreeImage_OpenMemory();
-	if(hmem==NULL) return NULL;
+	if(hmem==nullptr) return nullptr;
 	// save the file to memory
 	if(!FreeImage_SaveToMemory(header->cache_fif, data, hmem, 0)) {
 		FreeImage_CloseMemory(hmem);
-		return NULL;
+		return nullptr;
 	}
 	// get the buffer from the memory stream
 	if(!FreeImage_AcquireMemory(hmem, &compressed_data, &compressed_size)) {
 		FreeImage_CloseMemory(hmem);
-		return NULL;
+		return nullptr;
 	}
 
 	// write the compressed data to the cache
@@ -659,7 +659,7 @@ FreeImage_AppendPage(FIMULTIBITMAP *bitmap, FIBITMAP *data) {
 	MULTIBITMAPHEADER *header = FreeImage_GetMultiBitmapHeader(bitmap);
 
 	BlockReference *block = FreeImage_SavePageToBlock(header, data);
-	if(block==NULL) return;
+	if(block==nullptr) return;
 
 	// add the block
 	header->m_blocks.push_back((BlockTypeS *)block);
@@ -678,7 +678,7 @@ FreeImage_InsertPage(FIMULTIBITMAP *bitmap, int page, FIBITMAP *data) {
 	MULTIBITMAPHEADER *header = FreeImage_GetMultiBitmapHeader(bitmap);
 
 	BlockReference *block = FreeImage_SavePageToBlock(header, data);
-	if(block==NULL) return;
+	if(block==nullptr) return;
 
 	// add a block
 	if (page > 0) {
@@ -734,7 +734,7 @@ FreeImage_LockPage(FIMULTIBITMAP *bitmap, int page) {
 
 		for (std::map<FIBITMAP *, int>::iterator i = header->locked_pages.begin(); i != header->locked_pages.end(); ++i) {
 			if (i->second == page) {
-				return NULL;
+				return nullptr;
 			}
 		}
 
@@ -746,8 +746,8 @@ FreeImage_LockPage(FIMULTIBITMAP *bitmap, int page) {
 
 		// load the bitmap data
 
-		if (data != NULL) {
-			FIBITMAP *dib = (header->node->m_plugin->load_proc != NULL) ? header->node->m_plugin->load_proc(header->io, header->handle, page, header->load_flags, data) : NULL;
+		if (data != nullptr) {
+			FIBITMAP *dib = (header->node->m_plugin->load_proc != nullptr) ? header->node->m_plugin->load_proc(header->io, header->handle, page, header->load_flags, data) : nullptr;
 
 			// close the file
 
@@ -761,11 +761,11 @@ FreeImage_LockPage(FIMULTIBITMAP *bitmap, int page) {
 				return dib;
 			}	
 
-			return NULL;
+			return nullptr;
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void DLL_CALLCONV
@@ -787,8 +787,8 @@ FreeImage_UnlockPage(FIMULTIBITMAP *bitmap, FIBITMAP *page, BOOL changed) {
 
 				// compress the data
 
-				DWORD compressed_size = 0;
-				BYTE *compressed_data = NULL;
+				uint32_t compressed_size = 0;
+				uint8_t *compressed_data = nullptr;
 
 				// open a memory handle
 				FIMEMORY *hmem = FreeImage_OpenMemory();
@@ -869,7 +869,7 @@ FreeImage_GetLockedPageNumbers(FIMULTIBITMAP *bitmap, int *pages, int *count) {
 	if ((bitmap) && (count)) {
 		MULTIBITMAPHEADER *header = FreeImage_GetMultiBitmapHeader(bitmap);
 
-		if ((pages == NULL) || (*count == 0)) {
+		if ((pages == nullptr) || (*count == 0)) {
 			*count = (int)header->locked_pages.size();
 		} else {
 			int c = 0;
@@ -917,14 +917,14 @@ FreeImage_LoadMultiBitmapFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream, int
 					MULTIBITMAPHEADER *header = new(std::nothrow) MULTIBITMAPHEADER;
 
 					if (header) {
-						header->m_filename = NULL;
+						header->m_filename = nullptr;
 						header->node = node;
 						header->fif = fif;
 						header->io = io;
 						header->handle = (fi_handle)stream;						
 						header->changed = FALSE;						
 						header->read_only = read_only;
-						header->m_cachefile = NULL;
+						header->m_cachefile = nullptr;
 						header->cache_fif = fif;
 						header->load_flags = flags;
 
@@ -960,7 +960,7 @@ FreeImage_LoadMultiBitmapFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream, int
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 BOOL DLL_CALLCONV

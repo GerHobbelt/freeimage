@@ -1456,7 +1456,7 @@ namespace FreeImageAPI
 		///
 		/// Rounding is done using the following formula:
 		///
-		/// dst_pixel = (BYTE) MIN(255, MAX(0, q)) where int q = int(src_pixel + 0.5);</param>
+		/// dst_pixel = (uint8_t) MIN(255, MAX(0, q)) where int q = int(src_pixel + 0.5);</param>
 		/// <returns>Handle to a FreeImage bitmap.</returns>
 		[DllImport(FreeImageLibrary, EntryPoint = "FreeImage_ConvertToStandardType")]
 		public static extern FIBITMAP ConvertToStandardType(FIBITMAP src, bool scale_linear);
@@ -1627,7 +1627,7 @@ namespace FreeImageAPI
 		/// Returns the tag description.
 		/// </summary>
 		/// <param name="tag">The tag field.</param>
-		/// <returns>The description or NULL if unavailable.</returns>
+		/// <returns>The description or nullptr if unavailable.</returns>
 		public static unsafe string GetTagDescription(FITAG tag) { return PtrToStr(GetTagDescription_(tag)); }
 		[DllImport(FreeImageLibrary, CharSet = CharSet.Ansi, EntryPoint = "FreeImage_GetTagDescription")]
 		private static unsafe extern byte* GetTagDescription_(FITAG tag);

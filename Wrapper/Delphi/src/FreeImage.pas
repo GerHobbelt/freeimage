@@ -67,33 +67,33 @@ type
 type
   FreeImageAnsiString = UTF8String;
 
-  LONG = LongInt;
-  DWORD = Cardinal;
+  int32_t = LongInt;
+  uint32_t = Cardinal;
 
-  PDWORD = ^DWORD;
+  PDWORD = ^uint32_t;
 
   BITMAPINFOHEADER = record
-    biSize : DWORD;
-    biWidth : LONG;
-    biHeight : LONG;
-    biPlanes : WORD;
-    biBitCount : WORD;
-    biCompression : DWORD;
-    biSizeImage : DWORD;
-    biXPelsPerMeter : LONG;
-    biYPelsPerMeter : LONG;
-    biClrUsed : DWORD;
-    biClrImportant : DWORD;
+    biSize : uint32_t;
+    biWidth : int32_t;
+    biHeight : int32_t;
+    biPlanes : uint16_t;
+    biBitCount : uint16_t;
+    biCompression : uint32_t;
+    biSizeImage : uint32_t;
+    biXPelsPerMeter : int32_t;
+    biYPelsPerMeter : int32_t;
+    biClrUsed : uint32_t;
+    biClrImportant : uint32_t;
   end;
   LPBITMAPINFOHEADER = ^BITMAPINFOHEADER;
   TBITMAPINFOHEADER = BITMAPINFOHEADER;
   PBITMAPINFOHEADER = ^BITMAPINFOHEADER;
 
   RGBQUAD = record
-    rgbBlue : BYTE;
-    rgbGreen : BYTE;
-    rgbRed : BYTE;
-    rgbReserved : BYTE;
+    rgbBlue : uint8_t;
+    rgbGreen : uint8_t;
+    rgbRed : uint8_t;
+    rgbReserved : uint8_t;
   end;
   tagRGBQUAD = RGBQUAD;
   TRGBQUAD = RGBQUAD;
@@ -150,18 +150,18 @@ type
 type
   {* 48-bit RGB }
   tagFIRGB16 = packed record
-    red: WORD;
-    green: WORD;
-    blue: WORD;
+    red: uint16_t;
+    green: uint16_t;
+    blue: uint16_t;
   end;
   FIRGB16 = tagFIRGB16;
 
   {* 64-bit RGBA }
   tagFIRGBA16 = packed record
-    red: WORD;
-    green: WORD;
-    blue: WORD;
-    alpha: WORD;
+    red: uint16_t;
+    green: uint16_t;
+    blue: uint16_t;
+    alpha: uint16_t;
   end;
   FIRGBA16 = tagFIRGBA16;
 
@@ -242,8 +242,8 @@ const
 
 type
   FIICCPROFILE = record
-    flags: WORD;   // info flag
-    size: DWORD;   // profile's size measured in bytes
+    flags: uint16_t;   // info flag
+    size: uint32_t;   // profile's size measured in bytes
     data: Pointer; // points to a block of contiguous memory containing the profile
   end;
   PFIICCPROFILE = ^FIICCPROFILE;
@@ -739,7 +739,7 @@ function FreeImage_SaveToHandle(fif: FREE_IMAGE_FORMAT; dib: PFIBITMAP;
 // Memory I/O stream routines -----------------------------------------------
 // --------------------------------------------------------------------------
 
-function FreeImage_OpenMemory(data: PByte = nil; size_in_bytes: DWORD = 0): PFIMEMORY; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_OpenMemory(data: PByte = nil; size_in_bytes: uint32_t = 0): PFIMEMORY; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_OpenMemory@8'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_OpenMemory'{$ENDIF};
 procedure FreeImage_CloseMemory(stream: PFIMEMORY); {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
@@ -761,7 +761,7 @@ function FreeImage_SeekMemory(stream: PFIMEMORY; offset: LongInt;
   external FIDLL {$IFDEF WIN32}name '_FreeImage_SeekMemory@12'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_SeekMemory'{$ENDIF};
 function FreeImage_AcquireMemory(stream: PFIMEMORY; var data: PByte;
-  var size_in_bytes: DWORD): LongBool; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+  var size_in_bytes: uint32_t): LongBool; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_AcquireMemory@12'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_AcquireMemory'{$ENDIF};
 function FreeImage_ReadMemory(buffer: Pointer; size, count: Cardinal;
@@ -1319,19 +1319,19 @@ function FreeImage_TmoFattal02(src: PFIBITMAP; color_saturation: Double = 0.5;
 // ZLib interface -----------------------------------------------------------
 // --------------------------------------------------------------------------
 
-function FreeImage_ZLibCompress(target: PByte; target_size: DWORD; source: PByte; source_size: DWORD): DWORD; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_ZLibCompress(target: PByte; target_size: uint32_t; source: PByte; source_size: uint32_t): uint32_t; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_ZLibCompress@16'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_ZLibCompress'{$ENDIF};
-function FreeImage_ZLibUncompress(target: PByte; target_size: DWORD; source: PByte; source_size: DWORD): DWORD; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_ZLibUncompress(target: PByte; target_size: uint32_t; source: PByte; source_size: uint32_t): uint32_t; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_ZLibUncompress@16'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_ZLibUncompress'{$ENDIF};
-function FreeImage_ZLibGZip(target: PByte; target_size: DWORD; source: PByte; source_size: DWORD): DWORD; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_ZLibGZip(target: PByte; target_size: uint32_t; source: PByte; source_size: uint32_t): uint32_t; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_ZLibGZip@16'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_ZLibGZip'{$ENDIF};
-function FreeImage_ZLibGUnzip(target: PByte; target_size: DWORD; source: PByte; source_size: DWORD): DWORD; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_ZLibGUnzip(target: PByte; target_size: uint32_t; source: PByte; source_size: uint32_t): uint32_t; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_ZLibGUnzip@16'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_ZLibGUnzip'{$ENDIF};
-function FreeImage_ZLibCRC32(crc: DWORD; source: PByte; source_size: DWORD): DWORD; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_ZLibCRC32(crc: uint32_t; source: PByte; source_size: uint32_t): uint32_t; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_ZLibCRC32@12'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_ZLibCRC32'{$ENDIF};
 
@@ -1363,10 +1363,10 @@ function FreeImage_GetTagID(tag: PFITAG): Word; {$IFDEF MSWINDOWS}stdcall;{$ELSE
 function FreeImage_GetTagType(tag: PFITAG): FREE_IMAGE_MDTYPE; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_GetTagType@4'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_GetTagType'{$ENDIF};
-function FreeImage_GetTagCount(tag: PFITAG): DWORD; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_GetTagCount(tag: PFITAG): uint32_t; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_GetTagCount@4'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_GetTagCount'{$ENDIF};
-function FreeImage_GetTagLength(tag: PFITAG): DWORD; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_GetTagLength(tag: PFITAG): uint32_t; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_GetTagLength@4'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_GetTagLength'{$ENDIF};
 function FreeImage_GetTagValue(tag: PFITAG): Pointer; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
@@ -1385,10 +1385,10 @@ function FreeImage_SetTagID(tag: PFITAG; id: Word): LongBool; {$IFDEF MSWINDOWS}
 function FreeImage_SetTagType(tag: PFITAG; _type: FREE_IMAGE_MDTYPE): LongBool; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_SetTagType@8'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_SetTagType'{$ENDIF};
-function FreeImage_SetTagCount(tag: PFITAG; count: DWORD): LongBool; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_SetTagCount(tag: PFITAG; count: uint32_t): LongBool; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_SetTagCount@8'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_SetTagCount'{$ENDIF};
-function FreeImage_SetTagLength(tag: PFITAG; length: DWORD): LongBool; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
+function FreeImage_SetTagLength(tag: PFITAG; length: uint32_t): LongBool; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
   external FIDLL {$IFDEF WIN32}name '_FreeImage_SetTagLength@8'{$ENDIF}
   {$IFDEF MACOS}name '_FreeImage_SetTagLength'{$ENDIF};
 function FreeImage_SetTagValue(tag: PFITAG; value: Pointer): LongBool; {$IFDEF MSWINDOWS}stdcall;{$ELSE}cdecl;{$ENDIF}
@@ -1647,13 +1647,13 @@ procedure FreeImage_OutputMessageProc(fif: Integer; fmt: PAnsiChar; args: array 
           PAnsiChar(parg^) := pbuf;
         end;
         vtPChar: begin
-          //NULL terminated MBCS string
+          //nullptr terminated MBCS string
           psrc := nil;
           len := 0;
           PAnsiChar(parg^) := Args[i].VPChar;
         end;
         vtPWideChar: begin
-          //NULL terminated Unicode string
+          //nullptr terminated Unicode string
           temp := AnsiString(Args[i].VPWideChar);
           psrc := PAnsiChar(temp);
           len := Length(temp);
@@ -1680,7 +1680,7 @@ procedure FreeImage_OutputMessageProc(fif: Integer; fmt: PAnsiChar; args: array 
           raise Exception.Create('Buffer overflow');
         //copy string
         Move(psrc^, pbuf^, len);
-        //NULL terminator
+        //nullptr terminator
         PAnsiChar(Cardinal(pbuf) + len)^ := #0;
         //shift pointer...
         Inc(pbuf, len + 1);
@@ -1702,24 +1702,24 @@ procedure FreeImage_OutputMessageProc(fif: Integer; fmt: PAnsiChar; args: array 
       PUSH    EAX                      //remember fif
       PUSH    ECX                      //make room for ESP backup
 
-      MOV     DWORD PTR [EBP-$08], ESP //backup stack pointer
+      MOV     uint32_t PTR [EBP-$08], ESP //backup stack pointer
 
-      MOV     EAX, DWORD PTR [EBP+$08] //store Argc
+      MOV     EAX, uint32_t PTR [EBP+$08] //store Argc
 
       TEST    EAX, EAX                 //Argc <= 0?
       JLE     @Call
 
     @Loop:
-      PUSH    DWORD PTR [ECX+EAX*$04-$04] //push Argv in right to left order
+      PUSH    uint32_t PTR [ECX+EAX*$04-$04] //push Argv in right to left order
       DEC     EAX
       JNZ     @Loop
 
     @Call:
       PUSH    EDX                      //push fmt
-      PUSH    DWORD PTR [EBP-$04]      //push fif
+      PUSH    uint32_t PTR [EBP-$04]      //push fif
       CALL    __FreeImage_OutputMessageProc
 
-      MOV     ESP, DWORD PTR [EBP-$08] //restore stack pointer
+      MOV     ESP, uint32_t PTR [EBP-$08] //restore stack pointer
 
       POP     ECX                      //clean stack
       POP     EAX

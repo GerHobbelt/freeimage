@@ -36,7 +36,7 @@
 FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeFromHandle(FreeImageIO *io,
                                                                fi_handle handle,
                                                                int size) {
-  if (handle != NULL) {
+  if (handle != nullptr) {
     int fif_count = FreeImage_GetFIFCount();
 
     for (int i = 0; i < fif_count; ++i) {
@@ -65,7 +65,7 @@ FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileType(const char *filename,
 
   FILE *handle = fopen(filename, "rb");
 
-  if (handle != NULL) {
+  if (handle != nullptr) {
     FREE_IMAGE_FORMAT format =
         FreeImage_GetFileTypeFromHandle(&io, (fi_handle)handle, size);
 
@@ -84,7 +84,7 @@ FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeU(const wchar_t *filename,
   SetDefaultIO(&io);
   FILE *handle = _wfopen(filename, L"rb");
 
-  if (handle != NULL) {
+  if (handle != nullptr) {
     FREE_IMAGE_FORMAT format =
         FreeImage_GetFileTypeFromHandle(&io, (fi_handle)handle, size);
 

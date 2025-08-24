@@ -687,7 +687,7 @@ namespace FreeImageAPI.Metadata
         /// </summary>
         /// <remarks>
         /// The character code used in the UserComment tag is identified based on an ID code in a fixed 8-byte
-        /// area at the start of the tag data area. The unused portion of the area is padded with NULL.
+        /// area at the start of the tag data area. The unused portion of the area is padded with nullptr.
         /// The ID code for the UserComment area may be a Defined code such as JIS or ASCII, or may be Undefined.
         /// <para/>
         /// <br/><b>Handling of null values</b><para/>
@@ -3295,7 +3295,7 @@ namespace FreeImageAPI.Metadata
         /// Gets or sets a character string recording the name of the method used
         /// for location finding. The first byte indicates the character code used,
         /// and this is followed by the name of the method. Since the Type is not ASCII,
-        /// NULL termination is not necessary.
+        /// nullptr termination is not necessary.
         /// </summary>
         /// <remarks>
         /// <b>Handling of null values</b><para/>
@@ -3321,7 +3321,7 @@ namespace FreeImageAPI.Metadata
         /// <summary>
         /// Gets or sets a character string recording the name of the GPS area.
         /// The first byte indicates the character code used, and this is followed by
-        /// the name of the GPS area. Since the Type is not ASCII, NULL termination is
+        /// the name of the GPS area. Since the Type is not ASCII, nullptr termination is
         /// not necessary. 
         /// </summary>
         /// <remarks>
@@ -4606,9 +4606,9 @@ namespace FreeImageAPI.Metadata
         /// projections, datums, etc.
         /// <para/>
         /// Special handling is required for <see cref="String"/>-valued keys. While it
-        /// is true that TIFF 6.0 permits multiple NULL-delimited strings within a single
+        /// is true that TIFF 6.0 permits multiple nullptr-delimited strings within a single
         /// ASCII tag, the secondary strings might not appear in the output of naive
-        /// <i>tiffdump</i> programs. For this reason, the NULL delimiter of each ASCII key
+        /// <i>tiffdump</i> programs. For this reason, the nullptr delimiter of each ASCII key
         /// value shall be converted to a "|" (pipe) character before being installed
         /// back into the <see cref="String"/> holding tag, so that a dump of the tag
         /// will look like this.
@@ -4616,7 +4616,7 @@ namespace FreeImageAPI.Metadata
         /// AsciiTag="first_value|second_value|etc...last_value|"
         /// <para/>
         /// A baseline GeoTIFF-reader must check for and convert the final "|" pipe 
-        /// character of a key back into a NULL before returning it to the client 
+        /// character of a key back into a nullptr before returning it to the client 
         /// software.
         /// <para/>
         /// <br/><b>Handling of null values</b><para/>
