@@ -6,6 +6,8 @@ Clone of the FreeImage library Found here: http://freeimage.sourceforge.net
 http://downloads.sourceforge.net/freeimage/FreeImage
 
 
+MonoGame specific improvements live here in the `monogame` branch.
+
 Added here to generate patches for compiling for iOS / OSX
 
 

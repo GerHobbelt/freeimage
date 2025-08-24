@@ -9,6 +9,10 @@ rm -rf Source/LibJPEG/Debug
 rm -rf Source/LibJPEG/Release
 rm -rf Source/LibPNG/Debug
 rm -rf Source/LibPNG/Release
+rm -rf Source/LibMNG/Debug
+rm -rf Source/LibMNG/Release
+rm -rf Source/LibTIFF/Debug
+rm -rf Source/LibTIFF/Release
 rm -rf Source/LibTIFF4/Debug
 rm -rf Source/LibTIFF4/Release
 rm -rf Source/Zlib/Debug
