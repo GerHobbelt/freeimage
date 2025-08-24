@@ -61,7 +61,6 @@ FreeImage_Invert(FIBITMAP *src) {
 			case 1 :
 			case 4 :
 			case 8 :
-      case 16:
 			{
 				// if the dib has a colormap, just invert it
 				// else, keep the linear grayscale

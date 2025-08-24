@@ -19,7 +19,7 @@
 // Use at your own risk!
 // ==========================================================
 
-#include "libraw.h"
+#include "../LibRawLite/libraw/libraw.h"
 
 #include "FreeImage.h"
 #include "Utilities.h"

@@ -25,6 +25,8 @@ set(FREEIMAGE_SOURCES
         FreeImage/ConversionRGBA16.cpp
         FreeImage/ConversionRGBF.cpp FreeImage/ConversionRGB16.cpp FreeImage/ConversionType.cpp
         FreeImage/ConversionUINT16.cpp
+	FreeImage/ConversionRGBAF.cpp
+	FreeImage/ConversionRGBA16.cpp
         FreeImage/FreeImage.cpp
         FreeImage/FreeImageIO.cpp
         FreeImage/GetType.cpp
@@ -41,6 +43,7 @@ set(FREEIMAGE_SOURCES
         #FreeImage/PluginHDR.cpp
         FreeImage/PluginICO.cpp
         #FreeImage/PluginIFF.cpp
+	FreeImage/LFPQuantizer.cpp
         #FreeImage/PluginKOALA.cpp
         #FreeImage/PluginPCD.cpp
         #FreeImage/PluginPCX.cpp
@@ -85,7 +88,9 @@ set(FREEIMAGE_SOURCES
         #FreeImage/ZLibInterface.cpp
         #OpenEXR/Half/half.cpp
         )
-
+IF(ENABLE_JXR)
+  SET(FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES} FreeImage/PluginJXR.cpp)
+ENDIF()
 IF (ENABLE_PNG)
   MESSAGE("PNG_INCLUDE_DIR: ${PNG_INCLUDE_DIR}")
   add_definitions(${PNG_DEFINITIONS})
@@ -122,6 +127,7 @@ IF (FREEIMAGE_BUILD_STATIC)
   add_library(FreeImage::FreeImage STATIC ${FREEIMAGE_SOURCES})
   set_property(TARGET FreeImage::FreeImage PROPERTY CXX_STANDARD 11)
   target_include_directories(FreeImage::FreeImage INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
+  target_link_libraries(FreeImage_static png jpeg tiff zlib half)
   IF(ENABLE_PNG)
       target_link_libraries(FreeImage::FreeImage LINK_PUBLIC ${PNG_LIBRARIES})
   ENDIF()

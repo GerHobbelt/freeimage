@@ -22,7 +22,8 @@
 #include "zlib.h"
 #include "FreeImage.h"
 #include "Utilities.h"
-#define OS_CODE 7 // XXX Ugly hack as code is using zlib provate internal stuff
+#include "zutil.h"	/* must be the last header because of error C3163 in VS2008 (_vsnprintf defined in stdio.h) */
+
 /**
 Compresses a source buffer into a target buffer, using the ZLib library. 
 Upon entry, target_size is the total size of the destination buffer, 

@@ -231,7 +231,9 @@ void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only) {
       */
       s_plugins->AddNode(InitBMP);
       s_plugins->AddNode(InitICO);
+#ifdef ENABLE_JPEG
 			//  s_plugins->AddNode(InitJPEG);
+#endif
       // s_plugins->AddNode(InitJNG);
       // s_plugins->AddNode(InitKOALA);
       // s_plugins->AddNode(InitIFF);
@@ -242,12 +244,16 @@ void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only) {
       // s_plugins->AddNode(InitPCX);
       s_plugins->AddNode(InitPNM, nullptr, "PGM", "Portable Greymap (ASCII)",                  "pgm", "^P2");
       s_plugins->AddNode(InitPNM, nullptr, "PGMRAW", "Portable Greymap (RAW)",                   "pgm", "^P5");
+#ifdef ENABLE_PNG
       s_plugins->AddNode(InitPNG);
+#endif
       s_plugins->AddNode(InitPNM, nullptr, "PPM", "Portable Pixelmap (ASCII)",                   "ppm", "^P3");
       s_plugins->AddNode(InitPNM, nullptr, "PPMRAW", "Portable Pixelmap (RAW)",                  "ppm", "^P6");
 // s_plugins->AddNode(InitRAS);
         s_plugins->AddNode(InitTARGA);
+#ifdef ENABLE_TIFF
 			//  s_plugins->AddNode(InitTIFF);
+#endif
 // s_plugins->AddNode(InitWBMP);
 // s_plugins->AddNode(InitPSD);
 // s_plugins->AddNode(InitCUT);
@@ -258,15 +264,23 @@ void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only) {
 // s_plugins->AddNode(InitHDR);
 			//  s_plugins->AddNode(InitG3);
 // s_plugins->AddNode(InitSGI);
-// s_plugins->AddNode(InitEXR);
+#ifdef ENABLE_EXR
+			s_plugins->AddNode(InitEXR);
+#endif
+#ifdef ENABLE_OPENJP
 			//  s_plugins->AddNode(InitJ2K);
 			//  s_plugins->AddNode(InitJP2);
+#endif
 // s_plugins->AddNode(InitPFM);
 // s_plugins->AddNode(InitPICT);
+#ifdef ENABLE_RAW
 			//  s_plugins->AddNode(InitRAW);
+#endif
+#ifdef ENABLE_WEBP
 			//  s_plugins->AddNode(InitWEBP);
-#if !(defined(_MSC_VER) && (_MSC_VER <= 1310))
-// s_plugins->AddNode(InitJXR);
+#endif
+#if !(defined(_MSC_VER) && (_MSC_VER <= 1310)) && defined(ENABLE_JXR)
+			s_plugins->AddNode(InitJXR);
 #endif // unsupported by MS Visual Studio 2003 !!!
 
       // external plugin initialization
