@@ -43,7 +43,7 @@
  * Convert color value from the CIE L*a*b* 1976 space to CIE XYZ.
  */
 void
-TIFFCIELabToXYZ(TIFFCIELabToRGB *cielab, uint32 l, int32 a, int32 b,
+TIFFCIELabToXYZ(TIFFCIELabToRGB *cielab, uint32_t l, int32 a, int32 b,
 		float *X, float *Y, float *Z)
 {
 	float L = (float)l * 100.0F / 255.0F;
@@ -70,13 +70,13 @@ TIFFCIELabToXYZ(TIFFCIELabToRGB *cielab, uint32 l, int32 a, int32 b,
 		*Z = cielab->Z0 * tmp * tmp * tmp;
 }
 
-#define RINT(R) ((uint32)((R)>0?((R)+0.5):((R)-0.5)))
+#define RINT(R) ((uint32_t)((R)>0?((R)+0.5):((R)-0.5)))
 /*
  * Convert color value from the XYZ space to RGB.
  */
 void
 TIFFXYZToRGB(TIFFCIELabToRGB *cielab, float X, float Y, float Z,
-	     uint32 *r, uint32 *g, uint32 *b)
+	     uint32_t *r, uint32_t *g, uint32_t *b)
 {
 	int i;
 	float Yr, Yg, Yb;
@@ -180,8 +180,8 @@ TIFFCIELabToRGBInit(TIFFCIELabToRGB* cielab,
 #define HICLAMP(f,max)		((f)>(max)?(max):(f))
 
 void
-TIFFYCbCrtoRGB(TIFFYCbCrToRGB *ycbcr, uint32 Y, int32 Cb, int32 Cr,
-	       uint32 *r, uint32 *g, uint32 *b)
+TIFFYCbCrtoRGB(TIFFYCbCrToRGB *ycbcr, uint32_t Y, int32 Cb, int32 Cr,
+	       uint32_t *r, uint32_t *g, uint32_t *b)
 {
 	/* XXX: Only 8-bit YCbCr input supported for now */
 	Y = HICLAMP(Y, 255), Cb = CLAMP(Cb, 0, 255), Cr = CLAMP(Cr, 0, 255);

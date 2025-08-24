@@ -30,13 +30,13 @@
 // ----------------------------------------------------------
 
 void DLL_CALLCONV
-FreeImage_ConvertLine1To8(BYTE *target, BYTE *source, int width_in_pixels) {
+FreeImage_ConvertLine1To8(uint8_t *target, uint8_t *source, int width_in_pixels) {
 	for (int cols = 0; cols < width_in_pixels; cols++)
 		target[cols] = (source[cols >> 3] & (0x80 >> (cols & 0x07))) != 0 ? 255 : 0;	
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine4To8(BYTE *target, BYTE *source, int width_in_pixels) {
+FreeImage_ConvertLine4To8(uint8_t *target, uint8_t *source, int width_in_pixels) {
 	int count_new = 0;
 	int count_org = 0;
 	BOOL hinibble = TRUE;
@@ -57,8 +57,8 @@ FreeImage_ConvertLine4To8(BYTE *target, BYTE *source, int width_in_pixels) {
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine16To8_555(BYTE *target, BYTE *source, int width_in_pixels) {
-	WORD *bits = (WORD *)source;
+FreeImage_ConvertLine16To8_555(uint8_t *target, uint8_t *source, int width_in_pixels) {
+	uint16_t *bits = (uint16_t *)source;
 
 	for (int cols = 0; cols < width_in_pixels; cols++) {
 		target[cols] = GREY((((bits[cols] & FI16_555_RED_MASK) >> FI16_555_RED_SHIFT) * 0xFF) / 0x1F,
@@ -68,8 +68,8 @@ FreeImage_ConvertLine16To8_555(BYTE *target, BYTE *source, int width_in_pixels) 
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine16To8_565(BYTE *target, BYTE *source, int width_in_pixels) {
-	WORD *bits = (WORD *)source;
+FreeImage_ConvertLine16To8_565(uint8_t *target, uint8_t *source, int width_in_pixels) {
+	uint16_t *bits = (uint16_t *)source;
 
 	for (int cols = 0; cols < width_in_pixels; cols++)
 		target[cols] = GREY((((bits[cols] & FI16_565_RED_MASK) >> FI16_565_RED_SHIFT) * 0xFF) / 0x1F,
@@ -78,7 +78,7 @@ FreeImage_ConvertLine16To8_565(BYTE *target, BYTE *source, int width_in_pixels) 
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine24To8(BYTE *target, BYTE *source, int width_in_pixels) {
+FreeImage_ConvertLine24To8(uint8_t *target, uint8_t *source, int width_in_pixels) {
 	for (int cols = 0; cols < width_in_pixels; cols++) {
 		target[cols] = GREY(source[FI_RGBA_RED], source[FI_RGBA_GREEN], source[FI_RGBA_BLUE]);
 
@@ -87,7 +87,7 @@ FreeImage_ConvertLine24To8(BYTE *target, BYTE *source, int width_in_pixels) {
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertLine32To8(BYTE *target, BYTE *source, int width_in_pixels) {
+FreeImage_ConvertLine32To8(uint8_t *target, uint8_t *source, int width_in_pixels) {
 	for (int cols = 0; cols < width_in_pixels; cols++) {
 		target[cols] = GREY(source[FI_RGBA_RED], source[FI_RGBA_GREEN], source[FI_RGBA_BLUE]);
 
@@ -101,13 +101,13 @@ FreeImage_ConvertLine32To8(BYTE *target, BYTE *source, int width_in_pixels) {
 
 FIBITMAP * DLL_CALLCONV
 FreeImage_ConvertTo8Bits(FIBITMAP *dib) {
-	if(!dib) return NULL;
+	if(!dib) return nullptr;
 
 	const int bpp = FreeImage_GetBPP(dib);
 
 	const FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(dib);
 	if((image_type != FIT_BITMAP) && (image_type != FIT_UINT16)) {
-		return NULL;
+		return nullptr;
 	}
 
 	if(bpp != 8) {
@@ -115,8 +115,8 @@ FreeImage_ConvertTo8Bits(FIBITMAP *dib) {
 		const int height = FreeImage_GetHeight(dib);
 		FIBITMAP *new_dib = FreeImage_Allocate(width, height, 8);
 
-		if(new_dib == NULL) {
-			return NULL;
+		if(new_dib == nullptr) {
+			return nullptr;
 		}
 
 		// copy metadata from src to dst
@@ -127,9 +127,9 @@ FreeImage_ConvertTo8Bits(FIBITMAP *dib) {
 		RGBQUAD *new_pal = FreeImage_GetPalette(new_dib);
 
 		for(int i = 0; i < 256; i++) {
-			new_pal[i].rgbRed	= (BYTE)i;
-			new_pal[i].rgbGreen = (BYTE)i;
-			new_pal[i].rgbBlue	= (BYTE)i;
+			new_pal[i].rgbRed	= (uint8_t)i;
+			new_pal[i].rgbGreen = (uint8_t)i;
+			new_pal[i].rgbBlue	= (uint8_t)i;
 		}
 
 		if(image_type == FIT_BITMAP) {
@@ -151,7 +151,7 @@ FreeImage_ConvertTo8Bits(FIBITMAP *dib) {
 						// Reverse the grayscale palette
 
 						for(int i = 0; i < 256; i++) {
-							new_pal[i].rgbRed = new_pal[i].rgbGreen = new_pal[i].rgbBlue = (BYTE)(255 - i);
+							new_pal[i].rgbRed = new_pal[i].rgbGreen = new_pal[i].rgbBlue = (uint8_t)(255 - i);
 						}
 					}
 
@@ -227,13 +227,13 @@ FreeImage_ConvertTo8Bits(FIBITMAP *dib) {
 
 			const unsigned src_pitch = FreeImage_GetPitch(dib);
 			const unsigned dst_pitch = FreeImage_GetPitch(new_dib);
-			const BYTE *src_bits = FreeImage_GetBits(dib);
-			BYTE *dst_bits = FreeImage_GetBits(new_dib);
+			const uint8_t *src_bits = FreeImage_GetBits(dib);
+			uint8_t *dst_bits = FreeImage_GetBits(new_dib);
 			for (int rows = 0; rows < height; rows++) {
-				const WORD *src_pixel = (WORD*)src_bits;
-				BYTE *dst_pixel = (BYTE*)dst_bits;
+				const uint16_t *src_pixel = (uint16_t*)src_bits;
+				uint8_t *dst_pixel = (uint8_t*)dst_bits;
 				for(int cols = 0; cols < width; cols++) {
-					dst_pixel[cols] = (BYTE)(src_pixel[cols] >> 8);
+					dst_pixel[cols] = (uint8_t)(src_pixel[cols] >> 8);
 				}
 				src_bits += src_pitch;
 				dst_bits += dst_pitch;
@@ -250,7 +250,7 @@ FreeImage_ConvertTo8Bits(FIBITMAP *dib) {
 
 FIBITMAP * DLL_CALLCONV
 FreeImage_ConvertToGreyscale(FIBITMAP *dib) {
-	if(!dib) return NULL;
+	if(!dib) return nullptr;
 
 	const FREE_IMAGE_COLOR_TYPE color_type = FreeImage_GetColorType(dib);
 	const int bpp = FreeImage_GetBPP(dib);
@@ -260,8 +260,8 @@ FreeImage_ConvertToGreyscale(FIBITMAP *dib) {
 		const int height = FreeImage_GetHeight(dib);
 		FIBITMAP *new_dib = FreeImage_Allocate(width, height, 8);
 
-		if(new_dib == NULL) {
-			return NULL;
+		if(new_dib == nullptr) {
+			return nullptr;
 		}
 
 		// copy metadata from src to dst
@@ -272,17 +272,17 @@ FreeImage_ConvertToGreyscale(FIBITMAP *dib) {
 		RGBQUAD *new_pal = FreeImage_GetPalette(new_dib);
 
 		for(int i = 0; i < 256; i++) {
-			new_pal[i].rgbRed	= (BYTE)i;
-			new_pal[i].rgbGreen = (BYTE)i;
-			new_pal[i].rgbBlue	= (BYTE)i;
+			new_pal[i].rgbRed	= (uint8_t)i;
+			new_pal[i].rgbGreen = (uint8_t)i;
+			new_pal[i].rgbBlue	= (uint8_t)i;
 		}
 
 		// allocate a 24-bit buffer
 
-		BYTE *buffer = (BYTE*)malloc( CalculatePitch(CalculateLine(width, 24)) );
-		if(NULL == buffer) {
+		uint8_t *buffer = (uint8_t*)malloc( CalculatePitch(CalculateLine(width, 24)) );
+		if(nullptr == buffer) {
 			FreeImage_Unload(new_dib);
-			return NULL;
+			return nullptr;
 		}
 
 		// Convert the palette to 24-bit, then to 8-bit

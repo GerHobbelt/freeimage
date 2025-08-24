@@ -34,14 +34,14 @@
 #endif
 
 typedef struct tagDDPIXELFORMAT {
-	DWORD dwSize;	// size of this structure (must be 32)
-	DWORD dwFlags;	// see DDPF_*
-	DWORD dwFourCC;
-	DWORD dwRGBBitCount;	// Total number of bits for RGB formats
-	DWORD dwRBitMask;
-	DWORD dwGBitMask;
-	DWORD dwBBitMask;
-	DWORD dwRGBAlphaBitMask;
+	uint32_t dwSize;	// size of this structure (must be 32)
+	uint32_t dwFlags;	// see DDPF_*
+	uint32_t dwFourCC;
+	uint32_t dwRGBBitCount;	// Total number of bits for RGB formats
+	uint32_t dwRBitMask;
+	uint32_t dwGBitMask;
+	uint32_t dwBBitMask;
+	uint32_t dwRGBAlphaBitMask;
 } DDPIXELFORMAT;
 
 // DIRECTDRAW PIXELFORMAT FLAGS
@@ -53,9 +53,9 @@ enum {
 };
 
 typedef struct tagDDCAPS2 {
-	DWORD dwCaps1;	// Zero or more of the DDSCAPS_* members
-	DWORD dwCaps2;	// Zero or more of the DDSCAPS2_* members
-	DWORD dwReserved[2];
+	uint32_t dwCaps1;	// Zero or more of the DDSCAPS_* members
+	uint32_t dwCaps2;	// Zero or more of the DDSCAPS2_* members
+	uint32_t dwReserved[2];
 } DDCAPS2;
 
 // DIRECTDRAWSURFACE CAPABILITY FLAGS
@@ -78,17 +78,17 @@ enum {
 };
 
 typedef struct tagDDSURFACEDESC2 {
-	DWORD dwSize;	// size of this structure (must be 124)
-	DWORD dwFlags;	// combination of the DDSS_* flags
-	DWORD dwHeight;
-	DWORD dwWidth;
-	DWORD dwPitchOrLinearSize;
-	DWORD dwDepth;	// Depth of a volume texture
-	DWORD dwMipMapCount;
-	DWORD dwReserved1[11];
+	uint32_t dwSize;	// size of this structure (must be 124)
+	uint32_t dwFlags;	// combination of the DDSS_* flags
+	uint32_t dwHeight;
+	uint32_t dwWidth;
+	uint32_t dwPitchOrLinearSize;
+	uint32_t dwDepth;	// Depth of a volume texture
+	uint32_t dwMipMapCount;
+	uint32_t dwReserved1[11];
 	DDPIXELFORMAT ddpfPixelFormat;
 	DDCAPS2 ddsCaps;
-	DWORD dwReserved2;
+	uint32_t dwReserved2;
 } DDSURFACEDESC2;
 
 enum {
@@ -104,13 +104,13 @@ enum {
 };
 
 typedef struct tagDDSHEADER {
-	DWORD dwMagic;			// FOURCC: "DDS "
+	uint32_t dwMagic;			// FOURCC: "DDS "
 	DDSURFACEDESC2 surfaceDesc;
 } DDSHEADER;
 
 #define MAKEFOURCC(ch0, ch1, ch2, ch3) \
-	((DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8) |   \
-    ((DWORD)(BYTE)(ch2) << 16) | ((DWORD)(BYTE)(ch3) << 24 ))
+	((uint32_t)(uint8_t)(ch0) | ((uint32_t)(uint8_t)(ch1) << 8) |   \
+    ((uint32_t)(uint8_t)(ch2) << 16) | ((uint32_t)(uint8_t)(ch3) << 24 ))
 
 #define FOURCC_DXT1	MAKEFOURCC('D','X','T','1')
 #define FOURCC_DXT2	MAKEFOURCC('D','X','T','2')
@@ -123,30 +123,30 @@ typedef struct tagDDSHEADER {
 // ----------------------------------------------------------
 
 typedef struct tagColor8888 {
-	BYTE b;
-	BYTE g;
-	BYTE r;
-	BYTE a;
+	uint8_t b;
+	uint8_t g;
+	uint8_t r;
+	uint8_t a;
 } Color8888;
 
 typedef struct tagColor565 {
-	WORD b : 5;
-	WORD g : 6;
-	WORD r : 5;
+	uint16_t b : 5;
+	uint16_t g : 6;
+	uint16_t r : 5;
 } Color565;
 
 typedef struct tagDXTColBlock {
 	Color565 colors[2];
-	BYTE row[4];
+	uint8_t row[4];
 } DXTColBlock;
 
 typedef struct tagDXTAlphaBlockExplicit {
-	WORD row[4];
+	uint16_t row[4];
 } DXTAlphaBlockExplicit;
 
 typedef struct tagDXTAlphaBlock3BitLinear {
-	BYTE alpha[2];
-	BYTE data[6];
+	uint8_t alpha[2];
+	uint8_t data[6];
 } DXTAlphaBlock3BitLinear;
 
 typedef struct tagDXT1Block
@@ -214,31 +214,31 @@ GetBlockColors (const DXTColBlock &block, Color8888 colors[4], bool isDXT1) {
 	for (i = 0; i < 2; i++)	{
 		colors[i].a = 0xff;
 		/*
-		colors[i].r = (BYTE)(block.colors[i].r * 0xff / 0x1f);
-		colors[i].g = (BYTE)(block.colors[i].g * 0xff / 0x3f);
-		colors[i].b = (BYTE)(block.colors[i].b * 0xff / 0x1f);
+		colors[i].r = (uint8_t)(block.colors[i].r * 0xff / 0x1f);
+		colors[i].g = (uint8_t)(block.colors[i].g * 0xff / 0x3f);
+		colors[i].b = (uint8_t)(block.colors[i].b * 0xff / 0x1f);
 		*/
-		colors[i].r = (BYTE)((block.colors[i].r << 3U) | (block.colors[i].r >> 2U));
-		colors[i].g = (BYTE)((block.colors[i].g << 2U) | (block.colors[i].g >> 4U));
-		colors[i].b = (BYTE)((block.colors[i].b << 3U) | (block.colors[i].b >> 2U));
+		colors[i].r = (uint8_t)((block.colors[i].r << 3U) | (block.colors[i].r >> 2U));
+		colors[i].g = (uint8_t)((block.colors[i].g << 2U) | (block.colors[i].g >> 4U));
+		colors[i].b = (uint8_t)((block.colors[i].b << 3U) | (block.colors[i].b >> 2U));
 	}
 
-	WORD *wCol = (WORD *)block.colors;
+	uint16_t *wCol = (uint16_t *)block.colors;
 	if (wCol[0] > wCol[1] || !isDXT1) {
 		// 4 color block
 		for (i = 0; i < 2; i++)	{
 			colors[i + 2].a = 0xff;
-			colors[i + 2].r = (BYTE)((WORD (colors[0].r) * (2 - i) + WORD (colors[1].r) * (1 + i)) / 3);
-			colors[i + 2].g = (BYTE)((WORD (colors[0].g) * (2 - i) + WORD (colors[1].g) * (1 + i)) / 3);
-			colors[i + 2].b = (BYTE)((WORD (colors[0].b) * (2 - i) + WORD (colors[1].b) * (1 + i)) / 3);
+			colors[i + 2].r = (uint8_t)((uint16_t (colors[0].r) * (2 - i) + uint16_t (colors[1].r) * (1 + i)) / 3);
+			colors[i + 2].g = (uint8_t)((uint16_t (colors[0].g) * (2 - i) + uint16_t (colors[1].g) * (1 + i)) / 3);
+			colors[i + 2].b = (uint8_t)((uint16_t (colors[0].b) * (2 - i) + uint16_t (colors[1].b) * (1 + i)) / 3);
 		}
 	}
 	else {
 		// 3 color block, number 4 is transparent
 		colors[2].a = 0xff;
-		colors[2].r = (BYTE)((WORD (colors[0].r) + WORD (colors[1].r)) / 2);
-		colors[2].g = (BYTE)((WORD (colors[0].g) + WORD (colors[1].g)) / 2);
-		colors[2].b = (BYTE)((WORD (colors[0].b) + WORD (colors[1].b)) / 2);
+		colors[2].r = (uint8_t)((uint16_t (colors[0].r) + uint16_t (colors[1].r)) / 2);
+		colors[2].g = (uint8_t)((uint16_t (colors[0].g) + uint16_t (colors[1].g)) / 2);
+		colors[2].b = (uint8_t)((uint16_t (colors[0].b) + uint16_t (colors[1].b)) / 2);
 
 		colors[3].a = 0x00;
 		colors[3].g = 0x00;
@@ -279,7 +279,7 @@ protected:
 	unsigned m_colorRow;
 
 public:
-	void Setup (const BYTE *pBlock) {
+	void Setup (const uint8_t *pBlock) {
 		m_pBlock = (const typename INFO::Block *)pBlock;
 		GetBlockColors (m_pBlock->color, m_colors, INFO::isDXT1);
 	}
@@ -316,7 +316,7 @@ public:
 	void GetColor (int x, int y, Color8888 &color) {
 		base::GetColor (x, y, color);
 		const unsigned bits = (m_alphaRow >> (x * 4)) & 0xF;
-		color.a = (BYTE)((bits * 0xFF) / 0xF);
+		color.a = (uint8_t)((bits * 0xFF) / 0xF);
 	}
 };
 
@@ -331,7 +331,7 @@ protected:
 	int m_offset;
 
 public:
-	void Setup (const BYTE *pBlock) {
+	void Setup (const uint8_t *pBlock) {
 		base::Setup (pBlock);
 
 		const DXTAlphaBlock3BitLinear &block = m_pBlock->alpha;
@@ -366,15 +366,15 @@ public:
 	void GetColor (int x, int y, Color8888 &color) {
 		base::GetColor (x, y, color);
 		unsigned bits = (m_alphaBits >> (x * 3 + m_offset)) & 7;
-		color.a = (BYTE)m_alphas[bits];
+		color.a = (uint8_t)m_alphas[bits];
 	}
 };
 
-template <class DECODER> void DecodeDXTBlock (BYTE *dstData, const BYTE *srcBlock, long dstPitch, int bw, int bh) {
+template <class DECODER> void DecodeDXTBlock (uint8_t *dstData, const uint8_t *srcBlock, long dstPitch, int bw, int bh) {
 	DECODER decoder;
 	decoder.Setup (srcBlock);
 	for (int y = 0; y < bh; y++) {
-		BYTE *dst = dstData - y * dstPitch;
+		uint8_t *dst = dstData - y * dstPitch;
 		decoder.SetY (y);
 		for (int x = 0; x < bw; x++) {
 			decoder.GetColor (x, y, (Color8888 &)*dst);
@@ -402,8 +402,8 @@ LoadRGB (DDSURFACEDESC2 &desc, FreeImageIO *io, fi_handle handle, int page, int 
 	// allocate a new dib
 	FIBITMAP *dib = FreeImage_Allocate (width, height, bpp, desc.ddpfPixelFormat.dwRBitMask,
 		desc.ddpfPixelFormat.dwGBitMask, desc.ddpfPixelFormat.dwBBitMask);
-	if (dib == NULL)
-		return NULL;
+	if (dib == nullptr)
+		return nullptr;
 
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_RGB
 		// Calculate the number of bytes per pixel (3 for 24-bit or 4 for 32-bit)
@@ -415,7 +415,7 @@ LoadRGB (DDSURFACEDESC2 &desc, FreeImageIO *io, fi_handle handle, int page, int 
 	int filePitch = (desc.dwFlags & DDSD_PITCH) ? (int)desc.dwPitchOrLinearSize : line;
 	long delta = (long)filePitch - (long)line;
 	for (int i = 0; i < height; i++) {
-		BYTE *pixels = FreeImage_GetScanLine(dib, height - i - 1);
+		uint8_t *pixels = FreeImage_GetScanLine(dib, height - i - 1);
 		io->read_proc (pixels, 1, line, handle);
 		io->seek_proc (handle, delta, SEEK_CUR);
 #if FREEIMAGE_COLORORDER == FREEIMAGE_COLORORDER_RGB
@@ -453,8 +453,8 @@ LoadDXT_Helper (FreeImageIO *io, fi_handle handle, int page, int flags, void *da
 		for (; y < height; y += 4) {
 			io->read_proc (input_buffer, sizeof (typename INFO::Block), inputLine, handle);
 			// TODO: probably need some endian work here
-			BYTE *pbSrc = (BYTE *)input_buffer;
-			BYTE *pbDst = FreeImage_GetScanLine (dib, height - y - 1);
+			uint8_t *pbSrc = (uint8_t *)input_buffer;
+			uint8_t *pbDst = FreeImage_GetScanLine (dib, height - y - 1);
 
 			if (width >= 4) {
 				for (int x = 0; x < width; x += 4) {
@@ -471,8 +471,8 @@ LoadDXT_Helper (FreeImageIO *io, fi_handle handle, int page, int flags, void *da
 	if (heightRest)	{
 		io->read_proc (input_buffer, sizeof (typename INFO::Block), inputLine, handle);
 		// TODO: probably need some endian work here
-		BYTE *pbSrc = (BYTE *)input_buffer;
-		BYTE *pbDst = FreeImage_GetScanLine (dib, height - y - 1);
+		uint8_t *pbSrc = (uint8_t *)input_buffer;
+		uint8_t *pbDst = FreeImage_GetScanLine (dib, height - y - 1);
 
 		if (width >= 4) {
 			for (int x = 0; x < width; x += 4) {
@@ -497,12 +497,12 @@ LoadDXT (int type, DDSURFACEDESC2 &desc, FreeImageIO *io, fi_handle handle, int 
 
 	// allocate a 32-bit dib
 	FIBITMAP *dib = FreeImage_Allocate (width, height, 32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
-	if (dib == NULL)
-		return NULL;
+	if (dib == nullptr)
+		return nullptr;
 
 	int bpp = FreeImage_GetBPP (dib);
 	int line = CalculateLine (width, bpp);
-	BYTE *bits = FreeImage_GetBits (dib);
+	uint8_t *bits = FreeImage_GetBits (dib);
 
 	// select the right decoder
 	switch (type) {
@@ -540,7 +540,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -578,7 +578,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 
 static void * DLL_CALLCONV
 Open(FreeImageIO *io, fi_handle handle, BOOL read) {
-	return NULL;
+	return nullptr;
 }
 
 static void DLL_CALLCONV
@@ -590,7 +590,7 @@ Close(FreeImageIO *io, fi_handle handle, void *data) {
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 	DDSHEADER header;
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 
 	memset(&header, 0, sizeof(header));
 	io->read_proc(&header, 1, sizeof(header), handle);
@@ -637,13 +637,13 @@ InitDDS(Plugin *plugin, int format_id) {
 	plugin->regexpr_proc = RegExpr;
 	plugin->open_proc = Open;
 	plugin->close_proc = Close;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;	//Save;	// not implemented (yet?)
+	plugin->save_proc = nullptr;	//Save;	// not implemented (yet?)
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

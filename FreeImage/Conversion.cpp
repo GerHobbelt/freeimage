@@ -75,7 +75,7 @@ FreeImage_ColorQuantizeEx(FIBITMAP *dib, FREE_IMAGE_QUANTIZE quantize, int Palet
 						}
 						return dst;
 					} catch (const char *) {
-						return NULL;
+						return nullptr;
 					}
 				}
 				case FIQ_NNQUANT :
@@ -96,16 +96,16 @@ FreeImage_ColorQuantizeEx(FIBITMAP *dib, FREE_IMAGE_QUANTIZE quantize, int Palet
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ==========================================================
 
 FIBITMAP * DLL_CALLCONV
-FreeImage_ConvertFromRawBits(BYTE *bits, int width, int height, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown) {
+FreeImage_ConvertFromRawBits(uint8_t *bits, int width, int height, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown) {
 	FIBITMAP *dib = FreeImage_Allocate(width, height, bpp, red_mask, green_mask, blue_mask);
 
-	if (dib != NULL) {
+	if (dib != nullptr) {
 		if (topdown) {
 			for (int i = height - 1; i >= 0; --i) {
 				memcpy(FreeImage_GetScanLine(dib, i), bits, FreeImage_GetLine(dib));
@@ -123,10 +123,10 @@ FreeImage_ConvertFromRawBits(BYTE *bits, int width, int height, int pitch, unsig
 }
 
 void DLL_CALLCONV
-FreeImage_ConvertToRawBits(BYTE *bits, FIBITMAP *dib, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown) {
-	if ((dib != NULL) && (bits != NULL)) {
+FreeImage_ConvertToRawBits(uint8_t *bits, FIBITMAP *dib, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown) {
+	if ((dib != nullptr) && (bits != nullptr)) {
 		for (unsigned i = 0; i < FreeImage_GetHeight(dib); ++i) {
-			BYTE *scanline = FreeImage_GetScanLine(dib, topdown ? (FreeImage_GetHeight(dib) - i - 1) : i);
+			uint8_t *scanline = FreeImage_GetScanLine(dib, topdown ? (FreeImage_GetHeight(dib) - i - 1) : i);
 
 			if ((bpp == 16) && (FreeImage_GetBPP(dib) == 16)) {
 				// convert 555 to 565 or vice versa

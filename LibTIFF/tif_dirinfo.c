@@ -35,7 +35,7 @@
 
 /*
  * NB: NB: THIS ARRAY IS ASSUMED TO BE SORTED BY TAG.
- *       If a tag can have both LONG and SHORT types then the LONG must be
+ *       If a tag can have both int32_t and SHORT types then the int32_t must be
  *       placed before the SHORT for writing to work properly.
  *
  * NOTE: The second field (field_readcount) and third field (field_writecount)
@@ -63,17 +63,17 @@ tiffFieldInfo[] = {
       1,	0,	"ImageLength" },
     { TIFFTAG_BITSPERSAMPLE,	-1,-1,	TIFF_SHORT,	FIELD_BITSPERSAMPLE,
       0,	0,	"BitsPerSample" },
-/* XXX LONG for compatibility with some broken TIFF writers */
+/* XXX int32_t for compatibility with some broken TIFF writers */
     { TIFFTAG_BITSPERSAMPLE,	-1,-1,	TIFF_LONG,	FIELD_BITSPERSAMPLE,
       0,	0,	"BitsPerSample" },
     { TIFFTAG_COMPRESSION,	-1, 1,	TIFF_SHORT,	FIELD_COMPRESSION,
       0,	0,	"Compression" },
-/* XXX LONG for compatibility with some broken TIFF writers */
+/* XXX int32_t for compatibility with some broken TIFF writers */
     { TIFFTAG_COMPRESSION,	-1, 1,	TIFF_LONG,	FIELD_COMPRESSION,
       0,	0,	"Compression" },
     { TIFFTAG_PHOTOMETRIC,	 1, 1,	TIFF_SHORT,	FIELD_PHOTOMETRIC,
       0,	0,	"PhotometricInterpretation" },
-/* XXX LONG for compatibility with some broken TIFF writers */
+/* XXX int32_t for compatibility with some broken TIFF writers */
     { TIFFTAG_PHOTOMETRIC,	 1, 1,	TIFF_LONG,	FIELD_PHOTOMETRIC,
       0,	0,	"PhotometricInterpretation" },
     { TIFFTAG_THRESHHOLDING,	 1, 1,	TIFF_SHORT,	FIELD_THRESHHOLDING,
@@ -219,7 +219,7 @@ tiffFieldInfo[] = {
       0,	0,	"YCbCrPositioning" },
     { TIFFTAG_REFERENCEBLACKWHITE, 6, 6, TIFF_RATIONAL,	FIELD_CUSTOM,
       1,	0,	"ReferenceBlackWhite" },
-/* XXX temporarily accept LONG for backwards compatibility */
+/* XXX temporarily accept int32_t for backwards compatibility */
     { TIFFTAG_REFERENCEBLACKWHITE, 6, 6, TIFF_LONG,	FIELD_CUSTOM,
       1,	0,	"ReferenceBlackWhite" },
     { TIFFTAG_XMLPACKET,	-3,-3,	TIFF_BYTE,	FIELD_CUSTOM,
@@ -597,7 +597,7 @@ _TIFFMergeFieldInfo(TIFF* tif, const TIFFFieldInfo info[], int n)
 	TIFFFieldInfo** tp;
 	int i;
 
-        tif->tif_foundfield = NULL;
+        tif->tif_foundfield = nullptr;
 
 	if (tif->tif_nfields > 0) {
 		tif->tif_fieldinfo = (TIFFFieldInfo**)
@@ -725,7 +725,7 @@ _TIFFDataSize(TIFFDataType type)
 TIFFDataType
 _TIFFSampleToTagType(TIFF* tif)
 {
-	uint32 bps = TIFFhowmany8(tif->tif_dir.td_bitspersample);
+	uint32_t bps = TIFFhowmany8(tif->tif_dir.td_bitspersample);
 
 	switch (tif->tif_dir.td_sampleformat) {
 	case SAMPLEFORMAT_IEEEFP:
@@ -756,7 +756,7 @@ _TIFFFindFieldInfo(TIFF* tif, ttag_t tag, TIFFDataType dt)
 
 	/* If we are invoked with no field information, then just return. */
 	if ( !tif->tif_fieldinfo ) {
-		return NULL;
+		return nullptr;
 	}
 
 	/* NB: use sorted search (e.g. binary search) */
@@ -768,7 +768,7 @@ _TIFFFindFieldInfo(TIFF* tif, ttag_t tag, TIFFDataType dt)
 					       tif->tif_nfields,
 					       sizeof(TIFFFieldInfo *), 
 					       tagCompare);
-	return tif->tif_foundfield = (ret ? *ret : NULL);
+	return tif->tif_foundfield = (ret ? *ret : nullptr);
 }
 
 const TIFFFieldInfo*
@@ -785,7 +785,7 @@ _TIFFFindFieldInfoByName(TIFF* tif, const char *field_name, TIFFDataType dt)
 
 	/* If we are invoked with no field information, then just return. */
 	if ( !tif->tif_fieldinfo ) {
-		return NULL;
+		return nullptr;
 	}
 
 	/* NB: use sorted search (e.g. binary search) */
@@ -797,7 +797,7 @@ _TIFFFindFieldInfoByName(TIFF* tif, const char *field_name, TIFFDataType dt)
 					     &tif->tif_nfields,
 					     sizeof(TIFFFieldInfo *),
 					     tagNameCompare);
-	return tif->tif_foundfield = (ret ? *ret : NULL);
+	return tif->tif_foundfield = (ret ? *ret : nullptr);
 }
 
 const TIFFFieldInfo*
@@ -808,7 +808,7 @@ _TIFFFieldWithTag(TIFF* tif, ttag_t tag)
 		TIFFErrorExt(tif->tif_clientdata, "TIFFFieldWithTag",
 			     "Internal error, unknown tag 0x%x",
 			     (unsigned int) tag);
-		assert(fip != NULL);
+		assert(fip != nullptr);
 		/*NOTREACHED*/
 	}
 	return (fip);
@@ -822,7 +822,7 @@ _TIFFFieldWithName(TIFF* tif, const char *field_name)
 	if (!fip) {
 		TIFFErrorExt(tif->tif_clientdata, "TIFFFieldWithName",
 			     "Internal error, unknown tag %s", field_name);
-		assert(fip != NULL);
+		assert(fip != nullptr);
 		/*NOTREACHED*/
 	}
 	return (fip);
@@ -835,11 +835,11 @@ _TIFFFindOrRegisterFieldInfo( TIFF *tif, ttag_t tag, TIFFDataType dt )
     const TIFFFieldInfo *fld;
 
     fld = _TIFFFindFieldInfo( tif, tag, dt );
-    if( fld == NULL )
+    if( fld == nullptr )
     {
         fld = _TIFFCreateAnonFieldInfo( tif, tag, dt );
         if (!_TIFFMergeFieldInfo(tif, fld, 1))
-		return NULL;
+		return nullptr;
     }
 
     return fld;
@@ -852,8 +852,8 @@ _TIFFCreateAnonFieldInfo(TIFF *tif, ttag_t tag, TIFFDataType field_type)
 	(void) tif;
 
 	fld = (TIFFFieldInfo *) _TIFFmalloc(sizeof (TIFFFieldInfo));
-	if (fld == NULL)
-	    return NULL;
+	if (fld == nullptr)
+	    return nullptr;
 	_TIFFmemset( fld, 0, sizeof(TIFFFieldInfo) );
 
 	fld->field_tag = tag;
@@ -864,9 +864,9 @@ _TIFFCreateAnonFieldInfo(TIFF *tif, ttag_t tag, TIFFDataType field_type)
 	fld->field_oktochange = TRUE;
 	fld->field_passcount = TRUE;
 	fld->field_name = (char *) _TIFFmalloc(32);
-	if (fld->field_name == NULL) {
+	if (fld->field_name == nullptr) {
 	    _TIFFfree(fld);
-	    return NULL;
+	    return nullptr;
 	}
 
 	/* 

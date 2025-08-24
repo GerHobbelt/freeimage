@@ -94,7 +94,7 @@ DumpModeDecode(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
  * Seek forwards nrows in the current strip.
  */
 static int
-DumpModeSeek(TIFF* tif, uint32 nrows)
+DumpModeSeek(TIFF* tif, uint32_t nrows)
 {
 	tif->tif_rawcp += nrows * tif->tif_scanlinesize;
 	tif->tif_rawcc -= nrows * tif->tif_scanlinesize;

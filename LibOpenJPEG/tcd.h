@@ -211,7 +211,7 @@ void tcd_dump(FILE *fd, opj_tcd_t *tcd, opj_tcd_image_t *img);
 /**
 Create a new TCD handle
 @param cinfo Codec context info
-@return Returns a new TCD handle if successful returns NULL otherwise
+@return Returns a new TCD handle if successful returns nullptr otherwise
 */
 opj_tcd_t* tcd_create(opj_common_ptr cinfo);
 /**

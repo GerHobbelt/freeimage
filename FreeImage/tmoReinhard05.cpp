@@ -76,7 +76,7 @@ ToneMappingReinhard05(FIBITMAP *dib, FIBITMAP *Y, float f, float m, float a, flo
 
 	int i;
 	unsigned x, y;
-	BYTE *bits = NULL, *Ybits = NULL;
+	uint8_t *bits = nullptr, *Ybits = nullptr;
 
 	// get statistics about the data (but only if its really needed)
 
@@ -100,8 +100,8 @@ ToneMappingReinhard05(FIBITMAP *dib, FIBITMAP *Y, float f, float m, float a, flo
 
 	// tone map image
 
-	bits  = (BYTE*)FreeImage_GetBits(dib);
-	Ybits = (BYTE*)FreeImage_GetBits(Y);
+	bits  = (uint8_t*)FreeImage_GetBits(dib);
+	Ybits = (uint8_t*)FreeImage_GetBits(Y);
 
 	if((a == 1) && (c == 0)) {
 		// when using default values, use a fastest code
@@ -133,7 +133,7 @@ ToneMappingReinhard05(FIBITMAP *dib, FIBITMAP *Y, float f, float m, float a, flo
 		Cav[0] = Cav[1] = Cav[2] = 0;
 		if((a != 1) && (c != 0)) {
 			// channel averages are not needed when (a == 1) or (c == 0)
-			bits = (BYTE*)FreeImage_GetBits(dib);
+			bits = (uint8_t*)FreeImage_GetBits(dib);
 			for(y = 0; y < height; y++) {
 				float *color = (float*)bits;
 				for(x = 0; x < width; x++) {
@@ -153,7 +153,7 @@ ToneMappingReinhard05(FIBITMAP *dib, FIBITMAP *Y, float f, float m, float a, flo
 
 		// perform tone mapping
 
-		bits = (BYTE*)FreeImage_GetBits(dib);
+		bits = (uint8_t*)FreeImage_GetBits(dib);
 		for(y = 0; y < height; y++) {
 			const float *Y     = (float*)Ybits;
 			float *color = (float*)bits;
@@ -181,7 +181,7 @@ ToneMappingReinhard05(FIBITMAP *dib, FIBITMAP *Y, float f, float m, float a, flo
 	// normalize intensities
 
 	if(max_color != min_color) {
-		bits = (BYTE*)FreeImage_GetBits(dib);
+		bits = (uint8_t*)FreeImage_GetBits(dib);
 		const float range = max_color - min_color;
 		for(y = 0; y < height; y++) {
 			float *color = (float*)bits;
@@ -211,23 +211,23 @@ User parameters control intensity, contrast, and level of adaptation
 @param contrast Contrast in range [0.3:1) : default to 0
 @param adaptation Adaptation in range [0:1] : default to 1
 @param color_correction Color correction in range [0:1] : default to 0
-@return Returns a 24-bit RGB image if successful, returns NULL otherwise
+@return Returns a 24-bit RGB image if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_TmoReinhard05Ex(FIBITMAP *src, double intensity, double contrast, double adaptation, double color_correction) {
-	if(!src) return NULL;
+	if(!src) return nullptr;
 
 	// working RGBF variable
-	FIBITMAP *dib = NULL, *Y = NULL;
+	FIBITMAP *dib = nullptr, *Y = nullptr;
 
 	dib = FreeImage_ConvertToRGBF(src);
-	if(!dib) return NULL;
+	if(!dib) return nullptr;
 
 	// get the Luminance channel
 	Y = ConvertRGBFToY(dib);
 	if(!Y) {
 		FreeImage_Unload(dib);
-		return NULL;
+		return nullptr;
 	}
 
 	// perform the tone mapping
@@ -252,7 +252,7 @@ User parameters control intensity and contrast
 @param src Input RGBF image
 @param intensity Overall intensity in range [-8:8] : default to 0
 @param contrast Contrast in range [0.3:1) : default to 0
-@return Returns a 24-bit RGB image if successful, returns NULL otherwise
+@return Returns a 24-bit RGB image if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_TmoReinhard05(FIBITMAP *src, double intensity, double contrast) {

@@ -84,7 +84,7 @@ public:
 		memset(buffer, 0, length);
 		for(int i = 0; i < length; i++) {
 			if(!_io->read_proc(&buffer[i], 1, 1, _handle))
-				return NULL;
+				return nullptr;
 			if(buffer[i] == 0x0A)
 				break;
 		}
@@ -122,11 +122,11 @@ public:
 /**
 Convert a processed raw data array to a FIBITMAP
 @param image Processed raw image
-@return Returns the converted dib if successfull, returns NULL otherwise
+@return Returns the converted dib if successfull, returns nullptr otherwise
 */
 static FIBITMAP * 
 libraw_ConvertToDib(libraw_processed_image_t *image) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 	try {
 		unsigned width = image->width;
 		unsigned height = image->height;
@@ -155,7 +155,7 @@ libraw_ConvertToDib(libraw_processed_image_t *image) {
 				throw FI_MSG_ERROR_DIB_MEMORY;
 			}
 			// write data
-			BYTE *raw_data = (BYTE*)image->data;
+			uint8_t *raw_data = (uint8_t*)image->data;
 			for(unsigned y = 0; y < height; y++) {
 				RGBTRIPLE *output = (RGBTRIPLE*)FreeImage_GetScanLine(dib, height - 1 - y);
 				for(unsigned x = 0; x < width; x++) {
@@ -177,17 +177,17 @@ libraw_ConvertToDib(libraw_processed_image_t *image) {
 /** 
 Get the embedded JPEG preview image from RAW picture with included Exif Data. 
 @param RawProcessor Libraw handle
-@return Returns the loaded dib if successfull, returns NULL otherwise
+@return Returns the loaded dib if successfull, returns nullptr otherwise
 */
 static FIBITMAP * 
 libraw_LoadEmbeddedPreview(LibRaw& RawProcessor) {
-	FIBITMAP *dib = NULL;
-	libraw_processed_image_t *thumb_image = NULL;
+	FIBITMAP *dib = nullptr;
+	libraw_processed_image_t *thumb_image = nullptr;
 	
 	try {
 		// unpack data
 		if(RawProcessor.unpack_thumb() != LIBRAW_SUCCESS) {
-			throw (char*)NULL;	// run silently "LibRaw : failed to run unpack_thumb"
+			throw (char*)nullptr;	// run silently "LibRaw : failed to run unpack_thumb"
 		}
 
 		// retrieve thumb image
@@ -197,7 +197,7 @@ libraw_LoadEmbeddedPreview(LibRaw& RawProcessor) {
 			if(thumb_image->type != LIBRAW_IMAGE_BITMAP) {
 				int flags = 0;
 				// attach the binary data to a memory stream
-				FIMEMORY *hmem = FreeImage_OpenMemory((BYTE*)thumb_image->data, (DWORD)thumb_image->data_size);
+				FIMEMORY *hmem = FreeImage_OpenMemory((uint8_t*)thumb_image->data, (uint32_t)thumb_image->data_size);
 				// get the file type
 				FREE_IMAGE_FORMAT fif = FreeImage_GetFileTypeFromMemory(hmem, 0);
 				if(fif == FIF_JPEG) {
@@ -226,23 +226,23 @@ libraw_LoadEmbeddedPreview(LibRaw& RawProcessor) {
 		if(thumb_image) {
 			free(thumb_image);
 		}
-		if(text != NULL) {
+		if(text != nullptr) {
 			FreeImage_OutputMessageProc(s_format_id, text);
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 /**
 Load raw data and convert to FIBITMAP
 @param RawProcessor Libraw handle
 @param bitspersample Output bitdepth (8- or 16-bit)
-@return Returns the loaded dib if successfull, returns NULL otherwise
+@return Returns the loaded dib if successfull, returns nullptr otherwise
 */
 static FIBITMAP * 
 libraw_LoadRawData(LibRaw& RawProcessor, int bitspersample) {
-	FIBITMAP *dib = NULL;
-	libraw_processed_image_t *processed_image = NULL;
+	FIBITMAP *dib = nullptr;
+	libraw_processed_image_t *processed_image = nullptr;
 
 	try {
 		// set decoding parameters
@@ -301,7 +301,7 @@ libraw_LoadRawData(LibRaw& RawProcessor, int bitspersample) {
 		FreeImage_OutputMessageProc(s_format_id, text);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ==========================================================
@@ -368,7 +368,7 @@ Extension() {
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -416,7 +416,7 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	FIBITMAP *dib = NULL;
+	FIBITMAP *dib = nullptr;
 	LibRaw RawProcessor;
 
 	try {
@@ -444,7 +444,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		}
 
 		// save ICC profile if present
-		if(NULL != RawProcessor.imgdata.color.profile) {
+		if(nullptr != RawProcessor.imgdata.color.profile) {
 			FreeImage_CreateICCProfile(dib, RawProcessor.imgdata.color.profile, RawProcessor.imgdata.color.profile_length);
 		}
 
@@ -461,7 +461,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		FreeImage_OutputMessageProc(s_format_id, text);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ==========================================================
@@ -476,15 +476,15 @@ InitRAW(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
+	plugin->save_proc = nullptr;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

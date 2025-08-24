@@ -111,8 +111,8 @@ class DllDef LibRaw
     int                         dcraw_thumb_writer(const char *fname);
     int                         dcraw_process(void);
     /* memory writers */
-    libraw_processed_image_t*   dcraw_make_mem_image(int *errcode=NULL);  
-    libraw_processed_image_t*   dcraw_make_mem_thumb(int *errcode=NULL);  
+    libraw_processed_image_t*   dcraw_make_mem_image(int *errcode=nullptr);  
+    libraw_processed_image_t*   dcraw_make_mem_thumb(int *errcode=nullptr);  
 
     /* free all internal data structures */
     void         recycle(); 

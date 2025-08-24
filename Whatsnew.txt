@@ -643,7 +643,7 @@ July 22th 2001 - 2.4.0
 * (Yours Detlev) fixed memory leak in FreeImage_GetFIFFromFilename
 * (Yours Detlev) fixed memory leak in the ICO plugin
 * (Yours Detlev) fixed memory leak in the PNG plugin
-* fixed potential NULL-pointer access bug in Plugin::AddNode
+* fixed potential nullptr-pointer access bug in Plugin::AddNode
 * fixed problems with linking the static lib
 - removed LBM plugin. Its functionality is placed in the IFF plugin now
 - removed FreeImage_GetFIFByIndex

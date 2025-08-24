@@ -29,7 +29,7 @@
  */
 #include "tiffiop.h"
 
-TIFFErrorHandlerExt _TIFFerrorHandlerExt = NULL;
+TIFFErrorHandlerExt _TIFFerrorHandlerExt = nullptr;
 
 TIFFErrorHandler
 TIFFSetErrorHandler(TIFFErrorHandler handler)

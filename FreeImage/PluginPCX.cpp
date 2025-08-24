@@ -41,24 +41,24 @@
 #endif
 
 typedef struct tagPCXHEADER {
-	BYTE  manufacturer;		// Magic number (0x0A = ZSoft Z)
-	BYTE  version;			// Version	0 == 2.5
+	uint8_t  manufacturer;		// Magic number (0x0A = ZSoft Z)
+	uint8_t  version;			// Version	0 == 2.5
 							//          2 == 2.8 with palette info
 							//          3 == 2.8 without palette info
 							//          5 == 3.0 with palette info
-	BYTE  encoding;			// Encoding: 0 = uncompressed, 1 = PCX rle compressed
-	BYTE  bpp;				// Bits per pixel per plane (only 1 or 8)
-	WORD  window[4];		// left, upper, right,lower pixel coord.
-	WORD  hdpi;				// Horizontal resolution
-	WORD  vdpi;				// Vertical resolution
-	BYTE  color_map[48];	// Colormap for 16-color images
-	BYTE  reserved;
-	BYTE  planes;			// Number of planes (1, 3 or 4)
-	WORD  bytes_per_line;	// Bytes per row (always even)
-	WORD  palette_info;		// Palette information (1 = color or b&w; 2 = gray scale)
-	WORD  h_screen_size;
-	WORD  v_screen_size;
-	BYTE  filler[54];		// Reserved filler
+	uint8_t  encoding;			// Encoding: 0 = uncompressed, 1 = PCX rle compressed
+	uint8_t  bpp;				// Bits per pixel per plane (only 1 or 8)
+	uint16_t  window[4];		// left, upper, right,lower pixel coord.
+	uint16_t  hdpi;				// Horizontal resolution
+	uint16_t  vdpi;				// Vertical resolution
+	uint8_t  color_map[48];	// Colormap for 16-color images
+	uint8_t  reserved;
+	uint8_t  planes;			// Number of planes (1, 3 or 4)
+	uint16_t  bytes_per_line;	// Bytes per row (always even)
+	uint16_t  palette_info;		// Palette information (1 = color or b&w; 2 = gray scale)
+	uint16_t  h_screen_size;
+	uint16_t  v_screen_size;
+	uint8_t  filler[54];		// Reserved filler
 } PCXHEADER;
 		
 #ifdef _WIN32
@@ -71,8 +71,8 @@ typedef struct tagPCXHEADER {
 // Internal functions
 // ==========================================================
 
-static WORD
-readline(FreeImageIO &io, fi_handle handle, BYTE *buffer, WORD length, BOOL rle, BYTE * ReadBuf, int * ReadPos) {
+static uint16_t
+readline(FreeImageIO &io, fi_handle handle, uint8_t *buffer, uint16_t length, BOOL rle, uint8_t * ReadBuf, int * ReadPos) {
 	// -----------------------------------------------------------//
 	// Read either run-length encoded or normal image data        //
 	//                                                            //
@@ -87,8 +87,8 @@ readline(FreeImageIO &io, fi_handle handle, BYTE *buffer, WORD length, BOOL rle,
 	//  Note that a scanline always has an even number of bytes   //
 	// -------------------------------------------------------------
 
-	BYTE count = 0, value = 0;
-	WORD written = 0;
+	uint8_t count = 0, value = 0;
+	uint16_t written = 0;
 
 	if (rle) {
 		// run-length encoded read
@@ -97,7 +97,7 @@ readline(FreeImageIO &io, fi_handle handle, BYTE *buffer, WORD length, BOOL rle,
 			if (count == 0) {
 				if (*ReadPos >= IO_BUF_SIZE - 1 ) {
 					if (*ReadPos == IO_BUF_SIZE - 1) {
-						// we still have one BYTE, copy it to the start pos
+						// we still have one uint8_t, copy it to the start pos
 
 						*ReadBuf = ReadBuf[IO_BUF_SIZE - 1];
 
@@ -130,7 +130,7 @@ readline(FreeImageIO &io, fi_handle handle, BYTE *buffer, WORD length, BOOL rle,
 	} else {
 		// normal read
 
-		written = (WORD)io.read_proc(buffer, length, 1, handle);
+		written = (uint16_t)io.read_proc(buffer, length, 1, handle);
 	}
 
 	return written;
@@ -207,13 +207,13 @@ Extension() {
 	expression can be applied to the first few bytes (header) of
 	the bitmap. FreeImage is not capable of processing regular expression itself,
 	but FreeImageQt, the FreeImage Trolltech support library, can. If RegExpr
-	returns NULL, FreeImageQt will automatically bypass Trolltech's regular
+	returns nullptr, FreeImageQt will automatically bypass Trolltech's regular
 	expression support and use its internal functions to find the bitmap type.
 */
 
 static const char * DLL_CALLCONV
 RegExpr() {
-	return NULL;
+	return nullptr;
 }
 
 static const char * DLL_CALLCONV
@@ -239,8 +239,8 @@ MimeType() {
 
 static BOOL DLL_CALLCONV
 Validate(FreeImageIO *io, fi_handle handle) {
-	BYTE pcx_signature = 0x0A;
-	BYTE signature = 0;
+	uint8_t pcx_signature = 0x0A;
+	uint8_t signature = 0;
 
 	io->read_proc(&signature, 1, 1, handle);
 
@@ -301,20 +301,20 @@ SupportsExportType(FREE_IMAGE_TYPE type) {
 
 	The last parameter (void *data) can contain a special data block used when
 	the file is read multi-paged. Because not every plugin supports multi-paging
-	not every plugin will use the data parameter and it will be set to NULL.However,
+	not every plugin will use the data parameter and it will be set to nullptr.However,
 	when the plugin does support multi-paging the parameter contains a pointer to a
 	block of data allocated by the Open function.
 */
 
 static FIBITMAP * DLL_CALLCONV
 Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
-	FIBITMAP *dib = NULL;
-	BYTE *bits;			  // Pointer to dib data
+	FIBITMAP *dib = nullptr;
+	uint8_t *bits;			  // Pointer to dib data
 	RGBQUAD *pal;		  // Pointer to dib palette
-	BYTE *line = NULL;	  // PCX raster line
-	BYTE *ReadBuf = NULL; // buffer;
-	WORD linelength;	  // Length of raster line in bytes
-	WORD pitch;			  // Length of DIB line in bytes
+	uint8_t *line = nullptr;	  // PCX raster line
+	uint8_t *ReadBuf = nullptr; // buffer;
+	uint16_t linelength;	  // Length of raster line in bytes
+	uint16_t pitch;			  // Length of DIB line in bytes
 	BOOL rle;			  // True if the file is run-length encoded
 
 	if (handle) {
@@ -335,9 +335,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 			// allocate a new DIB
 
-			WORD width = header.window[2] - header.window[0] + 1;
-			WORD height = header.window[3] - header.window[1] + 1;
-			WORD bitcount = header.bpp * header.planes;
+			uint16_t width = header.window[2] - header.window[0] + 1;
+			uint16_t height = header.window[3] - header.window[1] + 1;
+			uint16_t bitcount = header.bpp * header.planes;
 
 			if (bitcount == 24)
 				dib = FreeImage_Allocate(width, height, bitcount, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
@@ -371,7 +371,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 				{
 					pal = FreeImage_GetPalette(dib);
 
-					BYTE *pColormap = &header.color_map[0];
+					uint8_t *pColormap = &header.color_map[0];
 
 					for (int i = 0; i < 16; i++) {
 						pal[i].rgbRed   = pColormap[0];
@@ -385,17 +385,17 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				case 8:
 				{
-					BYTE palette_id;
+					uint8_t palette_id;
 
 					io->seek_proc(handle, -769L, SEEK_END);
 					io->read_proc(&palette_id, 1, 1, handle);
 
 					if (palette_id == 0x0C) {
-						BYTE *cmap = (BYTE*)malloc(768 * sizeof(BYTE));
+						uint8_t *cmap = (uint8_t*)malloc(768 * sizeof(uint8_t));
 						io->read_proc(cmap, 768, 1, handle);
 
 						pal = FreeImage_GetPalette(dib);
-						BYTE *pColormap = &cmap[0];
+						uint8_t *pColormap = &cmap[0];
 
 						for(int i = 0; i < 256; i++) {
 							pal[i].rgbRed   = pColormap[0];
@@ -413,9 +413,9 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						pal = FreeImage_GetPalette(dib);
 
 						for(int i = 0; i < 256; i++) {
-							pal[i].rgbRed   = (BYTE)i;
-							pal[i].rgbGreen = (BYTE)i;
-							pal[i].rgbBlue  = (BYTE)i;
+							pal[i].rgbRed   = (uint8_t)i;
+							pal[i].rgbGreen = (uint8_t)i;
+							pal[i].rgbBlue  = (uint8_t)i;
 						}
 					}
 
@@ -427,7 +427,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// calculate the line length for the PCX and the DIB
 
 			linelength = header.bytes_per_line * header.planes;
-			pitch = (WORD)FreeImage_GetPitch(dib);
+			pitch = (uint16_t)FreeImage_GetPitch(dib);
 
 			// run-length encoding ?
 
@@ -436,17 +436,17 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 			// load image data
 			// ---------------
 
-			line = new BYTE[linelength];
+			line = new uint8_t[linelength];
 			bits = FreeImage_GetScanLine(dib, height - 1);
-			ReadBuf = new BYTE[IO_BUF_SIZE];
+			ReadBuf = new uint8_t[IO_BUF_SIZE];
 
 			int ReadPos = IO_BUF_SIZE;
 
 			if ((header.planes == 1) && ((header.bpp == 1) || (header.bpp == 8))) {
-				BYTE skip;
-				WORD written;
+				uint8_t skip;
+				uint16_t written;
 
-				for (WORD y = 0; y < height; y++) {
+				for (uint16_t y = 0; y < height; y++) {
 					written = readline(*io, handle, bits, linelength, rle, ReadBuf, &ReadPos);
 
 					// skip trailing garbage at the end of the scanline
@@ -455,33 +455,33 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						if (ReadPos < IO_BUF_SIZE) {
 							ReadPos++;
 						} else {
-							io->read_proc(&skip, sizeof(BYTE), 1, handle);
+							io->read_proc(&skip, sizeof(uint8_t), 1, handle);
 						}
 					}
 
 					bits -= pitch;
 				}
 			} else if ((header.planes == 4) && (header.bpp == 1)) {
-				BYTE bit,  mask, skip;
-        		        WORD index;
-				BYTE *buffer;
-				WORD x, y, written;
+				uint8_t bit,  mask, skip;
+        		        uint16_t index;
+				uint8_t *buffer;
+				uint16_t x, y, written;
 
-				buffer = new BYTE[width];
+				buffer = new uint8_t[width];
 
 				for (y = 0; y < height; y++) {
 					written = readline(*io, handle, line, linelength, rle, ReadBuf, &ReadPos);
 
 					// build a nibble using the 4 planes
 
-					memset(buffer, 0, width * sizeof(BYTE));
+					memset(buffer, 0, width * sizeof(uint8_t));
 
 					for(int plane = 0; plane < 4; plane++) {
-						bit = (BYTE)(1 << plane);
+						bit = (uint8_t)(1 << plane);
 
 						for (x = 0; x < width; x++) {
-							index = (WORD)((x / 8) + plane * header.bytes_per_line);
-							mask = (BYTE)(0x80 >> (x & 0x07));
+							index = (uint16_t)((x / 8) + plane * header.bytes_per_line);
+							mask = (uint8_t)(0x80 >> (x & 0x07));
 							buffer[x] |= (line[index] & mask) ? bit : 0;
 						}
 					}
@@ -497,7 +497,7 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 						if (ReadPos < IO_BUF_SIZE) {
 							ReadPos++;
 						} else {
-							io->read_proc(&skip, sizeof(BYTE), 1, handle);
+							io->read_proc(&skip, sizeof(uint8_t), 1, handle);
 						}
 					}
 
@@ -506,16 +506,16 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 
 				delete [] buffer;
 			} else if((header.planes == 3) && (header.bpp == 8)) {
-				BYTE *pline;
+				uint8_t *pline;
 
-				for (WORD y = 0; y < height; y++) {
+				for (uint16_t y = 0; y < height; y++) {
 					readline(*io, handle, line, linelength, rle, ReadBuf, &ReadPos);
 
 					// convert the plane stream to BGR (RRRRGGGGBBBB -> BGRBGRBGRBGR)
 					// well, now with the FI_RGBA_x macros, on BIGENDIAN we convert to RGB
 
 					pline = line;
-					WORD x;
+					uint16_t x;
 
 					for (x = 0; x < width; x++)
 						bits[x * 3 + FI_RGBA_RED] = pline[x];						
@@ -541,22 +541,22 @@ Load(FreeImageIO *io, fi_handle handle, int page, int flags, void *data) {
 		} catch (const char *text) {
 			// free allocated memory
 
-			if (dib != NULL)
+			if (dib != nullptr)
 				FreeImage_Unload(dib);
 
-			if (line != NULL)
+			if (line != nullptr)
 				delete [] line;
 
-			if (ReadBuf != NULL)
+			if (ReadBuf != nullptr)
 				delete [] ReadBuf;
 
 			FreeImage_OutputMessageProc(s_format_id, text);
 
-			return NULL;
+			return nullptr;
 		}
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
 // ==========================================================
@@ -593,15 +593,15 @@ InitPCX(Plugin *plugin, int format_id) {
 	plugin->description_proc = Description;
 	plugin->extension_proc = Extension;
 	plugin->regexpr_proc = RegExpr;
-	plugin->open_proc = NULL;
-	plugin->close_proc = NULL;
-	plugin->pagecount_proc = NULL;
-	plugin->pagecapability_proc = NULL;
+	plugin->open_proc = nullptr;
+	plugin->close_proc = nullptr;
+	plugin->pagecount_proc = nullptr;
+	plugin->pagecapability_proc = nullptr;
 	plugin->load_proc = Load;
-	plugin->save_proc = NULL;
+	plugin->save_proc = nullptr;
 	plugin->validate_proc = Validate;
 	plugin->mime_proc = MimeType;
 	plugin->supports_export_bpp_proc = SupportsExportDepth;
 	plugin->supports_export_type_proc = SupportsExportType;
-	plugin->supports_icc_profiles_proc = NULL;
+	plugin->supports_icc_profiles_proc = nullptr;
 }

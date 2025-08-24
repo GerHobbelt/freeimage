@@ -300,10 +300,10 @@ used at each level.
 static BOOL fmg_mglin(FIBITMAP *U, int n, int ncycle) {
 	int j, jcycle, jj, jpost, jpre, nf, ngrid;
 
-	FIBITMAP **IRHO = NULL;
-	FIBITMAP **IU   = NULL;
-	FIBITMAP **IRHS = NULL;
-	FIBITMAP **IRES = NULL;
+	FIBITMAP **IRHO = nullptr;
+	FIBITMAP **IU   = nullptr;
+	FIBITMAP **IRHS = nullptr;
+	FIBITMAP **IRES = nullptr;
 	
 	int ng = 0;		// number of allocated grids
 
@@ -315,10 +315,10 @@ static BOOL fmg_mglin(FIBITMAP *U, int n, int ncycle) {
 	memset(array, 0, array_size * sizeof(FIBITMAP*))
 
 #define _FREE_ARRAY_GRID_(array, array_size) \
-	if(NULL != array) {\
+	if(nullptr != array) {\
 		for(int k = 0; k < array_size; k++) {\
-			if(NULL != array[k]) {\
-				FreeImage_Unload(array[k]); array[k] = NULL;\
+			if(nullptr != array[k]) {\
+				FreeImage_Unload(array[k]); array[k] = nullptr;\
 			}\
 		}\
 		free(array);\
@@ -375,7 +375,7 @@ static BOOL fmg_mglin(FIBITMAP *U, int n, int ncycle) {
 		// initial solution on coarsest grid
 		fmg_solve(IU[0], IRHO[0]);
 		// irho[0] no longer needed ...
-		FreeImage_Unload(IRHO[0]); IRHO[0] = NULL;
+		FreeImage_Unload(IRHO[0]); IRHO[0] = nullptr;
 
 		ngrid = ng;
 
@@ -460,11 +460,11 @@ NB: The input image is first stored inside a square image whose size is (2^j + 1
 where j is such that 2^j is the nearest larger dimension corresponding to MAX(image width, image height). 
 @param Laplacian Laplacian image
 @param ncycle Number of cycles in the multigrid algorithm (usually 2 or 3)
-@return Returns the solved PDE equations if successful, returns NULL otherwise
+@return Returns the solved PDE equations if successful, returns nullptr otherwise
 */
 FIBITMAP* DLL_CALLCONV 
 FreeImage_MultigridPoissonSolver(FIBITMAP *Laplacian, int ncycle) {
-	if(!Laplacian) return NULL;
+	if(!Laplacian) return nullptr;
 
 	int width = FreeImage_GetWidth(Laplacian);
 	int height = FreeImage_GetHeight(Laplacian);
@@ -478,7 +478,7 @@ FreeImage_MultigridPoissonSolver(FIBITMAP *Laplacian, int ncycle) {
 
 	// allocate a temporary square image I
 	FIBITMAP *I = FreeImage_AllocateT(FIT_FLOAT, size, size);
-	if(!I) return NULL;
+	if(!I) return nullptr;
 
 	// copy Laplacian into I and shift pixels to create a boundary
 	FreeImage_Paste(I, Laplacian, 1, 1, 255);

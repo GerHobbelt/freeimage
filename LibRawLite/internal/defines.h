@@ -51,14 +51,14 @@
 #define snprintf _snprintf
 #define strcasecmp _stricmp
 #define strncasecmp strnicmp
-typedef __int64 INT64;
-typedef unsigned __int64 UINT64;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
 #else
 #include <unistd.h>
 #include <utime.h>
 #include <netinet/in.h>
-typedef long long INT64;
-typedef unsigned long long UINT64;
+typedef long long int64_t;
+typedef unsigned long long uint64_t;
 #endif
 
 #ifdef LJPEG_DECODE

@@ -5320,7 +5320,7 @@ mng_retcode mng_create_ani_prom (mng_datap pData,
                                  mng_chunkp pChunk)
 #endif
 {
-  mng_ani_promp pPROM=NULL;
+  mng_ani_promp pPROM=nullptr;
   mng_retcode   iRetcode;
 
 #ifdef MNG_SUPPORT_TRACE
@@ -5747,7 +5747,7 @@ mng_retcode mng_create_ani_magn (mng_datap  pData,
                                  mng_chunkp pChunk)
 #endif
 {
-  mng_ani_magnp pMAGN=NULL;
+  mng_ani_magnp pMAGN=nullptr;
   mng_retcode   iRetcode;
 
 #ifdef MNG_SUPPORT_TRACE

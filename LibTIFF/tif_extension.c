@@ -68,13 +68,13 @@ void *TIFFGetClientInfo( TIFF *tif, const char *name )
 {
     TIFFClientInfoLink *link = tif->tif_clientinfo;
 
-    while( link != NULL && strcmp(link->name,name) != 0 )
+    while( link != nullptr && strcmp(link->name,name) != 0 )
         link = link->next;
 
-    if( link != NULL )
+    if( link != nullptr )
         return link->data;
     else
-        return NULL;
+        return nullptr;
 }
 
 void TIFFSetClientInfo( TIFF *tif, void *data, const char *name )
@@ -86,10 +86,10 @@ void TIFFSetClientInfo( TIFF *tif, void *data, const char *name )
     ** Do we have an existing link with this name?  If so, just
     ** set it.
     */
-    while( link != NULL && strcmp(link->name,name) != 0 )
+    while( link != nullptr && strcmp(link->name,name) != 0 )
         link = link->next;
 
-    if( link != NULL )
+    if( link != nullptr )
     {
         link->data = data;
         return;
@@ -100,10 +100,10 @@ void TIFFSetClientInfo( TIFF *tif, void *data, const char *name )
     */
 
     link = (TIFFClientInfoLink *) _TIFFmalloc(sizeof(TIFFClientInfoLink));
-    assert (link != NULL);
+    assert (link != nullptr);
     link->next = tif->tif_clientinfo;
     link->name = (char *) _TIFFmalloc(strlen(name)+1);
-    assert (link->name != NULL);
+    assert (link->name != nullptr);
     strcpy(link->name, name);
     link->data = data;
 
