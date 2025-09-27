@@ -3455,7 +3455,7 @@ Dim lpSA As Long
    ' This makes you use code like you would in C/C++:
    
    ' // this code assumes there is a bitmap loaded and
-   ' // present in a variable called ‘dib’
+   ' // present in a variable called â€˜dibâ€™
    ' if(FreeImage_GetBPP(Bitmap) == 8) {
    '   // Build a greyscale palette
    '   RGBQUAD *pal = FreeImage_GetPalette(Bitmap);
@@ -3568,7 +3568,7 @@ Dim lpSA As Long
    ' This makes you use code like you would in C/C++:
    
    ' // this code assumes there is a bitmap loaded and
-   ' // present in a variable called ‘dib’
+   ' // present in a variable called â€˜dibâ€™
    ' if(FreeImage_GetBPP(Bitmap) == 8) {
    '   // Build a greyscale palette
    '   RGBQUAD *pal = FreeImage_GetPalette(Bitmap);
@@ -3706,7 +3706,7 @@ Dim lpSA As Long
    ' This makes you use code like you would in C/C++:
    
    ' // this code assumes there is a bitmap loaded and
-   ' // present in a variable called ‘dib’
+   ' // present in a variable called â€˜dibâ€™
    ' if(FreeImage_GetBPP(Bitmap) == 8) {
    '   // Remove transparency information
    '   byte *transt = FreeImage_GetTransparencyTable(Bitmap);
@@ -9227,7 +9227,7 @@ Const vbObjectOrWithBlockVariableNotSet As Long = 91
    ' converted back to a Ole Picture object and re-assigned to the
    ' PictureBox control.
    
-   ' The Control paramater is actually of type Object so any object or control
+   ' The Control parameter is actually of type Object so any object or control
    ' providing Picture, hWnd, Width and Height properties can be used instead
    ' of a PictureBox control
    
